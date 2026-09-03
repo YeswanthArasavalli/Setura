@@ -1,0 +1,541 @@
+{
+  "scriptCompleted": true,
+  "entryPointCandidates": [
+    {
+      "id": "document:ARCHITECTURE.md",
+      "score": 2,
+      "name": "ARCHITECTURE.md",
+      "type": "document",
+      "summary": "Frozen SETURA architecture document: SQL-first business logic in PostgreSQL, Deno edge functions as HTTP API layer, multi-tenant security model, core engines (booking, queue runtime, payment/settlement, WhatsApp, SLA, monitoring, audit, background worker, analytics), enterprise intelligence layer added in Phase 1.5, and cross-cutting conventions."
+    },
+    {
+      "id": "document:CLAUDE.md",
+      "score": 2,
+      "name": "CLAUDE.md",
+      "type": "document",
+      "summary": "Operating contract for working in SETURA: identity, stack, command authority, context discipline, established architecture, security/tenancy rules, state machine, idempotency, concurrency, financial integrity, audit, worker/scheduler, WhatsApp, migrations, testing, and current-state pointers."
+    },
+    {
+      "id": "file:supabase/functions/settlement-engine/index.ts",
+      "score": 2,
+      "name": "settlement-engine/index.ts",
+      "type": "file",
+      "summary": "Settlement engine edge function: computes hospital_settlements + settlement_items from platform fees, drives payout states, exposes snapshot endpoints for finance dashboards."
+    },
+    {
+      "id": "file:supabase/functions/create-payment-order/index.ts",
+      "score": 2,
+      "name": "create-payment-order/index.ts",
+      "type": "file",
+      "summary": "Razorpay integration: creates payment_orders row, calls Razorpay Orders API, returns short_id and amount. Triggers the patient-facing payment flow."
+    },
+    {
+      "id": "file:supabase/functions/create-booking/index.ts",
+      "score": 1,
+      "name": "create-booking/index.ts",
+      "type": "file",
+      "summary": "Production-grade booking creation. Full pipeline: CORS, idempotency, auth+role, zod validation, rate limit, hospital open/holiday rules, doctor availability, queue capacity, phone block, find-or-create patient, atomic token allocation, WhatsApp confirmation enqueue, audit log, idempotency completion."
+    }
+  ],
+  "fanInRanking": [
+    {
+      "id": "file:supabase/functions/_shared/auth.ts",
+      "fanIn": 7,
+      "name": "auth.ts"
+    },
+    {
+      "id": "file:supabase/migrations/07_settlement_engine.sql",
+      "fanIn": 3,
+      "name": "07_settlement_engine.sql"
+    },
+    {
+      "id": "file:supabase/functions/_shared/response.ts",
+      "fanIn": 3,
+      "name": "response.ts"
+    },
+    {
+      "id": "file:supabase/migrations/01_foundation.sql",
+      "fanIn": 2,
+      "name": "01_foundation.sql"
+    },
+    {
+      "id": "file:supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+      "fanIn": 2,
+      "name": "02_atomic_token_engine_&_bookings.sql"
+    },
+    {
+      "id": "file:supabase/migrations/48_privilege_hardening.sql",
+      "fanIn": 2,
+      "name": "48_privilege_hardening.sql"
+    },
+    {
+      "id": "file:supabase/functions/_shared/errors.ts",
+      "fanIn": 2,
+      "name": "errors.ts"
+    },
+    {
+      "id": "file:supabase/functions/_shared/worker.ts",
+      "fanIn": 2,
+      "name": "worker.ts"
+    },
+    {
+      "id": "file:supabase/migrations/13_payment_engine.sql",
+      "fanIn": 1,
+      "name": "13_payment_engine.sql"
+    },
+    {
+      "id": "file:supabase/migrations/42_whatsapp_conversational_engine.sql",
+      "fanIn": 1,
+      "name": "42_whatsapp_conversational_engine.sql"
+    },
+    {
+      "id": "file:supabase/migrations/43_queue_runtime.sql",
+      "fanIn": 1,
+      "name": "43_queue_runtime.sql"
+    },
+    {
+      "id": "file:supabase/functions/_shared/idempotency.ts",
+      "fanIn": 1,
+      "name": "idempotency.ts"
+    },
+    {
+      "id": "file:supabase/functions/_shared/audit.ts",
+      "fanIn": 1,
+      "name": "audit.ts"
+    },
+    {
+      "id": "file:supabase/functions/create-booking/index.ts",
+      "fanIn": 1,
+      "name": "create-booking/index.ts"
+    },
+    {
+      "id": "file:supabase/functions/queue-control/index.ts",
+      "fanIn": 1,
+      "name": "queue-control/index.ts"
+    },
+    {
+      "id": "file:supabase/functions/process-whatsapp-webhook/index.ts",
+      "fanIn": 1,
+      "name": "process-whatsapp-webhook/index.ts"
+    },
+    {
+      "id": "file:supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+      "fanIn": 1,
+      "name": "whatsapp_conversation_engine.ts"
+    },
+    {
+      "id": "file:supabase/functions/_shared/whatsapp/whatsapp_intent_router.ts",
+      "fanIn": 1,
+      "name": "whatsapp_intent_router.ts"
+    },
+    {
+      "id": "config:deno.json",
+      "fanIn": 1,
+      "name": "deno.json"
+    },
+    {
+      "id": "document:ARCHITECTURE.md",
+      "fanIn": 0,
+      "name": "ARCHITECTURE.md"
+    }
+  ],
+  "fanOutRanking": [
+    {
+      "id": "file:supabase/functions/create-booking/index.ts",
+      "fanOut": 6,
+      "name": "create-booking/index.ts"
+    },
+    {
+      "id": "file:supabase/functions/queue-control/index.ts",
+      "fanOut": 3,
+      "name": "queue-control/index.ts"
+    },
+    {
+      "id": "document:ARCHITECTURE.md",
+      "fanOut": 2,
+      "name": "ARCHITECTURE.md"
+    },
+    {
+      "id": "document:CLAUDE.md",
+      "fanOut": 2,
+      "name": "CLAUDE.md"
+    },
+    {
+      "id": "file:supabase/functions/settlement-engine/index.ts",
+      "fanOut": 2,
+      "name": "settlement-engine/index.ts"
+    },
+    {
+      "id": "file:supabase/functions/create-payment-order/index.ts",
+      "fanOut": 2,
+      "name": "create-payment-order/index.ts"
+    },
+    {
+      "id": "file:supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+      "fanOut": 2,
+      "name": "whatsapp_conversation_engine.ts"
+    },
+    {
+      "id": "document:docs/API_CONTRACTS.md",
+      "fanOut": 1,
+      "name": "docs/API_CONTRACTS.md"
+    },
+    {
+      "id": "document:docs/ERROR_CONTRACT.md",
+      "fanOut": 1,
+      "name": "docs/ERROR_CONTRACT.md"
+    },
+    {
+      "id": "document:docs/security/PRIVILEGE_MODEL.md",
+      "fanOut": 1,
+      "name": "docs/security/PRIVILEGE_MODEL.md"
+    },
+    {
+      "id": "file:supabase/migrations/01_foundation.sql",
+      "fanOut": 1,
+      "name": "01_foundation.sql"
+    },
+    {
+      "id": "file:supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+      "fanOut": 1,
+      "name": "02_atomic_token_engine_&_bookings.sql"
+    },
+    {
+      "id": "file:supabase/migrations/13_payment_engine.sql",
+      "fanOut": 1,
+      "name": "13_payment_engine.sql"
+    },
+    {
+      "id": "file:supabase/migrations/48_privilege_hardening.sql",
+      "fanOut": 1,
+      "name": "48_privilege_hardening.sql"
+    },
+    {
+      "id": "file:supabase/functions/_shared/idempotency.ts",
+      "fanOut": 1,
+      "name": "idempotency.ts"
+    },
+    {
+      "id": "file:supabase/functions/_shared/audit.ts",
+      "fanOut": 1,
+      "name": "audit.ts"
+    },
+    {
+      "id": "file:supabase/functions/process-whatsapp-webhook/index.ts",
+      "fanOut": 1,
+      "name": "process-whatsapp-webhook/index.ts"
+    },
+    {
+      "id": "file:supabase/functions/send-whatsapp-message/index.ts",
+      "fanOut": 1,
+      "name": "send-whatsapp-message/index.ts"
+    },
+    {
+      "id": "file:supabase/functions/run-background-worker/index.ts",
+      "fanOut": 1,
+      "name": "run-background-worker/index.ts"
+    },
+    {
+      "id": "file:supabase/functions/run-cron-minute/index.ts",
+      "fanOut": 1,
+      "name": "run-cron-minute/index.ts"
+    }
+  ],
+  "bfsTraversal": {
+    "startNode": "file:supabase/functions/settlement-engine/index.ts",
+    "order": [
+      "file:supabase/functions/settlement-engine/index.ts",
+      "file:supabase/functions/_shared/auth.ts",
+      "file:supabase/migrations/07_settlement_engine.sql"
+    ],
+    "depthMap": {
+      "file:supabase/functions/settlement-engine/index.ts": 0,
+      "file:supabase/functions/_shared/auth.ts": 1,
+      "file:supabase/migrations/07_settlement_engine.sql": 1
+    },
+    "byDepth": {
+      "0": [
+        "file:supabase/functions/settlement-engine/index.ts"
+      ],
+      "1": [
+        "file:supabase/functions/_shared/auth.ts",
+        "file:supabase/migrations/07_settlement_engine.sql"
+      ]
+    }
+  },
+  "nonCodeFiles": {
+    "documentation": [
+      {
+        "id": "document:ARCHITECTURE.md",
+        "name": "ARCHITECTURE.md",
+        "type": "document",
+        "summary": "Frozen SETURA architecture document: SQL-first business logic in PostgreSQL, Deno edge functions as HTTP API layer, multi-tenant security model, core engines (booking, queue runtime, payment/settlement, WhatsApp, SLA, monitoring, audit, background worker, analytics), enterprise intelligence layer added in Phase 1.5, and cross-cutting conventions."
+      },
+      {
+        "id": "document:CLAUDE.md",
+        "name": "CLAUDE.md",
+        "type": "document",
+        "summary": "Operating contract for working in SETURA: identity, stack, command authority, context discipline, established architecture, security/tenancy rules, state machine, idempotency, concurrency, financial integrity, audit, worker/scheduler, WhatsApp, migrations, testing, and current-state pointers."
+      },
+      {
+        "id": "document:docs/API_CONTRACTS.md",
+        "name": "docs/API_CONTRACTS.md",
+        "type": "document",
+        "summary": "API request/response contracts for SETURA edge functions. Standard envelope: success flag, data payload, correlationId, timestamp. Documents idempotency-key usage, hospital ID header requirement, and error taxonomy references."
+      },
+      {
+        "id": "document:docs/ERROR_CONTRACT.md",
+        "name": "docs/ERROR_CONTRACT.md",
+        "type": "document",
+        "summary": "Error taxonomy for SETURA: SeturError base class with subclasses for auth, booking, queue, idempotency, rate limiting, infrastructure. Each error carries code, statusCode, retryable flag, optional context."
+      },
+      {
+        "id": "document:docs/security/PRIVILEGE_MODEL.md",
+        "name": "docs/security/PRIVILEGE_MODEL.md",
+        "type": "document",
+        "summary": "Multi-tier privilege model: PUBLIC, anon, authenticated, service_role, owner. Documented default-privilege behavior, fail-closed guarantees for SECURITY DEFINER functions, and how new functions need explicit REVOKE."
+      }
+    ],
+    "infrastructure": [],
+    "data": [],
+    "config": [
+      {
+        "id": "config:deno.json",
+        "name": "deno.json",
+        "type": "config",
+        "summary": "Deno workspace config and command authority. Defines 10 tasks: fmt, fmt:check, lint, check, test, test:integration, validate:migrations, gen:types, gen:types:check, db:reset. Strict TypeScript compiler options. No package.json/Makefile exists."
+      },
+      {
+        "id": "config:.env.example",
+        "name": ".env.example",
+        "type": "config",
+        "summary": "21 placeholder secrets for local dev: SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, CRON_SECRET, WORKER_SECRET, META_APP_SECRET, RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET, RAZORPAY_WEBHOOK_SECRET, ENABLE_WORKER_TRIGGER, WORKER_LEASE_SECS, CORS_ALLOWED_ORIGINS. No .env exists in repo."
+      }
+    ]
+  },
+  "clusters": [],
+  "layers": {
+    "count": 7,
+    "list": [
+      {
+        "id": "layer:edge-runtime",
+        "name": "Edge Runtime",
+        "description": "Deno Edge Function HTTP entry points (22 handlers)."
+      },
+      {
+        "id": "layer:shared-utilities",
+        "name": "Shared Utilities",
+        "description": "Cross-cutting helpers shared by all Edge Functions (15 modules)."
+      },
+      {
+        "id": "layer:whatsapp-conversation-engine",
+        "name": "WhatsApp Conversation Engine",
+        "description": "Stateful WhatsApp-first patient experience (7 modules)."
+      },
+      {
+        "id": "layer:database",
+        "name": "Database Layer",
+        "description": "PostgreSQL schema and business logic via 49 ordered migrations."
+      },
+      {
+        "id": "layer:tests",
+        "name": "Test Suite",
+        "description": "Integration and unit tests against the real local Supabase stack."
+      },
+      {
+        "id": "layer:documentation",
+        "name": "Project Documentation",
+        "description": "Root-level markdown documentation."
+      },
+      {
+        "id": "layer:project-support",
+        "name": "Project Support",
+        "description": "Deno workspace config, .env.example, scripts."
+      }
+    ]
+  },
+  "nodeSummaryIndex": {
+    "document:ARCHITECTURE.md": {
+      "name": "ARCHITECTURE.md",
+      "type": "document",
+      "summary": "Frozen SETURA architecture document: SQL-first business logic in PostgreSQL, Deno edge functions as HTTP API layer, multi-tenant security model, core engines (booking, queue runtime, payment/settlement, WhatsApp, SLA, monitoring, audit, background worker, analytics), enterprise intelligence layer added in Phase 1.5, and cross-cutting conventions."
+    },
+    "document:CLAUDE.md": {
+      "name": "CLAUDE.md",
+      "type": "document",
+      "summary": "Operating contract for working in SETURA: identity, stack, command authority, context discipline, established architecture, security/tenancy rules, state machine, idempotency, concurrency, financial integrity, audit, worker/scheduler, WhatsApp, migrations, testing, and current-state pointers."
+    },
+    "document:docs/API_CONTRACTS.md": {
+      "name": "docs/API_CONTRACTS.md",
+      "type": "document",
+      "summary": "API request/response contracts for SETURA edge functions. Standard envelope: success flag, data payload, correlationId, timestamp. Documents idempotency-key usage, hospital ID header requirement, and error taxonomy references."
+    },
+    "document:docs/ERROR_CONTRACT.md": {
+      "name": "docs/ERROR_CONTRACT.md",
+      "type": "document",
+      "summary": "Error taxonomy for SETURA: SeturError base class with subclasses for auth, booking, queue, idempotency, rate limiting, infrastructure. Each error carries code, statusCode, retryable flag, optional context."
+    },
+    "document:docs/security/PRIVILEGE_MODEL.md": {
+      "name": "docs/security/PRIVILEGE_MODEL.md",
+      "type": "document",
+      "summary": "Multi-tier privilege model: PUBLIC, anon, authenticated, service_role, owner. Documented default-privilege behavior, fail-closed guarantees for SECURITY DEFINER functions, and how new functions need explicit REVOKE."
+    },
+    "file:supabase/migrations/01_foundation.sql": {
+      "name": "01_foundation.sql",
+      "type": "file",
+      "summary": "First migration (must run first). Creates extensions (pgcrypto, uuid-ossp, pg_trgm, citext), core enums (user_role_type, booking_status, booking_source), immutable hospital_id guard trigger, and the foundational helper set_updated_at()."
+    },
+    "file:supabase/migrations/02_atomic_token_engine_&_bookings.sql": {
+      "name": "02_atomic_token_engine_&_bookings.sql",
+      "type": "file",
+      "summary": "Booking engine: bookings, booking_events, queue_sessions, hospital_daily_counters. Atomic token allocation via INSERT ... ON CONFLICT DO UPDATE RETURNING. Enforces patient dedupe by phone."
+    },
+    "file:supabase/migrations/07_settlement_engine.sql": {
+      "name": "07_settlement_engine.sql",
+      "type": "file",
+      "summary": "Settlement engine: daily_collection_entries, hospital_settlements, settlement_items, outstanding_balances. Computes platform vs hospital vs receptionist fees."
+    },
+    "file:supabase/migrations/13_payment_engine.sql": {
+      "name": "13_payment_engine.sql",
+      "type": "file",
+      "summary": "Payment engine: payment_orders, payment_attempts, payment_refunds, payment_events, financial_ledger. Append-only financial_ledger with trigger-enforced immutability."
+    },
+    "file:supabase/migrations/42_whatsapp_conversational_engine.sql": {
+      "name": "42_whatsapp_conversational_engine.sql",
+      "type": "file",
+      "summary": "WhatsApp conversational engine: whatsapp_conversation_states table tracking per-phone per-hospital conversation context, state transitions, and handoff flags."
+    },
+    "file:supabase/migrations/43_queue_runtime.sql": {
+      "name": "43_queue_runtime.sql",
+      "type": "file",
+      "summary": "Queue runtime: queue_runtime_events audit log for every queue action (call, skip, recall, restore, complete). Provides event sourcing for queue displays and analytics."
+    },
+    "file:supabase/migrations/48_privilege_hardening.sql": {
+      "name": "48_privilege_hardening.sql",
+      "type": "file",
+      "summary": "Privilege hardening migration: REVOKE PUBLIC EXECUTE on SECURITY DEFINER functions. Documented F16-04: the fail-closed guarantee does not hold - new/resignatured SECURITY DEFINER functions need explicit REVOKE."
+    },
+    "file:supabase/functions/_shared/auth.ts": {
+      "name": "auth.ts",
+      "type": "file",
+      "summary": "Central authentication and authorization module. resolveAuth verifies JWT, loads profile, queries user_roles for hospital membership and role. requireRole enforces role hierarchy. ROLE_HIERARCHY: global_admin > hospital_admin > doctor > receptionist > patient."
+    },
+    "file:supabase/functions/_shared/errors.ts": {
+      "name": "errors.ts",
+      "type": "file",
+      "summary": "18 SeturError subclasses covering auth, booking, queue, idempotency, rate limit, infrastructure. Each has code, statusCode, retryable flag, optional context. Type guards isSeturError and isRetryable."
+    },
+    "file:supabase/functions/_shared/response.ts": {
+      "name": "response.ts",
+      "type": "file",
+      "summary": "Standardized API response builders: successResponse, createdResponse, errorResponse, handleErrorResponse. JSON envelope: success flag, data, correlationId, timestamp. CORS headers injected on all responses."
+    },
+    "file:supabase/functions/_shared/idempotency.ts": {
+      "name": "idempotency.ts",
+      "type": "file",
+      "summary": "Idempotency-Key header extraction and withIdempotency wrapper. Claims keys in api_idempotency_keys table, stores response for replay on duplicate POST."
+    },
+    "file:supabase/functions/_shared/audit.ts": {
+      "name": "audit.ts",
+      "type": "file",
+      "summary": "logAuditEvent helper writes to immutable audit_logs table. Enforces registered action types from audit_action_types, captures actor, hospital, entity, severity, old/new state, correlation id."
+    },
+    "file:supabase/functions/_shared/worker.ts": {
+      "name": "worker.ts",
+      "type": "file",
+      "summary": "Background worker primitives: job claim wrappers, lease management, heartbeat, retry, dead-letter handling. Used by run-background-worker edge function."
+    },
+    "file:supabase/functions/create-booking/index.ts": {
+      "name": "create-booking/index.ts",
+      "type": "file",
+      "summary": "Production-grade booking creation. Full pipeline: CORS, idempotency, auth+role, zod validation, rate limit, hospital open/holiday rules, doctor availability, queue capacity, phone block, find-or-create patient, atomic token allocation, WhatsApp confirmation enqueue, audit log, idempotency completion."
+    },
+    "file:supabase/functions/queue-control/index.ts": {
+      "name": "queue-control/index.ts",
+      "type": "file",
+      "summary": "Live queue control API. Actions: pause, resume, recall, skip, restore, mark_absent, call, delay, clear_delay, snapshot. All actions are idempotent via deterministic keys."
+    },
+    "file:supabase/functions/settlement-engine/index.ts": {
+      "name": "settlement-engine/index.ts",
+      "type": "file",
+      "summary": "Settlement engine edge function: computes hospital_settlements + settlement_items from platform fees, drives payout states, exposes snapshot endpoints for finance dashboards."
+    },
+    "file:supabase/functions/create-payment-order/index.ts": {
+      "name": "create-payment-order/index.ts",
+      "type": "file",
+      "summary": "Razorpay integration: creates payment_orders row, calls Razorpay Orders API, returns short_id and amount. Triggers the patient-facing payment flow."
+    },
+    "file:supabase/functions/process-whatsapp-webhook/index.ts": {
+      "name": "process-whatsapp-webhook/index.ts",
+      "type": "file",
+      "summary": "Inbound WhatsApp webhook: verifies Meta HMAC signature, deduplicates via webhook_events, hands off to the conversation engine."
+    },
+    "file:supabase/functions/send-whatsapp-message/index.ts": {
+      "name": "send-whatsapp-message/index.ts",
+      "type": "file",
+      "summary": "Outbound WhatsApp delivery: invoked by the background worker. Calls Meta Cloud API, writes delivery logs, handles retry/exhaustion via DLQ."
+    },
+    "file:supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts": {
+      "name": "whatsapp_conversation_engine.ts",
+      "type": "file",
+      "summary": "Conversation state machine per (hospital_id, phone). Loads/updates whatsapp_conversation_states, routes to intent handler. Delegates actual booking/cancel creation to canonical RPCs - never duplicates business logic."
+    },
+    "file:supabase/functions/_shared/whatsapp/whatsapp_intent_router.ts": {
+      "name": "whatsapp_intent_router.ts",
+      "type": "file",
+      "summary": "Deterministic keyword-based intent classifier (no LLM). Maps message text to intents: book, cancel, reschedule, queue, handoff, unknown. Resolves ambiguity to human handoff."
+    },
+    "file:supabase/functions/run-background-worker/index.ts": {
+      "name": "run-background-worker/index.ts",
+      "type": "file",
+      "summary": "Job claiming worker: uses claim_jobs_v2 with SKIP LOCKED, sets lease, processes job payload, writes result or retries with backoff. Heartbeat + DLQ. No scheduler in current environment (P0-02)."
+    },
+    "file:supabase/functions/run-cron-minute/index.ts": {
+      "name": "run-cron-minute/index.ts",
+      "type": "file",
+      "summary": "Per-minute cron entry point. Enqueues reminders, refresh rollups, run health checks, partition automation. Requires CRON_SECRET."
+    },
+    "file:supabase/functions/alert-center/index.ts": {
+      "name": "alert-center/index.ts",
+      "type": "file",
+      "summary": "Alert center: acknowledge, assign, resolve, escalate, suppress alerts. Phase 1.5 enterprise intelligence addition reading alert_events + alert_activity_log + alert_suppressions."
+    },
+    "file:tests/integration/queue_runtime.test.ts": {
+      "name": "queue_runtime.test.ts",
+      "type": "file",
+      "summary": "Integration test for queue runtime: validates that queue-control actions produce queue_runtime_events and that one-active-consultation-per-doctor invariant holds."
+    },
+    "file:tests/integration/whatsapp_conversational.test.ts": {
+      "name": "whatsapp_conversational.test.ts",
+      "type": "file",
+      "summary": "Integration test for WhatsApp conversational flow: inbound message to intent to conversation state to delegated booking creation, verifying tenant isolation and conversation-state transitions."
+    },
+    "file:tests/integration/refund_sync.test.ts": {
+      "name": "refund_sync.test.ts",
+      "type": "file",
+      "summary": "Integration test for refund synchronization: process-refund must create payment_refunds, write ledger reversal entries, and keep daily_collection_entries consistent."
+    },
+    "file:tests/integration/doctor_operations.test.ts": {
+      "name": "doctor_operations.test.ts",
+      "type": "file",
+      "summary": "Integration test for doctor operations: validates the 15 doctor workflow actions and the consultation_notes table invariants."
+    },
+    "file:tests/integration/privilege_isolation.test.ts": {
+      "name": "privilege_isolation.test.ts",
+      "type": "file",
+      "summary": "Integration test for privilege isolation: verifies that locked SECURITY DEFINER routines return SQLSTATE 42501 (not 401) for anon/authenticated callers. Part of Gate 2 catalog-census-backed boundary proof."
+    },
+    "config:deno.json": {
+      "name": "deno.json",
+      "type": "config",
+      "summary": "Deno workspace config and command authority. Defines 10 tasks: fmt, fmt:check, lint, check, test, test:integration, validate:migrations, gen:types, gen:types:check, db:reset. Strict TypeScript compiler options. No package.json/Makefile exists."
+    },
+    "config:.env.example": {
+      "name": ".env.example",
+      "type": "config",
+      "summary": "21 placeholder secrets for local dev: SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, CRON_SECRET, WORKER_SECRET, META_APP_SECRET, RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET, RAZORPAY_WEBHOOK_SECRET, ENABLE_WORKER_TRIGGER, WORKER_LEASE_SECS, CORS_ALLOWED_ORIGINS. No .env exists in repo."
+    }
+  },
+  "totalNodes": 36,
+  "totalEdges": 38
+}

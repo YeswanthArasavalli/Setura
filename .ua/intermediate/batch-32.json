@@ -1,0 +1,185 @@
+{
+  "nodes": [
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/01d19a676cc92c22fd5637b6729f5f82ce045b7c6e6766b3977350afdf8400c0.json",
+      "type": "data",
+      "name": "01d19a676cc92c22fd5637b6729f5f82ce045b7c6e6766b3977350afdf8400c0.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/01d19a676cc92c22fd5637b6729f5f82ce045b7c6e6766b3977350afdf8400c0.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/04441ac052d1905f757be21e012b6f006bb8f89b3dcc6cb321bacfccf9c0b33d.json",
+      "type": "data",
+      "name": "04441ac052d1905f757be21e012b6f006bb8f89b3dcc6cb321bacfccf9c0b33d.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/04441ac052d1905f757be21e012b6f006bb8f89b3dcc6cb321bacfccf9c0b33d.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/0ac017c67924b5732bc685e0686e086dbbf0663c905901277fe74aac6a5ce322.json",
+      "type": "data",
+      "name": "0ac017c67924b5732bc685e0686e086dbbf0663c905901277fe74aac6a5ce322.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/0ac017c67924b5732bc685e0686e086dbbf0663c905901277fe74aac6a5ce322.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/0b8163aff8cee4f044c5d86186c771fbe2a9870f1b7c08811f257552e8d74889.json",
+      "type": "data",
+      "name": "0b8163aff8cee4f044c5d86186c771fbe2a9870f1b7c08811f257552e8d74889.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/0b8163aff8cee4f044c5d86186c771fbe2a9870f1b7c08811f257552e8d74889.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/132336c4cb20b0a58ca7072c5598b1778f39be044e3aac7780f656886048bdfa.json",
+      "type": "data",
+      "name": "132336c4cb20b0a58ca7072c5598b1778f39be044e3aac7780f656886048bdfa.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/132336c4cb20b0a58ca7072c5598b1778f39be044e3aac7780f656886048bdfa.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/17ce47089a926ed9e0227a061275f11d6e710ee697850ef31bddb682b5e6a427.json",
+      "type": "data",
+      "name": "17ce47089a926ed9e0227a061275f11d6e710ee697850ef31bddb682b5e6a427.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/17ce47089a926ed9e0227a061275f11d6e710ee697850ef31bddb682b5e6a427.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/1f093c5bb12d0c15597a90b9e9d6b5720e606386c593c90f98e275d373bf40fc.json",
+      "type": "data",
+      "name": "1f093c5bb12d0c15597a90b9e9d6b5720e606386c593c90f98e275d373bf40fc.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/1f093c5bb12d0c15597a90b9e9d6b5720e606386c593c90f98e275d373bf40fc.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/23bd7564dfa4399f5477647e822959e7d11ce8f5d4c7e8b118e188b50bd16b05.json",
+      "type": "data",
+      "name": "23bd7564dfa4399f5477647e822959e7d11ce8f5d4c7e8b118e188b50bd16b05.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/23bd7564dfa4399f5477647e822959e7d11ce8f5d4c7e8b118e188b50bd16b05.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/2d28571d795e1f1471fc0bea3455345713ae519f5fc3e0ce61451a75814b6e96.json",
+      "type": "data",
+      "name": "2d28571d795e1f1471fc0bea3455345713ae519f5fc3e0ce61451a75814b6e96.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/2d28571d795e1f1471fc0bea3455345713ae519f5fc3e0ce61451a75814b6e96.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/3292312f962ed2d02d5d5b86502f7a1ff7a77e0480353f8a23dfc023809cd799.json",
+      "type": "data",
+      "name": "3292312f962ed2d02d5d5b86502f7a1ff7a77e0480353f8a23dfc023809cd799.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/3292312f962ed2d02d5d5b86502f7a1ff7a77e0480353f8a23dfc023809cd799.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/33280cafbf590168cf0c2e46cb5e55601ff04c0a4665371b0d9ba91191af4156.json",
+      "type": "data",
+      "name": "33280cafbf590168cf0c2e46cb5e55601ff04c0a4665371b0d9ba91191af4156.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/33280cafbf590168cf0c2e46cb5e55601ff04c0a4665371b0d9ba91191af4156.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/3ecb5fc9499c9ba578306e34950768cd81e4d38d4fbea98f2d9387b460f64c3a.json",
+      "type": "data",
+      "name": "3ecb5fc9499c9ba578306e34950768cd81e4d38d4fbea98f2d9387b460f64c3a.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/3ecb5fc9499c9ba578306e34950768cd81e4d38d4fbea98f2d9387b460f64c3a.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/415170efddaa811e1266bff220e3cec8d9c2fe918e547d34802b4120d8affde7.json",
+      "type": "data",
+      "name": "415170efddaa811e1266bff220e3cec8d9c2fe918e547d34802b4120d8affde7.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/415170efddaa811e1266bff220e3cec8d9c2fe918e547d34802b4120d8affde7.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/418c856b1ced9e9e0cfed2c6b0d22aa3e2f1b5d01b17ed04eb2fef1b505aae13.json",
+      "type": "data",
+      "name": "418c856b1ced9e9e0cfed2c6b0d22aa3e2f1b5d01b17ed04eb2fef1b505aae13.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/418c856b1ced9e9e0cfed2c6b0d22aa3e2f1b5d01b17ed04eb2fef1b505aae13.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/4347090bcb904ddfd2f9ccefe4feb512b94f2485b59fce4419943f419b12242a.json",
+      "type": "data",
+      "name": "4347090bcb904ddfd2f9ccefe4feb512b94f2485b59fce4419943f419b12242a.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/4347090bcb904ddfd2f9ccefe4feb512b94f2485b59fce4419943f419b12242a.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/440b5cedfec0b73672ed856a26f7743e0835cec855750a1650e0a57ce925510c.json",
+      "type": "data",
+      "name": "440b5cedfec0b73672ed856a26f7743e0835cec855750a1650e0a57ce925510c.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/440b5cedfec0b73672ed856a26f7743e0835cec855750a1650e0a57ce925510c.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/5623bbacaeea2ac46b5c3362fe9ecdd8dc61b7df93ef9da97af32f8250eed0e7.json",
+      "type": "data",
+      "name": "5623bbacaeea2ac46b5c3362fe9ecdd8dc61b7df93ef9da97af32f8250eed0e7.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/5623bbacaeea2ac46b5c3362fe9ecdd8dc61b7df93ef9da97af32f8250eed0e7.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/574c889dd8b60abd07f47502378b14afc9a44a546a9ff21e3f12f57a94a22384.json",
+      "type": "data",
+      "name": "574c889dd8b60abd07f47502378b14afc9a44a546a9ff21e3f12f57a94a22384.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/574c889dd8b60abd07f47502378b14afc9a44a546a9ff21e3f12f57a94a22384.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/63feceffda53e4666647c42599f406d4531b61400bb801621125bdb05f05d4d1.json",
+      "type": "data",
+      "name": "63feceffda53e4666647c42599f406d4531b61400bb801621125bdb05f05d4d1.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/63feceffda53e4666647c42599f406d4531b61400bb801621125bdb05f05d4d1.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "data:graphify-out/cache/ast/v0.9.48-s2/6788d28d6cdc4ac60277d1f73703f13951ab3b12723627d006770328b6b7da1b.json",
+      "type": "data",
+      "name": "6788d28d6cdc4ac60277d1f73703f13951ab3b12723627d006770328b6b7da1b.json",
+      "filePath": "graphify-out/cache/ast/v0.9.48-s2/6788d28d6cdc4ac60277d1f73703f13951ab3b12723627d006770328b6b7da1b.json",
+      "summary": "Graphify AST cache entry for a source file, storing the parsed abstract syntax tree for structural analysis.",
+      "tags": ["graphify", "cache", "data"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": []
+}

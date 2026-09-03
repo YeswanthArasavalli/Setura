@@ -1,0 +1,215 @@
+{
+  "nodes": [
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Message Queue System.md",
+      "type": "document",
+      "name": "Message Queue System.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Message Queue System.md",
+      "summary": "Qoder wiki documentation covering SETURA's dual notification and job queue system for WhatsApp messaging, reminder scheduling, and background job processing, with priority handling, exponential backoff retries, dead-letter handling, and monitoring.",
+      "tags": ["qoder-wiki", "message-queue", "background-worker", "whatsapp", "documentation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Queue Architecture.md",
+      "type": "document",
+      "name": "Queue Architecture.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Queue Architecture.md",
+      "summary": "Qoder wiki documentation describing the notification queue architecture, including schema, priority ordering, FOR UPDATE SKIP LOCKED concurrent processing, exponential backoff retries, dead-letter handling, partitioning strategy, and monitoring metrics.",
+      "tags": ["qoder-wiki", "queue-architecture", "database", "concurrency", "documentation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Reminder Scheduling.md",
+      "type": "document",
+      "name": "Reminder Scheduling.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Reminder Scheduling.md",
+      "summary": "Qoder wiki documentation explaining the automated appointment reminder scheduling system, including trigger logic based on hospital business rules, time-window calculations, template-driven content, delivery tracking, and integration with the booking engine.",
+      "tags": ["qoder-wiki", "reminder-scheduling", "whatsapp", "booking-engine", "documentation"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Message Queue System.md",
+      "target": "file:supabase/functions/send-whatsapp-message/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Message Queue System.md",
+      "target": "file:supabase/functions/send-reminders/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Message Queue System.md",
+      "target": "file:supabase/functions/process-whatsapp-webhook/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Message Queue System.md",
+      "target": "file:supabase/functions/run-background-worker/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Message Queue System.md",
+      "target": "file:supabase/functions/run-cron-minute/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Message Queue System.md",
+      "target": "file:supabase/migrations/05_notification_queue.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Message Queue System.md",
+      "target": "file:supabase/migrations/06_background_job_queue.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Message Queue System.md",
+      "target": "file:supabase/migrations/14_dead_letter_queue.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Message Queue System.md",
+      "target": "file:supabase/migrations/17_queue_monitoring_engine.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Queue Architecture.md",
+      "target": "file:supabase/migrations/05_notification_queue.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Queue Architecture.md",
+      "target": "file:supabase/migrations/14_dead_letter_queue.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Queue Architecture.md",
+      "target": "file:supabase/migrations/17_queue_monitoring_engine.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Queue Architecture.md",
+      "target": "file:supabase/migrations/15_partitioning_strategy.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Queue Architecture.md",
+      "target": "file:supabase/functions/_shared/worker.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Queue Architecture.md",
+      "target": "file:supabase/functions/run-background-worker/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Queue Architecture.md",
+      "target": "file:supabase/functions/send-reminders/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Queue Architecture.md",
+      "target": "file:supabase/functions/send-whatsapp-message/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Reminder Scheduling.md",
+      "target": "file:supabase/functions/send-reminders/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Reminder Scheduling.md",
+      "target": "file:supabase/functions/run-cron-minute/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Reminder Scheduling.md",
+      "target": "file:supabase/functions/run-background-worker/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Reminder Scheduling.md",
+      "target": "file:supabase/functions/send-whatsapp-message/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Reminder Scheduling.md",
+      "target": "file:supabase/functions/process-whatsapp-webhook/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Reminder Scheduling.md",
+      "target": "file:supabase/migrations/05_notification_queue.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Reminder Scheduling.md",
+      "target": "file:supabase/migrations/06_background_job_queue.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Reminder Scheduling.md",
+      "target": "file:supabase/functions/create-booking/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Communication System/Message Queue System/Reminder Scheduling.md",
+      "target": "file:supabase/functions/_shared/worker.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

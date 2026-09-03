@@ -1,0 +1,381 @@
+{
+  "nodes": [
+    {
+      "id": "file:tests/integration/doctor_operations.test.ts",
+      "type": "file",
+      "name": "doctor_operations.test.ts",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "summary": "Phase 1.4 integration tests for doctor and clinical operations against the real local Supabase stack. Covers doctor session lifecycle, consultation lifecycle, emergency insertion, pause/resume, SLA refresh enqueue, clinical notes grants, dashboard accuracy, and the doctor-operations HTTP edge function with audit trail and tenant isolation.",
+      "tags": ["test", "integration", "doctor-operations", "queue-session", "real-stack", "audit", "tenant-isolation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:tests/integration/local_stack.test.ts",
+      "type": "file",
+      "name": "local_stack.test.ts",
+      "filePath": "tests/integration/local_stack.test.ts",
+      "summary": "Certification-grade smoke test for the local Supabase stack. Verifies migrations are applied, the deterministic seed produced a complete working hospital (profiles, roles, doctor schedules, working hours, settings, fee policy, queue config, feature flags), and seed row counts prove idempotency.",
+      "tags": ["test", "integration", "smoke-test", "seed-validation", "real-stack"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/integration/queue_operations.test.ts",
+      "type": "file",
+      "name": "queue_operations.test.ts",
+      "filePath": "tests/integration/queue_operations.test.ts",
+      "summary": "Phase 1.3 integration tests for queue control operations: doctor delay, queue pause/resume, recall, skip/restore, mark absent, and queue alerts. Exercises the queue_runtime shared module against the real local stack and verifies queue_runtime_events and alert_events side effects.",
+      "tags": ["test", "integration", "queue-operations", "queue-runtime", "alerts", "real-stack"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:tests/integration/queue_runtime.test.ts",
+      "type": "file",
+      "name": "queue_runtime.test.ts",
+      "filePath": "tests/integration/queue_runtime.test.ts",
+      "summary": "Phase 1.2 integration tests for queue runtime consultation flows: call/complete/return-to-waiting consultation, mark queue completed, multi-day session boundaries, and queue_runtime_events audit emission against the real local stack.",
+      "tags": ["test", "integration", "queue-runtime", "consultation", "real-stack"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:tests/integration/refund_sync.test.ts",
+      "type": "file",
+      "name": "refund_sync.test.ts",
+      "filePath": "tests/integration/refund_sync.test.ts",
+      "summary": "Phase 0.5 integration tests for refund synchronization between Razorpay and the local ledger. Seeds captured payment orders and verifies refund write-through to payment_refunds, ledger entries, and booking status transitions.",
+      "tags": ["test", "integration", "refund", "razorpay", "payment", "real-stack"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/integration/usage_retention.test.ts",
+      "type": "file",
+      "name": "usage_retention.test.ts",
+      "filePath": "tests/integration/usage_retention.test.ts",
+      "summary": "Integration tests for hospital subscription usage tracking and retention/cleanup. Verifies record_usage_metric RPC increments hospital_subscriptions counters correctly and validates retention window behavior on operational tables.",
+      "tags": ["test", "integration", "subscription", "usage-tracking", "retention", "real-stack"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/integration/whatsapp_conversational.test.ts",
+      "type": "file",
+      "name": "whatsapp_conversational.test.ts",
+      "filePath": "tests/integration/whatsapp_conversational.test.ts",
+      "summary": "Phase 0.9 / Phase 1.1 integration tests for the WhatsApp conversational engine. Exercises inbound message processing (without Meta), conversation state machine, booking flow, cancellation flow, reschedule flow, handoff to human, and outbound reply job queue creation.",
+      "tags": ["test", "integration", "whatsapp", "conversational-engine", "booking-flow", "real-stack"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:tests/integration/whatsapp_lifecycle.test.ts",
+      "type": "file",
+      "name": "whatsapp_lifecycle.test.ts",
+      "filePath": "tests/integration/whatsapp_lifecycle.test.ts",
+      "summary": "Integration tests for WhatsApp message lifecycle: outbound message creation, delivery, read receipt reconciliation, retry/exhaustion handling, and lifecycle state transitions on the whatsapp_messages table.",
+      "tags": ["test", "integration", "whatsapp", "message-lifecycle", "retry", "real-stack"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/utils/seed_constants.ts",
+      "type": "file",
+      "name": "seed_constants.ts",
+      "filePath": "tests/utils/seed_constants.ts",
+      "summary": "Fixed identifiers and expected counts from the deterministic supabase/seed.sql. Acts as the contract between seed data and every test asserting seeded state, including hospital/users/profile UUIDs, emails, and exact row counts for idempotency proof.",
+      "tags": ["test-utility", "seed", "constants", "fixture"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:bootstrap",
+      "type": "function",
+      "name": "bootstrap",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [69, 89],
+      "summary": "One-time test setup: reads local Supabase status, sets env vars, and dynamically imports the real getServiceClient and queue_runtime shared modules so tests exercise production code paths.",
+      "tags": ["test-setup", "bootstrap", "dynamic-import"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:fixtureDoctor",
+      "type": "function",
+      "name": "fixtureDoctor",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [135, 172],
+      "summary": "Creates a synthetic doctor user via GoTrue admin API and a matching profile row. Required because queue_sessions has UNIQUE(hospital_id, doctor_id, session_date) — every same-day session needs its own doctor.",
+      "tags": ["test-fixture", "doctor", "gotrue", "isolation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:makeSession",
+      "type": "function",
+      "name": "makeSession",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [238, 291],
+      "summary": "Creates an active queue session and N waiting bookings for a doctor in the seed hospital. Tracks ids in fixtureSessions/bookingIds arrays for cleanup tracking.",
+      "tags": ["test-fixture", "queue-session", "booking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:docOps",
+      "type": "function",
+      "name": "docOps",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [368, 396],
+      "summary": "HTTP client wrapper for the doctor-operations edge function. Sends authenticated requests with Bearer token and X-Hospital-ID header, returning status and parsed JSON.",
+      "tags": ["http-client", "edge-function", "doctor-operations"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/local_stack.test.ts:createClient",
+      "type": "function",
+      "name": "createClient",
+      "filePath": "tests/integration/local_stack.test.ts",
+      "lineRange": [56, 73],
+      "summary": "One-time test bootstrap: reads local stack status, sets Supabase env vars, and returns the service-role client for direct database inspection.",
+      "tags": ["test-setup", "bootstrap", "service-client"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_operations.test.ts:bootstrap",
+      "type": "function",
+      "name": "bootstrap",
+      "filePath": "tests/integration/queue_operations.test.ts",
+      "lineRange": [64, 84],
+      "summary": "One-time test bootstrap for queue_operations: sets env vars and dynamically imports the real getServiceClient and queue_runtime modules.",
+      "tags": ["test-setup", "bootstrap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_operations.test.ts:setThreshold",
+      "type": "function",
+      "name": "setThreshold",
+      "filePath": "tests/integration/queue_operations.test.ts",
+      "lineRange": [310, 329],
+      "summary": "Upserts an alert_threshold row for a hospital so queue alerts fire under controlled conditions. Tracked in fixtureThresholds for cleanup.",
+      "tags": ["test-fixture", "alert-threshold", "queue-alerts"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_runtime.test.ts:bootstrap",
+      "type": "function",
+      "name": "bootstrap",
+      "filePath": "tests/integration/queue_runtime.test.ts",
+      "lineRange": [70, 92],
+      "summary": "One-time bootstrap for queue_runtime tests: reads stack status, sets env, and imports the real db client, queue_runtime module, and root logger.",
+      "tags": ["test-setup", "bootstrap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/refund_sync.test.ts:seedCapturedBooking",
+      "type": "function",
+      "name": "seedCapturedBooking",
+      "filePath": "tests/integration/refund_sync.test.ts",
+      "lineRange": [88, 129],
+      "summary": "Seeds a captured Razorpay payment scenario by inserting a booking with fee snapshots and a payment_orders row in captured state, so refund flow tests have a real precondition.",
+      "tags": ["test-fixture", "payment", "razorpay", "seed"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/integration/usage_retention.test.ts:createClient",
+      "type": "function",
+      "name": "createClient",
+      "filePath": "tests/integration/usage_retention.test.ts",
+      "lineRange": [53, 69],
+      "summary": "One-time bootstrap: reads local stack status, sets Supabase env vars, and returns the service-role client.",
+      "tags": ["test-setup", "bootstrap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_conversational.test.ts:client",
+      "type": "function",
+      "name": "client",
+      "filePath": "tests/integration/whatsapp_conversational.test.ts",
+      "lineRange": [77, 102],
+      "summary": "One-time test setup that bootstraps env, lazily imports the conversation engine, and returns a configured client closure used to send messages, query state, and inspect the job queue.",
+      "tags": ["test-setup", "bootstrap", "conversational-engine"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_conversational.test.ts:send",
+      "type": "function",
+      "name": "send",
+      "filePath": "tests/integration/whatsapp_conversational.test.ts",
+      "lineRange": [177, 220],
+      "summary": "Sends an inbound WhatsApp message into the conversation engine (bypassing Meta) and returns the engine reply, polling the job_queue for outbound reply jobs.",
+      "tags": ["test-helper", "whatsapp", "inbound-message"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_lifecycle.test.ts:createClient",
+      "type": "function",
+      "name": "createClient",
+      "filePath": "tests/integration/whatsapp_lifecycle.test.ts",
+      "lineRange": [57, 73],
+      "summary": "One-time bootstrap: reads local stack status, sets Supabase env vars, and returns the service-role client.",
+      "tags": ["test-setup", "bootstrap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_lifecycle.test.ts:queueMsg",
+      "type": "function",
+      "name": "queueMsg",
+      "filePath": "tests/integration/whatsapp_lifecycle.test.ts",
+      "lineRange": [102, 122],
+      "summary": "Queues an outbound WhatsApp message via RPC and tracks the returned id in createdMessageIds for cleanup.",
+      "tags": ["test-helper", "whatsapp", "outbound-message"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "file:tests/utils/seed_constants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:tests/integration/local_stack.test.ts",
+      "target": "file:tests/utils/seed_constants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:tests/integration/queue_operations.test.ts",
+      "target": "file:tests/utils/seed_constants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:tests/integration/queue_runtime.test.ts",
+      "target": "file:tests/utils/seed_constants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:tests/integration/refund_sync.test.ts",
+      "target": "file:tests/utils/seed_constants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:tests/integration/usage_retention.test.ts",
+      "target": "file:tests/utils/seed_constants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:tests/integration/whatsapp_conversational.test.ts",
+      "target": "file:tests/utils/seed_constants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:tests/integration/whatsapp_lifecycle.test.ts",
+      "target": "file:tests/utils/seed_constants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:bootstrap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:fixtureDoctor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:makeSession",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:docOps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/local_stack.test.ts",
+      "target": "function:tests/integration/local_stack.test.ts:createClient",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_operations.test.ts",
+      "target": "function:tests/integration/queue_operations.test.ts:bootstrap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_operations.test.ts",
+      "target": "function:tests/integration/queue_operations.test.ts:setThreshold",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_runtime.test.ts",
+      "target": "function:tests/integration/queue_runtime.test.ts:bootstrap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/refund_sync.test.ts",
+      "target": "function:tests/integration/refund_sync.test.ts:seedCapturedBooking",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/usage_retention.test.ts",
+      "target": "function:tests/integration/usage_retention.test.ts:createClient",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_conversational.test.ts",
+      "target": "function:tests/integration/whatsapp_conversational.test.ts:client",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_conversational.test.ts",
+      "target": "function:tests/integration/whatsapp_conversational.test.ts:send",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_lifecycle.test.ts",
+      "target": "function:tests/integration/whatsapp_lifecycle.test.ts:createClient",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_lifecycle.test.ts",
+      "target": "function:tests/integration/whatsapp_lifecycle.test.ts:queueMsg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    }
+  ]
+}

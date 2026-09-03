@@ -1,0 +1,3635 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 20,
+  "filesSkipped": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 20,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 20
+    }
+  },
+  "results": [
+    {
+      "path": ".env.example",
+      "language": "config",
+      "fileCategory": "config",
+      "totalLines": 21,
+      "nonEmptyLines": 21,
+      "definitions": [
+        {
+          "name": "SUPABASE_URL",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 1,
+          "endLine": 1
+        },
+        {
+          "name": "SUPABASE_ANON_KEY",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 2,
+          "endLine": 2
+        },
+        {
+          "name": "SUPABASE_SERVICE_ROLE_KEY",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 3,
+          "endLine": 3
+        },
+        {
+          "name": "APP_ENV",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 4,
+          "endLine": 4
+        },
+        {
+          "name": "LOG_LEVEL",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 5,
+          "endLine": 5
+        },
+        {
+          "name": "DEPLOYMENT_VERSION",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 6,
+          "endLine": 6
+        },
+        {
+          "name": "META_ACCESS_TOKEN",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 7,
+          "endLine": 7
+        },
+        {
+          "name": "META_APP_SECRET",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 8,
+          "endLine": 8
+        },
+        {
+          "name": "META_WEBHOOK_VERIFY_TOKEN",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 9,
+          "endLine": 9
+        },
+        {
+          "name": "META_PHONE_NUMBER_ID",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 10,
+          "endLine": 10
+        },
+        {
+          "name": "META_API_VERSION",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 11,
+          "endLine": 11
+        },
+        {
+          "name": "RAZORPAY_KEY_ID",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 12,
+          "endLine": 12
+        },
+        {
+          "name": "RAZORPAY_KEY_SECRET",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 13,
+          "endLine": 13
+        },
+        {
+          "name": "CRON_SECRET",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 14,
+          "endLine": 14
+        },
+        {
+          "name": "WORKER_SECRET",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 15,
+          "endLine": 15
+        },
+        {
+          "name": "ENABLE_WORKER_TRIGGER",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 16,
+          "endLine": 16
+        },
+        {
+          "name": "ALLOWED_ORIGINS",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 17,
+          "endLine": 17
+        },
+        {
+          "name": "MAX_BOOKING_ADVANCE_DAYS",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 18,
+          "endLine": 18
+        },
+        {
+          "name": "RATE_LIMIT_WINDOW_MINUTES",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 19,
+          "endLine": 19
+        },
+        {
+          "name": "RATE_LIMIT_MAX_ATTEMPTS",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 20,
+          "endLine": 20
+        },
+        {
+          "name": "WORKER_LEASE_SECS",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 21,
+          "endLine": 21
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 21
+      }
+    },
+    {
+      "path": "AGENTS.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 658,
+      "nonEmptyLines": 523,
+      "sections": [
+        {
+          "heading": "SETURA — Codex OPERATING CONTRACT",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. IDENTITY AND NON-NEGOTIABLES",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "2. STACK AND COMMAND AUTHORITY",
+          "level": 2,
+          "line": 32
+        },
+        {
+          "heading": "3. CONTEXT AND TOKEN DISCIPLINE",
+          "level": 2,
+          "line": 64
+        },
+        {
+          "heading": "4. GRAPHIFY — NAVIGATION LAYER",
+          "level": 2,
+          "line": 117
+        },
+        {
+          "heading": "5. SOURCE OF TRUTH AND EVIDENCE",
+          "level": 2,
+          "line": 162
+        },
+        {
+          "heading": "6. ESTABLISHED ARCHITECTURE — DO NOT DUPLICATE",
+          "level": 2,
+          "line": 207
+        },
+        {
+          "heading": "7. SECURITY, TENANCY AND AUTHORIZATION",
+          "level": 2,
+          "line": 236
+        },
+        {
+          "heading": "8. CORRECTNESS INVARIANTS",
+          "level": 2,
+          "line": 282
+        },
+        {
+          "heading": "9. BACKGROUND WORKER AND SCHEDULER",
+          "level": 2,
+          "line": 321
+        },
+        {
+          "heading": "10. WHATSAPP",
+          "level": 2,
+          "line": 344
+        },
+        {
+          "heading": "11. MIGRATIONS",
+          "level": 2,
+          "line": 358
+        },
+        {
+          "heading": "12. TESTING STANDARD",
+          "level": 2,
+          "line": 375
+        },
+        {
+          "heading": "13. CURRENT STATE — POINTERS, NOT EVIDENCE",
+          "level": 2,
+          "line": 396
+        },
+        {
+          "heading": "14. FINDING-ID AND REPORT DISCIPLINE",
+          "level": 2,
+          "line": 500
+        },
+        {
+          "heading": "15. CHANGE, PHASE, AUDIT AND ENVIRONMENT DISCIPLINE",
+          "level": 2,
+          "line": 531
+        },
+        {
+          "heading": "16. SESSION DISCIPLINE AND HANDOFF",
+          "level": 2,
+          "line": 600
+        },
+        {
+          "heading": "17. OUTPUT FORMAT",
+          "level": 2,
+          "line": 623
+        },
+        {
+          "heading": "18. GOLDEN RULE",
+          "level": 2,
+          "line": 641
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 19
+      }
+    },
+    {
+      "path": "ARCHITECTURAL_DRIFT_REGISTER.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 173,
+      "nonEmptyLines": 138,
+      "sections": [
+        {
+          "heading": "SETURA — ARCHITECTURAL DRIFT REGISTER",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "0. WHAT THIS REGISTER MEANS BY \"DRIFT\"",
+          "level": 2,
+          "line": 12
+        },
+        {
+          "heading": "1. DRIFT REGISTER",
+          "level": 2,
+          "line": 50
+        },
+        {
+          "heading": "2. DRIFT DISTRIBUTION",
+          "level": 2,
+          "line": 87
+        },
+        {
+          "heading": "2.1 By severity",
+          "level": 3,
+          "line": 89
+        },
+        {
+          "heading": "2.2 By drift class — the recurring shapes",
+          "level": 3,
+          "line": 100
+        },
+        {
+          "heading": "2.3 Drift → P0 traceability",
+          "level": 3,
+          "line": 118
+        },
+        {
+          "heading": "3. WHAT THIS REGISTER DOES *NOT* CLAIM",
+          "level": 2,
+          "line": 136
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 8
+      }
+    },
+    {
+      "path": "ARCHITECTURE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 269,
+      "nonEmptyLines": 215,
+      "sections": [
+        {
+          "heading": "SETURA — Architecture",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. System overview",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "2. Technology stack",
+          "level": 2,
+          "line": 47
+        },
+        {
+          "heading": "3. Multi-tenant security model",
+          "level": 2,
+          "line": 62
+        },
+        {
+          "heading": "4. Core engines (frozen)",
+          "level": 2,
+          "line": 79
+        },
+        {
+          "heading": "4.1 Booking engine",
+          "level": 3,
+          "line": 81
+        },
+        {
+          "heading": "4.2 Queue runtime",
+          "level": 3,
+          "line": 97
+        },
+        {
+          "heading": "4.3 Payment & settlement engines",
+          "level": 3,
+          "line": 107
+        },
+        {
+          "heading": "4.4 WhatsApp engine",
+          "level": 3,
+          "line": 119
+        },
+        {
+          "heading": "4.5 SLA engine",
+          "level": 3,
+          "line": 128
+        },
+        {
+          "heading": "4.6 Monitoring & alerts",
+          "level": 3,
+          "line": 134
+        },
+        {
+          "heading": "4.7 Audit engine",
+          "level": 3,
+          "line": 142
+        },
+        {
+          "heading": "4.8 Background worker",
+          "level": 3,
+          "line": 149
+        },
+        {
+          "heading": "4.9 Analytics pipeline",
+          "level": 3,
+          "line": 157
+        },
+        {
+          "heading": "4.10 Operational hardening",
+          "level": 3,
+          "line": 165
+        },
+        {
+          "heading": "5. Enterprise intelligence layer (Phase 1.5, additive)",
+          "level": 2,
+          "line": 174
+        },
+        {
+          "heading": "6. Edge function catalog",
+          "level": 2,
+          "line": 208
+        },
+        {
+          "heading": "7. Cross-cutting conventions",
+          "level": 2,
+          "line": 239
+        },
+        {
+          "heading": "8. Data integrity guarantees",
+          "level": 2,
+          "line": 259
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 19
+      }
+    },
+    {
+      "path": "AUDIT_REPORT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 536,
+      "nonEmptyLines": 442,
+      "sections": [
+        {
+          "heading": "SETURA Hospital OS — Complete Architecture & Project Audit",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Table of Contents",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "Phase 3 — Project Identification",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "Phase 4 — Module Completion Audit",
+          "level": 2,
+          "line": 51
+        },
+        {
+          "heading": "Shared Modules (16/16 — 100%)",
+          "level": 3,
+          "line": 53
+        },
+        {
+          "heading": "Edge Functions (21/21 — 100%)",
+          "level": 3,
+          "line": 74
+        },
+        {
+          "heading": "SQL Migrations (37/37 — 100%)",
+          "level": 3,
+          "line": 98
+        },
+        {
+          "heading": "Configuration Files",
+          "level": 3,
+          "line": 140
+        },
+        {
+          "heading": "Phase 5 — Remaining Work",
+          "level": 2,
+          "line": 149
+        },
+        {
+          "heading": "🔴 Critical — Not Yet Implemented",
+          "level": 3,
+          "line": 151
+        },
+        {
+          "heading": "🟡 Important — Partially Implemented",
+          "level": 3,
+          "line": 159
+        },
+        {
+          "heading": "🟢 Minor — Enhancement Opportunities",
+          "level": 3,
+          "line": 169
+        },
+        {
+          "heading": "Phase 6 — Technical Debt",
+          "level": 2,
+          "line": 180
+        },
+        {
+          "heading": "High Priority",
+          "level": 3,
+          "line": 182
+        },
+        {
+          "heading": "Medium Priority",
+          "level": 3,
+          "line": 191
+        },
+        {
+          "heading": "Low Priority",
+          "level": 3,
+          "line": 201
+        },
+        {
+          "heading": "Phase 7 — Architecture Report",
+          "level": 2,
+          "line": 211
+        },
+        {
+          "heading": "System Architecture (Mermaid)",
+          "level": 3,
+          "line": 213
+        },
+        {
+          "heading": "Request Lifecycle (Mermaid)",
+          "level": 3,
+          "line": 259
+        },
+        {
+          "heading": "Multi-Tenancy Model",
+          "level": 3,
+          "line": 293
+        },
+        {
+          "heading": "Role Hierarchy (Mermaid)",
+          "level": 3,
+          "line": 330
+        },
+        {
+          "heading": "Payment Flow",
+          "level": 3,
+          "line": 349
+        },
+        {
+          "heading": "Phase 8 — Feature Inventory",
+          "level": 2,
+          "line": 365
+        },
+        {
+          "heading": "Core Features",
+          "level": 3,
+          "line": 367
+        },
+        {
+          "heading": "Missing Features (Planned)",
+          "level": 3,
+          "line": 395
+        },
+        {
+          "heading": "Phase 9 — Missing Pieces & TODOs",
+          "level": 2,
+          "line": 405
+        },
+        {
+          "heading": "In-Code TODOs",
+          "level": 3,
+          "line": 407
+        },
+        {
+          "heading": "Structural TODOs",
+          "level": 3,
+          "line": 413
+        },
+        {
+          "heading": "Business Logic Gaps",
+          "level": 3,
+          "line": 426
+        },
+        {
+          "heading": "Phase 10 — Risk Assessment",
+          "level": 2,
+          "line": 436
+        },
+        {
+          "heading": "🔴 Critical Risks",
+          "level": 3,
+          "line": 438
+        },
+        {
+          "heading": "🟡 High Risks",
+          "level": 3,
+          "line": 446
+        },
+        {
+          "heading": "🟢 Low Risks",
+          "level": 3,
+          "line": 456
+        },
+        {
+          "heading": "Phase 11 — Executive Summary & Roadmap",
+          "level": 2,
+          "line": 466
+        },
+        {
+          "heading": "Executive Summary",
+          "level": 3,
+          "line": 468
+        },
+        {
+          "heading": "Development Roadmap",
+          "level": 3,
+          "line": 490
+        },
+        {
+          "heading": "Priority Order",
+          "level": 3,
+          "line": 522
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 37
+      }
+    },
+    {
+      "path": "CERTIFICATION_RECONCILIATION.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 520,
+      "nonEmptyLines": 405,
+      "sections": [
+        {
+          "heading": "SETURA — CERTIFICATION RECONCILIATION",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "0. METHOD AND RULES OF ENGAGEMENT",
+          "level": 2,
+          "line": 14
+        },
+        {
+          "heading": "0.1 The instruction this section exists to honour",
+          "level": 3,
+          "line": 16
+        },
+        {
+          "heading": "0.2 Outcome vocabulary",
+          "level": 3,
+          "line": 33
+        },
+        {
+          "heading": "0.3 The declared evidence limitation",
+          "level": 3,
+          "line": 43
+        },
+        {
+          "heading": "0.4 The gates this audit *did* execute",
+          "level": 3,
+          "line": 56
+        },
+        {
+          "heading": "1. CERTIFICATION INVENTORY",
+          "level": 2,
+          "line": 80
+        },
+        {
+          "heading": "2. PHASE 0 — `AUDIT_REPORT.md` AND `CROSS_CHECK_REPORT.md`",
+          "level": 2,
+          "line": 110
+        },
+        {
+          "heading": "2.1 Claim-by-claim",
+          "level": 3,
+          "line": 115
+        },
+        {
+          "heading": "2.2 Verdict on Phase 0's certification",
+          "level": 3,
+          "line": 132
+        },
+        {
+          "heading": "3. PHASE 0.5 — `PHASE_0.5_COMPLETION_REPORT.md`",
+          "level": 2,
+          "line": 150
+        },
+        {
+          "heading": "3.1 Claim-by-claim",
+          "level": 3,
+          "line": 155
+        },
+        {
+          "heading": "3.2 Verdict on Phase 0.5's certification",
+          "level": 3,
+          "line": 169
+        },
+        {
+          "heading": "4. PHASE 1.1 — `PHASE_1.1_COMPLETION_REPORT.md`",
+          "level": 2,
+          "line": 184
+        },
+        {
+          "heading": "4.1 Claim-by-claim",
+          "level": 3,
+          "line": 189
+        },
+        {
+          "heading": "4.2 Verdict on Phase 1.1's certification",
+          "level": 3,
+          "line": 202
+        },
+        {
+          "heading": "5. PHASE 1.2 — `PHASE_1.2_COMPLETION_REPORT.md`",
+          "level": 2,
+          "line": 222
+        },
+        {
+          "heading": "5.1 Claim-by-claim",
+          "level": 3,
+          "line": 228
+        },
+        {
+          "heading": "5.2 Verdict on Phase 1.2's certification",
+          "level": 3,
+          "line": 240
+        },
+        {
+          "heading": "6. PHASE 1.3 — `PHASE_1.3_COMPLETION_REPORT.md`",
+          "level": 2,
+          "line": 255
+        },
+        {
+          "heading": "6.1 Claim-by-claim",
+          "level": 3,
+          "line": 261
+        },
+        {
+          "heading": "6.2 Verdict on Phase 1.3's certification",
+          "level": 3,
+          "line": 275
+        },
+        {
+          "heading": "7. PHASE 1.4 — `PHASE_1.4_COMPLETION_REPORT.md`",
+          "level": 2,
+          "line": 289
+        },
+        {
+          "heading": "7.1 Claim-by-claim",
+          "level": 3,
+          "line": 295
+        },
+        {
+          "heading": "7.2 Verdict on Phase 1.4's certification",
+          "level": 3,
+          "line": 309
+        },
+        {
+          "heading": "8. PHASE 1.5 — TWO REPORTS",
+          "level": 2,
+          "line": 330
+        },
+        {
+          "heading": "8.1 `PHASE_1.5_RECOVERY_REPORT.md` — self-declared **NOT CERTIFIED**",
+          "level": 3,
+          "line": 335
+        },
+        {
+          "heading": "8.2 `PHASE_1.5_SECURITY_AND_COMPLETION_REPORT.md` — self-declared **CERTIFIED** with three disclosures",
+          "level": 3,
+          "line": 350
+        },
+        {
+          "heading": "8.3 Verdict on Phase 1.5's certification",
+          "level": 3,
+          "line": 374
+        },
+        {
+          "heading": "9. `SETURA_CLAUDE_REPORT.md` — RECONCILING THE PRIOR META-AUDIT",
+          "level": 2,
+          "line": 403
+        },
+        {
+          "heading": "10. CONSOLIDATED CERTIFICATION DISPOSITION",
+          "level": 2,
+          "line": 431
+        },
+        {
+          "heading": "10.1 Phase-level dispositions",
+          "level": 3,
+          "line": 433
+        },
+        {
+          "heading": "10.2 Certification changes — the answer to PART 21",
+          "level": 3,
+          "line": 448
+        },
+        {
+          "heading": "10.3 Where the certification process worked",
+          "level": 3,
+          "line": 468
+        },
+        {
+          "heading": "11. WHAT THIS RECONCILIATION DOES *NOT* CLAIM",
+          "level": 2,
+          "line": 486
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 35
+      }
+    },
+    {
+      "path": "CLAUDE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 658,
+      "nonEmptyLines": 523,
+      "sections": [
+        {
+          "heading": "SETURA — CLAUDE CODE OPERATING CONTRACT",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. IDENTITY AND NON-NEGOTIABLES",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "2. STACK AND COMMAND AUTHORITY",
+          "level": 2,
+          "line": 32
+        },
+        {
+          "heading": "3. CONTEXT AND TOKEN DISCIPLINE",
+          "level": 2,
+          "line": 64
+        },
+        {
+          "heading": "4. GRAPHIFY — NAVIGATION LAYER",
+          "level": 2,
+          "line": 117
+        },
+        {
+          "heading": "5. SOURCE OF TRUTH AND EVIDENCE",
+          "level": 2,
+          "line": 162
+        },
+        {
+          "heading": "6. ESTABLISHED ARCHITECTURE — DO NOT DUPLICATE",
+          "level": 2,
+          "line": 207
+        },
+        {
+          "heading": "7. SECURITY, TENANCY AND AUTHORIZATION",
+          "level": 2,
+          "line": 236
+        },
+        {
+          "heading": "8. CORRECTNESS INVARIANTS",
+          "level": 2,
+          "line": 282
+        },
+        {
+          "heading": "9. BACKGROUND WORKER AND SCHEDULER",
+          "level": 2,
+          "line": 321
+        },
+        {
+          "heading": "10. WHATSAPP",
+          "level": 2,
+          "line": 344
+        },
+        {
+          "heading": "11. MIGRATIONS",
+          "level": 2,
+          "line": 358
+        },
+        {
+          "heading": "12. TESTING STANDARD",
+          "level": 2,
+          "line": 375
+        },
+        {
+          "heading": "13. CURRENT STATE — POINTERS, NOT EVIDENCE",
+          "level": 2,
+          "line": 396
+        },
+        {
+          "heading": "14. FINDING-ID AND REPORT DISCIPLINE",
+          "level": 2,
+          "line": 500
+        },
+        {
+          "heading": "15. CHANGE, PHASE, AUDIT AND ENVIRONMENT DISCIPLINE",
+          "level": 2,
+          "line": 531
+        },
+        {
+          "heading": "16. SESSION DISCIPLINE AND HANDOFF",
+          "level": 2,
+          "line": 600
+        },
+        {
+          "heading": "17. OUTPUT FORMAT",
+          "level": 2,
+          "line": 623
+        },
+        {
+          "heading": "18. GOLDEN RULE",
+          "level": 2,
+          "line": 641
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 19
+      }
+    },
+    {
+      "path": "CROSS_CHECK_REPORT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 271,
+      "nonEmptyLines": 213,
+      "sections": [
+        {
+          "heading": "SETURA — Product Description vs. Actual Codebase Cross-Verification Report",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. Executive Verdict",
+          "level": 2,
+          "line": 13
+        },
+        {
+          "heading": "2. Claim-by-Claim Verification",
+          "level": 2,
+          "line": 34
+        },
+        {
+          "heading": "2.1 Core Product Flow (\"How SETURA Works\")",
+          "level": 3,
+          "line": 36
+        },
+        {
+          "heading": "2.2 Feature Claims",
+          "level": 3,
+          "line": 48
+        },
+        {
+          "heading": "📅 Smart Appointment Booking — ✅ CONFIRMED",
+          "level": 4,
+          "line": 50
+        },
+        {
+          "heading": "🏥 Live Queue Management — ✅ CONFIRMED",
+          "level": 4,
+          "line": 64
+        },
+        {
+          "heading": "💬 WhatsApp Automation — ✅ MOSTLY CONFIRMED (one material gap)",
+          "level": 4,
+          "line": 73
+        },
+        {
+          "heading": "💳 Payment Management — ✅ CONFIRMED",
+          "level": 4,
+          "line": 116
+        },
+        {
+          "heading": "👨‍⚕️ Doctor & Reception Workflow — ✅ CONFIRMED",
+          "level": 4,
+          "line": 125
+        },
+        {
+          "heading": "📊 Analytics & Monitoring — ✅ CONFIRMED (backend)",
+          "level": 4,
+          "line": 139
+        },
+        {
+          "heading": "2.3 Multi-Tenant SaaS — ✅ CONFIRMED",
+          "level": 3,
+          "line": 149
+        },
+        {
+          "heading": "2.4 Security & Reliability — ✅ CONFIRMED (spot-verified)",
+          "level": 3,
+          "line": 165
+        },
+        {
+          "heading": "2.5 Business Model — ✅ CONFIRMED (remarkably well-enforced)",
+          "level": 3,
+          "line": 177
+        },
+        {
+          "heading": "3. Where the Description Overstates Reality",
+          "level": 2,
+          "line": 196
+        },
+        {
+          "heading": "3.1 \"~95% Backend Complete\" → ~85%",
+          "level": 3,
+          "line": 198
+        },
+        {
+          "heading": "3.2 \"Hospital Dashboards\" → no UI exists",
+          "level": 3,
+          "line": 209
+        },
+        {
+          "heading": "3.3 \"WhatsApp-first\" → \"WhatsApp-notified\"",
+          "level": 3,
+          "line": 215
+        },
+        {
+          "heading": "3.4 \"Production-grade\"",
+          "level": 3,
+          "line": 222
+        },
+        {
+          "heading": "4. Nothing Contradicted",
+          "level": 2,
+          "line": 230
+        },
+        {
+          "heading": "5. Undersold Capabilities (code > marketing)",
+          "level": 2,
+          "line": 240
+        },
+        {
+          "heading": "6. Recommended Corrections to the Product Sheet",
+          "level": 2,
+          "line": 254
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 22
+      }
+    },
+    {
+      "path": "CROSS_PHASE_AUDIT_REPORT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 2178,
+      "nonEmptyLines": 1700,
+      "sections": [
+        {
+          "heading": "SETURA — CROSS-PHASE ARCHITECTURE, REQUIREMENTS & GAP RECONCILIATION AUDIT",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "§0 — Method, and the two questions this audit answers",
+          "level": 2,
+          "line": 14
+        },
+        {
+          "heading": "0.1 The questions",
+          "level": 3,
+          "line": 16
+        },
+        {
+          "heading": "0.2 How evidence was treated",
+          "level": 3,
+          "line": 39
+        },
+        {
+          "heading": "0.3 What could not be verified, and why",
+          "level": 3,
+          "line": 64
+        },
+        {
+          "heading": "0.4 The mechanism behind most findings",
+          "level": 3,
+          "line": 94
+        },
+        {
+          "heading": "PART 1 — ARCHITECTURE MAP AND SOURCE-OF-TRUTH MAP",
+          "level": 2,
+          "line": 118
+        },
+        {
+          "heading": "1.1 What SETURA is, as built",
+          "level": 3,
+          "line": 120
+        },
+        {
+          "heading": "1.2 The architectural contract, and whether it held",
+          "level": 3,
+          "line": 137
+        },
+        {
+          "heading": "1.3 The privilege model",
+          "level": 3,
+          "line": 153
+        },
+        {
+          "heading": "1.4 Source-of-truth map",
+          "level": 3,
+          "line": 170
+        },
+        {
+          "heading": "1.5 Competing sources of truth",
+          "level": 3,
+          "line": 185
+        },
+        {
+          "heading": "1.6 Governing baseline artefacts",
+          "level": 3,
+          "line": 229
+        },
+        {
+          "heading": "PART 2 — PHASE-BY-PHASE CONTRACT RECONCILIATION",
+          "level": 2,
+          "line": 242
+        },
+        {
+          "heading": "2.1 Reconciliation summary",
+          "level": 3,
+          "line": 244
+        },
+        {
+          "heading": "2.2 The regression pattern",
+          "level": 3,
+          "line": 265
+        },
+        {
+          "heading": "2.3 Claim-by-claim reconciliation of the phase gate tables",
+          "level": 3,
+          "line": 283
+        },
+        {
+          "heading": "PART 3 — PHASE 0 AUDIT (Foundation)",
+          "level": 2,
+          "line": 325
+        },
+        {
+          "heading": "3.1 What Phase 0 committed and delivered",
+          "level": 3,
+          "line": 330
+        },
+        {
+          "heading": "3.2 The withdrawn sub-claims, and the pattern they share",
+          "level": 3,
+          "line": 354
+        },
+        {
+          "heading": "3.3 Verdict",
+          "level": 3,
+          "line": 364
+        },
+        {
+          "heading": "PART 4 — PHASE 0.5 AUDIT (Schema Consolidation & Freeze)",
+          "level": 2,
+          "line": 376
+        },
+        {
+          "heading": "4.1 The freeze, precisely",
+          "level": 3,
+          "line": 381
+        },
+        {
+          "heading": "4.2 Migration governance",
+          "level": 3,
+          "line": 405
+        },
+        {
+          "heading": "4.3 Verdict",
+          "level": 3,
+          "line": 413
+        },
+        {
+          "heading": "PART 5 — PHASE 1.1 AUDIT (WhatsApp Messaging Engine)",
+          "level": 2,
+          "line": 421
+        },
+        {
+          "heading": "5.1 The retry contract — fully met",
+          "level": 3,
+          "line": 426
+        },
+        {
+          "heading": "5.2 The narrowing",
+          "level": 3,
+          "line": 443
+        },
+        {
+          "heading": "5.3 Verdict",
+          "level": 3,
+          "line": 451
+        },
+        {
+          "heading": "PART 6 — PHASE 1.2 AUDIT (Payments, Refunds & Settlement)",
+          "level": 2,
+          "line": 459
+        },
+        {
+          "heading": "6.1 Requirement-by-requirement",
+          "level": 3,
+          "line": 468
+        },
+        {
+          "heading": "6.2 Why the certification is nonetheless upheld",
+          "level": 3,
+          "line": 481
+        },
+        {
+          "heading": "6.3 The one certified statement that fully survives",
+          "level": 3,
+          "line": 490
+        },
+        {
+          "heading": "PART 7 — PHASE 1.3 AUDIT (Security Hardening)",
+          "level": 2,
+          "line": 500
+        },
+        {
+          "heading": "7.1 The two genuine security wins",
+          "level": 3,
+          "line": 505
+        },
+        {
+          "heading": "7.2 What is narrowed or missing",
+          "level": 3,
+          "line": 519
+        },
+        {
+          "heading": "7.3 Verdict",
+          "level": 3,
+          "line": 530
+        },
+        {
+          "heading": "PART 8 — PHASE 1.4 AUDIT (Queue Runtime & Operations)",
+          "level": 2,
+          "line": 540
+        },
+        {
+          "heading": "8.1 Queue runtime (set I) — the parts that work",
+          "level": 3,
+          "line": 549
+        },
+        {
+          "heading": "8.2 Operations (set V) — zero verified",
+          "level": 3,
+          "line": 563
+        },
+        {
+          "heading": "8.3 The two withdrawn sub-claims",
+          "level": 3,
+          "line": 576
+        },
+        {
+          "heading": "8.4 Verdict",
+          "level": 3,
+          "line": 591
+        },
+        {
+          "heading": "PART 9 — PHASE 1.5 AUDIT (Security Sweep & Completion)",
+          "level": 2,
+          "line": 600
+        },
+        {
+          "heading": "9.1 The 193-routine privilege claim",
+          "level": 3,
+          "line": 610
+        },
+        {
+          "heading": "9.2 Set N2 — ten of ten",
+          "level": 3,
+          "line": 644
+        },
+        {
+          "heading": "9.3 The recovery report — upheld in full",
+          "level": 3,
+          "line": 657
+        },
+        {
+          "heading": "9.4 The four suspended claims",
+          "level": 3,
+          "line": 665
+        },
+        {
+          "heading": "9.5 Verdict",
+          "level": 3,
+          "line": 678
+        },
+        {
+          "heading": "PART 10 — END-TO-END WORKFLOW RECONCILIATION",
+          "level": 2,
+          "line": 689
+        },
+        {
+          "heading": "10.1 Workflow A — Normal patient journey",
+          "level": 3,
+          "line": 695
+        },
+        {
+          "heading": "10.2 Workflow B — WhatsApp patient journey",
+          "level": 3,
+          "line": 726
+        },
+        {
+          "heading": "10.3 Workflow C — Doctor delay",
+          "level": 3,
+          "line": 743
+        },
+        {
+          "heading": "10.4 Workflow D — Cancellation and refund",
+          "level": 3,
+          "line": 760
+        },
+        {
+          "heading": "10.5 Workflow E — Queue failure and recovery",
+          "level": 3,
+          "line": 780
+        },
+        {
+          "heading": "10.6 Workflow F — Hospital executive reporting",
+          "level": 3,
+          "line": 799
+        },
+        {
+          "heading": "10.7 Workflow reconciliation summary",
+          "level": 3,
+          "line": 818
+        },
+        {
+          "heading": "PART 11 — DATABASE AND RPC RECONCILIATION INVENTORY",
+          "level": 2,
+          "line": 837
+        },
+        {
+          "heading": "11.1 Surface counts",
+          "level": 3,
+          "line": 839
+        },
+        {
+          "heading": "11.2 Reachability — the headline number",
+          "level": 3,
+          "line": 850
+        },
+        {
+          "heading": "11.3 Orphans, duplicates and dead code",
+          "level": 3,
+          "line": 872
+        },
+        {
+          "heading": "11.4 Dead migrations",
+          "level": 3,
+          "line": 910
+        },
+        {
+          "heading": "PART 12 — EDGE FUNCTION RECONCILIATION",
+          "level": 2,
+          "line": 927
+        },
+        {
+          "heading": "12.1 Reconciliation table",
+          "level": 3,
+          "line": 935
+        },
+        {
+          "heading": "12.2 Hardcoded India assumptions",
+          "level": 3,
+          "line": 953
+        },
+        {
+          "heading": "12.3 Stale comments",
+          "level": 3,
+          "line": 969
+        },
+        {
+          "heading": "PART 13 — WORKER AND CRON RECONCILIATION",
+          "level": 2,
+          "line": 979
+        },
+        {
+          "heading": "13.1 The chain",
+          "level": 3,
+          "line": 984
+        },
+        {
+          "heading": "13.2 P0-01 in full — the lease regression",
+          "level": 3,
+          "line": 1005
+        },
+        {
+          "heading": "13.3 What the async layer would do if switched on",
+          "level": 3,
+          "line": 1024
+        },
+        {
+          "heading": "13.4 The nightly chain",
+          "level": 3,
+          "line": 1033
+        },
+        {
+          "heading": "PART 14 — FRESH SECURITY REVIEW",
+          "level": 2,
+          "line": 1055
+        },
+        {
+          "heading": "14.1 Controls verified present and correct",
+          "level": 3,
+          "line": 1060
+        },
+        {
+          "heading": "14.2 `has_permission()` — the explicit verdict PART 14 requires",
+          "level": 3,
+          "line": 1083
+        },
+        {
+          "heading": "14.3 The privilege exposure — mechanism identified, effect UNPROVEN",
+          "level": 3,
+          "line": 1125
+        },
+        {
+          "heading": "14.4 Confirmed security defects",
+          "level": 3,
+          "line": 1160
+        },
+        {
+          "heading": "14.5 What was searched for and not found",
+          "level": 3,
+          "line": 1180
+        },
+        {
+          "heading": "PART 15 — FINANCIAL INTEGRITY",
+          "level": 2,
+          "line": 1198
+        },
+        {
+          "heading": "15.1 The chain, with break points",
+          "level": 3,
+          "line": 1203
+        },
+        {
+          "heading": "15.2 The three integrity questions the mandate asks explicitly",
+          "level": 3,
+          "line": 1228
+        },
+        {
+          "heading": "15.3 GST — booked but never charged",
+          "level": 3,
+          "line": 1240
+        },
+        {
+          "heading": "15.4 Revenue recognition — an unstated policy",
+          "level": 3,
+          "line": 1254
+        },
+        {
+          "heading": "15.5 What the certified financial claim actually supports",
+          "level": 3,
+          "line": 1267
+        },
+        {
+          "heading": "PART 16 — ANALYTICS AND KPI SOURCE TRACING",
+          "level": 2,
+          "line": 1285
+        },
+        {
+          "heading": "16.1 The two structural findings",
+          "level": 3,
+          "line": 1304
+        },
+        {
+          "heading": "16.2 KPI trustworthiness summary",
+          "level": 3,
+          "line": 1317
+        },
+        {
+          "heading": "PART 17 — TEST QUALITY AUDIT",
+          "level": 2,
+          "line": 1328
+        },
+        {
+          "heading": "17.1 Gates independently re-executed",
+          "level": 3,
+          "line": 1333
+        },
+        {
+          "heading": "17.2 The integrity claim — upheld",
+          "level": 3,
+          "line": 1350
+        },
+        {
+          "heading": "17.3 Where the suite fails to provide evidence — P2-14",
+          "level": 3,
+          "line": 1364
+        },
+        {
+          "heading": "17.4 Test quality verdict",
+          "level": 3,
+          "line": 1387
+        },
+        {
+          "heading": "PART 18 — MIGRATION AND SCHEMA HISTORY AUDIT (01 → 49)",
+          "level": 2,
+          "line": 1405
+        },
+        {
+          "heading": "18.1 Overall health",
+          "level": 3,
+          "line": 1407
+        },
+        {
+          "heading": "18.2 The four validator warnings",
+          "level": 3,
+          "line": 1423
+        },
+        {
+          "heading": "18.3 Migrations with audit significance",
+          "level": 3,
+          "line": 1435
+        },
+        {
+          "heading": "18.4 The freeze, in migration terms",
+          "level": 3,
+          "line": 1464
+        },
+        {
+          "heading": "PART 19 — ARCHITECTURAL DRIFT",
+          "level": 2,
+          "line": 1478
+        },
+        {
+          "heading": "19.1 Distribution",
+          "level": 3,
+          "line": 1483
+        },
+        {
+          "heading": "19.2 The twelve HIGH drifts",
+          "level": 3,
+          "line": 1492
+        },
+        {
+          "heading": "19.3 The finding that matters most about drift",
+          "level": 3,
+          "line": 1509
+        },
+        {
+          "heading": "PART 20 — MISSED, SKIPPED AND PARTIAL REQUIREMENTS",
+          "level": 2,
+          "line": 1531
+        },
+        {
+          "heading": "20.1 Ten commitments that are silently outstanding",
+          "level": 3,
+          "line": 1537
+        },
+        {
+          "heading": "20.2 Requirements invalidated by later work",
+          "level": 3,
+          "line": 1555
+        },
+        {
+          "heading": "20.3 Requirements delivered ahead of schedule",
+          "level": 3,
+          "line": 1568
+        },
+        {
+          "heading": "20.4 Phases skipped without record",
+          "level": 3,
+          "line": 1577
+        },
+        {
+          "heading": "20.5 What PART 20 establishes",
+          "level": 3,
+          "line": 1590
+        },
+        {
+          "heading": "PART 21 — CERTIFICATION CLAIM RECONCILIATION",
+          "level": 2,
+          "line": 1602
+        },
+        {
+          "heading": "21.1 Disposition",
+          "level": 3,
+          "line": 1606
+        },
+        {
+          "heading": "21.2 Certification changes",
+          "level": 3,
+          "line": 1621
+        },
+        {
+          "heading": "21.3 The pattern shared by all 15 withdrawn sub-claims",
+          "level": 3,
+          "line": 1638
+        },
+        {
+          "heading": "21.4 Where the certification process demonstrably worked",
+          "level": 3,
+          "line": 1650
+        },
+        {
+          "heading": "21.5 Where prior review failed",
+          "level": 3,
+          "line": 1666
+        },
+        {
+          "heading": "PART 22 — PRODUCTION READINESS",
+          "level": 2,
+          "line": 1684
+        },
+        {
+          "heading": "22.1 The RULE 5 seven-axis separation",
+          "level": 3,
+          "line": 1706
+        },
+        {
+          "heading": "PART 23 — CONSOLIDATED GAP REGISTER",
+          "level": 2,
+          "line": 1727
+        },
+        {
+          "heading": "23.1 Severity distribution",
+          "level": 3,
+          "line": 1732
+        },
+        {
+          "heading": "23.2 The four P0s",
+          "level": 3,
+          "line": 1743
+        },
+        {
+          "heading": "23.3 The thirteen P1s",
+          "level": 3,
+          "line": 1756
+        },
+        {
+          "heading": "23.4 Root-cause distribution across all 48 entries",
+          "level": 3,
+          "line": 1774
+        },
+        {
+          "heading": "PART 24 — FINAL ARCHITECTURE VERDICT",
+          "level": 2,
+          "line": 1793
+        },
+        {
+          "heading": "Q1 — Is the declared architecture actually the implemented architecture?",
+          "level": 3,
+          "line": 1797
+        },
+        {
+          "heading": "Q2 — Is the backend architecturally complete?",
+          "level": 3,
+          "line": 1805
+        },
+        {
+          "heading": "Q3 — Is the backend functionally complete?",
+          "level": 3,
+          "line": 1812
+        },
+        {
+          "heading": "Q4 — Is the system secure?",
+          "level": 3,
+          "line": 1820
+        },
+        {
+          "heading": "Q5 — Is `has_permission()` safe, conditionally safe, architecturally inconsistent, or in need of redesign?",
+          "level": 3,
+          "line": 1829
+        },
+        {
+          "heading": "Q6 — Is the operational layer functional?",
+          "level": 3,
+          "line": 1837
+        },
+        {
+          "heading": "Q7 — Is financial integrity assured?",
+          "level": 3,
+          "line": 1845
+        },
+        {
+          "heading": "Q8 — Are the existing certifications trustworthy?",
+          "level": 3,
+          "line": 1854
+        },
+        {
+          "heading": "Q9 — Does the test suite provide meaningful evidence?",
+          "level": 3,
+          "line": 1862
+        },
+        {
+          "heading": "Q10 — Is there duplicated or conflicting logic?",
+          "level": 3,
+          "line": 1870
+        },
+        {
+          "heading": "Q11 — Is there dead or orphaned code?",
+          "level": 3,
+          "line": 1878
+        },
+        {
+          "heading": "Q12 — Is SETURA ready for production deployment?",
+          "level": 3,
+          "line": 1887
+        },
+        {
+          "heading": "Q13 — Is SETURA ready for a real hospital?",
+          "level": 3,
+          "line": 1895
+        },
+        {
+          "heading": "Q14 — What is the single most important thing to understand about this system?",
+          "level": 3,
+          "line": 1905
+        },
+        {
+          "heading": "24.1 On PART 25 and PART 27",
+          "level": 3,
+          "line": 1917
+        },
+        {
+          "heading": "PART 28 — EXECUTIVE SUMMARY BY AUDIENCE",
+          "level": 2,
+          "line": 1935
+        },
+        {
+          "heading": "28.1 For the CEO",
+          "level": 3,
+          "line": 1940
+        },
+        {
+          "heading": "28.2 For the CTO",
+          "level": 3,
+          "line": 1957
+        },
+        {
+          "heading": "28.3 For the CIO",
+          "level": 3,
+          "line": 1983
+        },
+        {
+          "heading": "28.4 For the CFO",
+          "level": 3,
+          "line": 2001
+        },
+        {
+          "heading": "28.5 For the hospital operator",
+          "level": 3,
+          "line": 2022
+        },
+        {
+          "heading": "28.6 For a security reviewer",
+          "level": 3,
+          "line": 2042
+        },
+        {
+          "heading": "28.7 For an enterprise buyer performing due diligence",
+          "level": 3,
+          "line": 2069
+        },
+        {
+          "heading": "§29 — Limits of this audit",
+          "level": 2,
+          "line": 2098
+        },
+        {
+          "heading": "§30 — FINAL TALLIES",
+          "level": 2,
+          "line": 2132
+        },
+        {
+          "heading": "CROSS-PHASE AUDIT COMPLETE",
+          "level": 1,
+          "line": 2172
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 145
+      }
+    },
+    {
+      "path": "CROSS_PHASE_GAP_REGISTER.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 597,
+      "nonEmptyLines": 501,
+      "sections": [
+        {
+          "heading": "SETURA — CROSS-PHASE GAP REGISTER",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "0. SEVERITY DEFINITIONS",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "1. P0 — PRODUCTION BLOCKING (4)",
+          "level": 2,
+          "line": 33
+        },
+        {
+          "heading": "P0-01 — Job crash recovery is dead end to end",
+          "level": 3,
+          "line": 35
+        },
+        {
+          "heading": "P0-02 — Nothing schedules any cron or worker endpoint",
+          "level": 3,
+          "line": 50
+        },
+        {
+          "heading": "P0-03 — The worker is unreachable under the documented default configuration",
+          "level": 3,
+          "line": 61
+        },
+        {
+          "heading": "P0-04 — `bookings.booking_fee_inr` has no runtime writer, disabling two of three refund paths",
+          "level": 3,
+          "line": 72
+        },
+        {
+          "heading": "2. P1 — DEPLOY-BLOCKING FOR A PAYING HOSPITAL (13)",
+          "level": 2,
+          "line": 86
+        },
+        {
+          "heading": "P1-01 — Razorpay webhook HMAC verified with the wrong secret",
+          "level": 3,
+          "line": 88
+        },
+        {
+          "heading": "P1-02 — Partial refunds over-adjust settlement",
+          "level": 3,
+          "line": 107
+        },
+        {
+          "heading": "P1-03 — Capture failure is indistinguishable from capture success",
+          "level": 3,
+          "line": 124
+        },
+        {
+          "heading": "P1-04 — `settlement-engine` `record_payment` returns HTTP 500 by construction",
+          "level": 3,
+          "line": 136
+        },
+        {
+          "heading": "P1-05 — Revenue is recognised before, and independently of, collection",
+          "level": 3,
+          "line": 150
+        },
+        {
+          "heading": "P1-06 — `get_reconciliation_summary` reports three incorrect KPIs to hospital admins",
+          "level": 3,
+          "line": 168
+        },
+        {
+          "heading": "P1-07 — Nightly worker trigger authenticates with the wrong credential",
+          "level": 3,
+          "line": 187
+        },
+        {
+          "heading": "P1-08 — `payment_status_detail` refund transitions have no writer",
+          "level": 3,
+          "line": 201
+        },
+        {
+          "heading": "P1-09 — `verify_jwt = true` blocks all seven machine endpoints",
+          "level": 3,
+          "line": 217
+        },
+        {
+          "heading": "P1-10 — Refund amount basis is inconsistent between paths",
+          "level": 3,
+          "line": 239
+        },
+        {
+          "heading": "P1-11 — The privilege boundary from Phase 1.5 is unproven",
+          "level": 3,
+          "line": 252
+        },
+        {
+          "heading": "P1-12 — `is_primary` provisioning hazard causes total Edge API lockout",
+          "level": 3,
+          "line": 274
+        },
+        {
+          "heading": "P1-13 — Authorization ignores account deactivation",
+          "level": 3,
+          "line": 292
+        },
+        {
+          "heading": "3. P2 — SERIOUS, SURVIVABLE WITH DOCUMENTED COMPENSATION (15)",
+          "level": 2,
+          "line": 309
+        },
+        {
+          "heading": "P2-01 — Subscription plan limits are unenforceable",
+          "level": 3,
+          "line": 311
+        },
+        {
+          "heading": "P2-02 — GST is debited to the ledger but never charged to the payer",
+          "level": 3,
+          "line": 327
+        },
+        {
+          "heading": "P2-03 — `capture_payment` permits re-capture of partially refunded orders",
+          "level": 3,
+          "line": 340
+        },
+        {
+          "heading": "P2-04 — Gateway fee is always an estimate, never the actual",
+          "level": 3,
+          "line": 350
+        },
+        {
+          "heading": "P2-05 — Five materialised views have zero consumers; the forecast is duplicated",
+          "level": 3,
+          "line": 361
+        },
+        {
+          "heading": "P2-06 — Partition automation is advisory only, and misreports readiness",
+          "level": 3,
+          "line": 379
+        },
+        {
+          "heading": "P2-07 — The migration registry the project built for itself is 10 % populated",
+          "level": 3,
+          "line": 391
+        },
+        {
+          "heading": "P2-08 — The architecture freeze was breached and the breach was never recorded",
+          "level": 3,
+          "line": 405
+        },
+        {
+          "heading": "P2-09 — A documented negative constraint is contradicted by shipped code",
+          "level": 3,
+          "line": 421
+        },
+        {
+          "heading": "P2-10 — Booking and payment order are not created atomically",
+          "level": 3,
+          "line": 432
+        },
+        {
+          "heading": "P2-11 — 27 % of the SQL surface is unreachable from product code",
+          "level": 3,
+          "line": 442
+        },
+        {
+          "heading": "P2-12 — Duplicated orchestration with divergent behaviour",
+          "level": 3,
+          "line": 454
+        },
+        {
+          "heading": "P2-13 — Four superseded v1 RPCs retained as live, callable definitions",
+          "level": 3,
+          "line": 467
+        },
+        {
+          "heading": "P2-14 — The test suite does not cover the paths that fail",
+          "level": 3,
+          "line": 483
+        },
+        {
+          "heading": "P2-15 — `job_queue.job_type` is unconstrained, with producer/handler mismatches",
+          "level": 3,
+          "line": 511
+        },
+        {
+          "heading": "4. P3 — DOCUMENTATION, CONSISTENCY, HYGIENE (10)",
+          "level": 2,
+          "line": 523
+        },
+        {
+          "heading": "5. NPD — REQUIRES A BUSINESS RULING BEFORE ENGINEERING (6)",
+          "level": 2,
+          "line": 540
+        },
+        {
+          "heading": "6. SUMMARY TABLES",
+          "level": 2,
+          "line": 560
+        },
+        {
+          "heading": "6.1 Counts",
+          "level": 3,
+          "line": 562
+        },
+        {
+          "heading": "6.2 The four P0s share two root causes",
+          "level": 3,
+          "line": 573
+        },
+        {
+          "heading": "6.3 Highest-leverage verifications requiring no code change",
+          "level": 3,
+          "line": 580
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 43
+      }
+    },
+    {
+      "path": "CROSS_PHASE_REQUIREMENTS_MATRIX.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 718,
+      "nonEmptyLines": 578,
+      "sections": [
+        {
+          "heading": "SETURA — CROSS-PHASE REQUIREMENTS MATRIX",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "0. HOW THIS MATRIX WAS CONSTRUCTED (RULE 5 derivation)",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "0.1 Requirement sources",
+          "level": 3,
+          "line": 17
+        },
+        {
+          "heading": "0.2 Why two parallel 1.1–1.5 sets exist (W/R/T/S vs N1–N5)",
+          "level": 3,
+          "line": 42
+        },
+        {
+          "heading": "0.3 Status vocabulary (RULE 4 — exactly one per row)",
+          "level": 3,
+          "line": 55
+        },
+        {
+          "heading": "0.4 Evidence limitation declared up front (PART 27)",
+          "level": 3,
+          "line": 69
+        },
+        {
+          "heading": "0.5 Static gates executed by this audit (read-only)",
+          "level": 3,
+          "line": 84
+        },
+        {
+          "heading": "1. SET F — PHASE 0 FOUNDATION (19 requirements)",
+          "level": 2,
+          "line": 102
+        },
+        {
+          "heading": "2. SET Z — PHASE 0.5 ARCHITECTURE FREEZE (10 requirements)",
+          "level": 2,
+          "line": 143
+        },
+        {
+          "heading": "3. SET W — ROADMAP PHASE 1.1: WHATSAPP RELIABILITY (8 requirements)",
+          "level": 2,
+          "line": 173
+        },
+        {
+          "heading": "4. SET R — ROADMAP PHASE 1.2: REFUND CONSISTENCY (8 requirements)",
+          "level": 2,
+          "line": 202
+        },
+        {
+          "heading": "5. SET T — ROADMAP PHASE 1.3: RETENTION (5 requirements)",
+          "level": 2,
+          "line": 231
+        },
+        {
+          "heading": "6. SET S — ROADMAP PHASE 1.4: SUBSCRIPTION PLATFORM (8 requirements)",
+          "level": 2,
+          "line": 253
+        },
+        {
+          "heading": "7. SET I — ROADMAP PHASE 2: INTEGRATION HARDENING (12 requirements)",
+          "level": 2,
+          "line": 283
+        },
+        {
+          "heading": "8. SET V — ROADMAP PHASE 2.5: ENTERPRISE VALIDATION (8 requirements)",
+          "level": 2,
+          "line": 320
+        },
+        {
+          "heading": "9. SET C — ROADMAP PHASE 3: INCOMING WHATSAPP CONSUMER (6 requirements)",
+          "level": 2,
+          "line": 350
+        },
+        {
+          "heading": "10. SET N1 — EXECUTED \"PHASE 1.1\": INBOUND WHATSAPP (10 requirements)",
+          "level": 2,
+          "line": 379
+        },
+        {
+          "heading": "11. SET N2 — EXECUTED \"PHASE 1.2\": QUEUE RUNTIME (10 requirements)",
+          "level": 2,
+          "line": 412
+        },
+        {
+          "heading": "12. SET N3 — EXECUTED \"PHASE 1.3\": RETENTION & USAGE (8 requirements)",
+          "level": 2,
+          "line": 444
+        },
+        {
+          "heading": "13. SET N4 — EXECUTED \"PHASE 1.4\": ENTERPRISE COMMAND CENTRE (8 requirements)",
+          "level": 2,
+          "line": 473
+        },
+        {
+          "heading": "14. SET N5 — EXECUTED \"PHASE 1.5\": PRIVILEGE HARDENING (12 requirements)",
+          "level": 2,
+          "line": 505
+        },
+        {
+          "heading": "15. SET X — CROSS-CUTTING ARCHITECTURAL COMMITMENTS (15 requirements)",
+          "level": 2,
+          "line": 549
+        },
+        {
+          "heading": "16. CONSOLIDATED TALLY — ALL 147 REQUIREMENTS",
+          "level": 2,
+          "line": 593
+        },
+        {
+          "heading": "16.1 Per-set breakdown",
+          "level": 3,
+          "line": 595
+        },
+        {
+          "heading": "16.2 The only defensible percentage, and its derivation (RULE 5)",
+          "level": 3,
+          "line": 619
+        },
+        {
+          "heading": "16.3 Distribution of the 33 non-VC, non-OOS, non-NPD rows by root cause",
+          "level": 3,
+          "line": 648
+        },
+        {
+          "heading": "16.4 PART 20 — requirements traced back to their earliest promise",
+          "level": 3,
+          "line": 678
+        },
+        {
+          "heading": "17. CROSS-REFERENCES",
+          "level": 2,
+          "line": 704
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 28
+      }
+    },
+    {
+      "path": "FINDING_ID_RECONCILIATION.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 309,
+      "nonEmptyLines": 239,
+      "sections": [
+        {
+          "heading": "SETURA — FINDING ID RECONCILIATION",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "0. Why this gate exists, and what it found",
+          "level": 2,
+          "line": 13
+        },
+        {
+          "heading": "1. The actual structure of the divergence",
+          "level": 2,
+          "line": 34
+        },
+        {
+          "heading": "2. Canonical scheme: the Register scheme",
+          "level": 2,
+          "line": 59
+        },
+        {
+          "heading": "3. Canonical P1 crosswalk",
+          "level": 2,
+          "line": 96
+        },
+        {
+          "heading": "3.1 The two schemes' `P1-02` and `P1-05` — the §3A conflicts, confirmed",
+          "level": 3,
+          "line": 117
+        },
+        {
+          "heading": "3.2 Summary-scheme P1s with no canonical P1 home",
+          "level": 3,
+          "line": 131
+        },
+        {
+          "heading": "3.3 `P1-13` — same ID, adjacent but distinct content",
+          "level": 3,
+          "line": 139
+        },
+        {
+          "heading": "4. Severity disputes",
+          "level": 2,
+          "line": 154
+        },
+        {
+          "heading": "4.1 `P2-09` — nightly wakes the worker · **RESOLVED as P2**",
+          "level": 3,
+          "line": 156
+        },
+        {
+          "heading": "4.2 `P2-10` — `create-booking` creates no payment order · **ID RESOLVED, SEVERITY DEFERRED**",
+          "level": 3,
+          "line": 179
+        },
+        {
+          "heading": "5. Findings carried forward with no register entry",
+          "level": 2,
+          "line": 210
+        },
+        {
+          "heading": "6. Two further defects in the P2 namespace",
+          "level": 2,
+          "line": 233
+        },
+        {
+          "heading": "6.1 `DOC-01` — `P2-09` is misdescribed in the Readiness Report",
+          "level": 3,
+          "line": 240
+        },
+        {
+          "heading": "6.2 Two findings carry both a P1 and a P2 label inside one document",
+          "level": 3,
+          "line": 262
+        },
+        {
+          "heading": "7. Verified identical across all documents — cite freely",
+          "level": 2,
+          "line": 270
+        },
+        {
+          "heading": "8. Citation rule for all Phase 1.6 deliverables",
+          "level": 2,
+          "line": 285
+        },
+        {
+          "heading": "9. What this gate did not do",
+          "level": 2,
+          "line": 300
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 18
+      }
+    },
+    {
+      "path": "GRAPH_REPORT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 395,
+      "nonEmptyLines": 321,
+      "sections": [
+        {
+          "heading": "Graph Report - setura  (2026-08-23)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Corpus Check",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Summary",
+          "level": 2,
+          "line": 6
+        },
+        {
+          "heading": "Community Hubs (Navigation)",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "God Nodes (most connected - your core abstractions)",
+          "level": 2,
+          "line": 88
+        },
+        {
+          "heading": "Surprising Connections (you probably didn't know these)",
+          "level": 2,
+          "line": 100
+        },
+        {
+          "heading": "Import Cycles",
+          "level": 2,
+          "line": 112
+        },
+        {
+          "heading": "Communities (95 total, 11 thin omitted)",
+          "level": 2,
+          "line": 116
+        },
+        {
+          "heading": "Community 0 - \"whatsapp_conversation_engine.ts\"",
+          "level": 3,
+          "line": 118
+        },
+        {
+          "heading": "Community 1 - \"47_enterprise_command_center.sql\"",
+          "level": 3,
+          "line": 122
+        },
+        {
+          "heading": "Community 2 - \"run-background-worker/index.ts\"",
+          "level": 3,
+          "line": 126
+        },
+        {
+          "heading": "Community 3 - \"db.ts\"",
+          "level": 3,
+          "line": 130
+        },
+        {
+          "heading": "Community 4 - \"logger.ts\"",
+          "level": 3,
+          "line": 134
+        },
+        {
+          "heading": "Community 5 - \"SeturError\"",
+          "level": 3,
+          "line": 138
+        },
+        {
+          "heading": "Community 6 - \"types.ts\"",
+          "level": 3,
+          "line": 142
+        },
+        {
+          "heading": "Community 7 - \"privilege_isolation.test.ts\"",
+          "level": 3,
+          "line": 146
+        },
+        {
+          "heading": "Community 8 - \"env.ts\"",
+          "level": 3,
+          "line": 150
+        },
+        {
+          "heading": "Community 9 - \"audit.ts\"",
+          "level": 3,
+          "line": 154
+        },
+        {
+          "heading": "Community 10 - \"queue_runtime.ts\"",
+          "level": 3,
+          "line": 158
+        },
+        {
+          "heading": "Community 11 - \"tasks\"",
+          "level": 3,
+          "line": 162
+        },
+        {
+          "heading": "Community 12 - \"13_payment_engine.sql\"",
+          "level": 3,
+          "line": 166
+        },
+        {
+          "heading": "Community 13 - \"doctor_operations.test.ts\"",
+          "level": 3,
+          "line": 170
+        },
+        {
+          "heading": "Community 14 - \"validate_migrations.ts\"",
+          "level": 3,
+          "line": 174
+        },
+        {
+          "heading": "Community 15 - \"queue_operations.test.ts\"",
+          "level": 3,
+          "line": 178
+        },
+        {
+          "heading": "Community 16 - \"queue_runtime.test.ts\"",
+          "level": 3,
+          "line": 182
+        },
+        {
+          "heading": "Community 17 - \"18_config_versioning_&_rollback.sql\"",
+          "level": 3,
+          "line": 186
+        },
+        {
+          "heading": "Community 18 - \"getServiceClient\"",
+          "level": 3,
+          "line": 190
+        },
+        {
+          "heading": "Community 19 - \"auth.ts\"",
+          "level": 3,
+          "line": 194
+        },
+        {
+          "heading": "Community 20 - \"01_foundation.sql\"",
+          "level": 3,
+          "line": 198
+        },
+        {
+          "heading": "Community 21 - \"04_whatsapp_messaging_engine.sql\"",
+          "level": 3,
+          "line": 202
+        },
+        {
+          "heading": "Community 22 - \"enterprise_command_center.test.ts\"",
+          "level": 3,
+          "line": 206
+        },
+        {
+          "heading": "Community 23 - \"whatsapp_conversational.test.ts\"",
+          "level": 3,
+          "line": 210
+        },
+        {
+          "heading": "Community 24 - \"02_atomic_token_engine_&_bookings.sql\"",
+          "level": 3,
+          "line": 214
+        },
+        {
+          "heading": "Community 25 - \"43_queue_runtime.sql\"",
+          "level": 3,
+          "line": 218
+        },
+        {
+          "heading": "Community 26 - \"07_settlement_engine.sql\"",
+          "level": 3,
+          "line": 222
+        },
+        {
+          "heading": "Community 27 - \"formatE164\"",
+          "level": 3,
+          "line": 226
+        },
+        {
+          "heading": "Community 28 - \"public.dead_letter_queue\"",
+          "level": 3,
+          "line": 230
+        },
+        {
+          "heading": "Community 29 - \"32_subscription_engine.sql\"",
+          "level": 3,
+          "line": 234
+        },
+        {
+          "heading": "Community 30 - \"46_doctor_clinical_operations.sql\"",
+          "level": 3,
+          "line": 238
+        },
+        {
+          "heading": "Community 31 - \"response.ts\"",
+          "level": 3,
+          "line": 242
+        },
+        {
+          "heading": "Community 32 - \"05_notification_queue.sql\"",
+          "level": 3,
+          "line": 246
+        },
+        {
+          "heading": "Community 33 - \"09_abuse_protection_&_rate_limiting.sql\"",
+          "level": 3,
+          "line": 250
+        },
+        {
+          "heading": "Community 34 - \"31_doctor_leave_management.sql\"",
+          "level": 3,
+          "line": 254
+        },
+        {
+          "heading": "Community 35 - \"doctor-operations/index.ts\"",
+          "level": 3,
+          "line": 258
+        },
+        {
+          "heading": "Community 36 - \"11_realtime_presence_schedule_tasks.sql\"",
+          "level": 3,
+          "line": 262
+        },
+        {
+          "heading": "Community 37 - \"16_idempotency_hardening.sql\"",
+          "level": 3,
+          "line": 266
+        },
+        {
+          "heading": "Community 38 - \"multi_role_auth.test.ts\"",
+          "level": 3,
+          "line": 270
+        },
+        {
+          "heading": "Community 39 - \"19_background_worker_engine.sql\"",
+          "level": 3,
+          "line": 274
+        },
+        {
+          "heading": "Community 40 - \"06_background_job_queue.sql\"",
+          "level": 3,
+          "line": 278
+        },
+        {
+          "heading": "Community 41 - \"42_whatsapp_conversational_engine.sql\"",
+          "level": 3,
+          "line": 282
+        },
+        {
+          "heading": "Community 42 - \"22_partition_automation.sql\"",
+          "level": 3,
+          "line": 286
+        },
+        {
+          "heading": "Community 43 - \"26_migration_metadata_&_registry.sql\"",
+          "level": 3,
+          "line": 290
+        },
+        {
+          "heading": "Community 44 - \"23_retention_&_cleanup_engine.sql\"",
+          "level": 3,
+          "line": 294
+        },
+        {
+          "heading": "Community 45 - \"10_audit_&_security_engine.sql\"",
+          "level": 3,
+          "line": 298
+        },
+        {
+          "heading": "Community 46 - \"20_presence_engine.sql\"",
+          "level": 3,
+          "line": 302
+        },
+        {
+          "heading": "Community 47 - \"webhook_signature.ts\"",
+          "level": 3,
+          "line": 306
+        },
+        {
+          "heading": "Community 48 - \"24_operational-monitoring_engine.sql\"",
+          "level": 3,
+          "line": 310
+        },
+        {
+          "heading": "Community 49 - \"25_api_idempotency_registry.sql\"",
+          "level": 3,
+          "line": 314
+        },
+        {
+          "heading": "Community 50 - \"45_queue_operations.sql\"",
+          "level": 3,
+          "line": 318
+        },
+        {
+          "heading": "Community 52 - \"usage_retention.test.ts\"",
+          "level": 3,
+          "line": 322
+        },
+        {
+          "heading": "Community 53 - \"whatsapp_lifecycle.test.ts\"",
+          "level": 3,
+          "line": 326
+        },
+        {
+          "heading": "Community 54 - \"enqueueWhatsApp\"",
+          "level": 3,
+          "line": 330
+        },
+        {
+          "heading": "Community 56 - \"03_doctorscheduling&slotengine.sql\"",
+          "level": 3,
+          "line": 334
+        },
+        {
+          "heading": "Community 57 - \"seed_constants.ts\"",
+          "level": 3,
+          "line": 338
+        },
+        {
+          "heading": "Community 58 - \"gen_types.ts\"",
+          "level": 3,
+          "line": 342
+        },
+        {
+          "heading": "Community 59 - \"notifyQueuePositions\"",
+          "level": 3,
+          "line": 346
+        },
+        {
+          "heading": "Community 60 - \"reporting.ts\"",
+          "level": 3,
+          "line": 350
+        },
+        {
+          "heading": "Community 61 - \"verify-payment/index.ts\"",
+          "level": 3,
+          "line": 354
+        },
+        {
+          "heading": "Community 62 - \"39_schema_alignment.sql\"",
+          "level": 3,
+          "line": 358
+        },
+        {
+          "heading": "Community 64 - \"refund_sync.test.ts\"",
+          "level": 3,
+          "line": 362
+        },
+        {
+          "heading": "Community 67 - \"executive-analytics/index.ts\"",
+          "level": 3,
+          "line": 366
+        },
+        {
+          "heading": "Community 68 - \"queue-control/index.ts\"",
+          "level": 3,
+          "line": 370
+        },
+        {
+          "heading": "Knowledge Gaps",
+          "level": 2,
+          "line": 374
+        },
+        {
+          "heading": "Suggested Questions",
+          "level": 2,
+          "line": 379
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 74
+      }
+    },
+    {
+      "path": "NEXT_PHASE_READINESS_REPORT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 1161,
+      "nonEmptyLines": 922,
+      "sections": [
+        {
+          "heading": "SETURA — NEXT PHASE READINESS REPORT",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "§0 — What this document is, and what it deliberately is not",
+          "level": 2,
+          "line": 12
+        },
+        {
+          "heading": "0.4 — Verdict vocabulary",
+          "level": 3,
+          "line": 53
+        },
+        {
+          "heading": "0.5 — Inputs this report consumes",
+          "level": 3,
+          "line": 67
+        },
+        {
+          "heading": "§1 — Readiness scorecard (summary)",
+          "level": 2,
+          "line": 94
+        },
+        {
+          "heading": "§2 — Dimension 1: Backend architectural completeness",
+          "level": 2,
+          "line": 123
+        },
+        {
+          "heading": "2.1 What is proven",
+          "level": 3,
+          "line": 127
+        },
+        {
+          "heading": "2.2 What is not proven",
+          "level": 3,
+          "line": 154
+        },
+        {
+          "heading": "2.3 Gate conditions",
+          "level": 3,
+          "line": 184
+        },
+        {
+          "heading": "§3 — Dimension 2: Backend functional completeness",
+          "level": 2,
+          "line": 199
+        },
+        {
+          "heading": "3.1 The finding that decides this dimension",
+          "level": 3,
+          "line": 203
+        },
+        {
+          "heading": "3.2 Supporting failures in the same dimension",
+          "level": 3,
+          "line": 220
+        },
+        {
+          "heading": "3.3 What is nonetheless solid here",
+          "level": 3,
+          "line": 252
+        },
+        {
+          "heading": "3.4 Gate conditions",
+          "level": 3,
+          "line": 275
+        },
+        {
+          "heading": "§4 — Dimension 3: Data integrity & schema governance",
+          "level": 2,
+          "line": 291
+        },
+        {
+          "heading": "4.1 What is proven",
+          "level": 3,
+          "line": 295
+        },
+        {
+          "heading": "4.2 What blocks readiness",
+          "level": 3,
+          "line": 319
+        },
+        {
+          "heading": "4.3 Gate conditions",
+          "level": 3,
+          "line": 352
+        },
+        {
+          "heading": "§5 — Dimension 4: Security posture",
+          "level": 2,
+          "line": 368
+        },
+        {
+          "heading": "5.1 What is proven, and it is substantial",
+          "level": 3,
+          "line": 372
+        },
+        {
+          "heading": "5.2 The three findings that block readiness",
+          "level": 3,
+          "line": 392
+        },
+        {
+          "heading": "5.3 The privilege claim that cannot be closed statically",
+          "level": 3,
+          "line": 438
+        },
+        {
+          "heading": "5.4 Gate conditions",
+          "level": 3,
+          "line": 468
+        },
+        {
+          "heading": "§6 — Dimension 5: Authorization & tenancy",
+          "level": 2,
+          "line": 483
+        },
+        {
+          "heading": "6.1 What is proven",
+          "level": 3,
+          "line": 487
+        },
+        {
+          "heading": "6.2 What blocks readiness",
+          "level": 3,
+          "line": 501
+        },
+        {
+          "heading": "6.3 Gate conditions",
+          "level": 3,
+          "line": 514
+        },
+        {
+          "heading": "§7 — Dimension 6: Financial integrity",
+          "level": 2,
+          "line": 525
+        },
+        {
+          "heading": "7.1 The chain, traced end to end",
+          "level": 3,
+          "line": 529
+        },
+        {
+          "heading": "7.2 The two structural issues that are decisions, not bugs",
+          "level": 3,
+          "line": 549
+        },
+        {
+          "heading": "7.3 What is nonetheless correct",
+          "level": 3,
+          "line": 566
+        },
+        {
+          "heading": "7.4 Gate conditions",
+          "level": 3,
+          "line": 580
+        },
+        {
+          "heading": "§8 — Dimension 7: Operational readiness (scheduling, workers, recovery)",
+          "level": 2,
+          "line": 596
+        },
+        {
+          "heading": "8.1 P0-02 — nothing schedules anything",
+          "level": 3,
+          "line": 605
+        },
+        {
+          "heading": "8.2 P0-01 — job crash recovery is dead",
+          "level": 3,
+          "line": 623
+        },
+        {
+          "heading": "8.3 P0-03 — the worker is unreachable under the documented default",
+          "level": 3,
+          "line": 652
+        },
+        {
+          "heading": "8.4 The nightly authentication mismatch",
+          "level": 3,
+          "line": 660
+        },
+        {
+          "heading": "8.5 Queue-runtime resilience: the part that does work",
+          "level": 3,
+          "line": 672
+        },
+        {
+          "heading": "8.6 Gate conditions",
+          "level": 3,
+          "line": 687
+        },
+        {
+          "heading": "§9 — Dimension 8: Observability, alerting & monitoring",
+          "level": 2,
+          "line": 706
+        },
+        {
+          "heading": "9.1 Why this dimension inherits its verdict",
+          "level": 3,
+          "line": 710
+        },
+        {
+          "heading": "9.2 Specific findings",
+          "level": 3,
+          "line": 718
+        },
+        {
+          "heading": "9.3 What is built and ready to work",
+          "level": 3,
+          "line": 741
+        },
+        {
+          "heading": "9.4 Gate conditions",
+          "level": 3,
+          "line": 750
+        },
+        {
+          "heading": "§10 — Dimension 9: Test & verification confidence",
+          "level": 2,
+          "line": 763
+        },
+        {
+          "heading": "10.1 The gates that were actually executed in this audit",
+          "level": 3,
+          "line": 767
+        },
+        {
+          "heading": "10.2 The warning count: a small, instructive correction",
+          "level": 3,
+          "line": 792
+        },
+        {
+          "heading": "10.3 Where the suite does not provide evidence",
+          "level": 3,
+          "line": 810
+        },
+        {
+          "heading": "10.4 What Phase 1.5 claimed about test integrity, and whether it holds",
+          "level": 3,
+          "line": 830
+        },
+        {
+          "heading": "10.5 Gate conditions",
+          "level": 3,
+          "line": 839
+        },
+        {
+          "heading": "§11 — Dimension 10: Deployment & configuration readiness",
+          "level": 2,
+          "line": 850
+        },
+        {
+          "heading": "11.1 Why",
+          "level": 3,
+          "line": 854
+        },
+        {
+          "heading": "11.2 What is ready",
+          "level": 3,
+          "line": 874
+        },
+        {
+          "heading": "11.3 Residual configuration hygiene (P3, safe to carry)",
+          "level": 3,
+          "line": 883
+        },
+        {
+          "heading": "11.4 Gate conditions",
+          "level": 3,
+          "line": 900
+        },
+        {
+          "heading": "§12 — Dimension 11: Frontend / product completeness",
+          "level": 2,
+          "line": 910
+        },
+        {
+          "heading": "12.1 Gate conditions",
+          "level": 3,
+          "line": 943
+        },
+        {
+          "heading": "§13 — Dimension 12: Real-hospital readiness",
+          "level": 2,
+          "line": 952
+        },
+        {
+          "heading": "13.1 What is genuinely reassuring",
+          "level": 3,
+          "line": 985
+        },
+        {
+          "heading": "13.2 Gate conditions",
+          "level": 3,
+          "line": 1000
+        },
+        {
+          "heading": "§14 — RULE 5 seven-axis standing summary",
+          "level": 2,
+          "line": 1015
+        },
+        {
+          "heading": "§15 — Recommended next phase",
+          "level": 2,
+          "line": 1041
+        },
+        {
+          "heading": "15.1 The recommendation",
+          "level": 3,
+          "line": 1047
+        },
+        {
+          "heading": "15.2 Phase 1.6 content, in dependency order",
+          "level": 3,
+          "line": 1066
+        },
+        {
+          "heading": "15.3 What Phase 1.6 explicitly should not do",
+          "level": 3,
+          "line": 1111
+        },
+        {
+          "heading": "15.4 After Phase 1.6",
+          "level": 3,
+          "line": 1125
+        },
+        {
+          "heading": "§16 — Limits of this report",
+          "level": 2,
+          "line": 1135
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 67
+      }
+    },
+    {
+      "path": "PHASE_0.5_COMPLETION_REPORT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 215,
+      "nonEmptyLines": 170,
+      "sections": [
+        {
+          "heading": "SETURA Phase 0.5 — Completion Report",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. Executive Summary",
+          "level": 2,
+          "line": 12
+        },
+        {
+          "heading": "2. Changes Delivered",
+          "level": 2,
+          "line": 28
+        },
+        {
+          "heading": "2.1 New migrations (function bodies only — no DDL schema changes)",
+          "level": 3,
+          "line": 30
+        },
+        {
+          "heading": "2.2 Edge function changes (9 functions)",
+          "level": 3,
+          "line": 66
+        },
+        {
+          "heading": "2.3 Regenerated artifacts",
+          "level": 3,
+          "line": 80
+        },
+        {
+          "heading": "3. End-to-End Flow Verification",
+          "level": 2,
+          "line": 87
+        },
+        {
+          "heading": "4. Test Coverage (per spec requirements)",
+          "level": 2,
+          "line": 115
+        },
+        {
+          "heading": "5. Metrics and Audit Additions",
+          "level": 2,
+          "line": 130
+        },
+        {
+          "heading": "6. Certification Gate Results",
+          "level": 2,
+          "line": 148
+        },
+        {
+          "heading": "7. Compliance Notes",
+          "level": 2,
+          "line": 173
+        },
+        {
+          "heading": "8. Files Changed",
+          "level": 2,
+          "line": 189
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "PHASE_1.1_COMPLETION_REPORT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 244,
+      "nonEmptyLines": 197,
+      "sections": [
+        {
+          "heading": "SETURA Phase 1.1 — Completion Report",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. Executive Summary",
+          "level": 2,
+          "line": 16
+        },
+        {
+          "heading": "2. Changes Delivered",
+          "level": 2,
+          "line": 38
+        },
+        {
+          "heading": "2.1 New migration",
+          "level": 3,
+          "line": 40
+        },
+        {
+          "heading": "2.2 New modules (`supabase/functions/_shared/whatsapp/`)",
+          "level": 3,
+          "line": 65
+        },
+        {
+          "heading": "2.3 Edge function changes (3 functions)",
+          "level": 3,
+          "line": 77
+        },
+        {
+          "heading": "2.4 Regenerated artifacts",
+          "level": 3,
+          "line": 90
+        },
+        {
+          "heading": "3. End-to-End Flow Verification",
+          "level": 2,
+          "line": 97
+        },
+        {
+          "heading": "4. Test Coverage (per spec requirements)",
+          "level": 2,
+          "line": 130
+        },
+        {
+          "heading": "5. Metrics and Audit Additions",
+          "level": 2,
+          "line": 153
+        },
+        {
+          "heading": "6. Certification Gate Results",
+          "level": 2,
+          "line": 168
+        },
+        {
+          "heading": "7. Compliance Notes",
+          "level": 2,
+          "line": 202
+        },
+        {
+          "heading": "8. Files Changed",
+          "level": 2,
+          "line": 220
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 13
+      }
+    },
+    {
+      "path": "PHASE_1.2_COMPLETION_REPORT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 237,
+      "nonEmptyLines": 199,
+      "sections": [
+        {
+          "heading": "SETURA Phase 1.2 Completion Report — Queue Runtime & Live Operations",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Executive Summary",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "Architecture Changes",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "New modules",
+          "level": 3,
+          "line": 38
+        },
+        {
+          "heading": "Reused foundation (unchanged contracts)",
+          "level": 3,
+          "line": 51
+        },
+        {
+          "heading": "Modified endpoints",
+          "level": 3,
+          "line": 64
+        },
+        {
+          "heading": "Migration Summary",
+          "level": 2,
+          "line": 78
+        },
+        {
+          "heading": "43_queue_runtime.sql (applied, 1131 lines)",
+          "level": 3,
+          "line": 80
+        },
+        {
+          "heading": "44_queue_runtime_flag.sql (applied)",
+          "level": 3,
+          "line": 112
+        },
+        {
+          "heading": "Runtime Flow Diagram",
+          "level": 2,
+          "line": 117
+        },
+        {
+          "heading": "Test Coverage (new)",
+          "level": 2,
+          "line": 149
+        },
+        {
+          "heading": "Certification Gate Results",
+          "level": 2,
+          "line": 170
+        },
+        {
+          "heading": "Issues found and fixed during Phase 1.2",
+          "level": 3,
+          "line": 186
+        },
+        {
+          "heading": "Compliance Notes",
+          "level": 2,
+          "line": 198
+        },
+        {
+          "heading": "Files Changed",
+          "level": 2,
+          "line": 220
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 15
+      }
+    },
+    {
+      "path": "PHASE_1.3_COMPLETION_REPORT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 240,
+      "nonEmptyLines": 195,
+      "sections": [
+        {
+          "heading": "SETURA Phase 1.3 Completion Report — Operations & Exception Management",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Executive Summary",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "Step 0 — Security Baseline Freeze",
+          "level": 2,
+          "line": 26
+        },
+        {
+          "heading": "Architecture Changes",
+          "level": 2,
+          "line": 39
+        },
+        {
+          "heading": "Deliverable 1 — Doctor delay management",
+          "level": 3,
+          "line": 47
+        },
+        {
+          "heading": "Deliverable 2 — Dynamic queue intelligence",
+          "level": 3,
+          "line": 61
+        },
+        {
+          "heading": "Deliverable 3 — Queue congestion alerts",
+          "level": 3,
+          "line": 76
+        },
+        {
+          "heading": "Deliverable 4 — Operational safety",
+          "level": 3,
+          "line": 102
+        },
+        {
+          "heading": "Reused foundation (unchanged contracts)",
+          "level": 3,
+          "line": 120
+        },
+        {
+          "heading": "SQL Migration",
+          "level": 2,
+          "line": 130
+        },
+        {
+          "heading": "45_queue_operations.sql (applied from clean reset, 999 lines, pure ASCII)",
+          "level": 3,
+          "line": 132
+        },
+        {
+          "heading": "Shared Runtime Modules",
+          "level": 2,
+          "line": 150
+        },
+        {
+          "heading": "Edge Function Changes",
+          "level": 2,
+          "line": 165
+        },
+        {
+          "heading": "Integration Tests — `tests/integration/queue_operations.test.ts`",
+          "level": 2,
+          "line": 175
+        },
+        {
+          "heading": "Certification Report",
+          "level": 2,
+          "line": 203
+        },
+        {
+          "heading": "Mandatory-rule verification",
+          "level": 3,
+          "line": 217
+        },
+        {
+          "heading": "Outcome",
+          "level": 2,
+          "line": 233
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 17
+      }
+    },
+    {
+      "path": "PHASE_1.4_COMPLETION_REPORT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 260,
+      "nonEmptyLines": 216,
+      "sections": [
+        {
+          "heading": "SETURA Phase 1.4 Completion Report — Doctor & Clinical Operations",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Executive Summary",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "Architecture Changes",
+          "level": 2,
+          "line": 29
+        },
+        {
+          "heading": "Deliverable 1 — Doctor session management",
+          "level": 3,
+          "line": 38
+        },
+        {
+          "heading": "Deliverable 2 — Clinical queue operations",
+          "level": 3,
+          "line": 56
+        },
+        {
+          "heading": "Deliverable 3 — Consultation lifecycle",
+          "level": 3,
+          "line": 68
+        },
+        {
+          "heading": "Deliverable 4 — Clinical notes infrastructure",
+          "level": 3,
+          "line": 83
+        },
+        {
+          "heading": "Deliverable 5 — Doctor dashboard API",
+          "level": 3,
+          "line": 104
+        },
+        {
+          "heading": "Deliverable 6 — Operational safeguards",
+          "level": 3,
+          "line": 115
+        },
+        {
+          "heading": "SQL Migration",
+          "level": 2,
+          "line": 133
+        },
+        {
+          "heading": "46_doctor_clinical_operations.sql (applied from clean reset, 1026 lines, pure ASCII)",
+          "level": 3,
+          "line": 135
+        },
+        {
+          "heading": "Shared Runtime Modules",
+          "level": 2,
+          "line": 154
+        },
+        {
+          "heading": "Edge Function",
+          "level": 2,
+          "line": 167
+        },
+        {
+          "heading": "Integration Tests — `tests/integration/doctor_operations.test.ts`",
+          "level": 2,
+          "line": 180
+        },
+        {
+          "heading": "Certification Report",
+          "level": 2,
+          "line": 221
+        },
+        {
+          "heading": "Mandatory-rule verification",
+          "level": 3,
+          "line": 235
+        },
+        {
+          "heading": "Outcome",
+          "level": 2,
+          "line": 253
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 17
+      }
+    },
+    {
+      "path": "PHASE_1.5_RECOVERY_REPORT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 480,
+      "nonEmptyLines": 368,
+      "sections": [
+        {
+          "heading": "SETURA PHASE 1.5 RECOVERY REPORT",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. Current repository state",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "2. Migration count",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "3. Edge function count",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "4. SQL function count",
+          "level": 2,
+          "line": 39
+        },
+        {
+          "heading": "5. SECURITY DEFINER count",
+          "level": 2,
+          "line": 45
+        },
+        {
+          "heading": "6. Test count",
+          "level": 2,
+          "line": 54
+        },
+        {
+          "heading": "7. Exact Phase 1.5 artifacts (verified, not assumed)",
+          "level": 2,
+          "line": 73
+        },
+        {
+          "heading": "8. Requirements: DONE / PARTIAL / MISSING / BROKEN",
+          "level": 2,
+          "line": 89
+        },
+        {
+          "heading": "The 7 failures, individually diagnosed",
+          "level": 3,
+          "line": 107
+        },
+        {
+          "heading": "9. Security findings independently verified — CONFIRMED",
+          "level": 2,
+          "line": 124
+        },
+        {
+          "heading": "10. Security findings DISPROVED or downgraded",
+          "level": 2,
+          "line": 188
+        },
+        {
+          "heading": "11. Gate status (all executed on a fresh reset)",
+          "level": 2,
+          "line": 202
+        },
+        {
+          "heading": "The 4 validator warnings, classified (§27 — none labelled \"pre-existing\" without proof)",
+          "level": 3,
+          "line": 220
+        },
+        {
+          "heading": "12. Documentation drift",
+          "level": 2,
+          "line": 234
+        },
+        {
+          "heading": "13. `idx_alert_events_open` — confirmed collision",
+          "level": 2,
+          "line": 248
+        },
+        {
+          "heading": "14. Migrations 38 and 39 — verified, unmodified",
+          "level": 2,
+          "line": 267
+        },
+        {
+          "heading": "15. Multi-role authorization — a real, reproducible lockout",
+          "level": 2,
+          "line": 293
+        },
+        {
+          "heading": "16. Proposed files to change",
+          "level": 2,
+          "line": 320
+        },
+        {
+          "heading": "17. Proposed new migrations",
+          "level": 2,
+          "line": 377
+        },
+        {
+          "heading": "18. Requires an explicit product decision",
+          "level": 2,
+          "line": 418
+        },
+        {
+          "heading": "Two findings I want to flag before any work begins",
+          "level": 2,
+          "line": 457
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 22
+      }
+    }
+  ]
+}

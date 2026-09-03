@@ -1,0 +1,2299 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 20,
+  "filesSkipped": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 20,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 20,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "results": [
+    {
+      "path": "supabase/functions/_shared/cors.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 33,
+      "nonEmptyLines": 31,
+      "functions": [
+        {
+          "name": "buildCorsHeaders",
+          "startLine": 6,
+          "endLine": 23,
+          "params": [
+            "requestOrigin"
+          ]
+        },
+        {
+          "name": "handleCors",
+          "startLine": 25,
+          "endLine": 33,
+          "params": [
+            "req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "buildCorsHeaders",
+          "line": 6,
+          "isDefault": false
+        },
+        {
+          "name": "handleCors",
+          "line": 25,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "buildCorsHeaders",
+          "callee": "Env.ALLOWED_ORIGINS.some",
+          "lineNumber": 8
+        },
+        {
+          "caller": "buildCorsHeaders",
+          "callee": "[\n      \"Authorization\",\n      \"Content-Type\",\n      \"Idempotency-Key\",\n      \"X-Correlation-ID\",\n      \"X-Request-ID\",\n      \"X-Hospital-ID\",\n    ].join",
+          "lineNumber": 12
+        },
+        {
+          "caller": "handleCors",
+          "callee": "buildCorsHeaders",
+          "lineNumber": 29
+        },
+        {
+          "caller": "handleCors",
+          "callee": "req.headers.get",
+          "lineNumber": 29
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/_shared/db.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 168,
+      "nonEmptyLines": 152,
+      "functions": [
+        {
+          "name": "getServiceClient",
+          "startLine": 34,
+          "endLine": 56,
+          "params": []
+        },
+        {
+          "name": "getAnonClient",
+          "startLine": 62,
+          "endLine": 78,
+          "params": []
+        },
+        {
+          "name": "createAuthClient",
+          "startLine": 87,
+          "endLine": 106,
+          "params": [
+            "jwt"
+          ]
+        },
+        {
+          "name": "callRpc",
+          "startLine": 115,
+          "endLine": 136,
+          "params": [
+            "fnName",
+            "params",
+            "client"
+          ]
+        },
+        {
+          "name": "assertNoError",
+          "startLine": 146,
+          "endLine": 168,
+          "params": [
+            "result",
+            "context"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getServiceClient",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "getAnonClient",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "createAuthClient",
+          "line": 87,
+          "isDefault": false
+        },
+        {
+          "name": "callRpc",
+          "line": 115,
+          "isDefault": false
+        },
+        {
+          "name": "assertNoError",
+          "line": 146,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getServiceClient",
+          "callee": "createClient",
+          "lineNumber": 36
+        },
+        {
+          "caller": "getAnonClient",
+          "callee": "createClient",
+          "lineNumber": 64
+        },
+        {
+          "caller": "createAuthClient",
+          "callee": "createClient",
+          "lineNumber": 88
+        },
+        {
+          "caller": "callRpc",
+          "callee": "getServiceClient",
+          "lineNumber": 122
+        },
+        {
+          "caller": "callRpc",
+          "callee": "db.rpc",
+          "lineNumber": 123
+        },
+        {
+          "caller": "callRpc",
+          "callee": "import",
+          "lineNumber": 126
+        },
+        {
+          "caller": "assertNoError",
+          "callee": "Object.assign",
+          "lineNumber": 153
+        },
+        {
+          "caller": "assertNoError",
+          "callee": "Object.assign",
+          "lineNumber": 161
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 5,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/_shared/env.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 278,
+      "nonEmptyLines": 217,
+      "functions": [
+        {
+          "name": "requireEnv",
+          "startLine": 18,
+          "endLine": 28,
+          "params": [
+            "key"
+          ]
+        },
+        {
+          "name": "optionalEnv",
+          "startLine": 30,
+          "endLine": 35,
+          "params": [
+            "key",
+            "defaultValue"
+          ]
+        },
+        {
+          "name": "requireUrlEnv",
+          "startLine": 37,
+          "endLine": 49,
+          "params": [
+            "key"
+          ]
+        },
+        {
+          "name": "optionalIntEnv",
+          "startLine": 51,
+          "endLine": 65,
+          "params": [
+            "key",
+            "defaultValue"
+          ]
+        },
+        {
+          "name": "optionalBooleanEnv",
+          "startLine": 67,
+          "endLine": 76,
+          "params": [
+            "key",
+            "defaultValue"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Env",
+          "line": 227,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "requireEnv",
+          "callee": "Deno.env.get(key)?.trim",
+          "lineNumber": 19
+        },
+        {
+          "caller": "requireEnv",
+          "callee": "Deno.env.get",
+          "lineNumber": 19
+        },
+        {
+          "caller": "optionalEnv",
+          "callee": "Deno.env.get(key)?.trim",
+          "lineNumber": 34
+        },
+        {
+          "caller": "optionalEnv",
+          "callee": "Deno.env.get",
+          "lineNumber": 34
+        },
+        {
+          "caller": "requireUrlEnv",
+          "callee": "requireEnv",
+          "lineNumber": 38
+        },
+        {
+          "caller": "optionalIntEnv",
+          "callee": "optionalEnv",
+          "lineNumber": 55
+        },
+        {
+          "caller": "optionalIntEnv",
+          "callee": "String",
+          "lineNumber": 55
+        },
+        {
+          "caller": "optionalIntEnv",
+          "callee": "Number.parseInt",
+          "lineNumber": 56
+        },
+        {
+          "caller": "optionalIntEnv",
+          "callee": "Number.isNaN",
+          "lineNumber": 58
+        },
+        {
+          "caller": "optionalBooleanEnv",
+          "callee": "optionalEnv(key, String(defaultValue)).toLowerCase",
+          "lineNumber": 71
+        },
+        {
+          "caller": "optionalBooleanEnv",
+          "callee": "optionalEnv",
+          "lineNumber": 71
+        },
+        {
+          "caller": "optionalBooleanEnv",
+          "callee": "String",
+          "lineNumber": 71
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/_shared/idempotency.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 258,
+      "nonEmptyLines": 227,
+      "functions": [
+        {
+          "name": "extractIdempotencyKey",
+          "startLine": 39,
+          "endLine": 59,
+          "params": [
+            "req",
+            "required"
+          ]
+        },
+        {
+          "name": "computeRequestHash",
+          "startLine": 63,
+          "endLine": 68,
+          "params": [
+            "body"
+          ]
+        },
+        {
+          "name": "claimIdempotencyKey",
+          "startLine": 79,
+          "endLine": 129,
+          "params": [
+            "key",
+            "endpoint",
+            "userId",
+            "hospitalId",
+            "requestHash",
+            "requestSummary",
+            "instanceId",
+            "logger"
+          ]
+        },
+        {
+          "name": "completeIdempotencyKey",
+          "startLine": 133,
+          "endLine": 156,
+          "params": [
+            "key",
+            "endpoint",
+            "responseStatusCode",
+            "responseBody",
+            "logger"
+          ]
+        },
+        {
+          "name": "failIdempotencyKey",
+          "startLine": 160,
+          "endLine": 182,
+          "params": [
+            "key",
+            "endpoint",
+            "errorCode",
+            "errorMessage",
+            "logger"
+          ]
+        },
+        {
+          "name": "withIdempotency",
+          "startLine": 196,
+          "endLine": 258,
+          "params": [
+            "key",
+            "endpoint",
+            "userId",
+            "hospitalId",
+            "requestBody",
+            "instanceId",
+            "logger",
+            "handler"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "extractIdempotencyKey",
+          "line": 39,
+          "isDefault": false
+        },
+        {
+          "name": "computeRequestHash",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "claimIdempotencyKey",
+          "line": 79,
+          "isDefault": false
+        },
+        {
+          "name": "completeIdempotencyKey",
+          "line": 133,
+          "isDefault": false
+        },
+        {
+          "name": "failIdempotencyKey",
+          "line": 160,
+          "isDefault": false
+        },
+        {
+          "name": "withIdempotency",
+          "line": 196,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "extractIdempotencyKey",
+          "callee": "req.headers.get",
+          "lineNumber": 43
+        },
+        {
+          "caller": "extractIdempotencyKey",
+          "callee": "uuidV4Pattern.test",
+          "lineNumber": 53
+        },
+        {
+          "caller": "computeRequestHash",
+          "callee": "new TextEncoder().encode",
+          "lineNumber": 64
+        },
+        {
+          "caller": "computeRequestHash",
+          "callee": "JSON.stringify",
+          "lineNumber": 64
+        },
+        {
+          "caller": "computeRequestHash",
+          "callee": "crypto.subtle.digest",
+          "lineNumber": 65
+        },
+        {
+          "caller": "computeRequestHash",
+          "callee": "Array.from",
+          "lineNumber": 66
+        },
+        {
+          "caller": "computeRequestHash",
+          "callee": "hashArray.map((b) => b.toString(16).padStart(2, \"0\")).join",
+          "lineNumber": 67
+        },
+        {
+          "caller": "computeRequestHash",
+          "callee": "hashArray.map",
+          "lineNumber": 67
+        },
+        {
+          "caller": "computeRequestHash",
+          "callee": "b.toString(16).padStart",
+          "lineNumber": 67
+        },
+        {
+          "caller": "computeRequestHash",
+          "callee": "b.toString",
+          "lineNumber": 67
+        },
+        {
+          "caller": "claimIdempotencyKey",
+          "callee": "getServiceClient",
+          "lineNumber": 89
+        },
+        {
+          "caller": "claimIdempotencyKey",
+          "callee": "db.rpc",
+          "lineNumber": 91
+        },
+        {
+          "caller": "claimIdempotencyKey",
+          "callee": "logger.error",
+          "lineNumber": 102
+        },
+        {
+          "caller": "claimIdempotencyKey",
+          "callee": "logger.debug",
+          "lineNumber": 121
+        },
+        {
+          "caller": "completeIdempotencyKey",
+          "callee": "getServiceClient",
+          "lineNumber": 140
+        },
+        {
+          "caller": "completeIdempotencyKey",
+          "callee": "db.rpc",
+          "lineNumber": 142
+        },
+        {
+          "caller": "completeIdempotencyKey",
+          "callee": "logger.warn",
+          "lineNumber": 151
+        },
+        {
+          "caller": "failIdempotencyKey",
+          "callee": "getServiceClient",
+          "lineNumber": 167
+        },
+        {
+          "caller": "failIdempotencyKey",
+          "callee": "db.rpc",
+          "lineNumber": 169
+        },
+        {
+          "caller": "failIdempotencyKey",
+          "callee": "logger.warn",
+          "lineNumber": 177
+        },
+        {
+          "caller": "withIdempotency",
+          "callee": "computeRequestHash",
+          "lineNumber": 206
+        },
+        {
+          "caller": "withIdempotency",
+          "callee": "claimIdempotencyKey",
+          "lineNumber": 208
+        },
+        {
+          "caller": "withIdempotency",
+          "callee": "logger.info",
+          "lineNumber": 226
+        },
+        {
+          "caller": "withIdempotency",
+          "callee": "handler",
+          "lineNumber": 241
+        },
+        {
+          "caller": "withIdempotency",
+          "callee": "completeIdempotencyKey",
+          "lineNumber": 242
+        },
+        {
+          "caller": "withIdempotency",
+          "callee": "String",
+          "lineNumber": 252
+        },
+        {
+          "caller": "withIdempotency",
+          "callee": "failIdempotencyKey",
+          "lineNumber": 255
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 6,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/_shared/metrics.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 118,
+      "nonEmptyLines": 106,
+      "functions": [
+        {
+          "name": "createMetrics",
+          "startLine": 108,
+          "endLine": 118,
+          "params": [
+            "endpoint",
+            "correlationId",
+            "hospitalId"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "MetricsCollector",
+          "startLine": 24,
+          "endLine": 103,
+          "methods": [
+            "constructor",
+            "record",
+            "timing",
+            "increment",
+            "startTimer",
+            "flush",
+            "getAll",
+            "getSummary"
+          ],
+          "properties": [
+            "metrics",
+            "baseTags"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "MetricsCollector",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "createMetrics",
+          "line": 108,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "record",
+          "callee": "this.metrics.push",
+          "lineNumber": 38
+        },
+        {
+          "caller": "record",
+          "callee": "new Date().toISOString",
+          "lineNumber": 43
+        },
+        {
+          "caller": "timing",
+          "callee": "this.record",
+          "lineNumber": 52
+        },
+        {
+          "caller": "increment",
+          "callee": "this.record",
+          "lineNumber": 56
+        },
+        {
+          "caller": "startTimer",
+          "callee": "performance.now",
+          "lineNumber": 66
+        },
+        {
+          "caller": "startTimer",
+          "callee": "Math.round",
+          "lineNumber": 69
+        },
+        {
+          "caller": "startTimer",
+          "callee": "performance.now",
+          "lineNumber": 69
+        },
+        {
+          "caller": "startTimer",
+          "callee": "this.timing",
+          "lineNumber": 70
+        },
+        {
+          "caller": "flush",
+          "callee": "logger.info",
+          "lineNumber": 82
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "supabase/functions/_shared/tracing.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 49,
+      "nonEmptyLines": 44,
+      "functions": [
+        {
+          "name": "createTraceContext",
+          "startLine": 17,
+          "endLine": 26,
+          "params": [
+            "req"
+          ]
+        },
+        {
+          "name": "childSpan",
+          "startLine": 28,
+          "endLine": 36,
+          "params": [
+            "parent"
+          ]
+        },
+        {
+          "name": "elapsedMs",
+          "startLine": 38,
+          "endLine": 40,
+          "params": [
+            "ctx"
+          ]
+        },
+        {
+          "name": "traceHeaders",
+          "startLine": 42,
+          "endLine": 49,
+          "params": [
+            "ctx"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "createTraceContext",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "childSpan",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "elapsedMs",
+          "line": 38,
+          "isDefault": false
+        },
+        {
+          "name": "traceHeaders",
+          "line": 42,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "createTraceContext",
+          "callee": "req.headers.get",
+          "lineNumber": 19
+        },
+        {
+          "caller": "createTraceContext",
+          "callee": "req.headers.get",
+          "lineNumber": 20
+        },
+        {
+          "caller": "createTraceContext",
+          "callee": "crypto.randomUUID",
+          "lineNumber": 21
+        },
+        {
+          "caller": "createTraceContext",
+          "callee": "crypto.randomUUID",
+          "lineNumber": 22
+        },
+        {
+          "caller": "createTraceContext",
+          "callee": "crypto.randomUUID",
+          "lineNumber": 23
+        },
+        {
+          "caller": "createTraceContext",
+          "callee": "performance.now",
+          "lineNumber": 24
+        },
+        {
+          "caller": "childSpan",
+          "callee": "crypto.randomUUID",
+          "lineNumber": 32
+        },
+        {
+          "caller": "childSpan",
+          "callee": "performance.now",
+          "lineNumber": 34
+        },
+        {
+          "caller": "elapsedMs",
+          "callee": "Math.round",
+          "lineNumber": 39
+        },
+        {
+          "caller": "elapsedMs",
+          "callee": "performance.now",
+          "lineNumber": 39
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/_shared/types.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 328,
+      "nonEmptyLines": 300,
+      "exports": [
+        {
+          "name": "Database",
+          "line": 260,
+          "isDefault": false
+        },
+        {
+          "name": "Json",
+          "line": 260,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/_shared/worker.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 256,
+      "nonEmptyLines": 216,
+      "functions": [
+        {
+          "name": "registerWorker",
+          "startLine": 30,
+          "endLine": 54,
+          "params": [
+            "config",
+            "logger"
+          ]
+        },
+        {
+          "name": "sendWorkerHeartbeat",
+          "startLine": 58,
+          "endLine": 77,
+          "params": [
+            "workerId",
+            "jobsInFlight",
+            "logger"
+          ]
+        },
+        {
+          "name": "stopWorker",
+          "startLine": 81,
+          "endLine": 94,
+          "params": [
+            "workerId",
+            "drain",
+            "logger"
+          ]
+        },
+        {
+          "name": "claimJobs",
+          "startLine": 98,
+          "endLine": 130,
+          "params": [
+            "workerId",
+            "jobTypes",
+            "batchSize",
+            "logger"
+          ]
+        },
+        {
+          "name": "completeJob",
+          "startLine": 134,
+          "endLine": 151,
+          "params": [
+            "jobId",
+            "workerId",
+            "logger"
+          ]
+        },
+        {
+          "name": "failJob",
+          "startLine": 155,
+          "endLine": 178,
+          "params": [
+            "jobId",
+            "workerId",
+            "errorMessage",
+            "logger"
+          ]
+        },
+        {
+          "name": "startHeartbeatLoop",
+          "startLine": 191,
+          "endLine": 215,
+          "params": [
+            "workerId",
+            "getJobsInFlight",
+            "logger",
+            "intervalMs"
+          ]
+        },
+        {
+          "name": "processJob",
+          "startLine": 230,
+          "endLine": 256,
+          "params": [
+            "job",
+            "workerId",
+            "processor",
+            "logger"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "registerWorker",
+          "line": 30,
+          "isDefault": false
+        },
+        {
+          "name": "sendWorkerHeartbeat",
+          "line": 58,
+          "isDefault": false
+        },
+        {
+          "name": "stopWorker",
+          "line": 81,
+          "isDefault": false
+        },
+        {
+          "name": "claimJobs",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "completeJob",
+          "line": 134,
+          "isDefault": false
+        },
+        {
+          "name": "failJob",
+          "line": 155,
+          "isDefault": false
+        },
+        {
+          "name": "startHeartbeatLoop",
+          "line": 191,
+          "isDefault": false
+        },
+        {
+          "name": "processJob",
+          "line": 230,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "registerWorker",
+          "callee": "getServiceClient",
+          "lineNumber": 34
+        },
+        {
+          "caller": "registerWorker",
+          "callee": "db.rpc",
+          "lineNumber": 36
+        },
+        {
+          "caller": "registerWorker",
+          "callee": "logger.warn",
+          "lineNumber": 44
+        },
+        {
+          "caller": "registerWorker",
+          "callee": "logger.info",
+          "lineNumber": 48
+        },
+        {
+          "caller": "sendWorkerHeartbeat",
+          "callee": "getServiceClient",
+          "lineNumber": 63
+        },
+        {
+          "caller": "sendWorkerHeartbeat",
+          "callee": "db.rpc",
+          "lineNumber": 65
+        },
+        {
+          "caller": "sendWorkerHeartbeat",
+          "callee": "logger.warn",
+          "lineNumber": 72
+        },
+        {
+          "caller": "sendWorkerHeartbeat",
+          "callee": "Boolean",
+          "lineNumber": 76
+        },
+        {
+          "caller": "stopWorker",
+          "callee": "getServiceClient",
+          "lineNumber": 86
+        },
+        {
+          "caller": "stopWorker",
+          "callee": "db.rpc",
+          "lineNumber": 88
+        },
+        {
+          "caller": "stopWorker",
+          "callee": "logger.info",
+          "lineNumber": 93
+        },
+        {
+          "caller": "claimJobs",
+          "callee": "getServiceClient",
+          "lineNumber": 104
+        },
+        {
+          "caller": "claimJobs",
+          "callee": "db.rpc",
+          "lineNumber": 107
+        },
+        {
+          "caller": "claimJobs",
+          "callee": "logger.error",
+          "lineNumber": 114
+        },
+        {
+          "caller": "claimJobs",
+          "callee": "logger.info",
+          "lineNumber": 121
+        },
+        {
+          "caller": "claimJobs",
+          "callee": "jobs.map",
+          "lineNumber": 124
+        },
+        {
+          "caller": "claimJobs",
+          "callee": "jobs.map",
+          "lineNumber": 125
+        },
+        {
+          "caller": "completeJob",
+          "callee": "getServiceClient",
+          "lineNumber": 139
+        },
+        {
+          "caller": "completeJob",
+          "callee": "db.rpc",
+          "lineNumber": 141
+        },
+        {
+          "caller": "completeJob",
+          "callee": "logger.error",
+          "lineNumber": 147
+        },
+        {
+          "caller": "completeJob",
+          "callee": "logger.debug",
+          "lineNumber": 149
+        },
+        {
+          "caller": "failJob",
+          "callee": "getServiceClient",
+          "lineNumber": 161
+        },
+        {
+          "caller": "failJob",
+          "callee": "db.rpc",
+          "lineNumber": 163
+        },
+        {
+          "caller": "failJob",
+          "callee": "logger.error",
+          "lineNumber": 170
+        },
+        {
+          "caller": "failJob",
+          "callee": "logger.warn",
+          "lineNumber": 176
+        },
+        {
+          "caller": "loop",
+          "callee": "setTimeout",
+          "lineNumber": 201
+        },
+        {
+          "caller": "loop",
+          "callee": "sendWorkerHeartbeat",
+          "lineNumber": 203
+        },
+        {
+          "caller": "loop",
+          "callee": "getJobsInFlight",
+          "lineNumber": 203
+        },
+        {
+          "caller": "startHeartbeatLoop",
+          "callee": "loop().catch",
+          "lineNumber": 208
+        },
+        {
+          "caller": "startHeartbeatLoop",
+          "callee": "loop",
+          "lineNumber": 208
+        },
+        {
+          "caller": "startHeartbeatLoop",
+          "callee": "logger.error",
+          "lineNumber": 209
+        },
+        {
+          "caller": "processJob",
+          "callee": "logger.child",
+          "lineNumber": 236
+        },
+        {
+          "caller": "processJob",
+          "callee": "jobLogger.timer",
+          "lineNumber": 243
+        },
+        {
+          "caller": "processJob",
+          "callee": "processor.process",
+          "lineNumber": 246
+        },
+        {
+          "caller": "processJob",
+          "callee": "completeJob",
+          "lineNumber": 247
+        },
+        {
+          "caller": "processJob",
+          "callee": "timer.end",
+          "lineNumber": 248
+        },
+        {
+          "caller": "processJob",
+          "callee": "String",
+          "lineNumber": 251
+        },
+        {
+          "caller": "processJob",
+          "callee": "jobLogger.error",
+          "lineNumber": 252
+        },
+        {
+          "caller": "processJob",
+          "callee": "failJob",
+          "lineNumber": 253
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 8,
+        "functionCount": 8,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/cancel-booking/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 486,
+      "nonEmptyLines": 412,
+      "metrics": {
+        "importCount": 12,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/create-payment-order/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 406,
+      "nonEmptyLines": 368,
+      "functions": [
+        {
+          "name": "createRazorpayOrder",
+          "startLine": 64,
+          "endLine": 102,
+          "params": [
+            "amountPaise",
+            "currency",
+            "receipt",
+            "keyId",
+            "keySecret"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "createRazorpayOrder",
+          "callee": "btoa",
+          "lineNumber": 71
+        },
+        {
+          "caller": "createRazorpayOrder",
+          "callee": "fetch",
+          "lineNumber": 73
+        },
+        {
+          "caller": "createRazorpayOrder",
+          "callee": "JSON.stringify",
+          "lineNumber": 79
+        },
+        {
+          "caller": "createRazorpayOrder",
+          "callee": "AbortSignal.timeout",
+          "lineNumber": 85
+        },
+        {
+          "caller": "createRazorpayOrder",
+          "callee": "resp.json().catch",
+          "lineNumber": 89
+        },
+        {
+          "caller": "createRazorpayOrder",
+          "callee": "resp.json",
+          "lineNumber": 89
+        },
+        {
+          "caller": "createRazorpayOrder",
+          "callee": "resp.json",
+          "lineNumber": 101
+        }
+      ],
+      "metrics": {
+        "importCount": 13,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/monitoring-health-check/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 230,
+      "nonEmptyLines": 203,
+      "metrics": {
+        "importCount": 7,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/process-refund/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 377,
+      "nonEmptyLines": 341,
+      "functions": [
+        {
+          "name": "callRazorpayRefund",
+          "startLine": 48,
+          "endLine": 109,
+          "params": [
+            "gatewayPaymentId",
+            "amountPaise",
+            "keyId",
+            "keySecret",
+            "notes"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "callRazorpayRefund",
+          "callee": "btoa",
+          "lineNumber": 58
+        },
+        {
+          "caller": "callRazorpayRefund",
+          "callee": "fetch",
+          "lineNumber": 65
+        },
+        {
+          "caller": "callRazorpayRefund",
+          "callee": "JSON.stringify",
+          "lineNumber": 73
+        },
+        {
+          "caller": "callRazorpayRefund",
+          "callee": "AbortSignal.timeout",
+          "lineNumber": 77
+        },
+        {
+          "caller": "callRazorpayRefund",
+          "callee": "String",
+          "lineNumber": 86
+        },
+        {
+          "caller": "callRazorpayRefund",
+          "callee": "resp.json()\n      .catch",
+          "lineNumber": 92
+        },
+        {
+          "caller": "callRazorpayRefund",
+          "callee": "resp.json",
+          "lineNumber": 92
+        },
+        {
+          "caller": "callRazorpayRefund",
+          "callee": "resp.json",
+          "lineNumber": 108
+        }
+      ],
+      "metrics": {
+        "importCount": 13,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/process-whatsapp-webhook/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 662,
+      "nonEmptyLines": 579,
+      "functions": [
+        {
+          "name": "bodyHash",
+          "startLine": 40,
+          "endLine": 53,
+          "params": [
+            "body"
+          ]
+        },
+        {
+          "name": "OK_200",
+          "startLine": 55,
+          "endLine": 66,
+          "params": [
+            "status"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "bodyHash",
+          "callee": "crypto.subtle.digest",
+          "lineNumber": 43
+        },
+        {
+          "caller": "bodyHash",
+          "callee": "new TextEncoder().encode",
+          "lineNumber": 45
+        },
+        {
+          "caller": "bodyHash",
+          "callee": "Array.from(\n    new Uint8Array(digest),\n  )\n    .map((b) => b.toString(16).padStart(2, \"0\"))\n    .join",
+          "lineNumber": 48
+        },
+        {
+          "caller": "bodyHash",
+          "callee": "Array.from(\n    new Uint8Array(digest),\n  )\n    .map",
+          "lineNumber": 48
+        },
+        {
+          "caller": "bodyHash",
+          "callee": "Array.from",
+          "lineNumber": 48
+        },
+        {
+          "caller": "bodyHash",
+          "callee": "b.toString(16).padStart",
+          "lineNumber": 51
+        },
+        {
+          "caller": "bodyHash",
+          "callee": "b.toString",
+          "lineNumber": 51
+        },
+        {
+          "caller": "OK_200",
+          "callee": "JSON.stringify",
+          "lineNumber": 59
+        }
+      ],
+      "metrics": {
+        "importCount": 8,
+        "exportCount": 0,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/reschedule-booking/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 616,
+      "nonEmptyLines": 559,
+      "metrics": {
+        "importCount": 13,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/run-background-worker/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 497,
+      "nonEmptyLines": 443,
+      "functions": [
+        {
+          "name": "processSendWhatsapp",
+          "startLine": 37,
+          "endLine": 57,
+          "params": [
+            "job",
+            "_logger"
+          ]
+        },
+        {
+          "name": "processIncomingWhatsapp",
+          "startLine": 65,
+          "endLine": 165,
+          "params": [
+            "job",
+            "logger"
+          ]
+        },
+        {
+          "name": "processRefreshAnalytics",
+          "startLine": 167,
+          "endLine": 176,
+          "params": [
+            "_job",
+            "logger"
+          ]
+        },
+        {
+          "name": "processSendNotification",
+          "startLine": 178,
+          "endLine": 211,
+          "params": [
+            "job",
+            "logger"
+          ]
+        },
+        {
+          "name": "processComputeSla",
+          "startLine": 213,
+          "endLine": 289,
+          "params": [
+            "job",
+            "logger"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "processSendWhatsapp",
+          "callee": "fetch",
+          "lineNumber": 41
+        },
+        {
+          "caller": "processSendWhatsapp",
+          "callee": "JSON.stringify",
+          "lineNumber": 49
+        },
+        {
+          "caller": "processSendWhatsapp",
+          "callee": "AbortSignal.timeout",
+          "lineNumber": 50
+        },
+        {
+          "caller": "processSendWhatsapp",
+          "callee": "resp.text().catch",
+          "lineNumber": 54
+        },
+        {
+          "caller": "processSendWhatsapp",
+          "callee": "resp.text",
+          "lineNumber": 54
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "getServiceClient",
+          "lineNumber": 69
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "logger.warn",
+          "lineNumber": 84
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "String",
+          "lineNumber": 88
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "String",
+          "lineNumber": 89
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "String",
+          "lineNumber": 90
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "String(\n    (msg.text as { body?: string } | undefined)?.body ?? \"\",\n  ).trim",
+          "lineNumber": 91
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "String",
+          "lineNumber": 91
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "logger.warn",
+          "lineNumber": 96
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "logger.info",
+          "lineNumber": 102
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "from.replace(/\\D/g, \"\").slice",
+          "lineNumber": 109
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "from.replace",
+          "lineNumber": 109
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "String",
+          "lineNumber": 112
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "db\n      .from(\"hospital_settings\")\n      .select(\"hospital_id\")\n      .eq(\"meta_phone_number_id\", phoneNumberId)\n      .maybeSingle",
+          "lineNumber": 116
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "db\n      .from(\"hospital_settings\")\n      .select(\"hospital_id\")\n      .eq",
+          "lineNumber": 116
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "db\n      .from(\"hospital_settings\")\n      .select",
+          "lineNumber": 116
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "db\n      .from",
+          "lineNumber": 116
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "db\n      .from(\"hospitals\")\n      .select(\"id\")\n      .eq(\"is_active\", true)\n      .limit",
+          "lineNumber": 128
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "db\n      .from(\"hospitals\")\n      .select(\"id\")\n      .eq",
+          "lineNumber": 128
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "db\n      .from(\"hospitals\")\n      .select",
+          "lineNumber": 128
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "db\n      .from",
+          "lineNumber": 128
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "logger.warn",
+          "lineNumber": 139
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "createMetrics",
+          "lineNumber": 146
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "processInboundMessage",
+          "lineNumber": 148
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "metrics.flush",
+          "lineNumber": 155
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "logger.info",
+          "lineNumber": 157
+        },
+        {
+          "caller": "processIncomingWhatsapp",
+          "callee": "phone.slice",
+          "lineNumber": 159
+        },
+        {
+          "caller": "processRefreshAnalytics",
+          "callee": "getServiceClient().rpc",
+          "lineNumber": 171
+        },
+        {
+          "caller": "processRefreshAnalytics",
+          "callee": "getServiceClient",
+          "lineNumber": 171
+        },
+        {
+          "caller": "processRefreshAnalytics",
+          "callee": "logger.info",
+          "lineNumber": 175
+        },
+        {
+          "caller": "processSendNotification",
+          "callee": "getServiceClient",
+          "lineNumber": 182
+        },
+        {
+          "caller": "processSendNotification",
+          "callee": "db.from(\"notification_queue\").select(\n    \"*\",\n  ).eq(\"id\", nId).single",
+          "lineNumber": 185
+        },
+        {
+          "caller": "processSendNotification",
+          "callee": "db.from(\"notification_queue\").select(\n    \"*\",\n  ).eq",
+          "lineNumber": 185
+        },
+        {
+          "caller": "processSendNotification",
+          "callee": "db.from(\"notification_queue\").select",
+          "lineNumber": 185
+        },
+        {
+          "caller": "processSendNotification",
+          "callee": "db.from",
+          "lineNumber": 185
+        },
+        {
+          "caller": "processSendNotification",
+          "callee": "logger.warn",
+          "lineNumber": 189
+        },
+        {
+          "caller": "processSendNotification",
+          "callee": "db.rpc",
+          "lineNumber": 193
+        },
+        {
+          "caller": "processSendNotification",
+          "callee": "new Date().toISOString",
+          "lineNumber": 203
+        },
+        {
+          "caller": "processSendNotification",
+          "callee": "db.from(\"notification_queue\").update({\n    status: \"sent\",\n    sent_at: new Date().toISOString(),\n  }).eq",
+          "lineNumber": 207
+        },
+        {
+          "caller": "processSendNotification",
+          "callee": "db.from(\"notification_queue\").update",
+          "lineNumber": 207
+        },
+        {
+          "caller": "processSendNotification",
+          "callee": "db.from",
+          "lineNumber": 207
+        },
+        {
+          "caller": "processSendNotification",
+          "callee": "new Date().toISOString",
+          "lineNumber": 209
+        },
+        {
+          "caller": "processComputeSla",
+          "callee": "getServiceClient",
+          "lineNumber": 217
+        },
+        {
+          "caller": "processComputeSla",
+          "callee": "new Date(\n      Date.now() - 86400000,\n    )\n      .toISOString()\n      .split",
+          "lineNumber": 225
+        },
+        {
+          "caller": "processComputeSla",
+          "callee": "new Date(\n      Date.now() - 86400000,\n    )\n      .toISOString",
+          "lineNumber": 225
+        },
+        {
+          "caller": "processComputeSla",
+          "callee": "Date.now",
+          "lineNumber": 226
+        },
+        {
+          "caller": "processComputeSla",
+          "callee": "db.rpc",
+          "lineNumber": 234
+        },
+        {
+          "caller": "processComputeSla",
+          "callee": "db\n      .from(\"hospitals\")\n      .select(\"id\")\n      .eq",
+          "lineNumber": 251
+        },
+        {
+          "caller": "processComputeSla",
+          "callee": "db\n      .from(\"hospitals\")\n      .select",
+          "lineNumber": 251
+        },
+        {
+          "caller": "processComputeSla",
+          "callee": "db\n      .from",
+          "lineNumber": 251
+        },
+        {
+          "caller": "processComputeSla",
+          "callee": "Promise.allSettled",
+          "lineNumber": 265
+        },
+        {
+          "caller": "processComputeSla",
+          "callee": "(hospitals ?? []).map",
+          "lineNumber": 266
+        },
+        {
+          "caller": "processComputeSla",
+          "callee": "db.rpc",
+          "lineNumber": 268
+        },
+        {
+          "caller": "processComputeSla",
+          "callee": "logger.info",
+          "lineNumber": 283
+        }
+      ],
+      "metrics": {
+        "importCount": 10,
+        "exportCount": 0,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/run-cron-minute/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 532,
+      "nonEmptyLines": 457,
+      "functions": [
+        {
+          "name": "constantTimeEquals",
+          "startLine": 20,
+          "endLine": 42,
+          "params": [
+            "provided",
+            "expected"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "constantTimeEquals",
+          "callee": "provided.charCodeAt",
+          "lineNumber": 37
+        },
+        {
+          "caller": "constantTimeEquals",
+          "callee": "expected.charCodeAt",
+          "lineNumber": 38
+        }
+      ],
+      "metrics": {
+        "importCount": 8,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/run-cron-nightly/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 373,
+      "nonEmptyLines": 327,
+      "functions": [
+        {
+          "name": "runStep",
+          "startLine": 36,
+          "endLine": 61,
+          "params": [
+            "label",
+            "fn",
+            "logger"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "runStep",
+          "callee": "performance.now",
+          "lineNumber": 49
+        },
+        {
+          "caller": "runStep",
+          "callee": "fn",
+          "lineNumber": 51
+        },
+        {
+          "caller": "runStep",
+          "callee": "Math.round",
+          "lineNumber": 52
+        },
+        {
+          "caller": "runStep",
+          "callee": "performance.now",
+          "lineNumber": 52
+        },
+        {
+          "caller": "runStep",
+          "callee": "logger.info",
+          "lineNumber": 53
+        },
+        {
+          "caller": "runStep",
+          "callee": "Math.round",
+          "lineNumber": 56
+        },
+        {
+          "caller": "runStep",
+          "callee": "performance.now",
+          "lineNumber": 56
+        },
+        {
+          "caller": "runStep",
+          "callee": "String",
+          "lineNumber": 57
+        },
+        {
+          "caller": "runStep",
+          "callee": "logger.error",
+          "lineNumber": 58
+        }
+      ],
+      "metrics": {
+        "importCount": 8,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/send-reminders/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 449,
+      "nonEmptyLines": 381,
+      "functions": [
+        {
+          "name": "constantTimeEquals",
+          "startLine": 17,
+          "endLine": 39,
+          "params": [
+            "provided",
+            "expected"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "constantTimeEquals",
+          "callee": "provided.charCodeAt",
+          "lineNumber": 34
+        },
+        {
+          "caller": "constantTimeEquals",
+          "callee": "expected.charCodeAt",
+          "lineNumber": 35
+        }
+      ],
+      "metrics": {
+        "importCount": 8,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/send-whatsapp-message/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 863,
+      "nonEmptyLines": 757,
+      "functions": [
+        {
+          "name": "constantTimeEqual",
+          "startLine": 91,
+          "endLine": 107,
+          "params": [
+            "a",
+            "b"
+          ]
+        },
+        {
+          "name": "buildComponents",
+          "startLine": 109,
+          "endLine": 202,
+          "params": [
+            "p"
+          ]
+        },
+        {
+          "name": "callMeta",
+          "startLine": 213,
+          "endLine": 321,
+          "params": [
+            "messageBody",
+            "phoneNumberId",
+            "accessToken",
+            "apiVersion"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "constantTimeEqual",
+          "callee": "a.charCodeAt",
+          "lineNumber": 102
+        },
+        {
+          "caller": "constantTimeEqual",
+          "callee": "b.charCodeAt",
+          "lineNumber": 103
+        },
+        {
+          "caller": "vars",
+          "callee": "texts.map",
+          "lineNumber": 113
+        },
+        {
+          "caller": "buildComponents",
+          "callee": "vars",
+          "lineNumber": 123
+        },
+        {
+          "caller": "buildComponents",
+          "callee": "String",
+          "lineNumber": 125
+        },
+        {
+          "caller": "buildComponents",
+          "callee": "vars",
+          "lineNumber": 139
+        },
+        {
+          "caller": "buildComponents",
+          "callee": "String",
+          "lineNumber": 141
+        },
+        {
+          "caller": "buildComponents",
+          "callee": "vars",
+          "lineNumber": 152
+        },
+        {
+          "caller": "buildComponents",
+          "callee": "String",
+          "lineNumber": 154
+        },
+        {
+          "caller": "buildComponents",
+          "callee": "vars",
+          "lineNumber": 166
+        },
+        {
+          "caller": "buildComponents",
+          "callee": "vars",
+          "lineNumber": 179
+        },
+        {
+          "caller": "buildComponents",
+          "callee": "String",
+          "lineNumber": 181
+        },
+        {
+          "caller": "buildComponents",
+          "callee": "vars",
+          "lineNumber": 195
+        },
+        {
+          "caller": "callMeta",
+          "callee": "fetch",
+          "lineNumber": 222
+        },
+        {
+          "caller": "callMeta",
+          "callee": "JSON.stringify",
+          "lineNumber": 230
+        },
+        {
+          "caller": "callMeta",
+          "callee": "AbortSignal.timeout",
+          "lineNumber": 231
+        },
+        {
+          "caller": "callMeta",
+          "callee": "String",
+          "lineNumber": 239
+        },
+        {
+          "caller": "callMeta",
+          "callee": "parseInt",
+          "lineNumber": 246
+        },
+        {
+          "caller": "callMeta",
+          "callee": "resp.headers.get",
+          "lineNumber": 247
+        },
+        {
+          "caller": "callMeta",
+          "callee": "resp.json",
+          "lineNumber": 268
+        },
+        {
+          "caller": "callMeta",
+          "callee": "JSON.stringify",
+          "lineNumber": 297
+        },
+        {
+          "caller": "callMeta",
+          "callee": "permanentCodes.has",
+          "lineNumber": 300
+        },
+        {
+          "caller": "callMeta",
+          "callee": "Array.isArray",
+          "lineNumber": 307
+        }
+      ],
+      "metrics": {
+        "importCount": 11,
+        "exportCount": 0,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/verify-payment/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 576,
+      "nonEmptyLines": 506,
+      "functions": [
+        {
+          "name": "hmacSha256",
+          "startLine": 41,
+          "endLine": 57,
+          "params": [
+            "message",
+            "secret"
+          ]
+        },
+        {
+          "name": "verifyWebhookSignature",
+          "startLine": 59,
+          "endLine": 70,
+          "params": [
+            "rawBody",
+            "signature"
+          ]
+        },
+        {
+          "name": "verifyPaymentSignature",
+          "startLine": 72,
+          "endLine": 110,
+          "params": [
+            "orderId",
+            "paymentId",
+            "providedSignature"
+          ]
+        },
+        {
+          "name": "computeHash",
+          "startLine": 112,
+          "endLine": 120,
+          "params": [
+            "body"
+          ]
+        },
+        {
+          "name": "processCapturedPayment",
+          "startLine": 133,
+          "endLine": 186,
+          "params": [
+            "db",
+            "gatewayOrderId",
+            "gatewayPaymentId",
+            "gatewaySignature",
+            "rawPayload",
+            "logger",
+            "_correlationId"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "hmacSha256",
+          "callee": "crypto.subtle.importKey",
+          "lineNumber": 42
+        },
+        {
+          "caller": "hmacSha256",
+          "callee": "new TextEncoder().encode",
+          "lineNumber": 44
+        },
+        {
+          "caller": "hmacSha256",
+          "callee": "crypto.subtle.sign",
+          "lineNumber": 49
+        },
+        {
+          "caller": "hmacSha256",
+          "callee": "new TextEncoder().encode",
+          "lineNumber": 52
+        },
+        {
+          "caller": "hmacSha256",
+          "callee": "Array.from(new Uint8Array(sig)).map((b) =>\n    b.toString(16).padStart(2, \"0\")\n  ).join",
+          "lineNumber": 54
+        },
+        {
+          "caller": "hmacSha256",
+          "callee": "Array.from(new Uint8Array(sig)).map",
+          "lineNumber": 54
+        },
+        {
+          "caller": "hmacSha256",
+          "callee": "Array.from",
+          "lineNumber": 54
+        },
+        {
+          "caller": "hmacSha256",
+          "callee": "b.toString(16).padStart",
+          "lineNumber": 55
+        },
+        {
+          "caller": "hmacSha256",
+          "callee": "b.toString",
+          "lineNumber": 55
+        },
+        {
+          "caller": "verifyWebhookSignature",
+          "callee": "hmacSha256",
+          "lineNumber": 63
+        },
+        {
+          "caller": "verifyWebhookSignature",
+          "callee": "expected.charCodeAt",
+          "lineNumber": 67
+        },
+        {
+          "caller": "verifyWebhookSignature",
+          "callee": "signature.charCodeAt",
+          "lineNumber": 67
+        },
+        {
+          "caller": "verifyPaymentSignature",
+          "callee": "hmacSha256",
+          "lineNumber": 85
+        },
+        {
+          "caller": "verifyPaymentSignature",
+          "callee": "expectedSignature.charCodeAt",
+          "lineNumber": 105
+        },
+        {
+          "caller": "verifyPaymentSignature",
+          "callee": "providedSignature.charCodeAt",
+          "lineNumber": 106
+        },
+        {
+          "caller": "computeHash",
+          "callee": "crypto.subtle.digest",
+          "lineNumber": 113
+        },
+        {
+          "caller": "computeHash",
+          "callee": "new TextEncoder().encode",
+          "lineNumber": 115
+        },
+        {
+          "caller": "computeHash",
+          "callee": "Array.from(new Uint8Array(buf)).map((b) =>\n    b.toString(16).padStart(2, \"0\")\n  ).join",
+          "lineNumber": 117
+        },
+        {
+          "caller": "computeHash",
+          "callee": "Array.from(new Uint8Array(buf)).map",
+          "lineNumber": 117
+        },
+        {
+          "caller": "computeHash",
+          "callee": "Array.from",
+          "lineNumber": 117
+        },
+        {
+          "caller": "computeHash",
+          "callee": "b.toString(16).padStart",
+          "lineNumber": 118
+        },
+        {
+          "caller": "computeHash",
+          "callee": "b.toString",
+          "lineNumber": 118
+        },
+        {
+          "caller": "processCapturedPayment",
+          "callee": "computeHash",
+          "lineNumber": 142
+        },
+        {
+          "caller": "processCapturedPayment",
+          "callee": "JSON.stringify",
+          "lineNumber": 142
+        },
+        {
+          "caller": "processCapturedPayment",
+          "callee": "db.rpc",
+          "lineNumber": 144
+        },
+        {
+          "caller": "processCapturedPayment",
+          "callee": "logger.error",
+          "lineNumber": 157
+        },
+        {
+          "caller": "processCapturedPayment",
+          "callee": "logger.warn",
+          "lineNumber": 168
+        },
+        {
+          "caller": "processCapturedPayment",
+          "callee": "db\n    .from(\"payment_orders\")\n    .select(\"booking_id\")\n    .eq(\"gateway_payment_id\", gatewayPaymentId)\n    .single",
+          "lineNumber": 175
+        },
+        {
+          "caller": "processCapturedPayment",
+          "callee": "db\n    .from(\"payment_orders\")\n    .select(\"booking_id\")\n    .eq",
+          "lineNumber": 175
+        },
+        {
+          "caller": "processCapturedPayment",
+          "callee": "db\n    .from(\"payment_orders\")\n    .select",
+          "lineNumber": 175
+        },
+        {
+          "caller": "processCapturedPayment",
+          "callee": "db\n    .from",
+          "lineNumber": 175
+        }
+      ],
+      "metrics": {
+        "importCount": 12,
+        "exportCount": 0,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    }
+  ]
+}

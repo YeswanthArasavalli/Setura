@@ -1,0 +1,2563 @@
+{
+  "nodes": [
+    {
+      "id": "table:supabase/migrations/01_foundation.sql",
+      "type": "schema",
+      "name": "01_foundation.sql",
+      "filePath": "supabase/migrations/01_foundation.sql",
+      "summary": "Core foundation: hospitals, profiles, user_roles, patients, and hospital configuration tables with multi-tenancy fields.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "foundation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:supabase/migrations/01_foundation.sql:hospitals",
+      "type": "table",
+      "name": "hospitals",
+      "filePath": "supabase/migrations/01_foundation.sql",
+      "summary": "Table defined in migration 1: hospitals",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/01_foundation.sql:profiles",
+      "type": "table",
+      "name": "profiles",
+      "filePath": "supabase/migrations/01_foundation.sql",
+      "summary": "Table defined in migration 1: profiles",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/01_foundation.sql:user_roles",
+      "type": "table",
+      "name": "user_roles",
+      "filePath": "supabase/migrations/01_foundation.sql",
+      "summary": "Table defined in migration 1: user_roles",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/01_foundation.sql:patients",
+      "type": "table",
+      "name": "patients",
+      "filePath": "supabase/migrations/01_foundation.sql",
+      "summary": "Table defined in migration 1: patients",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/01_foundation.sql:hospital_working_hours",
+      "type": "table",
+      "name": "hospital_working_hours",
+      "filePath": "supabase/migrations/01_foundation.sql",
+      "summary": "Table defined in migration 1: hospital_working_hours",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/01_foundation.sql:hospital_holidays",
+      "type": "table",
+      "name": "hospital_holidays",
+      "filePath": "supabase/migrations/01_foundation.sql",
+      "summary": "Table defined in migration 1: hospital_holidays",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+      "type": "schema",
+      "name": "02_atomic_token_engine_&_bookings.sql",
+      "filePath": "supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+      "summary": "Atomic token engine with queue_sessions, bookings with full state machine, and booking_events audit trail.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "foundation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:supabase/migrations/02_atomic_token_engine_&_bookings.sql:hospital_daily_counters",
+      "type": "table",
+      "name": "hospital_daily_counters",
+      "filePath": "supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+      "summary": "Table defined in migration 2: hospital_daily_counters",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/02_atomic_token_engine_&_bookings.sql:queue_sessions",
+      "type": "table",
+      "name": "queue_sessions",
+      "filePath": "supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+      "summary": "Table defined in migration 2: queue_sessions",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/02_atomic_token_engine_&_bookings.sql:bookings",
+      "type": "table",
+      "name": "bookings",
+      "filePath": "supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+      "summary": "Table defined in migration 2: bookings",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/02_atomic_token_engine_&_bookings.sql:booking_events",
+      "type": "table",
+      "name": "booking_events",
+      "filePath": "supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+      "summary": "Table defined in migration 2: booking_events",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/03_doctorscheduling&slotengine.sql",
+      "type": "schema",
+      "name": "03_doctorscheduling&slotengine.sql",
+      "filePath": "supabase/migrations/03_doctorscheduling&slotengine.sql",
+      "summary": "Doctor scheduling engine: weekly schedules, block-out periods, leave management, and availability overrides.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "foundation",
+        "doctor"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:supabase/migrations/03_doctorscheduling&slotengine.sql:doctor_specializations",
+      "type": "table",
+      "name": "doctor_specializations",
+      "filePath": "supabase/migrations/03_doctorscheduling&slotengine.sql",
+      "summary": "Table defined in migration 3: doctor_specializations",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/03_doctorscheduling&slotengine.sql:doctor_schedules",
+      "type": "table",
+      "name": "doctor_schedules",
+      "filePath": "supabase/migrations/03_doctorscheduling&slotengine.sql",
+      "summary": "Table defined in migration 3: doctor_schedules",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/03_doctorscheduling&slotengine.sql:doctor_schedule_blocks",
+      "type": "table",
+      "name": "doctor_schedule_blocks",
+      "filePath": "supabase/migrations/03_doctorscheduling&slotengine.sql",
+      "summary": "Table defined in migration 3: doctor_schedule_blocks",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/03_doctorscheduling&slotengine.sql:doctor_leaves",
+      "type": "table",
+      "name": "doctor_leaves",
+      "filePath": "supabase/migrations/03_doctorscheduling&slotengine.sql",
+      "summary": "Table defined in migration 3: doctor_leaves",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/03_doctorscheduling&slotengine.sql:doctor_availability_overrides",
+      "type": "table",
+      "name": "doctor_availability_overrides",
+      "filePath": "supabase/migrations/03_doctorscheduling&slotengine.sql",
+      "summary": "Table defined in migration 3: doctor_availability_overrides",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/04_whatsapp_messaging_engine.sql",
+      "type": "schema",
+      "name": "04_whatsapp_messaging_engine.sql",
+      "filePath": "supabase/migrations/04_whatsapp_messaging_engine.sql",
+      "summary": "WhatsApp messaging engine with template management, conversation tracking, delivery logs, and webhook event processing.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "foundation",
+        "whatsapp",
+        "messaging"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:supabase/migrations/04_whatsapp_messaging_engine.sql:whatsapp_templates",
+      "type": "table",
+      "name": "whatsapp_templates",
+      "filePath": "supabase/migrations/04_whatsapp_messaging_engine.sql",
+      "summary": "Table defined in migration 4: whatsapp_templates",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/04_whatsapp_messaging_engine.sql:whatsapp_conversations",
+      "type": "table",
+      "name": "whatsapp_conversations",
+      "filePath": "supabase/migrations/04_whatsapp_messaging_engine.sql",
+      "summary": "Table defined in migration 4: whatsapp_conversations",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/04_whatsapp_messaging_engine.sql:whatsapp_messages",
+      "type": "table",
+      "name": "whatsapp_messages",
+      "filePath": "supabase/migrations/04_whatsapp_messaging_engine.sql",
+      "summary": "Table defined in migration 4: whatsapp_messages",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/04_whatsapp_messaging_engine.sql:whatsapp_delivery_logs",
+      "type": "table",
+      "name": "whatsapp_delivery_logs",
+      "filePath": "supabase/migrations/04_whatsapp_messaging_engine.sql",
+      "summary": "Table defined in migration 4: whatsapp_delivery_logs",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/04_whatsapp_messaging_engine.sql:whatsapp_webhook_events",
+      "type": "table",
+      "name": "whatsapp_webhook_events",
+      "filePath": "supabase/migrations/04_whatsapp_messaging_engine.sql",
+      "summary": "Table defined in migration 4: whatsapp_webhook_events",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/05_notification_queue.sql",
+      "type": "schema",
+      "name": "05_notification_queue.sql",
+      "filePath": "supabase/migrations/05_notification_queue.sql",
+      "summary": "Generic notification queue system for SMS, email, and push notifications with delivery tracking.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "foundation",
+        "queue-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/05_notification_queue.sql:notification_templates",
+      "type": "table",
+      "name": "notification_templates",
+      "filePath": "supabase/migrations/05_notification_queue.sql",
+      "summary": "Table defined in migration 5: notification_templates",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/05_notification_queue.sql:notification_queue",
+      "type": "table",
+      "name": "notification_queue",
+      "filePath": "supabase/migrations/05_notification_queue.sql",
+      "summary": "Table defined in migration 5: notification_queue",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/05_notification_queue.sql:notification_deliveries",
+      "type": "table",
+      "name": "notification_deliveries",
+      "filePath": "supabase/migrations/05_notification_queue.sql",
+      "summary": "Table defined in migration 5: notification_deliveries",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/06_background_job_queue.sql",
+      "type": "schema",
+      "name": "06_background_job_queue.sql",
+      "filePath": "supabase/migrations/06_background_job_queue.sql",
+      "summary": "Background job queue for async processing with dead-letter handling for failed jobs.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "foundation",
+        "background-jobs",
+        "queue-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/06_background_job_queue.sql:job_queue",
+      "type": "table",
+      "name": "job_queue",
+      "filePath": "supabase/migrations/06_background_job_queue.sql",
+      "summary": "Table defined in migration 6: job_queue",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/06_background_job_queue.sql:dead_letter_jobs",
+      "type": "table",
+      "name": "dead_letter_jobs",
+      "filePath": "supabase/migrations/06_background_job_queue.sql",
+      "summary": "Table defined in migration 6: dead_letter_jobs",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/07_settlement_engine.sql",
+      "type": "schema",
+      "name": "07_settlement_engine.sql",
+      "filePath": "supabase/migrations/07_settlement_engine.sql",
+      "summary": "Settlement engine: daily collections, hospital settlements, settlement breakdown, and outstanding balance tracking.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "foundation",
+        "financial"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/07_settlement_engine.sql:daily_collection_entries",
+      "type": "table",
+      "name": "daily_collection_entries",
+      "filePath": "supabase/migrations/07_settlement_engine.sql",
+      "summary": "Table defined in migration 7: daily_collection_entries",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/07_settlement_engine.sql:hospital_settlements",
+      "type": "table",
+      "name": "hospital_settlements",
+      "filePath": "supabase/migrations/07_settlement_engine.sql",
+      "summary": "Table defined in migration 7: hospital_settlements",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/07_settlement_engine.sql:settlement_items",
+      "type": "table",
+      "name": "settlement_items",
+      "filePath": "supabase/migrations/07_settlement_engine.sql",
+      "summary": "Table defined in migration 7: settlement_items",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/07_settlement_engine.sql:outstanding_balances",
+      "type": "table",
+      "name": "outstanding_balances",
+      "filePath": "supabase/migrations/07_settlement_engine.sql",
+      "summary": "Table defined in migration 7: outstanding_balances",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/08_analytics_engine.sql",
+      "type": "schema",
+      "name": "08_analytics_engine.sql",
+      "filePath": "supabase/migrations/08_analytics_engine.sql",
+      "summary": "Analytics refresh logging system for tracking rollup and aggregation refresh operations.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "foundation",
+        "analytics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/08_analytics_engine.sql:analytics_refresh_logs",
+      "type": "table",
+      "name": "analytics_refresh_logs",
+      "filePath": "supabase/migrations/08_analytics_engine.sql",
+      "summary": "Table defined in migration 8: analytics_refresh_logs",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql",
+      "type": "schema",
+      "name": "09_abuse_protection_&_rate_limiting.sql",
+      "filePath": "supabase/migrations/09_abuse_protection_&_rate_limiting.sql",
+      "summary": "Abuse protection and rate limiting: per-hospital rules, attempt logging, spam detection, and device/number blocking.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "foundation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql:rate_limit_rules",
+      "type": "table",
+      "name": "rate_limit_rules",
+      "filePath": "supabase/migrations/09_abuse_protection_&_rate_limiting.sql",
+      "summary": "Table defined in migration 9: rate_limit_rules",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql:booking_attempt_logs",
+      "type": "table",
+      "name": "booking_attempt_logs",
+      "filePath": "supabase/migrations/09_abuse_protection_&_rate_limiting.sql",
+      "summary": "Table defined in migration 9: booking_attempt_logs",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql:spam_events",
+      "type": "table",
+      "name": "spam_events",
+      "filePath": "supabase/migrations/09_abuse_protection_&_rate_limiting.sql",
+      "summary": "Table defined in migration 9: spam_events",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql:blocked_numbers",
+      "type": "table",
+      "name": "blocked_numbers",
+      "filePath": "supabase/migrations/09_abuse_protection_&_rate_limiting.sql",
+      "summary": "Table defined in migration 9: blocked_numbers",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql:blocked_devices",
+      "type": "table",
+      "name": "blocked_devices",
+      "filePath": "supabase/migrations/09_abuse_protection_&_rate_limiting.sql",
+      "summary": "Table defined in migration 9: blocked_devices",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql:abuse_scores",
+      "type": "table",
+      "name": "abuse_scores",
+      "filePath": "supabase/migrations/09_abuse_protection_&_rate_limiting.sql",
+      "summary": "Table defined in migration 9: abuse_scores",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql:temporary_restrictions",
+      "type": "table",
+      "name": "temporary_restrictions",
+      "filePath": "supabase/migrations/09_abuse_protection_&_rate_limiting.sql",
+      "summary": "Table defined in migration 9: temporary_restrictions",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/10_audit_&_security_engine.sql",
+      "type": "schema",
+      "name": "10_audit_&_security_engine.sql",
+      "filePath": "supabase/migrations/10_audit_&_security_engine.sql",
+      "summary": "Immutable audit and security event logging for compliance and security monitoring.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "foundation",
+        "audit",
+        "security"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/10_audit_&_security_engine.sql:audit_logs",
+      "type": "table",
+      "name": "audit_logs",
+      "filePath": "supabase/migrations/10_audit_&_security_engine.sql",
+      "summary": "Table defined in migration 10: audit_logs",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/10_audit_&_security_engine.sql:security_events",
+      "type": "table",
+      "name": "security_events",
+      "filePath": "supabase/migrations/10_audit_&_security_engine.sql",
+      "summary": "Table defined in migration 10: security_events",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/11_realtime_presence_schedule_tasks.sql",
+      "type": "schema",
+      "name": "11_realtime_presence_schedule_tasks.sql",
+      "filePath": "supabase/migrations/11_realtime_presence_schedule_tasks.sql",
+      "summary": "Realtime presence tracking for dashboard, plus scheduled task registry for background job scheduling.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/11_realtime_presence_schedule_tasks.sql:dashboard_presence",
+      "type": "table",
+      "name": "dashboard_presence",
+      "filePath": "supabase/migrations/11_realtime_presence_schedule_tasks.sql",
+      "summary": "Table defined in migration 11: dashboard_presence",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/12_hospital_configuration_engine.sql",
+      "type": "schema",
+      "name": "12_hospital_configuration_engine.sql",
+      "filePath": "supabase/migrations/12_hospital_configuration_engine.sql",
+      "summary": "Hospital and system configuration engine: settings, feature flags, and queue configuration management.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/12_hospital_configuration_engine.sql:system_settings",
+      "type": "table",
+      "name": "system_settings",
+      "filePath": "supabase/migrations/12_hospital_configuration_engine.sql",
+      "summary": "Table defined in migration 12: system_settings",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/12_hospital_configuration_engine.sql:hospital_settings",
+      "type": "table",
+      "name": "hospital_settings",
+      "filePath": "supabase/migrations/12_hospital_configuration_engine.sql",
+      "summary": "Table defined in migration 12: hospital_settings",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/12_hospital_configuration_engine.sql:feature_flags",
+      "type": "table",
+      "name": "feature_flags",
+      "filePath": "supabase/migrations/12_hospital_configuration_engine.sql",
+      "summary": "Table defined in migration 12: feature_flags",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/12_hospital_configuration_engine.sql:queue_configs",
+      "type": "table",
+      "name": "queue_configs",
+      "filePath": "supabase/migrations/12_hospital_configuration_engine.sql",
+      "summary": "Table defined in migration 12: queue_configs",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/13_payment_engine.sql",
+      "type": "schema",
+      "name": "13_payment_engine.sql",
+      "filePath": "supabase/migrations/13_payment_engine.sql",
+      "summary": "Payment engine: orders, attempts, refunds, event logging, and immutable financial ledger.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "financial"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:supabase/migrations/13_payment_engine.sql:payment_orders",
+      "type": "table",
+      "name": "payment_orders",
+      "filePath": "supabase/migrations/13_payment_engine.sql",
+      "summary": "Table defined in migration 13: payment_orders",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/13_payment_engine.sql:payment_attempts",
+      "type": "table",
+      "name": "payment_attempts",
+      "filePath": "supabase/migrations/13_payment_engine.sql",
+      "summary": "Table defined in migration 13: payment_attempts",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/13_payment_engine.sql:payment_refunds",
+      "type": "table",
+      "name": "payment_refunds",
+      "filePath": "supabase/migrations/13_payment_engine.sql",
+      "summary": "Table defined in migration 13: payment_refunds",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/13_payment_engine.sql:payment_events",
+      "type": "table",
+      "name": "payment_events",
+      "filePath": "supabase/migrations/13_payment_engine.sql",
+      "summary": "Table defined in migration 13: payment_events",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/13_payment_engine.sql:financial_ledger",
+      "type": "table",
+      "name": "financial_ledger",
+      "filePath": "supabase/migrations/13_payment_engine.sql",
+      "summary": "Table defined in migration 13: financial_ledger",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/14_dead_letter_queue.sql",
+      "type": "schema",
+      "name": "14_dead_letter_queue.sql",
+      "filePath": "supabase/migrations/14_dead_letter_queue.sql",
+      "summary": "Dead letter queue for capturing failed jobs with retry tracking and exhaustion state.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "queue-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/14_dead_letter_queue.sql:dead_letter_queue",
+      "type": "table",
+      "name": "dead_letter_queue",
+      "filePath": "supabase/migrations/14_dead_letter_queue.sql",
+      "summary": "Table defined in migration 14: dead_letter_queue",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/15_partitioning_strategy.sql",
+      "type": "schema",
+      "name": "15_partitioning_strategy.sql",
+      "filePath": "supabase/migrations/15_partitioning_strategy.sql",
+      "summary": "Database partitioning strategy with partition_management table and automated partition creation functions.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/15_partitioning_strategy.sql:partition_management",
+      "type": "table",
+      "name": "partition_management",
+      "filePath": "supabase/migrations/15_partitioning_strategy.sql",
+      "summary": "Table defined in migration 15: partition_management",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/16_idempotency_hardening.sql",
+      "type": "schema",
+      "name": "16_idempotency_hardening.sql",
+      "filePath": "supabase/migrations/16_idempotency_hardening.sql",
+      "summary": "Webhook idempotency hardening: deduplication, replay safety, and webhook event registry.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:supabase/migrations/16_idempotency_hardening.sql:webhook_events",
+      "type": "table",
+      "name": "webhook_events",
+      "filePath": "supabase/migrations/16_idempotency_hardening.sql",
+      "summary": "Table defined in migration 16: webhook_events",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/17_queue_monitoring_engine.sql",
+      "type": "schema",
+      "name": "17_queue_monitoring_engine.sql",
+      "filePath": "supabase/migrations/17_queue_monitoring_engine.sql",
+      "summary": "Queue monitoring: real-time metrics snapshots and materialized view refresh tracking.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "queue-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:supabase/migrations/17_queue_monitoring_engine.sql:queue_metrics_snapshots",
+      "type": "table",
+      "name": "queue_metrics_snapshots",
+      "filePath": "supabase/migrations/17_queue_monitoring_engine.sql",
+      "summary": "Table defined in migration 17: queue_metrics_snapshots",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/17_queue_monitoring_engine.sql:mv_refresh_log",
+      "type": "table",
+      "name": "mv_refresh_log",
+      "filePath": "supabase/migrations/17_queue_monitoring_engine.sql",
+      "summary": "Table defined in migration 17: mv_refresh_log",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/18_config_versioning_&_rollback.sql",
+      "type": "schema",
+      "name": "18_config_versioning_&_rollback.sql",
+      "filePath": "supabase/migrations/18_config_versioning_&_rollback.sql",
+      "summary": "Configuration versioning and rollback system for tracking changes to hospital and system settings.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/18_config_versioning_&_rollback.sql:config_versions",
+      "type": "table",
+      "name": "config_versions",
+      "filePath": "supabase/migrations/18_config_versioning_&_rollback.sql",
+      "summary": "Table defined in migration 18: config_versions",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/19_background_worker_engine.sql",
+      "type": "schema",
+      "name": "19_background_worker_engine.sql",
+      "filePath": "supabase/migrations/19_background_worker_engine.sql",
+      "summary": "Background worker engine: worker registration, heartbeat tracking, and distributed job leasing.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "background-jobs"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:supabase/migrations/19_background_worker_engine.sql:worker_registry",
+      "type": "table",
+      "name": "worker_registry",
+      "filePath": "supabase/migrations/19_background_worker_engine.sql",
+      "summary": "Table defined in migration 19: worker_registry",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/19_background_worker_engine.sql:worker_heartbeat_log",
+      "type": "table",
+      "name": "worker_heartbeat_log",
+      "filePath": "supabase/migrations/19_background_worker_engine.sql",
+      "summary": "Table defined in migration 19: worker_heartbeat_log",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/19_background_worker_engine.sql:worker_job_leases",
+      "type": "table",
+      "name": "worker_job_leases",
+      "filePath": "supabase/migrations/19_background_worker_engine.sql",
+      "summary": "Table defined in migration 19: worker_job_leases",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/20_presence_engine.sql",
+      "type": "schema",
+      "name": "20_presence_engine.sql",
+      "filePath": "supabase/migrations/20_presence_engine.sql",
+      "summary": "Presence engine for tracking doctor and staff online/offline status in real time.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/20_presence_engine.sql:dashboard_presence",
+      "type": "table",
+      "name": "dashboard_presence",
+      "filePath": "supabase/migrations/20_presence_engine.sql",
+      "summary": "Table defined in migration 20: dashboard_presence",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/20_presence_engine.sql:hospital_online_state",
+      "type": "table",
+      "name": "hospital_online_state",
+      "filePath": "supabase/migrations/20_presence_engine.sql",
+      "summary": "Table defined in migration 20: hospital_online_state",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/21_analytics_rollups.sql",
+      "type": "schema",
+      "name": "21_analytics_rollups.sql",
+      "filePath": "supabase/migrations/21_analytics_rollups.sql",
+      "summary": "Pre-computed analytics rollups at weekly, monthly, quarterly, and cohort retention levels.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "analytics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/21_analytics_rollups.sql:analytics_weekly_rollups",
+      "type": "table",
+      "name": "analytics_weekly_rollups",
+      "filePath": "supabase/migrations/21_analytics_rollups.sql",
+      "summary": "Table defined in migration 21: analytics_weekly_rollups",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/21_analytics_rollups.sql:analytics_monthly_rollups",
+      "type": "table",
+      "name": "analytics_monthly_rollups",
+      "filePath": "supabase/migrations/21_analytics_rollups.sql",
+      "summary": "Table defined in migration 21: analytics_monthly_rollups",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/21_analytics_rollups.sql:analytics_quarterly_rollups",
+      "type": "table",
+      "name": "analytics_quarterly_rollups",
+      "filePath": "supabase/migrations/21_analytics_rollups.sql",
+      "summary": "Table defined in migration 21: analytics_quarterly_rollups",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/21_analytics_rollups.sql:analytics_global_metrics",
+      "type": "table",
+      "name": "analytics_global_metrics",
+      "filePath": "supabase/migrations/21_analytics_rollups.sql",
+      "summary": "Table defined in migration 21: analytics_global_metrics",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/21_analytics_rollups.sql:analytics_cohort_retention",
+      "type": "table",
+      "name": "analytics_cohort_retention",
+      "filePath": "supabase/migrations/21_analytics_rollups.sql",
+      "summary": "Table defined in migration 21: analytics_cohort_retention",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/22_partition_automation.sql",
+      "type": "schema",
+      "name": "22_partition_automation.sql",
+      "filePath": "supabase/migrations/22_partition_automation.sql",
+      "summary": "Automated partition management with manifest, configuration, and operational notes tracking.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/22_partition_automation.sql:partition_manifest",
+      "type": "table",
+      "name": "partition_manifest",
+      "filePath": "supabase/migrations/22_partition_automation.sql",
+      "summary": "Table defined in migration 22: partition_manifest",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/22_partition_automation.sql:partition_config",
+      "type": "table",
+      "name": "partition_config",
+      "filePath": "supabase/migrations/22_partition_automation.sql",
+      "summary": "Table defined in migration 22: partition_config",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/22_partition_automation.sql:operational_notes",
+      "type": "table",
+      "name": "operational_notes",
+      "filePath": "supabase/migrations/22_partition_automation.sql",
+      "summary": "Table defined in migration 22: operational_notes",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/23_retention_&_cleanup_engine.sql",
+      "type": "schema",
+      "name": "23_retention_&_cleanup_engine.sql",
+      "filePath": "supabase/migrations/23_retention_&_cleanup_engine.sql",
+      "summary": "Data retention and cleanup engine with configurable policies and execution audit logs.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/23_retention_&_cleanup_engine.sql:retention_policies",
+      "type": "table",
+      "name": "retention_policies",
+      "filePath": "supabase/migrations/23_retention_&_cleanup_engine.sql",
+      "summary": "Table defined in migration 23: retention_policies",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/23_retention_&_cleanup_engine.sql:cleanup_run_log",
+      "type": "table",
+      "name": "cleanup_run_log",
+      "filePath": "supabase/migrations/23_retention_&_cleanup_engine.sql",
+      "summary": "Table defined in migration 23: cleanup_run_log",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/24_operational-monitoring_engine.sql",
+      "type": "schema",
+      "name": "24_operational-monitoring_engine.sql",
+      "filePath": "supabase/migrations/24_operational-monitoring_engine.sql",
+      "summary": "Operational monitoring: alert thresholds, event logging, system health snapshots, and SLA tracking.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/24_operational-monitoring_engine.sql:alert_thresholds",
+      "type": "table",
+      "name": "alert_thresholds",
+      "filePath": "supabase/migrations/24_operational-monitoring_engine.sql",
+      "summary": "Table defined in migration 24: alert_thresholds",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/24_operational-monitoring_engine.sql:alert_events",
+      "type": "table",
+      "name": "alert_events",
+      "filePath": "supabase/migrations/24_operational-monitoring_engine.sql",
+      "summary": "Table defined in migration 24: alert_events",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/24_operational-monitoring_engine.sql:system_health_snapshots",
+      "type": "table",
+      "name": "system_health_snapshots",
+      "filePath": "supabase/migrations/24_operational-monitoring_engine.sql",
+      "summary": "Table defined in migration 24: system_health_snapshots",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/24_operational-monitoring_engine.sql:sla_daily_tracking",
+      "type": "table",
+      "name": "sla_daily_tracking",
+      "filePath": "supabase/migrations/24_operational-monitoring_engine.sql",
+      "summary": "Table defined in migration 24: sla_daily_tracking",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/25_api_idempotency_registry.sql",
+      "type": "schema",
+      "name": "25_api_idempotency_registry.sql",
+      "filePath": "supabase/migrations/25_api_idempotency_registry.sql",
+      "summary": "API-level idempotency registry for preventing duplicate request processing.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/25_api_idempotency_registry.sql:api_idempotency_keys",
+      "type": "table",
+      "name": "api_idempotency_keys",
+      "filePath": "supabase/migrations/25_api_idempotency_registry.sql",
+      "summary": "Table defined in migration 25: api_idempotency_keys",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/25_api_idempotency_registry.sql:idempotency_endpoint_registry",
+      "type": "table",
+      "name": "idempotency_endpoint_registry",
+      "filePath": "supabase/migrations/25_api_idempotency_registry.sql",
+      "summary": "Table defined in migration 25: idempotency_endpoint_registry",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/26_migration_metadata_&_registry.sql",
+      "type": "schema",
+      "name": "26_migration_metadata_&_registry.sql",
+      "filePath": "supabase/migrations/26_migration_metadata_&_registry.sql",
+      "summary": "Migration metadata, execution log, and deployment snapshot for schema change tracking.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/26_migration_metadata_&_registry.sql:migration_registry",
+      "type": "table",
+      "name": "migration_registry",
+      "filePath": "supabase/migrations/26_migration_metadata_&_registry.sql",
+      "summary": "Table defined in migration 26: migration_registry",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/26_migration_metadata_&_registry.sql:migration_execution_log",
+      "type": "table",
+      "name": "migration_execution_log",
+      "filePath": "supabase/migrations/26_migration_metadata_&_registry.sql",
+      "summary": "Table defined in migration 26: migration_execution_log",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/26_migration_metadata_&_registry.sql:deployment_snapshots",
+      "type": "table",
+      "name": "deployment_snapshots",
+      "filePath": "supabase/migrations/26_migration_metadata_&_registry.sql",
+      "summary": "Table defined in migration 26: deployment_snapshots",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/27_role_permissions.sql",
+      "type": "schema",
+      "name": "27_role_permissions.sql",
+      "filePath": "supabase/migrations/27_role_permissions.sql",
+      "summary": "Role-based permission matrix defining what actions each role can perform per resource.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "authorization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/27_role_permissions.sql:role_permissions",
+      "type": "table",
+      "name": "role_permissions",
+      "filePath": "supabase/migrations/27_role_permissions.sql",
+      "summary": "Table defined in migration 27: role_permissions",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/28_booking_enhancements.sql",
+      "type": "schema",
+      "name": "28_booking_enhancements.sql",
+      "filePath": "supabase/migrations/28_booking_enhancements.sql",
+      "summary": "Booking fee policy configuration: platform fee, receptionist fee, and hospital fee rules per hospital.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/28_booking_enhancements.sql:booking_fee_policies",
+      "type": "table",
+      "name": "booking_fee_policies",
+      "filePath": "supabase/migrations/28_booking_enhancements.sql",
+      "summary": "Table defined in migration 28: booking_fee_policies",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/29_cancellation_policy.sql",
+      "type": "schema",
+      "name": "29_cancellation_policy.sql",
+      "filePath": "supabase/migrations/29_cancellation_policy.sql",
+      "summary": "Cancellation policies with configurable windows and fee rules, plus full history audit.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/29_cancellation_policy.sql:cancellation_policies",
+      "type": "table",
+      "name": "cancellation_policies",
+      "filePath": "supabase/migrations/29_cancellation_policy.sql",
+      "summary": "Table defined in migration 29: cancellation_policies",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/29_cancellation_policy.sql:cancellation_policy_history",
+      "type": "table",
+      "name": "cancellation_policy_history",
+      "filePath": "supabase/migrations/29_cancellation_policy.sql",
+      "summary": "Table defined in migration 29: cancellation_policy_history",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/30_device_sessions.sql",
+      "type": "schema",
+      "name": "30_device_sessions.sql",
+      "filePath": "supabase/migrations/30_device_sessions.sql",
+      "summary": "Device session tracking for user login sessions with device fingerprinting.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/30_device_sessions.sql:device_sessions",
+      "type": "table",
+      "name": "device_sessions",
+      "filePath": "supabase/migrations/30_device_sessions.sql",
+      "summary": "Table defined in migration 30: device_sessions",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/31_doctor_leave_management.sql",
+      "type": "schema",
+      "name": "31_doctor_leave_management.sql",
+      "filePath": "supabase/migrations/31_doctor_leave_management.sql",
+      "summary": "Doctor leave management with hospital-specific holiday overrides.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "doctor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/31_doctor_leave_management.sql:doctor_hospital_holidays",
+      "type": "table",
+      "name": "doctor_hospital_holidays",
+      "filePath": "supabase/migrations/31_doctor_leave_management.sql",
+      "summary": "Table defined in migration 31: doctor_hospital_holidays",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/32_subscription_engine.sql",
+      "type": "schema",
+      "name": "32_subscription_engine.sql",
+      "filePath": "supabase/migrations/32_subscription_engine.sql",
+      "summary": "Multi-tier subscription engine: plans, hospital subscriptions, and billing history.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "subscription"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/32_subscription_engine.sql:subscription_plans",
+      "type": "table",
+      "name": "subscription_plans",
+      "filePath": "supabase/migrations/32_subscription_engine.sql",
+      "summary": "Table defined in migration 32: subscription_plans",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/32_subscription_engine.sql:hospital_subscriptions",
+      "type": "table",
+      "name": "hospital_subscriptions",
+      "filePath": "supabase/migrations/32_subscription_engine.sql",
+      "summary": "Table defined in migration 32: hospital_subscriptions",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/32_subscription_engine.sql:subscription_billing_history",
+      "type": "table",
+      "name": "subscription_billing_history",
+      "filePath": "supabase/migrations/32_subscription_engine.sql",
+      "summary": "Table defined in migration 32: subscription_billing_history",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/33_settlement_engine_refactor.sql",
+      "type": "schema",
+      "name": "33_settlement_engine_refactor.sql",
+      "filePath": "supabase/migrations/33_settlement_engine_refactor.sql",
+      "summary": "Settlement engine refactor: RPC functions and triggers hardening without new tables.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "financial"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/34_payment_ledger_cleanup.sql",
+      "type": "schema",
+      "name": "34_payment_ledger_cleanup.sql",
+      "filePath": "supabase/migrations/34_payment_ledger_cleanup.sql",
+      "summary": "Payment ledger cleanup: removes orphaned entries and repairs data integrity issues.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "financial"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/35_hospital_config_enhancements.sql",
+      "type": "schema",
+      "name": "35_hospital_config_enhancements.sql",
+      "filePath": "supabase/migrations/35_hospital_config_enhancements.sql",
+      "summary": "Hospital configuration enhancements: adds columns and constraints to existing config tables.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/36_audit_standardization.sql",
+      "type": "schema",
+      "name": "36_audit_standardization.sql",
+      "filePath": "supabase/migrations/36_audit_standardization.sql",
+      "summary": "Audit standardization: adds audit_action_types taxonomy and standardizes audit_log metadata.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "audit",
+        "security"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:supabase/migrations/36_audit_standardization.sql:audit_action_types",
+      "type": "table",
+      "name": "audit_action_types",
+      "filePath": "supabase/migrations/36_audit_standardization.sql",
+      "summary": "Table defined in migration 36: audit_action_types",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/37_feature_flags.sql",
+      "type": "schema",
+      "name": "37_feature_flags.sql",
+      "filePath": "supabase/migrations/37_feature_flags.sql",
+      "summary": "Feature flag system: adds dynamic feature toggles for phased rollout of functionality.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/38_missing_rpc_functions.sql",
+      "type": "schema",
+      "name": "38_missing_rpc_functions.sql",
+      "filePath": "supabase/migrations/38_missing_rpc_functions.sql",
+      "summary": "Missing RPC function additions: fills gaps in the RPC surface for previously unexposed operations.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/39_schema_alignment.sql",
+      "type": "schema",
+      "name": "39_schema_alignment.sql",
+      "filePath": "supabase/migrations/39_schema_alignment.sql",
+      "summary": "Schema alignment: consistency fixes for column types, constraints, and naming across tables.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/40_subscription_usage_engine.sql",
+      "type": "schema",
+      "name": "40_subscription_usage_engine.sql",
+      "filePath": "supabase/migrations/40_subscription_usage_engine.sql",
+      "summary": "Subscription usage tracking: RPC functions and triggers for metering API calls and storage.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "subscription"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/41_integration_hardening.sql",
+      "type": "schema",
+      "name": "41_integration_hardening.sql",
+      "filePath": "supabase/migrations/41_integration_hardening.sql",
+      "summary": "Integration hardening: webhook validation, retry logic, and external API error handling improvements.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/42_whatsapp_conversational_engine.sql",
+      "type": "schema",
+      "name": "42_whatsapp_conversational_engine.sql",
+      "filePath": "supabase/migrations/42_whatsapp_conversational_engine.sql",
+      "summary": "WhatsApp conversational engine: state machine for multi-turn booking, cancellation, and queue flows.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "whatsapp",
+        "messaging"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:supabase/migrations/42_whatsapp_conversational_engine.sql:whatsapp_conversation_states",
+      "type": "table",
+      "name": "whatsapp_conversation_states",
+      "filePath": "supabase/migrations/42_whatsapp_conversational_engine.sql",
+      "summary": "Table defined in migration 42: whatsapp_conversation_states",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/43_queue_runtime.sql",
+      "type": "schema",
+      "name": "43_queue_runtime.sql",
+      "filePath": "supabase/migrations/43_queue_runtime.sql",
+      "summary": "Queue runtime engine: queue state machine, SLA tracking, position updates, and real-time broadcasts.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "queue-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:supabase/migrations/43_queue_runtime.sql:queue_runtime_events",
+      "type": "table",
+      "name": "queue_runtime_events",
+      "filePath": "supabase/migrations/43_queue_runtime.sql",
+      "summary": "Table defined in migration 43: queue_runtime_events",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/44_queue_runtime_flag.sql",
+      "type": "schema",
+      "name": "44_queue_runtime_flag.sql",
+      "filePath": "supabase/migrations/44_queue_runtime_flag.sql",
+      "summary": "Feature flag to enable or disable the queue runtime engine without schema changes.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "queue-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/45_queue_operations.sql",
+      "type": "schema",
+      "name": "45_queue_operations.sql",
+      "filePath": "supabase/migrations/45_queue_operations.sql",
+      "summary": "Queue operations RPCs: pause, resume, call next, skip, restore, mark absent, and insert emergency.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "queue-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:supabase/migrations/46_doctor_clinical_operations.sql",
+      "type": "schema",
+      "name": "46_doctor_clinical_operations.sql",
+      "filePath": "supabase/migrations/46_doctor_clinical_operations.sql",
+      "summary": "Doctor clinical operations: session open/close, consultation start/complete, return-to-waiting, emergency insert.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "doctor"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:supabase/migrations/46_doctor_clinical_operations.sql:consultation_notes",
+      "type": "table",
+      "name": "consultation_notes",
+      "filePath": "supabase/migrations/46_doctor_clinical_operations.sql",
+      "summary": "Table defined in migration 46: consultation_notes",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/47_enterprise_command_center.sql",
+      "type": "schema",
+      "name": "47_enterprise_command_center.sql",
+      "filePath": "supabase/migrations/47_enterprise_command_center.sql",
+      "summary": "Enterprise command center: real-time hospital alerts, admin broadcasts, and SLA monitoring dashboards.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:supabase/migrations/47_enterprise_command_center.sql:alert_activity_log",
+      "type": "table",
+      "name": "alert_activity_log",
+      "filePath": "supabase/migrations/47_enterprise_command_center.sql",
+      "summary": "Table defined in migration 47: alert_activity_log",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/47_enterprise_command_center.sql:alert_suppressions",
+      "type": "table",
+      "name": "alert_suppressions",
+      "filePath": "supabase/migrations/47_enterprise_command_center.sql",
+      "summary": "Table defined in migration 47: alert_suppressions",
+      "tags": [
+        "database",
+        "schema",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:supabase/migrations/48_privilege_hardening.sql",
+      "type": "schema",
+      "name": "48_privilege_hardening.sql",
+      "filePath": "supabase/migrations/48_privilege_hardening.sql",
+      "summary": "Privilege hardening: RLS policies, SECURITY DEFINER functions, and explicit REVOKE statements for fail-closed posture.",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "authorization"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:supabase/migrations/49_phase_1_5_defect_fixes.sql",
+      "type": "schema",
+      "name": "49_phase_1_5_defect_fixes.sql",
+      "filePath": "supabase/migrations/49_phase_1_5_defect_fixes.sql",
+      "summary": "Phase 1.5 defect fixes: schema corrections, missing constraints, and bug fixes from integration testing.",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "table:supabase/migrations/01_foundation.sql",
+      "target": "table:supabase/migrations/01_foundation.sql:hospitals",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/01_foundation.sql",
+      "target": "table:supabase/migrations/01_foundation.sql:profiles",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/01_foundation.sql",
+      "target": "table:supabase/migrations/01_foundation.sql:user_roles",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/01_foundation.sql",
+      "target": "table:supabase/migrations/01_foundation.sql:patients",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/01_foundation.sql",
+      "target": "table:supabase/migrations/01_foundation.sql:hospital_working_hours",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/01_foundation.sql",
+      "target": "table:supabase/migrations/01_foundation.sql:hospital_holidays",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+      "target": "table:supabase/migrations/02_atomic_token_engine_&_bookings.sql:hospital_daily_counters",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+      "target": "table:supabase/migrations/02_atomic_token_engine_&_bookings.sql:queue_sessions",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+      "target": "table:supabase/migrations/02_atomic_token_engine_&_bookings.sql:bookings",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+      "target": "table:supabase/migrations/02_atomic_token_engine_&_bookings.sql:booking_events",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/03_doctorscheduling&slotengine.sql",
+      "target": "table:supabase/migrations/03_doctorscheduling&slotengine.sql:doctor_specializations",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/03_doctorscheduling&slotengine.sql",
+      "target": "table:supabase/migrations/03_doctorscheduling&slotengine.sql:doctor_schedules",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/03_doctorscheduling&slotengine.sql",
+      "target": "table:supabase/migrations/03_doctorscheduling&slotengine.sql:doctor_schedule_blocks",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/03_doctorscheduling&slotengine.sql",
+      "target": "table:supabase/migrations/03_doctorscheduling&slotengine.sql:doctor_leaves",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/03_doctorscheduling&slotengine.sql",
+      "target": "table:supabase/migrations/03_doctorscheduling&slotengine.sql:doctor_availability_overrides",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/04_whatsapp_messaging_engine.sql",
+      "target": "table:supabase/migrations/04_whatsapp_messaging_engine.sql:whatsapp_templates",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/04_whatsapp_messaging_engine.sql",
+      "target": "table:supabase/migrations/04_whatsapp_messaging_engine.sql:whatsapp_conversations",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/04_whatsapp_messaging_engine.sql",
+      "target": "table:supabase/migrations/04_whatsapp_messaging_engine.sql:whatsapp_messages",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/04_whatsapp_messaging_engine.sql",
+      "target": "table:supabase/migrations/04_whatsapp_messaging_engine.sql:whatsapp_delivery_logs",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/04_whatsapp_messaging_engine.sql",
+      "target": "table:supabase/migrations/04_whatsapp_messaging_engine.sql:whatsapp_webhook_events",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/05_notification_queue.sql",
+      "target": "table:supabase/migrations/05_notification_queue.sql:notification_templates",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/05_notification_queue.sql",
+      "target": "table:supabase/migrations/05_notification_queue.sql:notification_queue",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/05_notification_queue.sql",
+      "target": "table:supabase/migrations/05_notification_queue.sql:notification_deliveries",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/06_background_job_queue.sql",
+      "target": "table:supabase/migrations/06_background_job_queue.sql:job_queue",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/06_background_job_queue.sql",
+      "target": "table:supabase/migrations/06_background_job_queue.sql:dead_letter_jobs",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/07_settlement_engine.sql",
+      "target": "table:supabase/migrations/07_settlement_engine.sql:daily_collection_entries",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/07_settlement_engine.sql",
+      "target": "table:supabase/migrations/07_settlement_engine.sql:hospital_settlements",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/07_settlement_engine.sql",
+      "target": "table:supabase/migrations/07_settlement_engine.sql:settlement_items",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/07_settlement_engine.sql",
+      "target": "table:supabase/migrations/07_settlement_engine.sql:outstanding_balances",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/08_analytics_engine.sql",
+      "target": "table:supabase/migrations/08_analytics_engine.sql:analytics_refresh_logs",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql",
+      "target": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql:rate_limit_rules",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql",
+      "target": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql:booking_attempt_logs",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql",
+      "target": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql:spam_events",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql",
+      "target": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql:blocked_numbers",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql",
+      "target": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql:blocked_devices",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql",
+      "target": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql:abuse_scores",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql",
+      "target": "table:supabase/migrations/09_abuse_protection_&_rate_limiting.sql:temporary_restrictions",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/10_audit_&_security_engine.sql",
+      "target": "table:supabase/migrations/10_audit_&_security_engine.sql:audit_logs",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/10_audit_&_security_engine.sql",
+      "target": "table:supabase/migrations/10_audit_&_security_engine.sql:security_events",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/11_realtime_presence_schedule_tasks.sql",
+      "target": "table:supabase/migrations/11_realtime_presence_schedule_tasks.sql:dashboard_presence",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/12_hospital_configuration_engine.sql",
+      "target": "table:supabase/migrations/12_hospital_configuration_engine.sql:system_settings",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/12_hospital_configuration_engine.sql",
+      "target": "table:supabase/migrations/12_hospital_configuration_engine.sql:hospital_settings",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/12_hospital_configuration_engine.sql",
+      "target": "table:supabase/migrations/12_hospital_configuration_engine.sql:feature_flags",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/12_hospital_configuration_engine.sql",
+      "target": "table:supabase/migrations/12_hospital_configuration_engine.sql:queue_configs",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/13_payment_engine.sql",
+      "target": "table:supabase/migrations/13_payment_engine.sql:payment_orders",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/13_payment_engine.sql",
+      "target": "table:supabase/migrations/13_payment_engine.sql:payment_attempts",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/13_payment_engine.sql",
+      "target": "table:supabase/migrations/13_payment_engine.sql:payment_refunds",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/13_payment_engine.sql",
+      "target": "table:supabase/migrations/13_payment_engine.sql:payment_events",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/13_payment_engine.sql",
+      "target": "table:supabase/migrations/13_payment_engine.sql:financial_ledger",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/14_dead_letter_queue.sql",
+      "target": "table:supabase/migrations/14_dead_letter_queue.sql:dead_letter_queue",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/15_partitioning_strategy.sql",
+      "target": "table:supabase/migrations/15_partitioning_strategy.sql:partition_management",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/16_idempotency_hardening.sql",
+      "target": "table:supabase/migrations/16_idempotency_hardening.sql:webhook_events",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/17_queue_monitoring_engine.sql",
+      "target": "table:supabase/migrations/17_queue_monitoring_engine.sql:queue_metrics_snapshots",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/17_queue_monitoring_engine.sql",
+      "target": "table:supabase/migrations/17_queue_monitoring_engine.sql:mv_refresh_log",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/18_config_versioning_&_rollback.sql",
+      "target": "table:supabase/migrations/18_config_versioning_&_rollback.sql:config_versions",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/19_background_worker_engine.sql",
+      "target": "table:supabase/migrations/19_background_worker_engine.sql:worker_registry",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/19_background_worker_engine.sql",
+      "target": "table:supabase/migrations/19_background_worker_engine.sql:worker_heartbeat_log",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/19_background_worker_engine.sql",
+      "target": "table:supabase/migrations/19_background_worker_engine.sql:worker_job_leases",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/20_presence_engine.sql",
+      "target": "table:supabase/migrations/20_presence_engine.sql:dashboard_presence",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/20_presence_engine.sql",
+      "target": "table:supabase/migrations/20_presence_engine.sql:hospital_online_state",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/21_analytics_rollups.sql",
+      "target": "table:supabase/migrations/21_analytics_rollups.sql:analytics_weekly_rollups",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/21_analytics_rollups.sql",
+      "target": "table:supabase/migrations/21_analytics_rollups.sql:analytics_monthly_rollups",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/21_analytics_rollups.sql",
+      "target": "table:supabase/migrations/21_analytics_rollups.sql:analytics_quarterly_rollups",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/21_analytics_rollups.sql",
+      "target": "table:supabase/migrations/21_analytics_rollups.sql:analytics_global_metrics",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/21_analytics_rollups.sql",
+      "target": "table:supabase/migrations/21_analytics_rollups.sql:analytics_cohort_retention",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/22_partition_automation.sql",
+      "target": "table:supabase/migrations/22_partition_automation.sql:partition_manifest",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/22_partition_automation.sql",
+      "target": "table:supabase/migrations/22_partition_automation.sql:partition_config",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/22_partition_automation.sql",
+      "target": "table:supabase/migrations/22_partition_automation.sql:operational_notes",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/23_retention_&_cleanup_engine.sql",
+      "target": "table:supabase/migrations/23_retention_&_cleanup_engine.sql:retention_policies",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/23_retention_&_cleanup_engine.sql",
+      "target": "table:supabase/migrations/23_retention_&_cleanup_engine.sql:cleanup_run_log",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/24_operational-monitoring_engine.sql",
+      "target": "table:supabase/migrations/24_operational-monitoring_engine.sql:alert_thresholds",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/24_operational-monitoring_engine.sql",
+      "target": "table:supabase/migrations/24_operational-monitoring_engine.sql:alert_events",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/24_operational-monitoring_engine.sql",
+      "target": "table:supabase/migrations/24_operational-monitoring_engine.sql:system_health_snapshots",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/24_operational-monitoring_engine.sql",
+      "target": "table:supabase/migrations/24_operational-monitoring_engine.sql:sla_daily_tracking",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/25_api_idempotency_registry.sql",
+      "target": "table:supabase/migrations/25_api_idempotency_registry.sql:api_idempotency_keys",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/25_api_idempotency_registry.sql",
+      "target": "table:supabase/migrations/25_api_idempotency_registry.sql:idempotency_endpoint_registry",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/26_migration_metadata_&_registry.sql",
+      "target": "table:supabase/migrations/26_migration_metadata_&_registry.sql:migration_registry",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/26_migration_metadata_&_registry.sql",
+      "target": "table:supabase/migrations/26_migration_metadata_&_registry.sql:migration_execution_log",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/26_migration_metadata_&_registry.sql",
+      "target": "table:supabase/migrations/26_migration_metadata_&_registry.sql:deployment_snapshots",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/27_role_permissions.sql",
+      "target": "table:supabase/migrations/27_role_permissions.sql:role_permissions",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/28_booking_enhancements.sql",
+      "target": "table:supabase/migrations/28_booking_enhancements.sql:booking_fee_policies",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/29_cancellation_policy.sql",
+      "target": "table:supabase/migrations/29_cancellation_policy.sql:cancellation_policies",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/29_cancellation_policy.sql",
+      "target": "table:supabase/migrations/29_cancellation_policy.sql:cancellation_policy_history",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/30_device_sessions.sql",
+      "target": "table:supabase/migrations/30_device_sessions.sql:device_sessions",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/31_doctor_leave_management.sql",
+      "target": "table:supabase/migrations/31_doctor_leave_management.sql:doctor_hospital_holidays",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/32_subscription_engine.sql",
+      "target": "table:supabase/migrations/32_subscription_engine.sql:subscription_plans",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/32_subscription_engine.sql",
+      "target": "table:supabase/migrations/32_subscription_engine.sql:hospital_subscriptions",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/32_subscription_engine.sql",
+      "target": "table:supabase/migrations/32_subscription_engine.sql:subscription_billing_history",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/36_audit_standardization.sql",
+      "target": "table:supabase/migrations/36_audit_standardization.sql:audit_action_types",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/42_whatsapp_conversational_engine.sql",
+      "target": "table:supabase/migrations/42_whatsapp_conversational_engine.sql:whatsapp_conversation_states",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/43_queue_runtime.sql",
+      "target": "table:supabase/migrations/43_queue_runtime.sql:queue_runtime_events",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/46_doctor_clinical_operations.sql",
+      "target": "table:supabase/migrations/46_doctor_clinical_operations.sql:consultation_notes",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/47_enterprise_command_center.sql",
+      "target": "table:supabase/migrations/47_enterprise_command_center.sql:alert_activity_log",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "table:supabase/migrations/47_enterprise_command_center.sql",
+      "target": "table:supabase/migrations/47_enterprise_command_center.sql:alert_suppressions",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.9
+    }
+  ]
+}

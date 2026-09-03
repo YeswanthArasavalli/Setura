@@ -1,0 +1,63 @@
+{
+  "projectRoot": "d:/Projects/datasets/setura",
+  "batchFiles": [
+    {"path": "supabase/functions/_shared/audit.ts", "language": "typescript", "sizeLines": 212, "fileCategory": "code"},
+    {"path": "supabase/functions/_shared/whatsapp/whatsapp_booking_flow.ts", "language": "typescript", "sizeLines": 576, "fileCategory": "code"},
+    {"path": "supabase/functions/_shared/whatsapp/whatsapp_cancel_flow.ts", "language": "typescript", "sizeLines": 348, "fileCategory": "code"},
+    {"path": "supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts", "language": "typescript", "sizeLines": 521, "fileCategory": "code"},
+    {"path": "supabase/functions/_shared/whatsapp/whatsapp_handoff_flow.ts", "language": "typescript", "sizeLines": 45, "fileCategory": "code"},
+    {"path": "supabase/functions/_shared/whatsapp/whatsapp_intent_router.ts", "language": "typescript", "sizeLines": 289, "fileCategory": "code"},
+    {"path": "supabase/functions/_shared/whatsapp/whatsapp_queue_flow.ts", "language": "typescript", "sizeLines": 327, "fileCategory": "code"},
+    {"path": "supabase/functions/_shared/whatsapp/whatsapp_reschedule_flow.ts", "language": "typescript", "sizeLines": 415, "fileCategory": "code"}
+  ],
+  "batchImportData": {
+    "supabase/functions/_shared/audit.ts": [
+      "supabase/functions/_shared/db.ts",
+      "supabase/functions/_shared/logger.ts",
+      "supabase/functions/_shared/metrics.ts",
+      "supabase/functions/_shared/types.ts"
+    ],
+    "supabase/functions/_shared/whatsapp/whatsapp_booking_flow.ts": [
+      "supabase/functions/_shared/audit.ts",
+      "supabase/functions/_shared/validation.ts",
+      "supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+      "supabase/functions/_shared/whatsapp/whatsapp_handoff_flow.ts",
+      "supabase/functions/_shared/whatsapp/whatsapp_intent_router.ts"
+    ],
+    "supabase/functions/_shared/whatsapp/whatsapp_cancel_flow.ts": [
+      "supabase/functions/_shared/audit.ts",
+      "supabase/functions/_shared/whatsapp/whatsapp_booking_flow.ts",
+      "supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+      "supabase/functions/_shared/whatsapp/whatsapp_handoff_flow.ts",
+      "supabase/functions/_shared/whatsapp/whatsapp_intent_router.ts"
+    ],
+    "supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts": [
+      "supabase/functions/_shared/audit.ts",
+      "supabase/functions/_shared/db.ts",
+      "supabase/functions/_shared/logger.ts",
+      "supabase/functions/_shared/phone.ts",
+      "supabase/functions/_shared/types.ts",
+      "supabase/functions/_shared/whatsapp/whatsapp_booking_flow.ts",
+      "supabase/functions/_shared/whatsapp/whatsapp_cancel_flow.ts",
+      "supabase/functions/_shared/whatsapp/whatsapp_handoff_flow.ts",
+      "supabase/functions/_shared/whatsapp/whatsapp_intent_router.ts",
+      "supabase/functions/_shared/whatsapp/whatsapp_queue_flow.ts",
+      "supabase/functions/_shared/whatsapp/whatsapp_reschedule_flow.ts"
+    ],
+    "supabase/functions/_shared/whatsapp/whatsapp_handoff_flow.ts": [
+      "supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts"
+    ],
+    "supabase/functions/_shared/whatsapp/whatsapp_intent_router.ts": [],
+    "supabase/functions/_shared/whatsapp/whatsapp_queue_flow.ts": [
+      "supabase/functions/_shared/whatsapp/whatsapp_booking_flow.ts",
+      "supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts"
+    ],
+    "supabase/functions/_shared/whatsapp/whatsapp_reschedule_flow.ts": [
+      "supabase/functions/_shared/audit.ts",
+      "supabase/functions/_shared/whatsapp/whatsapp_booking_flow.ts",
+      "supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+      "supabase/functions/_shared/whatsapp/whatsapp_handoff_flow.ts",
+      "supabase/functions/_shared/whatsapp/whatsapp_intent_router.ts"
+    ]
+  }
+}

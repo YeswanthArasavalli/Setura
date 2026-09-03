@@ -1,0 +1,50 @@
+{
+  "nodes": [
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Booking System/Appointment Scheduling.md",
+      "type": "document",
+      "name": "Appointment Scheduling.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Booking System/Appointment Scheduling.md",
+      "summary": "Documents the appointment scheduling system booking creation workflow, covering hospital rules validation, doctor availability checks, advance booking windows, holiday and working hours restrictions, slot capacity management, queue session auto-creation, conflict detection, and database RPCs used during booking. References create-booking Edge Function and scheduling migrations.",
+      "tags": ["qoder-wiki", "documentation", "booking", "scheduling", "availability"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Booking System/Booking Lifecycle Management.md",
+      "type": "document",
+      "name": "Booking Lifecycle Management.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Booking System/Booking Lifecycle Management.md",
+      "summary": "Describes the complete booking lifecycle from creation to completion, covering all supported states and transitions, cancellation and refund processing, rescheduling workflows, status updates, check-in and completion workflows, audit logging, and integrations with payment and notification systems.",
+      "tags": ["qoder-wiki", "documentation", "booking", "lifecycle", "state-machine"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Booking System/Booking System.md",
+      "type": "document",
+      "name": "Booking System.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Booking System/Booking System.md",
+      "summary": "Comprehensive overview of the Booking System, covering appointment scheduling, conflict detection, capacity management, and the full booking lifecycle from creation to completion or cancellation. Includes hospital rules validation, doctor availability, queue session management, atomic token allocation, booking states, cancellation policies, and integrations with payment and notification systems.",
+      "tags": ["qoder-wiki", "documentation", "booking", "overview", "architecture"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Booking System/Capacity Management.md",
+      "type": "document",
+      "name": "Capacity Management.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Booking System/Capacity Management.md",
+      "summary": "Explains how the system manages doctor capacity, queue session limits, and token allocation per day. Covers available slot calculation via get_remaining_token_capacity, automatic queue session creation with maximum tokens, real-time capacity updates, overflow handling, and advanced scenarios such as partial capacity booking, waitlist management, and dynamic capacity adjustment.",
+      "tags": ["qoder-wiki", "documentation", "booking", "capacity", "queue-management"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Booking System/Conflict Detection & Resolution.md",
+      "type": "document",
+      "name": "Conflict Detection & Resolution.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Booking System/Conflict Detection & Resolution.md",
+      "summary": "Documents how the booking engine prevents double bookings and handles race conditions using atomic token allocation and idempotency mechanisms. Covers PostgreSQL INSERT ... ON CONFLICT DO UPDATE patterns, idempotency key enforcement at API and database layers, unique constraint enforcement, transaction isolation, and conflict recovery.",
+      "tags": ["qoder-wiki", "documentation", "booking", "idempotency", "concurrency"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

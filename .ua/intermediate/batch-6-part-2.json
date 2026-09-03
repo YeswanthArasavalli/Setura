@@ -1,0 +1,412 @@
+{
+  "nodes": [
+    {
+      "id": "file:supabase/migrations/27_role_permissions.sql",
+      "type": "file",
+      "name": "27_role_permissions.sql",
+      "filePath": "supabase/migrations/27_role_permissions.sql",
+      "summary": "Role permissions: refines role hierarchy and adds granular permission system for role-based access control.",
+      "tags": ["sql", "migration", "postgres", "rbac", "permissions", "rls"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:supabase/migrations/28_booking_enhancements.sql",
+      "type": "file",
+      "name": "28_booking_enhancements.sql",
+      "filePath": "supabase/migrations/28_booking_enhancements.sql",
+      "summary": "Booking enhancements: adds booking_fee_inr field, one-time backfill of booking fees. Known issue: booking_fee_inr has no runtime writer.",
+      "tags": ["sql", "migration", "postgres", "bookings", "backfill", "rls"],
+      "complexity": "simple",
+      "languageNotes": "P0-04: booking_fee_inr has no runtime writer, only one-time backfill."
+    },
+    {
+      "id": "file:supabase/migrations/29_cancellation_policy.sql",
+      "type": "file",
+      "name": "29_cancellation_policy.sql",
+      "filePath": "supabase/migrations/29_cancellation_policy.sql",
+      "summary": "Cancellation policy: creates cancellation_policies table and enforces cancellation rules with refund calculation logic.",
+      "tags": ["sql", "migration", "postgres", "cancellation", "policy", "refunds", "rls"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:supabase/migrations/30_device_sessions.sql",
+      "type": "file",
+      "name": "30_device_sessions.sql",
+      "filePath": "supabase/migrations/30_device_sessions.sql",
+      "summary": "Device sessions: creates device_sessions table for tracking authenticated user devices, supports session management and device-level logout.",
+      "tags": ["sql", "migration", "postgres", "auth", "sessions", "security", "rls"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:supabase/migrations/31_doctor_leave_management.sql",
+      "type": "file",
+      "name": "31_doctor_leave_management.sql",
+      "filePath": "supabase/migrations/31_doctor_leave_management.sql",
+      "summary": "Doctor leave management: extends doctor_leaves table with approval workflow, leave type, and balance tracking.",
+      "tags": ["sql", "migration", "postgres", "doctor-scheduling", "leave", "workflow", "rls"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:supabase/migrations/32_subscription_engine.sql",
+      "type": "file",
+      "name": "32_subscription_engine.sql",
+      "filePath": "supabase/migrations/32_subscription_engine.sql",
+      "summary": "Subscription engine: creates subscription_plans, hospital_subscriptions, and subscription_invoices tables for SaaS billing.",
+      "tags": ["sql", "migration", "postgres", "subscriptions", "billing", "saas", "rls"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:supabase/migrations/33_settlement_engine_refactor.sql",
+      "type": "file",
+      "name": "33_settlement_engine_refactor.sql",
+      "filePath": "supabase/migrations/33_settlement_engine_refactor.sql",
+      "summary": "Settlement engine refactor: reorganizes settlement tables and RPCs for improved clarity and performance.",
+      "tags": ["sql", "migration", "postgres", "settlement", "refactor", "rls"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:supabase/migrations/34_payment_ledger_cleanup.sql",
+      "type": "file",
+      "name": "34_payment_ledger_cleanup.sql",
+      "filePath": "supabase/migrations/34_payment_ledger_cleanup.sql",
+      "summary": "Payment ledger cleanup: fixes data integrity issues in payment_ledger and ensures correct financial record state.",
+      "tags": ["sql", "migration", "postgres", "payments", "ledger", "cleanup", "rls"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:supabase/migrations/35_hospital_config_enhancements.sql",
+      "type": "file",
+      "name": "35_hospital_config_enhancements.sql",
+      "filePath": "supabase/migrations/35_hospital_config_enhancements.sql",
+      "summary": "Hospital configuration enhancements: adds additional config fields and validation rules for hospital-level settings.",
+      "tags": ["sql", "migration", "postgres", "configuration", "hospitals", "rls"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:supabase/migrations/36_audit_standardization.sql",
+      "type": "file",
+      "name": "36_audit_standardization.sql",
+      "filePath": "supabase/migrations/36_audit_standardization.sql",
+      "summary": "Audit standardization: standardizes audit event types, actor fields, and severity levels across the system.",
+      "tags": ["sql", "migration", "postgres", "audit", "standardization", "compliance", "rls"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:supabase/migrations/37_feature_flags.sql",
+      "type": "file",
+      "name": "37_feature_flags.sql",
+      "filePath": "supabase/migrations/37_feature_flags.sql",
+      "summary": "Feature flags: creates feature_flags table and is_feature_enabled() function for controlled feature rollouts.",
+      "tags": ["sql", "migration", "postgres", "feature-flags", "rollout", "rls"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:supabase/migrations/38_missing_rpc_functions.sql",
+      "type": "file",
+      "name": "38_missing_rpc_functions.sql",
+      "filePath": "supabase/migrations/38_missing_rpc_functions.sql",
+      "summary": "Missing RPC functions: backfills RPC functions that were referenced by code but not yet defined in migrations.",
+      "tags": ["sql", "migration", "postgres", "rpc", "backfill"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:supabase/migrations/39_schema_alignment.sql",
+      "type": "file",
+      "name": "39_schema_alignment.sql",
+      "filePath": "supabase/migrations/39_schema_alignment.sql",
+      "summary": "Schema alignment: aligns database schema with the generated TypeScript types, fixing drift between code and database.",
+      "tags": ["sql", "migration", "postgres", "schema", "alignment", "types"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:supabase/migrations/40_subscription_usage_engine.sql",
+      "type": "file",
+      "name": "40_subscription_usage_engine.sql",
+      "filePath": "supabase/migrations/40_subscription_usage_engine.sql",
+      "summary": "Subscription usage engine: creates usage_metrics and usage_limits tables for metered billing and quota enforcement.",
+      "tags": ["sql", "migration", "postgres", "subscriptions", "usage", "quotas", "rls"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:supabase/migrations/41_integration_hardening.sql",
+      "type": "file",
+      "name": "41_integration_hardening.sql",
+      "filePath": "supabase/migrations/41_integration_hardening.sql",
+      "summary": "Integration hardening: adds additional validation, security checks, and integrity constraints to integration tables.",
+      "tags": ["sql", "migration", "postgres", "security", "integrations", "rls"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:supabase/migrations/42_whatsapp_conversational_engine.sql",
+      "type": "file",
+      "name": "42_whatsapp_conversational_engine.sql",
+      "filePath": "supabase/migrations/42_whatsapp_conversational_engine.sql",
+      "summary": "WhatsApp conversational engine: creates conversation_state and handoff tables for stateful WhatsApp conversations with intent routing.",
+      "tags": ["sql", "migration", "postgres", "whatsapp", "conversational", "state-machine", "rls"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:supabase/migrations/43_queue_runtime.sql",
+      "type": "file",
+      "name": "43_queue_runtime.sql",
+      "filePath": "supabase/migrations/43_queue_runtime.sql",
+      "summary": "Queue runtime: the largest queue migration, implementing queue pause/resume, token skip/restore, doctor delay marking, recall, and emergency patient insertion as SQL RPCs.",
+      "tags": ["sql", "migration", "postgres", "queue", "runtime", "rls", "state-machine"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:supabase/migrations/44_queue_runtime_flag.sql",
+      "type": "file",
+      "name": "44_queue_runtime_flag.sql",
+      "filePath": "supabase/migrations/44_queue_runtime_flag.sql",
+      "summary": "Queue runtime feature flag: small migration toggling queue_runtime feature flag for safe rollout.",
+      "tags": ["sql", "migration", "postgres", "feature-flag", "queue", "rollout"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:supabase/migrations/45_queue_operations.sql",
+      "type": "file",
+      "name": "45_queue_operations.sql",
+      "filePath": "supabase/migrations/45_queue_operations.sql",
+      "summary": "Queue operations: extends queue runtime with operations RPCs for batch processing, queue health evaluation, and admin notifications.",
+      "tags": ["sql", "migration", "postgres", "queue", "operations", "rls"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:supabase/migrations/46_doctor_clinical_operations.sql",
+      "type": "file",
+      "name": "46_doctor_clinical_operations.sql",
+      "filePath": "supabase/migrations/46_doctor_clinical_operations.sql",
+      "summary": "Doctor clinical operations: creates consultation_notes, prescriptions, and clinical_assessments tables. Provides clinical workflow RPCs for the doctor dashboard.",
+      "tags": ["sql", "migration", "postgres", "doctor", "clinical", "consultation", "rls"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:supabase/migrations/47_enterprise_command_center.sql",
+      "type": "file",
+      "name": "47_enterprise_command_center.sql",
+      "filePath": "supabase/migrations/47_enterprise_command_center.sql",
+      "summary": "Enterprise command center: large migration creating executive dashboards, multi-hospital analytics, hospital comparison views, and command center RPCs.",
+      "tags": ["sql", "migration", "postgres", "enterprise", "command-center", "executive", "rls"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:supabase/migrations/48_privilege_hardening.sql",
+      "type": "file",
+      "name": "48_privilege_hardening.sql",
+      "filePath": "supabase/migrations/48_privilege_hardening.sql",
+      "summary": "Privilege hardening: revokes PUBLIC grants on SECURITY DEFINER functions, establishes fail-closed privilege boundary. Known issue (F16-04): the PUBLIC grant is never revoked (only named-role grants are), and the supabase_admin grantor rows were silently skipped.",
+      "tags": ["sql", "migration", "postgres", "security", "privileges", "security-definer", "rls"],
+      "complexity": "complex",
+      "languageNotes": "F16-04: fail-closed guarantee does not hold - PUBLIC grant is never revoked; supabase_admin grantor rows silently skipped when migration ran as postgres."
+    },
+    {
+      "id": "file:supabase/migrations/49_phase_1_5_defect_fixes.sql",
+      "type": "file",
+      "name": "49_phase_1_5_defect_fixes.sql",
+      "filePath": "supabase/migrations/49_phase_1_5_defect_fixes.sql",
+      "summary": "Phase 1.5 defect fixes: migration applying targeted fixes for issues identified during Phase 1.5 verification. The four functions in this migration are safe only by accident - each is CREATE OR REPLACE of a pre-existing signature, preserving the prior ACL.",
+      "tags": ["sql", "migration", "postgres", "defect-fixes", "phase-1.5", "rls"],
+      "complexity": "complex",
+      "languageNotes": "F16-04 mitigation: functions safe by accident due to CREATE OR REPLACE preserving prior ACL."
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:supabase/migrations/26_migration_metadata_&_registry.sql",
+      "target": "file:supabase/migrations/27_role_permissions.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/27_role_permissions.sql",
+      "target": "file:supabase/migrations/28_booking_enhancements.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/28_booking_enhancements.sql",
+      "target": "file:supabase/migrations/29_cancellation_policy.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/29_cancellation_policy.sql",
+      "target": "file:supabase/migrations/30_device_sessions.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/30_device_sessions.sql",
+      "target": "file:supabase/migrations/31_doctor_leave_management.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/31_doctor_leave_management.sql",
+      "target": "file:supabase/migrations/32_subscription_engine.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/32_subscription_engine.sql",
+      "target": "file:supabase/migrations/33_settlement_engine_refactor.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/33_settlement_engine_refactor.sql",
+      "target": "file:supabase/migrations/34_payment_ledger_cleanup.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/34_payment_ledger_cleanup.sql",
+      "target": "file:supabase/migrations/35_hospital_config_enhancements.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/35_hospital_config_enhancements.sql",
+      "target": "file:supabase/migrations/36_audit_standardization.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/36_audit_standardization.sql",
+      "target": "file:supabase/migrations/37_feature_flags.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/37_feature_flags.sql",
+      "target": "file:supabase/migrations/38_missing_rpc_functions.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/38_missing_rpc_functions.sql",
+      "target": "file:supabase/migrations/39_schema_alignment.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/39_schema_alignment.sql",
+      "target": "file:supabase/migrations/40_subscription_usage_engine.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/40_subscription_usage_engine.sql",
+      "target": "file:supabase/migrations/41_integration_hardening.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/41_integration_hardening.sql",
+      "target": "file:supabase/migrations/42_whatsapp_conversational_engine.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/42_whatsapp_conversational_engine.sql",
+      "target": "file:supabase/migrations/43_queue_runtime.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/43_queue_runtime.sql",
+      "target": "file:supabase/migrations/44_queue_runtime_flag.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/44_queue_runtime_flag.sql",
+      "target": "file:supabase/migrations/45_queue_operations.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/45_queue_operations.sql",
+      "target": "file:supabase/migrations/46_doctor_clinical_operations.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/46_doctor_clinical_operations.sql",
+      "target": "file:supabase/migrations/47_enterprise_command_center.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/47_enterprise_command_center.sql",
+      "target": "file:supabase/migrations/48_privilege_hardening.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/48_privilege_hardening.sql",
+      "target": "file:supabase/migrations/49_phase_1_5_defect_fixes.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:supabase/migrations/07_settlement_engine.sql",
+      "target": "file:supabase/migrations/33_settlement_engine_refactor.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:supabase/migrations/13_payment_engine.sql",
+      "target": "file:supabase/migrations/34_payment_ledger_cleanup.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:supabase/migrations/10_audit_&_security_engine.sql",
+      "target": "file:supabase/migrations/36_audit_standardization.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:supabase/migrations/04_whatsapp_messaging_engine.sql",
+      "target": "file:supabase/migrations/42_whatsapp_conversational_engine.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+      "target": "file:supabase/migrations/28_booking_enhancements.sql",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

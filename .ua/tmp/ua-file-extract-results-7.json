@@ -1,0 +1,4103 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 49,
+  "filesSkipped": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 49,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 49
+    }
+  },
+  "results": [
+    {
+      "path": "supabase/migrations/01_foundation.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 792,
+      "nonEmptyLines": 635,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "name",
+            "name_te",
+            "slug",
+            "phone",
+            "email",
+            "country",
+            "state",
+            "district",
+            "town",
+            "address",
+            "timezone",
+            "is_active",
+            "subscription_active",
+            "online_booking_enabled",
+            "max_advance_booking_days",
+            "deleted_at",
+            "created_by",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 100,
+          "endLine": 137
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "full_name",
+            "normalized_phone",
+            "avatar_url",
+            "preferred_language",
+            "is_active",
+            "last_login_at",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 155,
+          "endLine": 185
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "user_id",
+            "hospital_id",
+            "role",
+            "is_primary",
+            "created_at"
+          ],
+          "startLine": 202,
+          "endLine": 235
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "full_name",
+            "normalized_phone",
+            "age",
+            "gender",
+            "village",
+            "blood_group",
+            "has_diabetes",
+            "has_bp",
+            "total_visits",
+            "last_visit_date",
+            "is_deleted",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 382,
+          "endLine": 419
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "weekday",
+            "open_time",
+            "close_time",
+            "is_open",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 468,
+          "endLine": 493
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "holiday_date",
+            "description",
+            "created_at"
+          ],
+          "startLine": 507,
+          "endLine": 522
+        },
+        {
+          "name": "idx_hospitals_active",
+          "kind": "index",
+          "fields": [],
+          "startLine": 139,
+          "endLine": 139
+        },
+        {
+          "name": "idx_profiles_phone",
+          "kind": "index",
+          "fields": [],
+          "startLine": 187,
+          "endLine": 187
+        },
+        {
+          "name": "idx_primary_role",
+          "kind": "index",
+          "fields": [],
+          "startLine": 237,
+          "endLine": 237
+        },
+        {
+          "name": "idx_user_roles_user",
+          "kind": "index",
+          "fields": [],
+          "startLine": 247,
+          "endLine": 247
+        },
+        {
+          "name": "idx_user_roles_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 250,
+          "endLine": 250
+        },
+        {
+          "name": "idx_user_roles_role",
+          "kind": "index",
+          "fields": [],
+          "startLine": 253,
+          "endLine": 253
+        },
+        {
+          "name": "idx_patient_dedupe",
+          "kind": "index",
+          "fields": [],
+          "startLine": 421,
+          "endLine": 421
+        },
+        {
+          "name": "idx_patients_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 429,
+          "endLine": 429
+        },
+        {
+          "name": "idx_patients_phone",
+          "kind": "index",
+          "fields": [],
+          "startLine": 432,
+          "endLine": 432
+        },
+        {
+          "name": "idx_patients_last_visit",
+          "kind": "index",
+          "fields": [],
+          "startLine": 438,
+          "endLine": 438
+        },
+        {
+          "name": "idx_patients_name_trgm",
+          "kind": "index",
+          "fields": [],
+          "startLine": 444,
+          "endLine": 444
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 17
+      }
+    },
+    {
+      "path": "supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 827,
+      "nonEmptyLines": 666,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "hospital_id",
+            "visit_date",
+            "last_token",
+            "created_at"
+          ],
+          "startLine": 12,
+          "endLine": 25
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "doctor_id",
+            "session_date",
+            "session_name",
+            "max_tokens",
+            "current_live_token",
+            "is_active",
+            "started_at",
+            "ended_at",
+            "created_at",
+            "updated_at",
+            "session_date"
+          ],
+          "startLine": 81,
+          "endLine": 116
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "queue_session_id",
+            "patient_id",
+            "patient_name",
+            "patient_phone",
+            "patient_age",
+            "patient_gender",
+            "village",
+            "blood_group",
+            "has_diabetes",
+            "has_bp",
+            "token_number",
+            "priority_score",
+            "priority_flag",
+            "status",
+            "booking_source",
+            "assigned_doctor_id",
+            "booked_by",
+            "appointment_date",
+            "called_at",
+            "consultation_started_at",
+            "consultation_completed_at",
+            "cancelled_at",
+            "no_show_marked_at",
+            "carry_forwarded_from",
+            "is_carry_forward",
+            "cancellation_reason",
+            "platform_fee_snapshot",
+            "receptionist_fee_snapshot",
+            "hospital_fee_snapshot",
+            "total_amount_snapshot",
+            "payment_completed",
+            "payment_reference",
+            "whatsapp_confirmation_sent",
+            "whatsapp_reminder_sent",
+            "feedback_sent",
+            "estimated_wait_minutes",
+            "idempotency_key",
+            "booking_reference",
+            "metadata",
+            "is_deleted",
+            "deleted_at",
+            "created_at",
+            "updated_at",
+            "token_number"
+          ],
+          "startLine": 150,
+          "endLine": 284
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "booking_id",
+            "hospital_id",
+            "old_status",
+            "new_status",
+            "event_type",
+            "performed_by",
+            "notes",
+            "metadata",
+            "created_at"
+          ],
+          "startLine": 345,
+          "endLine": 373
+        },
+        {
+          "name": "idx_queue_sessions_hospital_date",
+          "kind": "index",
+          "fields": [],
+          "startLine": 118,
+          "endLine": 118
+        },
+        {
+          "name": "idx_queue_sessions_doctor",
+          "kind": "index",
+          "fields": [],
+          "startLine": 124,
+          "endLine": 124
+        },
+        {
+          "name": "idx_bookings_hospital_date",
+          "kind": "index",
+          "fields": [],
+          "startLine": 286,
+          "endLine": 286
+        },
+        {
+          "name": "idx_bookings_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 292,
+          "endLine": 292
+        },
+        {
+          "name": "idx_bookings_doctor",
+          "kind": "index",
+          "fields": [],
+          "startLine": 296,
+          "endLine": 296
+        },
+        {
+          "name": "idx_bookings_priority",
+          "kind": "index",
+          "fields": [],
+          "startLine": 302,
+          "endLine": 302
+        },
+        {
+          "name": "idx_bookings_patient",
+          "kind": "index",
+          "fields": [],
+          "startLine": 310,
+          "endLine": 310
+        },
+        {
+          "name": "idx_bookings_queue_lookup",
+          "kind": "index",
+          "fields": [],
+          "startLine": 313,
+          "endLine": 313
+        },
+        {
+          "name": "idx_bookings_idempotency",
+          "kind": "index",
+          "fields": [],
+          "startLine": 322,
+          "endLine": 322
+        },
+        {
+          "name": "idx_booking_events_booking",
+          "kind": "index",
+          "fields": [],
+          "startLine": 375,
+          "endLine": 375
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 14
+      }
+    },
+    {
+      "path": "supabase/migrations/03_doctorscheduling&slotengine.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 795,
+      "nonEmptyLines": 650,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "doctor_id",
+            "hospital_id",
+            "specialization_name",
+            "consultation_fee",
+            "average_consultation_minutes",
+            "is_deleted",
+            "created_at",
+            "updated_at",
+            "specialization_name"
+          ],
+          "startLine": 18,
+          "endLine": 50
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "doctor_id",
+            "hospital_id",
+            "weekday",
+            "start_time",
+            "end_time",
+            "max_tokens",
+            "average_consultation_minutes",
+            "buffer_minutes",
+            "is_active",
+            "is_walkin_allowed",
+            "created_by",
+            "is_deleted",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 79,
+          "endLine": 123
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "schedule_id",
+            "block_name",
+            "block_start_time",
+            "block_end_time",
+            "is_recurring",
+            "created_at"
+          ],
+          "startLine": 185,
+          "endLine": 205
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "doctor_id",
+            "hospital_id",
+            "leave_start_date",
+            "leave_end_date",
+            "reason",
+            "approved_by",
+            "is_deleted",
+            "created_at"
+          ],
+          "startLine": 237,
+          "endLine": 264
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "doctor_id",
+            "hospital_id",
+            "override_date",
+            "override_type",
+            "start_time",
+            "end_time",
+            "notes",
+            "created_by",
+            "is_deleted",
+            "created_at"
+          ],
+          "startLine": 317,
+          "endLine": 356
+        },
+        {
+          "name": "idx_doctor_specializations_lookup",
+          "kind": "index",
+          "fields": [],
+          "startLine": 52,
+          "endLine": 52
+        },
+        {
+          "name": "idx_doctor_schedules_doctor",
+          "kind": "index",
+          "fields": [],
+          "startLine": 151,
+          "endLine": 151
+        },
+        {
+          "name": "idx_doctor_schedules_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 158,
+          "endLine": 158
+        },
+        {
+          "name": "idx_schedule_blocks_schedule",
+          "kind": "index",
+          "fields": [],
+          "startLine": 230,
+          "endLine": 230
+        },
+        {
+          "name": "idx_doctor_leaves_lookup",
+          "kind": "index",
+          "fields": [],
+          "startLine": 281,
+          "endLine": 281
+        },
+        {
+          "name": "idx_doctor_overrides_lookup",
+          "kind": "index",
+          "fields": [],
+          "startLine": 358,
+          "endLine": 358
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 11
+      }
+    },
+    {
+      "path": "supabase/migrations/04_whatsapp_messaging_engine.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 852,
+      "nonEmptyLines": 682,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "template_name",
+            "meta_template_name",
+            "category",
+            "language_code",
+            "template_body",
+            "variables",
+            "is_active",
+            "created_at",
+            "updated_at",
+            "language_code"
+          ],
+          "startLine": 53,
+          "endLine": 87
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "patient_id",
+            "phone_number",
+            "latest_message_at",
+            "unread_count",
+            "is_blocked",
+            "metadata",
+            "created_at",
+            "updated_at",
+            "phone_number"
+          ],
+          "startLine": 107,
+          "endLine": 140
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "conversation_id",
+            "hospital_id",
+            "patient_id",
+            "related_booking_id",
+            "direction",
+            "message_status",
+            "whatsapp_message_id",
+            "template_name",
+            "template_language",
+            "message_text",
+            "media_url",
+            "error_message",
+            "sent_at",
+            "delivered_at",
+            "read_at",
+            "failed_at",
+            "retry_count",
+            "max_retries",
+            "next_retry_at",
+            "processing_started_at",
+            "idempotency_key",
+            "metadata",
+            "created_at"
+          ],
+          "startLine": 171,
+          "endLine": 231
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "whatsapp_message_id",
+            "delivery_status",
+            "meta_event_id",
+            "payload",
+            "created_at"
+          ],
+          "startLine": 278,
+          "endLine": 296
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "webhook_event_id",
+            "event_type",
+            "payload",
+            "processed",
+            "processed_at",
+            "processing_error",
+            "created_at"
+          ],
+          "startLine": 308,
+          "endLine": 324
+        },
+        {
+          "name": "idx_wa_templates_lookup",
+          "kind": "index",
+          "fields": [],
+          "startLine": 89,
+          "endLine": 89
+        },
+        {
+          "name": "idx_wa_conversations_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 142,
+          "endLine": 142
+        },
+        {
+          "name": "idx_wa_conversations_latest",
+          "kind": "index",
+          "fields": [],
+          "startLine": 145,
+          "endLine": 145
+        },
+        {
+          "name": "idx_wa_messages_conversation",
+          "kind": "index",
+          "fields": [],
+          "startLine": 233,
+          "endLine": 233
+        },
+        {
+          "name": "idx_wa_messages_booking",
+          "kind": "index",
+          "fields": [],
+          "startLine": 239,
+          "endLine": 239
+        },
+        {
+          "name": "idx_wa_messages_processing",
+          "kind": "index",
+          "fields": [],
+          "startLine": 244,
+          "endLine": 244
+        },
+        {
+          "name": "idx_wa_messages_hospital_created",
+          "kind": "index",
+          "fields": [],
+          "startLine": 250,
+          "endLine": 250
+        },
+        {
+          "name": "idx_wa_messages_worker_fetch",
+          "kind": "index",
+          "fields": [],
+          "startLine": 256,
+          "endLine": 256
+        },
+        {
+          "name": "idx_wa_delivery_logs_message",
+          "kind": "index",
+          "fields": [],
+          "startLine": 298,
+          "endLine": 298
+        },
+        {
+          "name": "idx_wa_webhooks_unprocessed",
+          "kind": "index",
+          "fields": [],
+          "startLine": 326,
+          "endLine": 326
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 15
+      }
+    },
+    {
+      "path": "supabase/migrations/05_notification_queue.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 595,
+      "nonEmptyLines": 486,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "template_key",
+            "template_name",
+            "channel",
+            "language_code",
+            "subject",
+            "body_template",
+            "variables",
+            "is_active",
+            "created_at",
+            "updated_at",
+            "language_code"
+          ],
+          "startLine": 59,
+          "endLine": 96
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "patient_id",
+            "booking_id",
+            "channel",
+            "priority",
+            "status",
+            "recipient",
+            "template_key",
+            "title",
+            "message_body",
+            "metadata",
+            "idempotency_key",
+            "scheduled_for",
+            "sent_at",
+            "delivered_at",
+            "failed_at",
+            "retry_count",
+            "max_retries",
+            "next_retry_at",
+            "processing_started_at",
+            "last_error",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 117,
+          "endLine": 176
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "notification_id",
+            "delivery_status",
+            "provider_response",
+            "delivered_at",
+            "created_at"
+          ],
+          "startLine": 228,
+          "endLine": 246
+        },
+        {
+          "name": "idx_notification_templates_lookup",
+          "kind": "index",
+          "fields": [],
+          "startLine": 98,
+          "endLine": 98
+        },
+        {
+          "name": "idx_notification_queue_worker",
+          "kind": "index",
+          "fields": [],
+          "startLine": 178,
+          "endLine": 178
+        },
+        {
+          "name": "idx_notification_queue_retry",
+          "kind": "index",
+          "fields": [],
+          "startLine": 191,
+          "endLine": 191
+        },
+        {
+          "name": "idx_notification_queue_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 197,
+          "endLine": 197
+        },
+        {
+          "name": "idx_notification_queue_booking",
+          "kind": "index",
+          "fields": [],
+          "startLine": 203,
+          "endLine": 203
+        },
+        {
+          "name": "idx_notification_deliveries_notification",
+          "kind": "index",
+          "fields": [],
+          "startLine": 248,
+          "endLine": 248
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 9
+      }
+    },
+    {
+      "path": "supabase/migrations/06_background_job_queue.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 550,
+      "nonEmptyLines": 445,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "job_type",
+            "payload",
+            "priority",
+            "status",
+            "hospital_id",
+            "related_booking_id",
+            "scheduled_at",
+            "processing_started_at",
+            "processing_completed_at",
+            "lease_expires_at",
+            "worker_id",
+            "attempt_count",
+            "max_attempts",
+            "last_error",
+            "next_attempt_at",
+            "idempotency_key",
+            "metadata",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 41,
+          "endLine": 95
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "original_job_id",
+            "job_type",
+            "payload",
+            "hospital_id",
+            "attempt_count",
+            "last_error",
+            "failed_at"
+          ],
+          "startLine": 163,
+          "endLine": 182
+        },
+        {
+          "name": "idx_job_queue_claim",
+          "kind": "index",
+          "fields": [],
+          "startLine": 101,
+          "endLine": 101
+        },
+        {
+          "name": "idx_job_queue_retry",
+          "kind": "index",
+          "fields": [],
+          "startLine": 108,
+          "endLine": 108
+        },
+        {
+          "name": "idx_job_queue_processing",
+          "kind": "index",
+          "fields": [],
+          "startLine": 114,
+          "endLine": 114
+        },
+        {
+          "name": "idx_job_queue_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 120,
+          "endLine": 120
+        },
+        {
+          "name": "idx_job_queue_type_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 126,
+          "endLine": 126
+        },
+        {
+          "name": "idx_job_queue_worker",
+          "kind": "index",
+          "fields": [],
+          "startLine": 132,
+          "endLine": 132
+        },
+        {
+          "name": "idx_dead_jobs_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 184,
+          "endLine": 184
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 9
+      }
+    },
+    {
+      "path": "supabase/migrations/07_settlement_engine.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 670,
+      "nonEmptyLines": 542,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "booking_id",
+            "patient_id",
+            "booking_source",
+            "collection_date",
+            "platform_fee",
+            "receptionist_fee",
+            "hospital_fee",
+            "total_amount",
+            "settlement_id",
+            "is_settled",
+            "metadata",
+            "created_at"
+          ],
+          "startLine": 30,
+          "endLine": 84
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "settlement_start_date",
+            "settlement_end_date",
+            "total_platform_amount",
+            "total_receptionist_amount",
+            "total_bookings",
+            "amount_paid_to_setura",
+            "remaining_due",
+            "settlement_status",
+            "collected_by",
+            "paid_at",
+            "notes",
+            "metadata",
+            "created_at",
+            "updated_at",
+            "settlement_end_date"
+          ],
+          "startLine": 113,
+          "endLine": 173
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "settlement_id",
+            "collection_entry_id",
+            "platform_fee_amount",
+            "receptionist_fee_amount",
+            "created_at"
+          ],
+          "startLine": 209,
+          "endLine": 228
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "hospital_id",
+            "total_outstanding",
+            "last_settlement_date",
+            "updated_at"
+          ],
+          "startLine": 244,
+          "endLine": 256
+        },
+        {
+          "name": "idx_collection_hospital_date",
+          "kind": "index",
+          "fields": [],
+          "startLine": 86,
+          "endLine": 86
+        },
+        {
+          "name": "idx_collection_unsettled",
+          "kind": "index",
+          "fields": [],
+          "startLine": 92,
+          "endLine": 92
+        },
+        {
+          "name": "idx_collection_settlement",
+          "kind": "index",
+          "fields": [],
+          "startLine": 99,
+          "endLine": 99
+        },
+        {
+          "name": "idx_collection_booking",
+          "kind": "index",
+          "fields": [],
+          "startLine": 104,
+          "endLine": 104
+        },
+        {
+          "name": "idx_settlements_hospital_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 175,
+          "endLine": 175
+        },
+        {
+          "name": "idx_settlements_hospital_dates",
+          "kind": "index",
+          "fields": [],
+          "startLine": 181,
+          "endLine": 181
+        },
+        {
+          "name": "idx_settlement_items_settlement",
+          "kind": "index",
+          "fields": [],
+          "startLine": 230,
+          "endLine": 230
+        },
+        {
+          "name": "idx_settlement_items_collection",
+          "kind": "index",
+          "fields": [],
+          "startLine": 235,
+          "endLine": 235
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 12
+      }
+    },
+    {
+      "path": "supabase/migrations/08_analytics_engine.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 446,
+      "nonEmptyLines": 353,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "refresh_started_at",
+            "refresh_completed_at",
+            "success",
+            "error_message",
+            "created_at"
+          ],
+          "startLine": 359,
+          "endLine": 371
+        },
+        {
+          "name": "idx_bookings_analytics_core",
+          "kind": "index",
+          "fields": [],
+          "startLine": 12,
+          "endLine": 12
+        },
+        {
+          "name": "idx_bookings_analytics_doctor",
+          "kind": "index",
+          "fields": [],
+          "startLine": 20,
+          "endLine": 20
+        },
+        {
+          "name": "idx_bookings_consultation_times",
+          "kind": "index",
+          "fields": [],
+          "startLine": 27,
+          "endLine": 27
+        },
+        {
+          "name": "idx_bookings_village",
+          "kind": "index",
+          "fields": [],
+          "startLine": 36,
+          "endLine": 36
+        },
+        {
+          "name": "uidx_mv_daily_stats",
+          "kind": "index",
+          "fields": [],
+          "startLine": 144,
+          "endLine": 144
+        },
+        {
+          "name": "uidx_mv_doctor_perf",
+          "kind": "index",
+          "fields": [],
+          "startLine": 228,
+          "endLine": 228
+        },
+        {
+          "name": "uidx_mv_peak_hour",
+          "kind": "index",
+          "fields": [],
+          "startLine": 264,
+          "endLine": 264
+        },
+        {
+          "name": "uidx_mv_village",
+          "kind": "index",
+          "fields": [],
+          "startLine": 303,
+          "endLine": 303
+        },
+        {
+          "name": "uidx_mv_revenue_forecast",
+          "kind": "index",
+          "fields": [],
+          "startLine": 349,
+          "endLine": 349
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 10
+      }
+    },
+    {
+      "path": "supabase/migrations/09_abuse_protection_&_rate_limiting.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 729,
+      "nonEmptyLines": 579,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "rule_name",
+            "window_minutes",
+            "max_attempts",
+            "is_active",
+            "metadata",
+            "created_at"
+          ],
+          "startLine": 81,
+          "endLine": 108
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "normalized_phone",
+            "ip_address",
+            "device_identifier",
+            "success",
+            "metadata",
+            "created_at"
+          ],
+          "startLine": 120,
+          "endLine": 141
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "event_type",
+            "phone_number",
+            "device_identifier",
+            "ip_address",
+            "risk_score",
+            "metadata",
+            "created_at"
+          ],
+          "startLine": 173,
+          "endLine": 199
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "normalized_phone",
+            "block_reason",
+            "restriction_status",
+            "blocked_until",
+            "metadata",
+            "created_at",
+            "normalized_phone"
+          ],
+          "startLine": 219,
+          "endLine": 246
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "device_identifier",
+            "block_reason",
+            "restriction_status",
+            "blocked_until",
+            "metadata",
+            "created_at"
+          ],
+          "startLine": 259,
+          "endLine": 277
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "normalized_phone",
+            "device_identifier",
+            "ip_address",
+            "total_score",
+            "last_event_at",
+            "updated_at",
+            "normalized_phone"
+          ],
+          "startLine": 283,
+          "endLine": 309
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "restriction_type",
+            "phone_number",
+            "device_identifier",
+            "ip_address",
+            "restriction_reason",
+            "restriction_status",
+            "restricted_until",
+            "metadata",
+            "created_at"
+          ],
+          "startLine": 329,
+          "endLine": 363
+        },
+        {
+          "name": "idx_rate_limit_rules_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 110,
+          "endLine": 110
+        },
+        {
+          "name": "idx_attempt_logs_phone_time",
+          "kind": "index",
+          "fields": [],
+          "startLine": 143,
+          "endLine": 143
+        },
+        {
+          "name": "idx_attempt_logs_ip_time",
+          "kind": "index",
+          "fields": [],
+          "startLine": 150,
+          "endLine": 150
+        },
+        {
+          "name": "idx_attempt_logs_device_time",
+          "kind": "index",
+          "fields": [],
+          "startLine": 157,
+          "endLine": 157
+        },
+        {
+          "name": "idx_attempt_logs_created",
+          "kind": "index",
+          "fields": [],
+          "startLine": 164,
+          "endLine": 164
+        },
+        {
+          "name": "idx_spam_events_phone",
+          "kind": "index",
+          "fields": [],
+          "startLine": 201,
+          "endLine": 201
+        },
+        {
+          "name": "idx_spam_events_ip",
+          "kind": "index",
+          "fields": [],
+          "startLine": 208,
+          "endLine": 208
+        },
+        {
+          "name": "idx_blocked_numbers_active",
+          "kind": "index",
+          "fields": [],
+          "startLine": 248,
+          "endLine": 248
+        },
+        {
+          "name": "idx_abuse_scores_total",
+          "kind": "index",
+          "fields": [],
+          "startLine": 311,
+          "endLine": 311
+        },
+        {
+          "name": "idx_temp_restrictions_phone",
+          "kind": "index",
+          "fields": [],
+          "startLine": 365,
+          "endLine": 365
+        },
+        {
+          "name": "idx_temp_restrictions_ip",
+          "kind": "index",
+          "fields": [],
+          "startLine": 373,
+          "endLine": 373
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 18
+      }
+    },
+    {
+      "path": "supabase/migrations/10_audit_&_security_engine.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 488,
+      "nonEmptyLines": 405,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "actor_user_id",
+            "entity_type",
+            "entity_id",
+            "action_type",
+            "action_severity",
+            "old_data",
+            "new_data",
+            "metadata",
+            "ip_address",
+            "user_agent",
+            "session_id",
+            "notes",
+            "created_at"
+          ],
+          "startLine": 43,
+          "endLine": 89
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "user_id",
+            "event_type",
+            "event_details",
+            "risk_score",
+            "ip_address",
+            "user_agent",
+            "event_fingerprint",
+            "resolved",
+            "resolved_by",
+            "resolved_at",
+            "resolution_notes",
+            "metadata",
+            "created_at"
+          ],
+          "startLine": 134,
+          "endLine": 191
+        },
+        {
+          "name": "idx_audit_logs_entity",
+          "kind": "index",
+          "fields": [],
+          "startLine": 95,
+          "endLine": 95
+        },
+        {
+          "name": "idx_audit_logs_hospital_date",
+          "kind": "index",
+          "fields": [],
+          "startLine": 102,
+          "endLine": 102
+        },
+        {
+          "name": "idx_audit_logs_actor",
+          "kind": "index",
+          "fields": [],
+          "startLine": 108,
+          "endLine": 108
+        },
+        {
+          "name": "idx_audit_logs_severity",
+          "kind": "index",
+          "fields": [],
+          "startLine": 114,
+          "endLine": 114
+        },
+        {
+          "name": "idx_audit_logs_action",
+          "kind": "index",
+          "fields": [],
+          "startLine": 124,
+          "endLine": 124
+        },
+        {
+          "name": "idx_security_events_unresolved",
+          "kind": "index",
+          "fields": [],
+          "startLine": 197,
+          "endLine": 197
+        },
+        {
+          "name": "idx_security_events_risk",
+          "kind": "index",
+          "fields": [],
+          "startLine": 204,
+          "endLine": 204
+        },
+        {
+          "name": "idx_security_events_type",
+          "kind": "index",
+          "fields": [],
+          "startLine": 210,
+          "endLine": 210
+        },
+        {
+          "name": "idx_security_events_user",
+          "kind": "index",
+          "fields": [],
+          "startLine": 216,
+          "endLine": 216
+        },
+        {
+          "name": "idx_security_events_fingerprint",
+          "kind": "index",
+          "fields": [],
+          "startLine": 222,
+          "endLine": 222
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 12
+      }
+    },
+    {
+      "path": "supabase/migrations/11_realtime_presence_schedule_tasks.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 514,
+      "nonEmptyLines": 422,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "user_id",
+            "role",
+            "tab_id",
+            "last_seen_at",
+            "metadata",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 11,
+          "endLine": 39
+        },
+        {
+          "name": "idx_dashboard_presence_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 45,
+          "endLine": 45
+        },
+        {
+          "name": "idx_dashboard_presence_cleanup",
+          "kind": "index",
+          "fields": [],
+          "startLine": 51,
+          "endLine": 51
+        },
+        {
+          "name": "idx_dashboard_presence_user",
+          "kind": "index",
+          "fields": [],
+          "startLine": 56,
+          "endLine": 56
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 4
+      }
+    },
+    {
+      "path": "supabase/migrations/12_hospital_configuration_engine.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 692,
+      "nonEmptyLines": 561,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "value",
+            "description",
+            "updated_by",
+            "updated_at"
+          ],
+          "startLine": 13,
+          "endLine": 37
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "logo_url",
+            "whatsapp_number",
+            "meta_phone_number_id",
+            "meta_waba_id",
+            "platform_fee_whatsapp",
+            "receptionist_fee",
+            "online_booking_fee_enabled",
+            "allow_walkin_tokens",
+            "allow_online_booking",
+            "allow_carry_forward",
+            "queue_display_enabled",
+            "send_whatsapp_reminder",
+            "send_feedback_request",
+            "reminder_before_minutes",
+            "payment_enabled",
+            "timezone",
+            "metadata",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 115,
+          "endLine": 210
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "flag_key",
+            "is_enabled",
+            "rollout_pct",
+            "metadata",
+            "updated_by",
+            "updated_at"
+          ],
+          "startLine": 275,
+          "endLine": 301
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "doctor_id",
+            "config_key",
+            "config_value",
+            "description",
+            "updated_by",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 392,
+          "endLine": 428
+        },
+        {
+          "name": "idx_hospital_settings_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 212,
+          "endLine": 212
+        },
+        {
+          "name": "idx_feature_flags_global_unique",
+          "kind": "index",
+          "fields": [],
+          "startLine": 303,
+          "endLine": 303
+        },
+        {
+          "name": "idx_feature_flags_hospital_unique",
+          "kind": "index",
+          "fields": [],
+          "startLine": 307,
+          "endLine": 307
+        },
+        {
+          "name": "idx_feature_flags_lookup",
+          "kind": "index",
+          "fields": [],
+          "startLine": 311,
+          "endLine": 311
+        },
+        {
+          "name": "idx_queue_configs_doctor_unique",
+          "kind": "index",
+          "fields": [],
+          "startLine": 430,
+          "endLine": 430
+        },
+        {
+          "name": "idx_queue_configs_hospital_unique",
+          "kind": "index",
+          "fields": [],
+          "startLine": 438,
+          "endLine": 438
+        },
+        {
+          "name": "idx_queue_configs_lookup",
+          "kind": "index",
+          "fields": [],
+          "startLine": 445,
+          "endLine": 445
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 11
+      }
+    },
+    {
+      "path": "supabase/migrations/13_payment_engine.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 962,
+      "nonEmptyLines": 763,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "booking_id",
+            "patient_id",
+            "gateway",
+            "gateway_order_id",
+            "gateway_payment_id",
+            "gateway_signature",
+            "amount_inr",
+            "amount_paise",
+            "currency",
+            "payment_status",
+            "initiated_at",
+            "authorized_at",
+            "captured_at",
+            "failed_at",
+            "expired_at",
+            "gateway_response",
+            "failure_reason",
+            "failure_code",
+            "idempotency_key",
+            "is_deleted",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 65,
+          "endLine": 129
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "payment_order_id",
+            "hospital_id",
+            "attempt_number",
+            "gateway",
+            "gateway_payment_id",
+            "amount_inr",
+            "payment_status",
+            "payment_method",
+            "payment_method_detail",
+            "error_code",
+            "error_description",
+            "error_source",
+            "error_step",
+            "error_reason",
+            "gateway_response",
+            "created_at"
+          ],
+          "startLine": 162,
+          "endLine": 209
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "payment_order_id",
+            "hospital_id",
+            "booking_id",
+            "gateway_refund_id",
+            "refund_amount_inr",
+            "refund_status",
+            "refund_reason",
+            "initiated_by",
+            "initiated_at",
+            "processed_at",
+            "failed_at",
+            "gateway_response",
+            "notes",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 221,
+          "endLine": 267
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "event_id",
+            "event_type",
+            "gateway_entity_id",
+            "processed",
+            "processed_at",
+            "processing_error",
+            "raw_payload",
+            "created_at"
+          ],
+          "startLine": 295,
+          "endLine": 317
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "booking_id",
+            "payment_order_id",
+            "refund_id",
+            "settlement_id",
+            "entry_type",
+            "amount_inr",
+            "is_credit",
+            "description",
+            "reference",
+            "created_at"
+          ],
+          "startLine": 327,
+          "endLine": 363
+        },
+        {
+          "name": "idx_payment_orders_booking",
+          "kind": "index",
+          "fields": [],
+          "startLine": 131,
+          "endLine": 131
+        },
+        {
+          "name": "idx_payment_orders_gateway_order",
+          "kind": "index",
+          "fields": [],
+          "startLine": 134,
+          "endLine": 134
+        },
+        {
+          "name": "idx_payment_orders_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 137,
+          "endLine": 137
+        },
+        {
+          "name": "idx_payment_orders_hospital_date",
+          "kind": "index",
+          "fields": [],
+          "startLine": 140,
+          "endLine": 140
+        },
+        {
+          "name": "idx_payment_attempts_order",
+          "kind": "index",
+          "fields": [],
+          "startLine": 211,
+          "endLine": 211
+        },
+        {
+          "name": "idx_payment_attempts_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 214,
+          "endLine": 214
+        },
+        {
+          "name": "idx_refunds_order",
+          "kind": "index",
+          "fields": [],
+          "startLine": 269,
+          "endLine": 269
+        },
+        {
+          "name": "idx_refunds_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 272,
+          "endLine": 272
+        },
+        {
+          "name": "idx_payment_events_unprocessed",
+          "kind": "index",
+          "fields": [],
+          "startLine": 319,
+          "endLine": 319
+        },
+        {
+          "name": "idx_ledger_hospital_date",
+          "kind": "index",
+          "fields": [],
+          "startLine": 365,
+          "endLine": 365
+        },
+        {
+          "name": "idx_ledger_booking",
+          "kind": "index",
+          "fields": [],
+          "startLine": 368,
+          "endLine": 368
+        },
+        {
+          "name": "idx_ledger_settlement",
+          "kind": "index",
+          "fields": [],
+          "startLine": 371,
+          "endLine": 371
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 17
+      }
+    },
+    {
+      "path": "supabase/migrations/14_dead_letter_queue.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 481,
+      "nonEmptyLines": 394,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "source_id",
+            "source_table",
+            "job_type",
+            "related_booking_id",
+            "related_patient_id",
+            "last_error",
+            "last_error_at",
+            "first_failed_at",
+            "payload",
+            "resolved_by",
+            "resolved_at",
+            "resolution_notes",
+            "alert_sent",
+            "priority_level",
+            "created_at",
+            "updated_at",
+            "resolution"
+          ],
+          "startLine": 39,
+          "endLine": 123
+        },
+        {
+          "name": "public",
+          "kind": "view",
+          "fields": [],
+          "startLine": 410,
+          "endLine": 410
+        },
+        {
+          "name": "public",
+          "kind": "view",
+          "fields": [],
+          "startLine": 427,
+          "endLine": 427
+        },
+        {
+          "name": "idx_dlq_unresolved",
+          "kind": "index",
+          "fields": [],
+          "startLine": 129,
+          "endLine": 129
+        },
+        {
+          "name": "idx_dlq_source",
+          "kind": "index",
+          "fields": [],
+          "startLine": 137,
+          "endLine": 137
+        },
+        {
+          "name": "idx_dlq_alertable",
+          "kind": "index",
+          "fields": [],
+          "startLine": 143,
+          "endLine": 143
+        },
+        {
+          "name": "idx_dlq_priority",
+          "kind": "index",
+          "fields": [],
+          "startLine": 151,
+          "endLine": 151
+        },
+        {
+          "name": "idx_dlq_hospital_created",
+          "kind": "index",
+          "fields": [],
+          "startLine": 158,
+          "endLine": 158
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 8
+      }
+    },
+    {
+      "path": "supabase/migrations/15_partitioning_strategy.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 542,
+      "nonEmptyLines": 420,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "table_name",
+            "partition_strategy",
+            "partition_column",
+            "recommended_threshold",
+            "partition_enabled",
+            "last_partition_created_for",
+            "retention_months",
+            "metadata",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 35,
+          "endLine": 76
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [],
+          "startLine": 197,
+          "endLine": 204
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [],
+          "startLine": 227,
+          "endLine": 231
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [],
+          "startLine": 277,
+          "endLine": 284
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [],
+          "startLine": 307,
+          "endLine": 311
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [],
+          "startLine": 357,
+          "endLine": 364
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [],
+          "startLine": 387,
+          "endLine": 391
+        },
+        {
+          "name": "public",
+          "kind": "view",
+          "fields": [],
+          "startLine": 458,
+          "endLine": 458
+        },
+        {
+          "name": "idx_partition_mgmt_enabled",
+          "kind": "index",
+          "fields": [],
+          "startLine": 82,
+          "endLine": 82
+        },
+        {
+          "name": "idx_partition_mgmt_table",
+          "kind": "index",
+          "fields": [],
+          "startLine": 88,
+          "endLine": 88
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 10
+      }
+    },
+    {
+      "path": "supabase/migrations/16_idempotency_hardening.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 780,
+      "nonEmptyLines": 612,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "provider",
+            "provider_event_id",
+            "event_type",
+            "payload_hash",
+            "duplicate_detected",
+            "duplicate_of",
+            "processing_status",
+            "processing_started_at",
+            "processed_at",
+            "processing_error",
+            "processing_attempt",
+            "raw_payload",
+            "hospital_id",
+            "created_at",
+            "updated_at",
+            "provider_event_id"
+          ],
+          "startLine": 46,
+          "endLine": 98
+        },
+        {
+          "name": "idx_webhook_events_unprocessed",
+          "kind": "index",
+          "fields": [],
+          "startLine": 104,
+          "endLine": 104
+        },
+        {
+          "name": "idx_webhook_events_hash",
+          "kind": "index",
+          "fields": [],
+          "startLine": 114,
+          "endLine": 114
+        },
+        {
+          "name": "idx_webhook_events_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 120,
+          "endLine": 120
+        },
+        {
+          "name": "idx_webhook_events_provider_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 126,
+          "endLine": 126
+        },
+        {
+          "name": "idx_bookings_client_request_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 564,
+          "endLine": 564
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 6
+      }
+    },
+    {
+      "path": "supabase/migrations/17_queue_monitoring_engine.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 928,
+      "nonEmptyLines": 629,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "snapshot_type",
+            "pending_count",
+            "processing_count",
+            "failed_count",
+            "dead_count",
+            "avg_processing_ms",
+            "p95_processing_ms",
+            "oldest_pending_age_secs",
+            "throughput_per_minute",
+            "avg_retry_count",
+            "captured_at",
+            "created_at"
+          ],
+          "startLine": 14,
+          "endLine": 51
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "view_name",
+            "started_at",
+            "completed_at",
+            "duration_ms",
+            "success",
+            "error_message",
+            "row_count",
+            "created_at"
+          ],
+          "startLine": 80,
+          "endLine": 106
+        },
+        {
+          "name": "idx_queue_metrics_captured",
+          "kind": "index",
+          "fields": [],
+          "startLine": 57,
+          "endLine": 57
+        },
+        {
+          "name": "idx_queue_metrics_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 63,
+          "endLine": 63
+        },
+        {
+          "name": "idx_queue_metrics_snapshot_type",
+          "kind": "index",
+          "fields": [],
+          "startLine": 69,
+          "endLine": 69
+        },
+        {
+          "name": "idx_mv_refresh_log_view",
+          "kind": "index",
+          "fields": [],
+          "startLine": 108,
+          "endLine": 108
+        },
+        {
+          "name": "idx_mv_refresh_log_success",
+          "kind": "index",
+          "fields": [],
+          "startLine": 114,
+          "endLine": 114
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 7
+      }
+    },
+    {
+      "path": "supabase/migrations/18_config_versioning_&_rollback.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 777,
+      "nonEmptyLines": 537,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "config_table",
+            "hospital_id",
+            "config_key",
+            "version_number",
+            "previous_value",
+            "new_value",
+            "change_reason",
+            "changed_by",
+            "is_rollback",
+            "rolled_back_from",
+            "created_at",
+            "version_number"
+          ],
+          "startLine": 35,
+          "endLine": 78
+        },
+        {
+          "name": "public",
+          "kind": "view",
+          "fields": [],
+          "startLine": 695,
+          "endLine": 695
+        },
+        {
+          "name": "idx_config_versions_key",
+          "kind": "index",
+          "fields": [],
+          "startLine": 84,
+          "endLine": 84
+        },
+        {
+          "name": "idx_config_versions_actor",
+          "kind": "index",
+          "fields": [],
+          "startLine": 92,
+          "endLine": 92
+        },
+        {
+          "name": "idx_config_versions_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 98,
+          "endLine": 98
+        },
+        {
+          "name": "idx_config_versions_rollbacks",
+          "kind": "index",
+          "fields": [],
+          "startLine": 104,
+          "endLine": 104
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 6
+      }
+    },
+    {
+      "path": "supabase/migrations/19_background_worker_engine.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 957,
+      "nonEmptyLines": 643,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "worker_id",
+            "worker_type",
+            "instance_id",
+            "hostname",
+            "started_at",
+            "last_heartbeat_at",
+            "lease_duration_secs",
+            "lease_expires_at",
+            "status",
+            "jobs_claimed",
+            "jobs_completed",
+            "jobs_failed",
+            "metadata",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 18,
+          "endLine": 61
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "worker_id",
+            "worker_type",
+            "heartbeat_at",
+            "jobs_in_flight",
+            "metadata"
+          ],
+          "startLine": 80,
+          "endLine": 96
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "worker_id",
+            "job_queue_id",
+            "job_type",
+            "leased_at",
+            "lease_expires_at",
+            "completed_at",
+            "failed_at",
+            "outcome",
+            "error_message"
+          ],
+          "startLine": 108,
+          "endLine": 142
+        },
+        {
+          "name": "public",
+          "kind": "view",
+          "fields": [],
+          "startLine": 859,
+          "endLine": 859
+        },
+        {
+          "name": "idx_worker_registry_active",
+          "kind": "index",
+          "fields": [],
+          "startLine": 63,
+          "endLine": 63
+        },
+        {
+          "name": "idx_worker_registry_type",
+          "kind": "index",
+          "fields": [],
+          "startLine": 70,
+          "endLine": 70
+        },
+        {
+          "name": "idx_worker_heartbeat_worker",
+          "kind": "index",
+          "fields": [],
+          "startLine": 98,
+          "endLine": 98
+        },
+        {
+          "name": "idx_worker_leases_active",
+          "kind": "index",
+          "fields": [],
+          "startLine": 144,
+          "endLine": 144
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 8
+      }
+    },
+    {
+      "path": "supabase/migrations/20_presence_engine.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 602,
+      "nonEmptyLines": 423,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "user_id",
+            "role",
+            "channel",
+            "tab_id",
+            "last_seen_at",
+            "metadata",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 31,
+          "endLine": 57
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "hospital_id",
+            "is_online",
+            "active_users",
+            "active_receptionists",
+            "active_doctors",
+            "active_queue_displays",
+            "last_activity_at",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 135,
+          "endLine": 156
+        },
+        {
+          "name": "idx_presence_active",
+          "kind": "index",
+          "fields": [],
+          "startLine": 112,
+          "endLine": 112
+        },
+        {
+          "name": "idx_presence_channel",
+          "kind": "index",
+          "fields": [],
+          "startLine": 118,
+          "endLine": 118
+        },
+        {
+          "name": "idx_presence_user",
+          "kind": "index",
+          "fields": [],
+          "startLine": 125,
+          "endLine": 125
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 5
+      }
+    },
+    {
+      "path": "supabase/migrations/21_analytics_rollups.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 632,
+      "nonEmptyLines": 497,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "hospital_id",
+            "week_start_date",
+            "week_end_date",
+            "total_bookings",
+            "completed_bookings",
+            "cancelled_bookings",
+            "no_show_bookings",
+            "carry_forward_bookings",
+            "new_patients",
+            "repeat_patients",
+            "total_revenue_inr",
+            "platform_revenue_inr",
+            "receptionist_fees_inr",
+            "avg_wait_minutes",
+            "avg_consultation_minutes",
+            "peak_hour",
+            "completion_rate_pct",
+            "computed_at"
+          ],
+          "startLine": 34,
+          "endLine": 65
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "hospital_id",
+            "month_start_date",
+            "total_bookings",
+            "completed_bookings",
+            "cancelled_bookings",
+            "no_show_bookings",
+            "new_patients",
+            "repeat_patients",
+            "carry_forward_bookings",
+            "total_revenue_inr",
+            "platform_revenue_inr",
+            "receptionist_fees_inr",
+            "avg_daily_bookings",
+            "peak_day_of_week",
+            "top_village",
+            "top_doctor_id",
+            "avg_wait_minutes",
+            "avg_consultation_minutes",
+            "bookings_mom_pct",
+            "revenue_mom_pct",
+            "completion_rate_pct",
+            "computed_at"
+          ],
+          "startLine": 77,
+          "endLine": 119
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "hospital_id",
+            "quarter_start_date",
+            "quarter_label",
+            "total_bookings",
+            "completed_bookings",
+            "total_revenue_inr",
+            "platform_revenue_inr",
+            "bookings_qoq_pct",
+            "revenue_qoq_pct",
+            "computed_at"
+          ],
+          "startLine": 131,
+          "endLine": 154
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "report_date",
+            "total_hospitals_active",
+            "total_bookings",
+            "total_completed",
+            "total_revenue_inr",
+            "total_platform_fee_inr",
+            "total_unique_patients",
+            "total_whatsapp_sent",
+            "new_hospitals_this_week",
+            "computed_at"
+          ],
+          "startLine": 166,
+          "endLine": 183
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "hospital_id",
+            "cohort_month",
+            "offset_months",
+            "cohort_size",
+            "retained_count",
+            "retention_rate_pct",
+            "computed_at",
+            "offset_months"
+          ],
+          "startLine": 189,
+          "endLine": 210
+        },
+        {
+          "name": "idx_weekly_rollups_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 67,
+          "endLine": 67
+        },
+        {
+          "name": "idx_monthly_rollups_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 121,
+          "endLine": 121
+        },
+        {
+          "name": "idx_quarterly_rollups_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 156,
+          "endLine": 156
+        },
+        {
+          "name": "idx_cohort_retention_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 212,
+          "endLine": 212
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 9
+      }
+    },
+    {
+      "path": "supabase/migrations/22_partition_automation.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 690,
+      "nonEmptyLines": 544,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "parent_table",
+            "partition_name",
+            "partition_schema",
+            "range_start",
+            "range_end",
+            "range_column",
+            "partition_state",
+            "estimated_rows",
+            "actual_rows",
+            "size_bytes",
+            "created_at",
+            "attached_at",
+            "detached_at",
+            "last_analyzed_at",
+            "notes"
+          ],
+          "startLine": 42,
+          "endLine": 71
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "parent_table",
+            "range_column",
+            "range_type",
+            "row_threshold",
+            "create_ahead_months",
+            "is_auto_enabled",
+            "last_auto_run",
+            "created_at"
+          ],
+          "startLine": 88,
+          "endLine": 110
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [],
+          "startLine": 225,
+          "endLine": 227
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "category",
+            "title",
+            "body",
+            "created_at"
+          ],
+          "startLine": 620,
+          "endLine": 630
+        },
+        {
+          "name": "public",
+          "kind": "view",
+          "fields": [],
+          "startLine": 529,
+          "endLine": 529
+        },
+        {
+          "name": "idx_partition_manifest_parent",
+          "kind": "index",
+          "fields": [],
+          "startLine": 73,
+          "endLine": 73
+        },
+        {
+          "name": "idx_partition_manifest_name",
+          "kind": "index",
+          "fields": [],
+          "startLine": 79,
+          "endLine": 79
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 7
+      }
+    },
+    {
+      "path": "supabase/migrations/23_retention_&_cleanup_engine.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 369,
+      "nonEmptyLines": 279,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "table_name",
+            "hospital_id",
+            "retention_days",
+            "hard_delete_after_days",
+            "is_active",
+            "legal_basis",
+            "notes",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 55,
+          "endLine": 84
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "run_type",
+            "tables_cleaned",
+            "total_deleted",
+            "duration_ms",
+            "error_message",
+            "success",
+            "run_at"
+          ],
+          "startLine": 104,
+          "endLine": 120
+        },
+        {
+          "name": "idx_retention_policies_table",
+          "kind": "index",
+          "fields": [],
+          "startLine": 94,
+          "endLine": 94
+        },
+        {
+          "name": "idx_retention_policies_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 97,
+          "endLine": 97
+        },
+        {
+          "name": "idx_cleanup_run_log_time",
+          "kind": "index",
+          "fields": [],
+          "startLine": 122,
+          "endLine": 122
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 5
+      }
+    },
+    {
+      "path": "supabase/migrations/24_operational-monitoring_engine.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 559,
+      "nonEmptyLines": 438,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "alert_key",
+            "threshold_value",
+            "threshold_unit",
+            "severity",
+            "is_active",
+            "notes",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 37,
+          "endLine": 69
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "alert_key",
+            "severity",
+            "current_value",
+            "threshold_value",
+            "threshold_unit",
+            "message",
+            "is_resolved",
+            "resolved_at",
+            "resolved_by",
+            "notified",
+            "created_at"
+          ],
+          "startLine": 109,
+          "endLine": 138
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "snapshot_at",
+            "job_queue_pending",
+            "job_queue_processing",
+            "job_queue_dead",
+            "wa_queue_pending",
+            "wa_permanently_failed",
+            "active_workers",
+            "crashed_workers",
+            "dlq_unresolved",
+            "payments_pending",
+            "mv_oldest_refresh_hrs",
+            "alerts_fired",
+            "health_score"
+          ],
+          "startLine": 157,
+          "endLine": 185
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "hospital_id",
+            "tracking_date",
+            "avg_wait_minutes",
+            "completion_rate_pct",
+            "no_show_rate_pct",
+            "cancellation_rate_pct",
+            "computed_at"
+          ],
+          "startLine": 403,
+          "endLine": 421
+        },
+        {
+          "name": "public",
+          "kind": "view",
+          "fields": [],
+          "startLine": 433,
+          "endLine": 433
+        },
+        {
+          "name": "idx_alert_thresholds_lookup",
+          "kind": "index",
+          "fields": [],
+          "startLine": 71,
+          "endLine": 71
+        },
+        {
+          "name": "idx_alert_events_open",
+          "kind": "index",
+          "fields": [],
+          "startLine": 140,
+          "endLine": 140
+        },
+        {
+          "name": "idx_alert_events_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 147,
+          "endLine": 147
+        },
+        {
+          "name": "idx_health_snapshots_recent",
+          "kind": "index",
+          "fields": [],
+          "startLine": 187,
+          "endLine": 187
+        },
+        {
+          "name": "idx_sla_tracking_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 423,
+          "endLine": 423
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 10
+      }
+    },
+    {
+      "path": "supabase/migrations/25_api_idempotency_registry.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 649,
+      "nonEmptyLines": 530,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "idempotency_key",
+            "api_endpoint",
+            "hospital_id",
+            "user_id",
+            "request_hash",
+            "request_summary",
+            "status",
+            "response_status_code",
+            "response_body",
+            "response_headers",
+            "first_attempt_at",
+            "completed_at",
+            "expires_at",
+            "claimed_by_instance",
+            "error_code",
+            "error_message",
+            "attempt_count",
+            "api_endpoint"
+          ],
+          "startLine": 32,
+          "endLine": 94
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "endpoint_name",
+            "description",
+            "idempotency_required",
+            "max_retries_allowed",
+            "response_cached",
+            "created_at"
+          ],
+          "startLine": 446,
+          "endLine": 466
+        },
+        {
+          "name": "public",
+          "kind": "view",
+          "fields": [],
+          "startLine": 403,
+          "endLine": 403
+        },
+        {
+          "name": "idx_idem_keys_expires",
+          "kind": "index",
+          "fields": [],
+          "startLine": 100,
+          "endLine": 100
+        },
+        {
+          "name": "idx_idem_keys_user",
+          "kind": "index",
+          "fields": [],
+          "startLine": 106,
+          "endLine": 106
+        },
+        {
+          "name": "idx_idem_keys_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 113,
+          "endLine": 113
+        },
+        {
+          "name": "idx_idem_keys_processing",
+          "kind": "index",
+          "fields": [],
+          "startLine": 121,
+          "endLine": 121
+        },
+        {
+          "name": "idx_idem_keys_endpoint",
+          "kind": "index",
+          "fields": [],
+          "startLine": 127,
+          "endLine": 127
+        },
+        {
+          "name": "idx_idem_registry_required",
+          "kind": "index",
+          "fields": [],
+          "startLine": 468,
+          "endLine": 468
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 9
+      }
+    },
+    {
+      "path": "supabase/migrations/26_migration_metadata_&_registry.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 613,
+      "nonEmptyLines": 502,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "migration_id",
+            "script_filename",
+            "script_version",
+            "description",
+            "category",
+            "depends_on",
+            "status",
+            "applied_at",
+            "duration_ms",
+            "applied_by",
+            "rollback_script",
+            "is_reversible",
+            "last_error",
+            "attempt_count",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 33,
+          "endLine": 90
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "migration_id",
+            "action",
+            "status",
+            "duration_ms",
+            "applied_by",
+            "error_message",
+            "postgres_version",
+            "supabase_project",
+            "executed_at"
+          ],
+          "startLine": 130,
+          "endLine": 170
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "snapshot_label",
+            "postgres_version",
+            "total_migrations",
+            "applied_migrations",
+            "failed_migrations",
+            "database_size_bytes",
+            "table_count",
+            "function_count",
+            "snapshot_data",
+            "created_at",
+            "created_by"
+          ],
+          "startLine": 372,
+          "endLine": 404
+        },
+        {
+          "name": "public",
+          "kind": "view",
+          "fields": [],
+          "startLine": 356,
+          "endLine": 356
+        },
+        {
+          "name": "idx_migration_registry_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 106,
+          "endLine": 106
+        },
+        {
+          "name": "idx_migration_registry_category",
+          "kind": "index",
+          "fields": [],
+          "startLine": 112,
+          "endLine": 112
+        },
+        {
+          "name": "idx_migration_log_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 183,
+          "endLine": 183
+        },
+        {
+          "name": "idx_migration_log_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 189,
+          "endLine": 189
+        },
+        {
+          "name": "idx_deployment_snapshots_created",
+          "kind": "index",
+          "fields": [],
+          "startLine": 417,
+          "endLine": 417
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 9
+      }
+    },
+    {
+      "path": "supabase/migrations/27_role_permissions.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 272,
+      "nonEmptyLines": 242,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "role",
+            "permission",
+            "granted_at",
+            "updated_at"
+          ],
+          "startLine": 42,
+          "endLine": 52
+        },
+        {
+          "name": "public",
+          "kind": "view",
+          "fields": [],
+          "startLine": 226,
+          "endLine": 226
+        },
+        {
+          "name": "idx_role_permissions_lookup",
+          "kind": "index",
+          "fields": [],
+          "startLine": 54,
+          "endLine": 54
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 3
+      }
+    },
+    {
+      "path": "supabase/migrations/28_booking_enhancements.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 276,
+      "nonEmptyLines": 238,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "booking_fee_whatsapp",
+            "booking_fee_walkin",
+            "booking_fee_enabled",
+            "gst_percentage",
+            "refund_on_cancellation",
+            "collect_consultation_at_hospital",
+            "gateway_fee_percentage",
+            "metadata",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 101,
+          "endLine": 143
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 1
+      }
+    },
+    {
+      "path": "supabase/migrations/29_cancellation_policy.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 312,
+      "nonEmptyLines": 261,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "partial_refund_within_minutes",
+            "no_show_penalty_amount_inr",
+            "effective_from",
+            "notes",
+            "metadata",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 22,
+          "endLine": 63
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "version",
+            "policy_snapshot",
+            "changed_by",
+            "created_at"
+          ],
+          "startLine": 78,
+          "endLine": 88
+        },
+        {
+          "name": "idx_cancellation_policies_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 65,
+          "endLine": 65
+        },
+        {
+          "name": "idx_cancel_policy_history",
+          "kind": "index",
+          "fields": [],
+          "startLine": 90,
+          "endLine": 90
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 4
+      }
+    },
+    {
+      "path": "supabase/migrations/30_device_sessions.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 206,
+      "nonEmptyLines": 176,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "user_id",
+            "hospital_id",
+            "device_name",
+            "device_type",
+            "ip_address",
+            "user_agent",
+            "last_action",
+            "is_active",
+            "last_seen",
+            "login_at",
+            "logout_at",
+            "city",
+            "country",
+            "metadata",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 14,
+          "endLine": 52
+        },
+        {
+          "name": "idx_device_sessions_user",
+          "kind": "index",
+          "fields": [],
+          "startLine": 55,
+          "endLine": 55
+        },
+        {
+          "name": "idx_device_sessions_active",
+          "kind": "index",
+          "fields": [],
+          "startLine": 57,
+          "endLine": 57
+        },
+        {
+          "name": "idx_device_sessions_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 60,
+          "endLine": 60
+        },
+        {
+          "name": "idx_device_sessions_ip",
+          "kind": "index",
+          "fields": [],
+          "startLine": 63,
+          "endLine": 63
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 5
+      }
+    },
+    {
+      "path": "supabase/migrations/31_doctor_leave_management.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 497,
+      "nonEmptyLines": 426,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "doctor_id",
+            "holiday_date",
+            "description",
+            "applies",
+            "created_by",
+            "created_at"
+          ],
+          "startLine": 157,
+          "endLine": 179
+        },
+        {
+          "name": "idx_doctor_leaves_status_date",
+          "kind": "index",
+          "fields": [],
+          "startLine": 95,
+          "endLine": 95
+        },
+        {
+          "name": "idx_doctor_leaves_doctor_date",
+          "kind": "index",
+          "fields": [],
+          "startLine": 99,
+          "endLine": 99
+        },
+        {
+          "name": "idx_doctor_hospital_holidays",
+          "kind": "index",
+          "fields": [],
+          "startLine": 181,
+          "endLine": 181
+        },
+        {
+          "name": "idx_unique_global_doctor_holiday",
+          "kind": "index",
+          "fields": [],
+          "startLine": 184,
+          "endLine": 184
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 5
+      }
+    },
+    {
+      "path": "supabase/migrations/32_subscription_engine.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 501,
+      "nonEmptyLines": 428,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "plan_name",
+            "display_name",
+            "description",
+            "max_receptionists",
+            "max_bookings_per_month",
+            "max_patients",
+            "analytics_enabled",
+            "multi_doctor_enabled",
+            "custom_branding_enabled",
+            "api_access_enabled",
+            "price_quarterly_inr",
+            "price_annual_inr",
+            "is_active",
+            "sort_order",
+            "metadata",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 36,
+          "endLine": 74
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "plan_id",
+            "subscription_status",
+            "billing_cycle",
+            "subscription_starts_at",
+            "expires_at",
+            "cancelled_at",
+            "last_invoice_date",
+            "next_invoice_date",
+            "current_period_start",
+            "current_period_end",
+            "razorpay_customer_id",
+            "max_receptionists",
+            "max_bookings_per_month",
+            "current_doctor_count",
+            "current_receptionist_count",
+            "notes",
+            "metadata",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 101,
+          "endLine": 156
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "subscription_id",
+            "event_type",
+            "amount_inr",
+            "billing_period_start",
+            "billing_period_end",
+            "gateway_invoice_id",
+            "gateway_response",
+            "notes",
+            "created_at"
+          ],
+          "startLine": 190,
+          "endLine": 212
+        },
+        {
+          "name": "idx_subscription_plans_active",
+          "kind": "index",
+          "fields": [],
+          "startLine": 76,
+          "endLine": 76
+        },
+        {
+          "name": "idx_subscriptions_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 172,
+          "endLine": 172
+        },
+        {
+          "name": "idx_subscriptions_expiring",
+          "kind": "index",
+          "fields": [],
+          "startLine": 174,
+          "endLine": 174
+        },
+        {
+          "name": "idx_subscriptions_razorpay",
+          "kind": "index",
+          "fields": [],
+          "startLine": 177,
+          "endLine": 177
+        },
+        {
+          "name": "idx_billing_history_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 214,
+          "endLine": 214
+        },
+        {
+          "name": "idx_billing_history_sub",
+          "kind": "index",
+          "fields": [],
+          "startLine": 216,
+          "endLine": 216
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 9
+      }
+    },
+    {
+      "path": "supabase/migrations/33_settlement_engine_refactor.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 307,
+      "nonEmptyLines": 273,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 0
+      }
+    },
+    {
+      "path": "supabase/migrations/34_payment_ledger_cleanup.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 353,
+      "nonEmptyLines": 315,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 0
+      }
+    },
+    {
+      "path": "supabase/migrations/35_hospital_config_enhancements.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 215,
+      "nonEmptyLines": 187,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 0
+      }
+    },
+    {
+      "path": "supabase/migrations/36_audit_standardization.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 685,
+      "nonEmptyLines": 627,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "action_type",
+            "display_name",
+            "default_severity",
+            "category",
+            "description",
+            "is_active",
+            "created_at"
+          ],
+          "startLine": 60,
+          "endLine": 87
+        },
+        {
+          "name": "idx_audit_action_types_category",
+          "kind": "index",
+          "fields": [],
+          "startLine": 89,
+          "endLine": 89
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 2
+      }
+    },
+    {
+      "path": "supabase/migrations/37_feature_flags.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 224,
+      "nonEmptyLines": 202,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 0
+      }
+    },
+    {
+      "path": "supabase/migrations/38_missing_rpc_functions.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 253,
+      "nonEmptyLines": 220,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 0
+      }
+    },
+    {
+      "path": "supabase/migrations/39_schema_alignment.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 393,
+      "nonEmptyLines": 354,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 0
+      }
+    },
+    {
+      "path": "supabase/migrations/40_subscription_usage_engine.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 319,
+      "nonEmptyLines": 273,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 0
+      }
+    },
+    {
+      "path": "supabase/migrations/41_integration_hardening.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 390,
+      "nonEmptyLines": 344,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 0
+      }
+    },
+    {
+      "path": "supabase/migrations/42_whatsapp_conversational_engine.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 414,
+      "nonEmptyLines": 354,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "conversation_id",
+            "phone_number",
+            "state",
+            "chosen",
+            "prompt",
+            "last_intent",
+            "handoff_reason",
+            "created_at",
+            "updated_at",
+            "phone_number"
+          ],
+          "startLine": 32,
+          "endLine": 91
+        },
+        {
+          "name": "idx_conv_states_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 93,
+          "endLine": 93
+        },
+        {
+          "name": "idx_conv_states_expires",
+          "kind": "index",
+          "fields": [],
+          "startLine": 96,
+          "endLine": 96
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 3
+      }
+    },
+    {
+      "path": "supabase/migrations/43_queue_runtime.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 1131,
+      "nonEmptyLines": 965,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "queue_session_id",
+            "hospital_id",
+            "booking_id",
+            "event_type",
+            "token_number",
+            "actor_id",
+            "metadata",
+            "created_at"
+          ],
+          "startLine": 44,
+          "endLine": 86
+        },
+        {
+          "name": "idx_queue_events_session",
+          "kind": "index",
+          "fields": [],
+          "startLine": 88,
+          "endLine": 88
+        },
+        {
+          "name": "idx_queue_events_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 94,
+          "endLine": 94
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 3
+      }
+    },
+    {
+      "path": "supabase/migrations/44_queue_runtime_flag.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 24,
+      "nonEmptyLines": 23,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 0
+      }
+    },
+    {
+      "path": "supabase/migrations/45_queue_operations.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 998,
+      "nonEmptyLines": 899,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 0
+      }
+    },
+    {
+      "path": "supabase/migrations/46_doctor_clinical_operations.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 1025,
+      "nonEmptyLines": 894,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "booking_id",
+            "hospital_id",
+            "doctor_id",
+            "notes",
+            "diagnosis_summary",
+            "prescription",
+            "follow_up_date",
+            "attachments",
+            "created_at"
+          ],
+          "startLine": 103,
+          "endLine": 135
+        },
+        {
+          "name": "idx_consultation_notes_booking",
+          "kind": "index",
+          "fields": [],
+          "startLine": 137,
+          "endLine": 137
+        },
+        {
+          "name": "idx_consultation_notes_hospital",
+          "kind": "index",
+          "fields": [],
+          "startLine": 143,
+          "endLine": 143
+        },
+        {
+          "name": "uq_one_active_consultation_per_doctor",
+          "kind": "index",
+          "fields": [],
+          "startLine": 183,
+          "endLine": 183
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 4
+      }
+    },
+    {
+      "path": "supabase/migrations/47_enterprise_command_center.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 2548,
+      "nonEmptyLines": 2339,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "alert_id",
+            "hospital_id",
+            "actor_user_id",
+            "action",
+            "notes",
+            "created_at"
+          ],
+          "startLine": 86,
+          "endLine": 98
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "hospital_id",
+            "alert_key",
+            "reason",
+            "active_from",
+            "active_until",
+            "created_by",
+            "created_at"
+          ],
+          "startLine": 103,
+          "endLine": 116
+        },
+        {
+          "name": "idx_alert_events_open",
+          "kind": "index",
+          "fields": [],
+          "startLine": 83,
+          "endLine": 83
+        },
+        {
+          "name": "idx_alert_activity_alert",
+          "kind": "index",
+          "fields": [],
+          "startLine": 100,
+          "endLine": 100
+        },
+        {
+          "name": "idx_alert_suppressions_active",
+          "kind": "index",
+          "fields": [],
+          "startLine": 118,
+          "endLine": 118
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 5
+      }
+    },
+    {
+      "path": "supabase/migrations/48_privilege_hardening.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 1469,
+      "nonEmptyLines": 1276,
+      "definitions": [
+        {
+          "name": "idx_alert_events_open",
+          "kind": "index",
+          "fields": [],
+          "startLine": 1229,
+          "endLine": 1229
+        },
+        {
+          "name": "idx_alert_events_hospital_open",
+          "kind": "index",
+          "fields": [],
+          "startLine": 1238,
+          "endLine": 1238
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 2
+      }
+    },
+    {
+      "path": "supabase/migrations/49_phase_1_5_defect_fixes.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 900,
+      "nonEmptyLines": 843,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 0
+      }
+    }
+  ]
+}

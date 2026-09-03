@@ -1,0 +1,51 @@
+{
+  "nodes": [
+    {
+      "id": "file:graphify-out/2026-08-27/.graphify_analysis.json",
+      "type": "file",
+      "name": ".graphify_analysis.json",
+      "filePath": "graphify-out/2026-08-27/.graphify_analysis.json",
+      "summary": "Hidden Graphify analysis cache containing community detection, cohesion metrics, god nodes, surprises, and open questions for the 2026-08-27 snapshot.",
+      "tags": ["graphify", "cache", "data", "analysis", "structural-index"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:graphify-out/2026-08-27/.graphify_labels.json",
+      "type": "file",
+      "name": ".graphify_labels.json",
+      "filePath": "graphify-out/2026-08-27/.graphify_labels.json",
+      "summary": "Hidden Graphify labels cache mapping the 95 detected community identifiers from the 2026-08-27 structural snapshot.",
+      "tags": ["graphify", "cache", "data", "labels"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:graphify-out/2026-08-27/GRAPH_REPORT.md",
+      "type": "document",
+      "name": "GRAPH_REPORT.md",
+      "filePath": "graphify-out/2026-08-27/GRAPH_REPORT.md",
+      "summary": "Human-readable Graphify navigation report for the 2026-08-27 snapshot, covering corpus check, summary, community hubs, god nodes, import cycles, 95 communities, and knowledge gaps.",
+      "tags": ["graphify", "cache", "data", "documentation", "navigation"],
+      "complexity": "moderate",
+      "languageNotes": "Markdown sections enumerate 95 communities with primary module identifiers, enabling topology-based navigation of the SETURA codebase."
+    },
+    {
+      "id": "file:graphify-out/2026-08-27/graph.json",
+      "type": "file",
+      "name": "graph.json",
+      "filePath": "graphify-out/2026-08-27/graph.json",
+      "summary": "Large machine-readable network graph cache (nodes/links/hyperedges) for the 2026-08-27 Graphify snapshot, encoding the full repository dependency topology.",
+      "tags": ["graphify", "cache", "data", "networkx", "topology"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:graphify-out/2026-08-27/manifest.json",
+      "type": "file",
+      "name": "manifest.json",
+      "filePath": "graphify-out/2026-08-27/manifest.json",
+      "summary": "Per-file manifest cache from the 2026-08-27 Graphify snapshot, listing every analyzed file path (shared helpers, Edge Functions, migrations, tests, scripts, seed) with per-file section metadata.",
+      "tags": ["graphify", "cache", "data", "manifest", "inventory"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

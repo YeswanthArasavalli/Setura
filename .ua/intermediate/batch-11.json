@@ -1,0 +1,585 @@
+{
+  "nodes": [
+    {
+      "id": "document:.qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "type": "document",
+      "name": "Architecture Overview.md",
+      "filePath": ".qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "summary": "Entry-point documentation for Setura Hospital OS architecture covering Supabase Edge Functions, PostgreSQL backend, multi-tenant isolation, RBAC, idempotent APIs, background workers, and external integrations with Meta WhatsApp and Razorpay.",
+      "tags": ["qoder-wiki", "architecture", "documentation", "entry-point", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Architecture Overview/Core Architecture Patterns.md",
+      "type": "document",
+      "name": "Core Architecture Patterns.md",
+      "filePath": ".qoder/repowiki/en/content/Architecture Overview/Core Architecture Patterns.md",
+      "summary": "Documents core architectural patterns including serverless edge functions per business operation, microservices-style isolation, event-driven processing via job queues, repository-like database abstractions, and middleware composition for cross-cutting concerns.",
+      "tags": ["qoder-wiki", "architecture-patterns", "documentation", "edge-functions", "event-driven"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Architecture Overview/Database Design Principles.md",
+      "type": "document",
+      "name": "Database Design Principles.md",
+      "filePath": ".qoder/repowiki/en/content/Architecture Overview/Database Design Principles.md",
+      "summary": "Explains multi-client database architecture with service-role, anonymous, and auth-scoped clients; progressive migration strategy; typed client generation; and multi-tenant isolation at data and query levels with indexing and connection pooling strategies.",
+      "tags": ["qoder-wiki", "database-design", "documentation", "multi-tenancy", "migrations"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Architecture Overview/Integration Patterns.md",
+      "type": "document",
+      "name": "Integration Patterns.md",
+      "filePath": ".qoder/repowiki/en/content/Architecture Overview/Integration Patterns.md",
+      "summary": "Documents external service integration patterns for WhatsApp Business API webhooks, Meta Cloud API outbound messaging, Razorpay payment order creation/verification, webhook security with HMAC verification, and database-backed message queue for asynchronous processing.",
+      "tags": ["qoder-wiki", "integration-patterns", "documentation", "webhooks", "external-apis"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Architecture Overview/Security Model.md",
+      "type": "document",
+      "name": "Security Model.md",
+      "filePath": ".qoder/repowiki/en/content/Architecture Overview/Security Model.md",
+      "summary": "Documents the security model covering JWT-based authentication, multi-tenant hospital isolation via RBAC, granular permissions for patients/doctors/receptionists/admins, abuse protection with rate limiting, and comprehensive audit logging for compliance.",
+      "tags": ["qoder-wiki", "security-model", "documentation", "authentication", "authorization"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Architecture Overview/Shared Utilities Layer.md",
+      "type": "document",
+      "name": "Shared Utilities Layer.md",
+      "filePath": ".qoder/repowiki/en/content/Architecture Overview/Shared Utilities Layer.md",
+      "summary": "Documents the shared utilities layer powering all edge functions: JWT authentication middleware with hospital isolation, Zod-based validation, centralized error handling, structured logging with correlation IDs, metrics collection, tracing, and CORS support.",
+      "tags": ["qoder-wiki", "shared-utilities", "documentation", "middleware", "validation"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "target": "document:.qoder/repowiki/en/content/Architecture Overview/Core Architecture Patterns.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "target": "document:.qoder/repowiki/en/content/Architecture Overview/Database Design Principles.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "target": "document:.qoder/repowiki/en/content/Architecture Overview/Integration Patterns.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "target": "document:.qoder/repowiki/en/content/Architecture Overview/Security Model.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "target": "document:.qoder/repowiki/en/content/Architecture Overview/Shared Utilities Layer.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "target": "file:supabase/functions/_shared/auth.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "target": "file:supabase/functions/_shared/db.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "target": "file:supabase/functions/_shared/validation.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "target": "file:supabase/functions/_shared/errors.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "target": "file:supabase/functions/_shared/logger.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "target": "file:supabase/functions/_shared/idempotency.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "target": "file:supabase/functions/_shared/worker.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "target": "file:supabase/functions/create-booking/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "target": "file:supabase/functions/create-payment-order/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "target": "file:supabase/functions/process-refund/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "target": "file:supabase/functions/send-whatsapp-message/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "target": "file:supabase/functions/run-background-worker/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Architecture Overview.md",
+      "target": "file:supabase/config.toml",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Core Architecture Patterns.md",
+      "target": "file:supabase/functions/_shared/auth.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Core Architecture Patterns.md",
+      "target": "file:supabase/functions/_shared/db.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Core Architecture Patterns.md",
+      "target": "file:supabase/functions/_shared/validation.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Core Architecture Patterns.md",
+      "target": "file:supabase/functions/_shared/errors.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Core Architecture Patterns.md",
+      "target": "file:supabase/functions/_shared/response.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Core Architecture Patterns.md",
+      "target": "file:supabase/functions/_shared/idempotency.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Core Architecture Patterns.md",
+      "target": "file:supabase/functions/_shared/audit.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Core Architecture Patterns.md",
+      "target": "file:supabase/functions/_shared/worker.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Core Architecture Patterns.md",
+      "target": "file:supabase/functions/create-booking/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Core Architecture Patterns.md",
+      "target": "file:supabase/functions/create-payment-order/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Core Architecture Patterns.md",
+      "target": "file:supabase/functions/send-whatsapp-message/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Core Architecture Patterns.md",
+      "target": "file:supabase/functions/run-background-worker/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Core Architecture Patterns.md",
+      "target": "file:supabase/functions/cancel-booking/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Core Architecture Patterns.md",
+      "target": "file:supabase/functions/process-refund/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Database Design Principles.md",
+      "target": "file:supabase/migrations/01_foundation.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Database Design Principles.md",
+      "target": "file:supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Database Design Principles.md",
+      "target": "file:supabase/migrations/15_partitioning_strategy.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Database Design Principles.md",
+      "target": "file:supabase/migrations/37_feature_flags.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Database Design Principles.md",
+      "target": "file:supabase/functions/_shared/database.generated.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Database Design Principles.md",
+      "target": "file:supabase/functions/_shared/db.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Database Design Principles.md",
+      "target": "file:supabase/functions/_shared/types.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Database Design Principles.md",
+      "target": "file:supabase/config.toml",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Integration Patterns.md",
+      "target": "file:supabase/functions/process-whatsapp-webhook/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Integration Patterns.md",
+      "target": "file:supabase/functions/send-whatsapp-message/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Integration Patterns.md",
+      "target": "file:supabase/functions/create-payment-order/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Integration Patterns.md",
+      "target": "file:supabase/functions/verify-payment/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Integration Patterns.md",
+      "target": "file:supabase/functions/_shared/cors.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Integration Patterns.md",
+      "target": "file:supabase/functions/_shared/env.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Integration Patterns.md",
+      "target": "file:supabase/functions/_shared/idempotency.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Integration Patterns.md",
+      "target": "file:supabase/functions/_shared/errors.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Integration Patterns.md",
+      "target": "file:supabase/functions/_shared/response.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Integration Patterns.md",
+      "target": "file:supabase/functions/run-background-worker/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Integration Patterns.md",
+      "target": "file:supabase/functions/_shared/worker.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Security Model.md",
+      "target": "file:supabase/functions/_shared/auth.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Security Model.md",
+      "target": "file:supabase/functions/_shared/rate_limit.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Security Model.md",
+      "target": "file:supabase/functions/_shared/audit.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Security Model.md",
+      "target": "file:supabase/functions/_shared/errors.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Security Model.md",
+      "target": "file:supabase/functions/_shared/types.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Security Model.md",
+      "target": "file:supabase/functions/create-booking/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Security Model.md",
+      "target": "file:supabase/functions/cancel-booking/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Security Model.md",
+      "target": "file:supabase/migrations/09_abuse_protection_&_rate_limiting.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Security Model.md",
+      "target": "file:supabase/migrations/10_audit_&_security_engine.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Security Model.md",
+      "target": "file:supabase/migrations/27_role_permissions.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Security Model.md",
+      "target": "file:supabase/migrations/01_foundation.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Shared Utilities Layer.md",
+      "target": "file:supabase/functions/_shared/auth.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Shared Utilities Layer.md",
+      "target": "file:supabase/functions/_shared/validation.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Shared Utilities Layer.md",
+      "target": "file:supabase/functions/_shared/errors.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Shared Utilities Layer.md",
+      "target": "file:supabase/functions/_shared/logger.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Shared Utilities Layer.md",
+      "target": "file:supabase/functions/_shared/response.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Shared Utilities Layer.md",
+      "target": "file:supabase/functions/_shared/types.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Shared Utilities Layer.md",
+      "target": "file:supabase/functions/_shared/metrics.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Shared Utilities Layer.md",
+      "target": "file:supabase/functions/_shared/tracing.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Shared Utilities Layer.md",
+      "target": "file:supabase/functions/_shared/env.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Shared Utilities Layer.md",
+      "target": "file:supabase/functions/_shared/cors.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Shared Utilities Layer.md",
+      "target": "file:supabase/functions/create-booking/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Shared Utilities Layer.md",
+      "target": "file:supabase/functions/cancel-booking/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Architecture Overview/Shared Utilities Layer.md",
+      "target": "file:supabase/functions/monitoring-health-check/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Communication System/Communication System.md",
+      "type": "document",
+      "name": "Communication System.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Communication System/Communication System.md",
+      "summary": "Comprehensive overview of the WhatsApp Communication System covering Meta Cloud API integration, template management, message queuing, webhook processing, and background job execution. Documents the full message lifecycle from booking events through delivery confirmation, including worker utilities, notification queues, retry scheduling, and integrations with booking and queue systems.",
+      "tags": ["qoder-wiki", "documentation", "communication", "whatsapp", "messaging"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Communication System/Template Management.md",
+      "type": "document",
+      "name": "Template Management.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Communication System/Template Management.md",
+      "summary": "Documents the WhatsApp template management system for patient notifications across booking lifecycle events. Covers supported templates (booking_confirmation, appointment_reminder, booking_cancelled, booking_rescheduled, feedback_request, etc.), parameter mapping, component building, allowlist enforcement, validation, localization behavior, and trigger points in booking functions.",
+      "tags": ["qoder-wiki", "documentation", "whatsapp", "template", "notifications"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Communication System/Webhook Processing.md",
+      "type": "document",
+      "name": "Webhook Processing.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Communication System/Webhook Processing.md",
+      "summary": "Documents the WhatsApp webhook processing system for Meta delivery status updates and incoming messages. Covers webhook verification, HMAC signature validation, idempotent event registration via register_webhook_event_v2, delivery status handling and message lifecycle tracking in whatsapp_messages, incoming message queueing, security measures, and database schema for conversations, delivery logs, and webhook events.",
+      "tags": ["qoder-wiki", "documentation", "webhook", "delivery-tracking", "idempotency"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Communication System/WhatsApp Integration.md",
+      "type": "document",
+      "name": "WhatsApp Integration.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Communication System/WhatsApp Integration.md",
+      "summary": "Documents the Meta Cloud API integration for WhatsApp Business messaging. Covers the outbound sender function, Meta API client implementation, template-based messaging workflow, rate limiting handling with retry-after logic, permanent failure detection, webhook processing for delivery receipts, hospital-specific configuration for per-tenant phone number IDs, and security considerations including worker secret validation and HMAC verification.",
+      "tags": ["qoder-wiki", "documentation", "whatsapp", "meta-api", "integration"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": []
+}

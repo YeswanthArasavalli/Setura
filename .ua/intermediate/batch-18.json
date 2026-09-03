@@ -1,0 +1,366 @@
+{
+  "nodes": [
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Priority Processing Engine.md",
+      "type": "document",
+      "name": "Priority Processing Engine.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Queue Management/Priority Processing Engine.md",
+      "summary": "Qoder wiki page documenting the priority processing engine that selects and advances patients in the queue using priority_score ordering, SKIP LOCKED concurrency, and FIFO within equal priorities, with section references to migrations 02/17 and the queue-next-patient Edge Function.",
+      "tags": ["qoder-wiki", "database", "schema", "postgresql"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Analytics & Monitoring.md",
+      "type": "document",
+      "name": "Queue Analytics & Monitoring.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Queue Management/Queue Analytics & Monitoring.md",
+      "summary": "Qoder wiki page explaining queue health snapshots, stuck job detection, materialized view refresh, analytics rollups, SLA tracking, alert thresholds, and health scores across migrations 17/21/24 and the compute-sla, refresh-rollups, and cron Edge Functions.",
+      "tags": ["qoder-wiki", "database", "schema", "postgresql"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Management.md",
+      "type": "document",
+      "name": "Queue Management.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Queue Management/Queue Management.md",
+      "summary": "Qoder wiki page providing an overview of the Queue Management system covering token allocation, queue session lifecycle, real-time status, patient flow states, and analytics, with references to migrations 02/03/17 and the create-booking, queue-next-patient, cancel-booking, and monitoring-health-check Edge Functions.",
+      "tags": ["qoder-wiki", "database", "schema", "postgresql"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Real-time Queue Status.md",
+      "type": "document",
+      "name": "Real-time Queue Status.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Queue Management/Real-time Queue Status.md",
+      "summary": "Qoder wiki page describing how queue status updates are broadcast through Supabase Realtime via broadcastQueueAdvance, the queue-next-patient Edge Function flow, the advance_queue RPC, and presence broadcasting via the hospital_online_state table.",
+      "tags": ["qoder-wiki", "database", "schema", "postgresql"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Token Allocation System.md",
+      "type": "document",
+      "name": "Token Allocation System.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Queue Management/Token Allocation System.md",
+      "summary": "Qoder wiki page detailing atomic token generation via daily counters, create_booking/advance_queue SQL functions, queue session management, priority handling, idempotency, and carry-forward recovery across migration 02 and the create-booking, queue-next-patient, cancel-booking, reschedule-booking, and carry-forward-tokens Edge Functions.",
+      "tags": ["qoder-wiki", "database", "schema", "postgresql"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Priority Processing Engine.md",
+      "target": "file:supabase/functions/queue-next-patient/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Priority Processing Engine.md",
+      "target": "file:supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Priority Processing Engine.md",
+      "target": "file:supabase/migrations/17_queue_monitoring_engine.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Priority Processing Engine.md",
+      "target": "file:supabase/functions/create-booking/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Priority Processing Engine.md",
+      "target": "file:supabase/functions/_shared/types.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Priority Processing Engine.md",
+      "target": "file:supabase/functions/update-booking-status/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Analytics & Monitoring.md",
+      "target": "file:supabase/migrations/17_queue_monitoring_engine.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Analytics & Monitoring.md",
+      "target": "file:supabase/migrations/21_analytics_rollups.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Analytics & Monitoring.md",
+      "target": "file:supabase/migrations/24_operational-monitoring_engine.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Analytics & Monitoring.md",
+      "target": "file:supabase/migrations/06_background_job_queue.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Analytics & Monitoring.md",
+      "target": "file:supabase/migrations/05_notification_queue.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Analytics & Monitoring.md",
+      "target": "file:supabase/functions/queue-next-patient/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Analytics & Monitoring.md",
+      "target": "file:supabase/functions/compute-sla/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Analytics & Monitoring.md",
+      "target": "file:supabase/functions/refresh-rollups/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Analytics & Monitoring.md",
+      "target": "file:supabase/functions/run-cron-minute/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Analytics & Monitoring.md",
+      "target": "file:supabase/functions/run-cron-nightly/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Analytics & Monitoring.md",
+      "target": "file:supabase/functions/_shared/metrics.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Management.md",
+      "target": "file:supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Management.md",
+      "target": "file:supabase/migrations/03_doctorscheduling&slotengine.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Management.md",
+      "target": "file:supabase/migrations/17_queue_monitoring_engine.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Management.md",
+      "target": "file:supabase/functions/create-booking/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Management.md",
+      "target": "file:supabase/functions/queue-next-patient/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Management.md",
+      "target": "file:supabase/functions/cancel-booking/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Management.md",
+      "target": "file:supabase/functions/_shared/realtime.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Management.md",
+      "target": "file:supabase/functions/_shared/errors.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Management.md",
+      "target": "file:supabase/functions/monitoring-health-check/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Real-time Queue Status.md",
+      "target": "file:supabase/functions/_shared/realtime.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Real-time Queue Status.md",
+      "target": "file:supabase/functions/queue-next-patient/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Real-time Queue Status.md",
+      "target": "file:supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Real-time Queue Status.md",
+      "target": "file:supabase/migrations/20_presence_engine.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Token Allocation System.md",
+      "target": "file:supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Token Allocation System.md",
+      "target": "file:supabase/functions/queue-next-patient/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Token Allocation System.md",
+      "target": "file:supabase/functions/create-booking/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Token Allocation System.md",
+      "target": "file:supabase/functions/cancel-booking/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Token Allocation System.md",
+      "target": "file:supabase/functions/reschedule-booking/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Token Allocation System.md",
+      "target": "file:supabase/functions/carry-forward-tokens/index.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Token Allocation System.md",
+      "target": "file:supabase/functions/_shared/validation.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Token Allocation System.md",
+      "target": "file:supabase/functions/_shared/errors.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Priority Processing Engine.md",
+      "target": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Management.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Management.md",
+      "target": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Token Allocation System.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Management.md",
+      "target": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Real-time Queue Status.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Management.md",
+      "target": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Analytics & Monitoring.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Queue Management.md",
+      "target": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Priority Processing Engine.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Token Allocation System.md",
+      "target": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Priority Processing Engine.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Real-time Queue Status.md",
+      "target": "document:.qoder/repowiki/en/content/Core Features/Queue Management/Priority Processing Engine.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

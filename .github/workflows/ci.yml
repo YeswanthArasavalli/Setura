@@ -1,0 +1,84 @@
+# SETURA — Phase 0 CI skeleton
+#
+# Two jobs:
+#   quality   — static gates, no services required:
+#               format check, lint, type check, migration validation,
+#               unit tests.
+#   stack     — boots the full local Supabase stack (all migrations +
+#               seed applied by `supabase start`), then runs the
+#               integration smoke suite against it.
+#
+# Failure of ANY step fails the pipeline. No step is advisory.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DENO_VERSION: v2.8.3
+
+jobs:
+  quality:
+    name: fmt / lint / typecheck / migrations / unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: ${{ env.DENO_VERSION }}
+
+      - name: Format check
+        run: deno fmt --check
+
+      - name: Lint
+        run: deno lint
+
+      - name: Type check (Edge Functions + scripts + tests)
+        run: deno task check
+
+      - name: Validate migrations (deps, duplicates, indexes, rollback risks)
+        run: deno task validate:migrations
+
+      - name: Unit tests
+        run: deno task test
+
+  stack:
+    name: supabase start + integration tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: ${{ env.DENO_VERSION }}
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start local Supabase stack (applies all migrations + seed)
+        run: supabase start
+
+      - name: Verify migrations applied
+        run: |
+          # Container name derives from project_id in supabase/config.toml.
+          docker exec supabase_db_setura \
+            psql -U postgres -d postgres \
+            -c "SELECT count(*) AS table_count FROM information_schema.tables WHERE table_schema = 'public';" \
+            -c "SELECT count(*) AS seeded_hospitals FROM public.hospitals WHERE id = '00000000-0000-4000-8000-000000000001';"
+
+      - name: Integration smoke tests (seed verification)
+        run: deno task test:integration

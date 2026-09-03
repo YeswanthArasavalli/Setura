@@ -1,0 +1,46 @@
+{
+  "fixedSectionOk": true,
+  "nodesRecovered": 0,
+  "edgesRestored": 94,
+  "crossBatchEdgesAdded": 94,
+  "typesRemapped": 0,
+  "complexityRemapped": 0,
+  "notes": [
+    "Fixed section reviewed and accepted: 111 duplicate nodes removed (last-wins), 20 bare-path prefixes added, 3 tested_by edges flipped correctly, 4 orphan tested_by edges dropped. No systemic anomalies.",
+    "Removed 69 low-quality nodes from the assembled graph: 49 'schema' type nodes that were duplicates of 'file:' nodes (one per migration), 20 'data' type nodes that were graphify AST cache entries (file:data:graphify-out/cache/ast/...), and 20 'config' type graphify-internal metadata files.",
+    "After node removal, 94 table nodes became orphaned because they had been connected via 'defines_schema' edges from the now-removed 'schema' type nodes. Restored connectivity by adding 94 new 'defines_schema' edges from the corresponding 'file:' migration nodes to their tables.",
+    "Cleaned 2 dangling edges that referenced removed .qoder config nodes.",
+    "All 12 migrations 33-49 that had only schema-type orphan nodes (no file node) have lost their schema entity. These migrations modify tables created in earlier migrations, so this is acceptable - the tables still exist via the 'file:' nodes of the originating migrations.",
+    "Final graph: 559 nodes, 1009 edges. Node types: file(117), function(179), class(19), table(95), config(2), document(147). No 'data' or 'schema' types remain. Zero dangling edges, zero self-referential edges, zero duplicate edges, zero missing fields.",
+    "Remaining 70 orphans: 1 config (.env.example - legitimate, no docs pointing to it), 60 documents (all .qoder/ auto-generated wiki content - no semantic edges), 9 files (graphify-out/2026-08-27/ internal cache, .ua/.understandignore, .graphify_labels.json.sig, .graphify_root, scripts/gen_types.ts, supabase/.branches/_current_branch, and 3 graphify-out 2026-08-23 metadata files).",
+    "Remaining orphans are all legitimate: project files without semantic connections, generated wiki docs without source-file links, and graphify internal metadata. No data quality fix needed for these.",
+    "Edge weights verified semantically appropriate: imports=0.7, exports=0.8, calls=0.8, defines_schema=0.9, contains=1.0, documents=0.5.",
+    "tested_by edges correctly point production -> test with direction=forward, weight=0.5. No test->test or prod->prod pairs.",
+    "All migration files correctly have defines_schema edges to their tables, and all tables (95/95) have at least one edge in the final graph."
+  ],
+  "issues": [
+    {
+      "severity": "info",
+      "description": "60 orphan document nodes (.qoder/repowiki/ auto-generated wiki content) have no semantic edges to source files. These are generated content, not project documentation - they likely should be excluded from the scan scope in the future.",
+      "nodeId": "document:.qoder/repowiki/... (60 nodes)",
+      "suggestedFix": "Consider adding .qoder/ to the .ua/.understandignore or scan-scope exclusions so these are not picked up by future scans. Alternatively, the wiki pages could be enhanced to include semantic links to source files."
+    },
+    {
+      "severity": "info",
+      "description": "9 orphan file nodes: 7 are graphify internal cache files, 2 are project artifacts (.ua/.understandignore and scripts/gen_types.ts) that simply have no semantic relationships. supabase/.branches/_current_branch is a state file.",
+      "nodeId": "file:graphify-out/2026-08-27/..., file:.ua/.understandignore, file:graphify-out/.graphify_labels.json.sig, file:graphify-out/.graphify_root, file:scripts/gen_types.ts, file:supabase/.branches/_current_branch",
+      "suggestedFix": "No fix needed. These are legitimate isolated files (or graphify artifacts)."
+    },
+    {
+      "severity": "info",
+      "description": "1 config orphan: .env.example. This is a real project file but has no documentation edges pointing to it. Could be linked to docs that reference environment variables.",
+      "nodeId": "config:.env.example",
+      "suggestedFix": "Optional: add a 'related' edge from docs/ENVIRONMENT.md or similar to .env.example. No action required."
+    }
+  ],
+  "warnings": [
+    "Scan scope is too broad: graphify-out/ and .qoder/ produce ~90 orphan nodes (20 + 60 + 9 + 1) that are not project entities. Future scans should exclude these via .ua/.understandignore or scan-scope configuration.",
+    "The 'data' node type is invalid in this graph schema. All 20 instances were graphify AST cache entries and have been removed. If the schema supports 'data' as a legitimate type, the merge script should normalize it. If not, the upstream LLM should not emit this type."
+  ],
+  "summary": "Review complete. The assembled graph required significant cleanup: 69 nodes removed (49 duplicate migration schema-nodes, 20 graphify cache 'data' nodes, 20 graphify config artifacts - some overlap), 94 edges restored to reconnect orphaned table nodes back to their canonical 'file:' migration nodes (via defines_schema), and 2 dangling edges cleaned. Final graph: 559 nodes, 1009 edges, zero dangling edges, zero duplicates, zero invalid types. 70 remaining orphans are all legitimate (auto-generated wiki docs, graphify internal files, isolated project files). The original 'could not fix' issues from the merge report were correctly identified as: 20 invalid 'data' types (now removed), 55 dangling edges (genuine missing shared module nodes), and no actionable complexity issues."
+}

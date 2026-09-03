@@ -1,0 +1,59 @@
+{
+  "nodes": [
+    {
+      "id": "document:.qoder/repowiki/en/content/Troubleshooting/Troubleshooting.md",
+      "type": "document",
+      "name": "Troubleshooting.md",
+      "filePath": ".qoder/repowiki/en/content/Troubleshooting/Troubleshooting.md",
+      "summary": "Comprehensive troubleshooting guide for the Setura Hospital OS covering database connectivity, edge function errors, external service integration failures, authentication issues, and recovery procedures. References shared utilities (logger, errors, tracing, metrics) and key edge functions (monitoring-health-check, create-booking).",
+      "tags": ["qoder-wiki", "knowledge", "troubleshooting", "operations"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Troubleshooting/Common Issues & Solutions.md",
+      "type": "document",
+      "name": "Common Issues & Solutions.md",
+      "filePath": ".qoder/repowiki/en/content/Troubleshooting/Common Issues & Solutions.md",
+      "summary": "Practical code-backed guide to diagnosing and resolving frequent failure modes in Setura including database connection failures, authentication errors, booking conflicts, queue processing issues, payment gateway errors, and rate limiting. Maps symptoms to root causes and step-by-step resolutions across booking, queue, and payment functions.",
+      "tags": ["qoder-wiki", "knowledge", "troubleshooting", "runbook"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Troubleshooting/Debugging Techniques.md",
+      "type": "document",
+      "name": "Debugging Techniques.md",
+      "filePath": ".qoder/repowiki/en/content/Troubleshooting/Debugging Techniques.md",
+      "summary": "Debugging playbook for Setura edge functions and database operations using structured logging with correlation IDs, monitoring dashboards, health endpoints, log analysis patterns, and worker orchestration diagnostics. Covers effective workflows for common issue types.",
+      "tags": ["qoder-wiki", "knowledge", "debugging", "observability"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Troubleshooting/Error Diagnosis.md",
+      "type": "document",
+      "name": "Error Diagnosis.md",
+      "filePath": ".qoder/repowiki/en/content/Troubleshooting/Error Diagnosis.md",
+      "summary": "Systematic guide to diagnosing errors in Setura using its centralized typed error hierarchy and standardized response envelope. Covers domain-based error classification, diagnostic procedures per domain, error propagation through middleware/handlers, decision trees, and escalation procedures.",
+      "tags": ["qoder-wiki", "knowledge", "errors", "diagnostics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Troubleshooting/Performance Troubleshooting.md",
+      "type": "document",
+      "name": "Performance Troubleshooting.md",
+      "filePath": ".qoder/repowiki/en/content/Troubleshooting/Performance Troubleshooting.md",
+      "summary": "Performance troubleshooting guide for identifying and resolving slow database queries, memory leaks in edge functions, and resource exhaustion. Covers SLA monitoring, performance regression detection, capacity planning, profiling tools, query analysis, and optimization best practices across booking, queue, and payment workflows.",
+      "tags": ["qoder-wiki", "knowledge", "performance", "optimization"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Troubleshooting/Recovery Procedures.md",
+      "type": "document",
+      "name": "Recovery Procedures.md",
+      "filePath": ".qoder/repowiki/en/content/Troubleshooting/Recovery Procedures.md",
+      "summary": "Step-by-step recovery runbook for failed deployments, corrupted data, service outages, and system failures. Covers database rollback, background job retry, dead letter queue processing, data consistency restoration, disaster recovery, failover, and post-recovery health verification.",
+      "tags": ["qoder-wiki", "knowledge", "recovery", "disaster-recovery"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": []
+}

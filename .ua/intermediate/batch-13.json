@@ -1,0 +1,55 @@
+{
+  "nodes": [
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Background Processing/Background Processing.md",
+      "type": "document",
+      "name": "Background Processing.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Background Processing/Background Processing.md",
+      "summary": "Comprehensive documentation of the Background Processing system covering job queue architecture, worker orchestration with leases and crash recovery, retry mechanisms, dead letter queues, and cron scheduling for minute-level and nightly tasks.",
+      "tags": ["qoder-wiki", "background-processing", "worker", "job-queue"],
+      "complexity": "complex",
+      "languageNotes": "Generated wiki documentation describing the architecture of the background processing subsystem across database migrations and Edge Functions."
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Background Processing/Job Queue System.md",
+      "type": "document",
+      "name": "Job Queue System.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Background Processing/Job Queue System.md",
+      "summary": "Detailed documentation of the PostgreSQL-based Job Queue System including database schema, job lifecycle management (creation, claiming, completion, failure, retries), dead-letter handling, queue operations, priority and ordering strategies.",
+      "tags": ["qoder-wiki", "job-queue", "database", "lifecycle"],
+      "complexity": "complex",
+      "languageNotes": "Generated wiki documentation covering SQL migrations and TypeScript worker integration via RPC for the job queue subsystem."
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Background Processing/Monitoring & Analytics.md",
+      "type": "document",
+      "name": "Monitoring & Analytics.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Background Processing/Monitoring & Analytics.md",
+      "summary": "Documentation of monitoring and analytics infrastructure for background processing including logging strategies, worker performance metrics, health indicators, metrics collection, alerting rules, and operational dashboard setup.",
+      "tags": ["qoder-wiki", "monitoring", "observability", "metrics"],
+      "complexity": "moderate",
+      "languageNotes": "Generated wiki documentation covering shared utilities (logger, metrics, tracing) and database migrations for operational monitoring."
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Background Processing/Retry Mechanisms & Error Handling.md",
+      "type": "document",
+      "name": "Retry Mechanisms & Error Handling.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Background Processing/Retry Mechanisms & Error Handling.md",
+      "summary": "Documentation of retry mechanisms and error handling for background jobs covering exponential backoff, retry limits, failure categorization, dead letter queues, retention policies, alerting, and debugging workflows.",
+      "tags": ["qoder-wiki", "retry", "error-handling", "dead-letter"],
+      "complexity": "moderate",
+      "languageNotes": "Generated wiki documentation covering worker.ts, errors.ts, and database migrations for retry and cleanup logic."
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Core Features/Background Processing/Worker Orchestration.md",
+      "type": "document",
+      "name": "Worker Orchestration.md",
+      "filePath": ".qoder/repowiki/en/content/Core Features/Background Processing/Worker Orchestration.md",
+      "summary": "Documentation of Worker Orchestration covering worker registration, job claiming from the database-backed queue, execution with retry and dead-letter handling, heartbeat health maintenance, graceful shutdown, and distributed deployment patterns.",
+      "tags": ["qoder-wiki", "worker", "orchestration", "cron"],
+      "complexity": "moderate",
+      "languageNotes": "Generated wiki documentation covering worker.ts, run-background-worker, run-cron-minute, and run-cron-nightly Edge Functions."
+    }
+  ],
+  "edges": []
+}

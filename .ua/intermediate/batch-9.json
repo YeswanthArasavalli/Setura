@@ -1,0 +1,217 @@
+{
+  "nodes": [
+    {
+      "id": "document:PHASE_1.5_SECURITY_AND_COMPLETION_REPORT.md",
+      "type": "document",
+      "name": "PHASE_1.5_SECURITY_AND_COMPLETION_REPORT.md",
+      "filePath": "PHASE_1.5_SECURITY_AND_COMPLETION_REPORT.md",
+      "summary": "Phase 1.5 security hardening and defect remediation report covering SECURITY DEFINER function classification, migration 48/49 privilege hardening, WhatsApp HMAC verification, RLS/tenant isolation, system_settings hardening, and the certification decision with disclosed gaps.",
+      "tags": ["phase-report", "security", "privilege-hardening", "rls", "tenant-isolation", "audit", "completion-report"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:PHASE_1.6_FINDINGS_LOG.md",
+      "type": "document",
+      "name": "PHASE_1.6_FINDINGS_LOG.md",
+      "filePath": "PHASE_1.6_FINDINGS_LOG.md",
+      "summary": "Durability snapshot of the seven F16 findings (F16-01 through F16-07) discovered during Phase 1.6 runtime verification, recording canonical-ID provenance, status vocabulary, and a cross-cutting note on the blocker.",
+      "tags": ["phase-report", "findings-log", "f16", "durability-snapshot", "governance"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:PHASE_1.6_GATE_3R_POE_2.md",
+      "type": "document",
+      "name": "PHASE_1.6_GATE_3R_POE_2.md",
+      "filePath": "PHASE_1.6_GATE_3R_POE_2.md",
+      "summary": "Gate 3R Proof-of-Evidence 2 (PoE-2) recording ownership, evidence recorded, provenance-disclosed gap, non-claims, and findings for Step 2 of the Gate 3R runtime and integration verification successor.",
+      "tags": ["phase-report", "proof-of-evidence", "gate-3r", "poe-2", "runtime-verification"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:PHASE_1.6_GATE_3R_REPORT.md",
+      "type": "document",
+      "name": "PHASE_1.6_GATE_3R_REPORT.md",
+      "filePath": "PHASE_1.6_GATE_3R_REPORT.md",
+      "summary": "Gate 3R execution report documenting environment readiness, integration/unit test execution, and three consecutive BLOCKED edge-dependent runtime attempts with detailed failure classification, F16-01 disposition, and per-file attribution.",
+      "tags": ["phase-report", "gate-3r", "runtime-verification", "blocked", "f16-01", "edge-runtime"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:PHASE_1.6_GATE_3R_SPEC.md",
+      "type": "document",
+      "name": "PHASE_1.6_GATE_3R_SPEC.md",
+      "filePath": "PHASE_1.6_GATE_3R_SPEC.md",
+      "summary": "Authoritative Gate 3R specification defining seven steps (environment readiness, integration suite, edge runtime, security regression, RLS default-deny, cross-phase runtime, environment limitation) with gate-wide rules, certification criteria, and change-control history.",
+      "tags": ["phase-report", "specification", "gate-3r", "certification", "governance", "runtime-verification"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:PHASE_1.6_RUNTIME_TEST_REPORT.md",
+      "type": "document",
+      "name": "PHASE_1.6_RUNTIME_TEST_REPORT.md",
+      "filePath": "PHASE_1.6_RUNTIME_TEST_REPORT.md",
+      "summary": "Frozen closure record of the historical Phase 1.6 Gate 3 — PARTIALLY COMPLETE / NOT CERTIFIED — with step-level evidence for completed steps (0, 1, 2, 4, 7), the unrecoverability statement, findings of record, and designation of Gate 3R as the successor.",
+      "tags": ["phase-report", "gate-3", "runtime-test", "frozen", "not-certified", "historical"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:PHASE_1.6_SPEC.md",
+      "type": "document",
+      "name": "PHASE_1.6_SPEC.md",
+      "filePath": "PHASE_1.6_SPEC.md",
+      "summary": "Phase 1.6 authoritative governance specification: phase objective, scope, gate inventory, gate 0–8 definitions, Gate 3 historical status, Gate 3R definition, finding-ID authority rules, evidence vocabulary, certification rules, and rules preventing undocumented gate steps.",
+      "tags": ["phase-report", "specification", "governance", "gates", "finding-id", "evidence", "certification"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:PRIVILEGE_RUNTIME_VERIFICATION.md",
+      "type": "document",
+      "name": "PRIVILEGE_RUNTIME_VERIFICATION.md",
+      "filePath": "PRIVILEGE_RUNTIME_VERIFICATION.md",
+      "summary": "Privilege runtime verification for P1-11: catalog and runtime census of 213 SETURA-owned and 266 extension-owned public routines, controlled runtime experiment on locked routines, discovery of the migration 48 fail-closed default not holding (F16-04), and verdict on P1-11.",
+      "tags": ["phase-report", "privilege", "runtime-verification", "p1-11", "f16-04", "security-census", "rls"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:ROADMAP.md",
+      "type": "document",
+      "name": "ROADMAP.md",
+      "filePath": "ROADMAP.md",
+      "summary": "SETURA v1.0 enterprise execution plan: phased delivery from Foundation (Phase 0) through Architecture Freeze, Backend Completion, Integration Hardening, Enterprise Validation, Frontend, Operational Excellence, Testing/Certification, Production Readiness Review, Pilot Deployment, and Commercial Launch, with execution order and key dependencies.",
+      "tags": ["roadmap", "planning", "phase-plan", "execution-plan", "v1-0"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:SETURA_CLAUDE_REPORT.md",
+      "type": "document",
+      "name": "SETURA_CLAUDE_REPORT.md",
+      "filePath": "SETURA_CLAUDE_REPORT.md",
+      "summary": "Independent state investigation of the SETURA repository: executive summary, repository reality, roadmap-vs-reality phase truth table, document cross-check, architecture layer map, traced flows, security status with confirmed findings G-1 through G-9, testing/certification status, and a recommended next step (Phase 1.4.5 privilege hardening).",
+      "tags": ["investigation", "state-report", "security-findings", "roadmap-drift", "architecture", "independent-review"],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:deno.json",
+      "type": "config",
+      "name": "deno.json",
+      "filePath": "deno.json",
+      "summary": "Deno workspace configuration defining strict TypeScript compiler options, the 10-task command authority (validate:migrations, fmt, fmt:check, lint, check, test, test:integration, gen:types, gen:types:check, db:reset), and import map for zod and Supabase JS.",
+      "tags": ["deno", "configuration", "build-system", "typescript", "command-authority"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:deno.json",
+      "target": "document:PHASE_1.6_SPEC.md",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:deno.json",
+      "target": "document:PHASE_1.6_GATE_3R_SPEC.md",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:PHASE_1.6_SPEC.md",
+      "target": "document:PHASE_1.6_GATE_3R_SPEC.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:PHASE_1.6_SPEC.md",
+      "target": "document:PHASE_1.6_GATE_3R_REPORT.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:PHASE_1.6_GATE_3R_SPEC.md",
+      "target": "document:PHASE_1.6_GATE_3R_REPORT.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:PHASE_1.6_GATE_3R_SPEC.md",
+      "target": "document:PHASE_1.6_GATE_3R_POE_2.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:PHASE_1.6_GATE_3R_REPORT.md",
+      "target": "document:PHASE_1.6_FINDINGS_LOG.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:PHASE_1.6_GATE_3R_REPORT.md",
+      "target": "document:PHASE_1.6_RUNTIME_TEST_REPORT.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:PHASE_1.6_RUNTIME_TEST_REPORT.md",
+      "target": "document:PHASE_1.6_FINDINGS_LOG.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:PHASE_1.5_SECURITY_AND_COMPLETION_REPORT.md",
+      "target": "document:PRIVILEGE_RUNTIME_VERIFICATION.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:PRIVILEGE_RUNTIME_VERIFICATION.md",
+      "target": "document:PHASE_1.6_FINDINGS_LOG.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:SETURA_CLAUDE_REPORT.md",
+      "target": "document:ROADMAP.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:SETURA_CLAUDE_REPORT.md",
+      "target": "document:PHASE_1.5_SECURITY_AND_COMPLETION_REPORT.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:SETURA_CLAUDE_REPORT.md",
+      "target": "document:PHASE_1.6_SPEC.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:SETURA_CLAUDE_REPORT.md",
+      "target": "document:PRIVILEGE_RUNTIME_VERIFICATION.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:ROADMAP.md",
+      "target": "document:PHASE_1.6_SPEC.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

@@ -1,0 +1,1878 @@
+[
+  {
+    "source": "file:supabase/functions/_shared/auth.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/auth.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/auth.ts",
+    "target": "file:supabase/functions/_shared/types.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/rate_limit.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/rate_limit.ts",
+    "target": "file:supabase/functions/_shared/env.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/rate_limit.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/rate_limit.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/response.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/response.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/validation.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/alert-center/index.ts",
+    "target": "file:supabase/functions/_shared/audit.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/alert-center/index.ts",
+    "target": "file:supabase/functions/_shared/auth.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/alert-center/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/alert-center/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/alert-center/index.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/alert-center/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/alert-center/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/alert-center/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/alert-center/index.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/carry-forward-tokens/index.ts",
+    "target": "file:supabase/functions/_shared/audit.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/carry-forward-tokens/index.ts",
+    "target": "file:supabase/functions/_shared/auth.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/carry-forward-tokens/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/carry-forward-tokens/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/carry-forward-tokens/index.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/carry-forward-tokens/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/carry-forward-tokens/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/carry-forward-tokens/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/carry-forward-tokens/index.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/command-center/index.ts",
+    "target": "file:supabase/functions/_shared/audit.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/command-center/index.ts",
+    "target": "file:supabase/functions/_shared/auth.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/command-center/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/command-center/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/command-center/index.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/command-center/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/command-center/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/command-center/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/command-center/index.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/compute-sla/index.ts",
+    "target": "file:supabase/functions/_shared/auth.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/compute-sla/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/compute-sla/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/compute-sla/index.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/compute-sla/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/compute-sla/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/compute-sla/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/compute-sla/index.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-booking/index.ts",
+    "target": "file:supabase/functions/_shared/audit.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-booking/index.ts",
+    "target": "file:supabase/functions/_shared/auth.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-booking/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-booking/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-booking/index.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-booking/index.ts",
+    "target": "file:supabase/functions/_shared/idempotency.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-booking/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-booking/index.ts",
+    "target": "file:supabase/functions/_shared/rate_limit.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-booking/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-booking/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-booking/index.ts",
+    "target": "file:supabase/functions/_shared/types.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-booking/index.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/enterprise-reports/index.ts",
+    "target": "file:supabase/functions/_shared/audit.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/enterprise-reports/index.ts",
+    "target": "file:supabase/functions/_shared/auth.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/enterprise-reports/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/enterprise-reports/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/enterprise-reports/index.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/enterprise-reports/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/enterprise-reports/index.ts",
+    "target": "file:supabase/functions/_shared/reporting.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/enterprise-reports/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/enterprise-reports/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/enterprise-reports/index.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/executive-analytics/index.ts",
+    "target": "file:supabase/functions/_shared/auth.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/executive-analytics/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/executive-analytics/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/executive-analytics/index.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/executive-analytics/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/executive-analytics/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/executive-analytics/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/executive-analytics/index.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/financial-command-center/index.ts",
+    "target": "file:supabase/functions/_shared/auth.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/financial-command-center/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/financial-command-center/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/financial-command-center/index.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/financial-command-center/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/financial-command-center/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/financial-command-center/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/financial-command-center/index.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/queue-control/index.ts",
+    "target": "file:supabase/functions/_shared/audit.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/queue-control/index.ts",
+    "target": "file:supabase/functions/_shared/auth.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/queue-control/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/queue-control/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/queue-control/index.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/queue-control/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/queue-control/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/queue-control/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/queue-control/index.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/refresh-rollups/index.ts",
+    "target": "file:supabase/functions/_shared/auth.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/refresh-rollups/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/refresh-rollups/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/refresh-rollups/index.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/refresh-rollups/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/refresh-rollups/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/refresh-rollups/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/refresh-rollups/index.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/settlement-engine/index.ts",
+    "target": "file:supabase/functions/_shared/audit.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/settlement-engine/index.ts",
+    "target": "file:supabase/functions/_shared/auth.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/settlement-engine/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/settlement-engine/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/settlement-engine/index.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/settlement-engine/index.ts",
+    "target": "file:supabase/functions/_shared/idempotency.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/settlement-engine/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/settlement-engine/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/settlement-engine/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/settlement-engine/index.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:tests/unit/errors.test.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:tests/unit/response.test.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:tests/unit/response.test.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:tests/unit/response.test.ts",
+    "target": "file:tests/utils/setup_env.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:tests/unit/validation.test.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:tests/unit/validation.test.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/cors.ts",
+    "target": "file:supabase/functions/_shared/env.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/db.ts",
+    "target": "file:supabase/functions/_shared/env.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/db.ts",
+    "target": "file:supabase/functions/_shared/types.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/idempotency.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/idempotency.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/idempotency.ts",
+    "target": "file:supabase/functions/_shared/types.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/worker.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/worker.ts",
+    "target": "file:supabase/functions/_shared/types.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/cancel-booking/index.ts",
+    "target": "file:supabase/functions/_shared/audit.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/cancel-booking/index.ts",
+    "target": "file:supabase/functions/_shared/auth.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/cancel-booking/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/cancel-booking/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/cancel-booking/index.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/cancel-booking/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/cancel-booking/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/cancel-booking/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/cancel-booking/index.ts",
+    "target": "file:supabase/functions/_shared/types.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/cancel-booking/index.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-payment-order/index.ts",
+    "target": "file:supabase/functions/_shared/audit.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-payment-order/index.ts",
+    "target": "file:supabase/functions/_shared/auth.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-payment-order/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-payment-order/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-payment-order/index.ts",
+    "target": "file:supabase/functions/_shared/env.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-payment-order/index.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-payment-order/index.ts",
+    "target": "file:supabase/functions/_shared/idempotency.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-payment-order/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-payment-order/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-payment-order/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-payment-order/index.ts",
+    "target": "file:supabase/functions/_shared/types.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/create-payment-order/index.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/monitoring-health-check/index.ts",
+    "target": "file:supabase/functions/_shared/auth.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/monitoring-health-check/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/monitoring-health-check/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/monitoring-health-check/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/monitoring-health-check/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/monitoring-health-check/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/process-refund/index.ts",
+    "target": "file:supabase/functions/_shared/audit.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/process-refund/index.ts",
+    "target": "file:supabase/functions/_shared/auth.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/process-refund/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/process-refund/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/process-refund/index.ts",
+    "target": "file:supabase/functions/_shared/env.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/process-refund/index.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/process-refund/index.ts",
+    "target": "file:supabase/functions/_shared/idempotency.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/process-refund/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/process-refund/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/process-refund/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/process-refund/index.ts",
+    "target": "file:supabase/functions/_shared/types.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/process-refund/index.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/process-whatsapp-webhook/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/process-whatsapp-webhook/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/process-whatsapp-webhook/index.ts",
+    "target": "file:supabase/functions/_shared/env.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/process-whatsapp-webhook/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/process-whatsapp-webhook/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/process-whatsapp-webhook/index.ts",
+    "target": "file:supabase/functions/_shared/types.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/reschedule-booking/index.ts",
+    "target": "file:supabase/functions/_shared/audit.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/reschedule-booking/index.ts",
+    "target": "file:supabase/functions/_shared/auth.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/reschedule-booking/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/reschedule-booking/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/reschedule-booking/index.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/reschedule-booking/index.ts",
+    "target": "file:supabase/functions/_shared/idempotency.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/reschedule-booking/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/reschedule-booking/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/reschedule-booking/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/reschedule-booking/index.ts",
+    "target": "file:supabase/functions/_shared/types.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/reschedule-booking/index.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-background-worker/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-background-worker/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-background-worker/index.ts",
+    "target": "file:supabase/functions/_shared/env.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-background-worker/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-background-worker/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-background-worker/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-background-worker/index.ts",
+    "target": "file:supabase/functions/_shared/types.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-background-worker/index.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-background-worker/index.ts",
+    "target": "file:supabase/functions/_shared/worker.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-cron-minute/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-cron-minute/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-cron-minute/index.ts",
+    "target": "file:supabase/functions/_shared/env.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-cron-minute/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-cron-minute/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-cron-minute/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-cron-nightly/index.ts",
+    "target": "file:supabase/functions/_shared/audit.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-cron-nightly/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-cron-nightly/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-cron-nightly/index.ts",
+    "target": "file:supabase/functions/_shared/env.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-cron-nightly/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-cron-nightly/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/run-cron-nightly/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/send-reminders/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/send-reminders/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/send-reminders/index.ts",
+    "target": "file:supabase/functions/_shared/env.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/send-reminders/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/send-reminders/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/send-reminders/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/send-whatsapp-message/index.ts",
+    "target": "file:supabase/functions/_shared/audit.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/send-whatsapp-message/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/send-whatsapp-message/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/send-whatsapp-message/index.ts",
+    "target": "file:supabase/functions/_shared/env.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/send-whatsapp-message/index.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/send-whatsapp-message/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/send-whatsapp-message/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/send-whatsapp-message/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/send-whatsapp-message/index.ts",
+    "target": "file:supabase/functions/_shared/types.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/send-whatsapp-message/index.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/verify-payment/index.ts",
+    "target": "file:supabase/functions/_shared/audit.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/verify-payment/index.ts",
+    "target": "file:supabase/functions/_shared/auth.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/verify-payment/index.ts",
+    "target": "file:supabase/functions/_shared/cors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/verify-payment/index.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/verify-payment/index.ts",
+    "target": "file:supabase/functions/_shared/env.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/verify-payment/index.ts",
+    "target": "file:supabase/functions/_shared/errors.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/verify-payment/index.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/verify-payment/index.ts",
+    "target": "file:supabase/functions/_shared/response.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/verify-payment/index.ts",
+    "target": "file:supabase/functions/_shared/tracing.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/verify-payment/index.ts",
+    "target": "file:supabase/functions/_shared/types.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/verify-payment/index.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:tests/integration/doctor_operations.test.ts",
+    "target": "file:tests/utils/seed_constants.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:tests/integration/local_stack.test.ts",
+    "target": "file:tests/utils/seed_constants.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:tests/integration/queue_operations.test.ts",
+    "target": "file:tests/utils/seed_constants.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:tests/integration/queue_runtime.test.ts",
+    "target": "file:tests/utils/seed_constants.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:tests/integration/refund_sync.test.ts",
+    "target": "file:tests/utils/seed_constants.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:tests/integration/usage_retention.test.ts",
+    "target": "file:tests/utils/seed_constants.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:tests/integration/whatsapp_conversational.test.ts",
+    "target": "file:tests/utils/seed_constants.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:tests/integration/whatsapp_lifecycle.test.ts",
+    "target": "file:tests/utils/seed_constants.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/audit.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/audit.ts",
+    "target": "file:supabase/functions/_shared/metrics.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/audit.ts",
+    "target": "file:supabase/functions/_shared/types.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_booking_flow.ts",
+    "target": "file:supabase/functions/_shared/audit.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_booking_flow.ts",
+    "target": "file:supabase/functions/_shared/validation.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_booking_flow.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_booking_flow.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_handoff_flow.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_booking_flow.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_intent_router.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_cancel_flow.ts",
+    "target": "file:supabase/functions/_shared/audit.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_cancel_flow.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_booking_flow.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_cancel_flow.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_cancel_flow.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_handoff_flow.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_cancel_flow.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_intent_router.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+    "target": "file:supabase/functions/_shared/audit.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+    "target": "file:supabase/functions/_shared/db.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+    "target": "file:supabase/functions/_shared/types.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_booking_flow.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_cancel_flow.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_handoff_flow.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_intent_router.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_queue_flow.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_reschedule_flow.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_handoff_flow.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_queue_flow.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_booking_flow.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_queue_flow.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_reschedule_flow.ts",
+    "target": "file:supabase/functions/_shared/audit.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_reschedule_flow.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_booking_flow.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_reschedule_flow.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_reschedule_flow.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_handoff_flow.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  },
+  {
+    "source": "file:supabase/functions/_shared/whatsapp/whatsapp_reschedule_flow.ts",
+    "target": "file:supabase/functions/_shared/whatsapp/whatsapp_intent_router.ts",
+    "type": "imports",
+    "direction": "forward",
+    "weight": 0.7
+  }
+]

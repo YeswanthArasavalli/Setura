@@ -1,0 +1,1282 @@
+{
+  "nodes": [
+    {
+      "id": "file:tests/integration/doctor_operations.test.ts",
+      "type": "file",
+      "name": "doctor_operations.test.ts",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "summary": "Integration tests for the doctor-operations Edge Function, covering session open/close, consultation start/complete, return-to-waiting, absent, recall and emergency patient flows against the real local Supabase stack.",
+      "tags": ["test", "integration", "doctor-operations", "queue", "session"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:tests/integration/local_stack.test.ts",
+      "type": "file",
+      "name": "local_stack.test.ts",
+      "filePath": "tests/integration/local_stack.test.ts",
+      "summary": "Smoke test that bootstraps the local Supabase stack via Docker status check and creates a service-role Supabase client used by other integration tests.",
+      "tags": ["test", "integration", "local-stack", "smoke", "bootstrap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/integration/queue_operations.test.ts",
+      "type": "file",
+      "name": "queue_operations.test.ts",
+      "filePath": "tests/integration/queue_operations.test.ts",
+      "summary": "Integration tests for queue-control actions (pause, resume, recall, skip, restore, mark absent) and alert-threshold emission, against the real local stack.",
+      "tags": ["test", "integration", "queue-control", "alerts"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:tests/integration/queue_runtime.test.ts",
+      "type": "file",
+      "name": "queue_runtime.test.ts",
+      "filePath": "tests/integration/queue_runtime.test.ts",
+      "summary": "Integration tests for queue runtime RPCs (claim, complete, skip, restore, recall, doctor delay, mark absent) with token-engine assertions on session state and queue runtime events.",
+      "tags": ["test", "integration", "queue-runtime", "token-engine"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:tests/integration/refund_sync.test.ts",
+      "type": "file",
+      "name": "refund_sync.test.ts",
+      "filePath": "tests/integration/refund_sync.test.ts",
+      "summary": "Integration test for refund synchronization: seeds a captured payment order and exercises the process-refund Edge Function to verify ledger and booking state updates.",
+      "tags": ["test", "integration", "refund", "payment", "ledger"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/integration/usage_retention.test.ts",
+      "type": "file",
+      "name": "usage_retention.test.ts",
+      "filePath": "tests/integration/usage_retention.test.ts",
+      "summary": "Integration tests verifying subscription usage counters (bookings, doctors, receptionists) and retention/cleanup job behavior against the real local stack.",
+      "tags": ["test", "integration", "subscription", "usage", "retention"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/integration/whatsapp_conversational.test.ts",
+      "type": "file",
+      "name": "whatsapp_conversational.test.ts",
+      "filePath": "tests/integration/whatsapp_conversational.test.ts",
+      "summary": "End-to-end integration tests for the WhatsApp conversational engine, driving inbound messages through the full booking, reschedule, cancel, queue-lookup and handoff flows and verifying outgoing job_queue entries and booking state.",
+      "tags": ["test", "integration", "whatsapp", "conversational", "booking", "cancel"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:tests/integration/whatsapp_lifecycle.test.ts",
+      "type": "file",
+      "name": "whatsapp_lifecycle.test.ts",
+      "filePath": "tests/integration/whatsapp_lifecycle.test.ts",
+      "summary": "Integration tests covering the WhatsApp message lifecycle: enqueue via RPC, delivery, retry, and read state on whatsapp_messages table.",
+      "tags": ["test", "integration", "whatsapp", "messaging", "lifecycle"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/utils/seed_constants.ts",
+      "type": "file",
+      "name": "seed_constants.ts",
+      "filePath": "tests/utils/seed_constants.ts",
+      "summary": "Shared test fixture exporting the SEED constant with stable hospital, doctor, and patient identifiers used across integration tests.",
+      "tags": ["test", "utility", "seed", "fixture"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:getLocalStatus",
+      "type": "function",
+      "name": "getLocalStatus",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [43, 60],
+      "summary": "Parses the JSON status block printed by `supabase status` to retrieve the local Supabase service URL and anon key.",
+      "tags": ["test", "utility", "bootstrap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:bootstrap",
+      "type": "function",
+      "name": "bootstrap",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [69, 89],
+      "summary": "Sets required Deno env vars, then imports setup_env and db helpers to obtain the service-role client used for fixtures.",
+      "tags": ["test", "bootstrap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:ctx",
+      "type": "function",
+      "name": "ctx",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [91, 94],
+      "summary": "Returns a per-test context object with the bootstrapped service client and a unique RUN id used to namespace fixture rows.",
+      "tags": ["test", "context"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:testLogger",
+      "type": "function",
+      "name": "testLogger",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [96, 101],
+      "summary": "Lazily loads the createRequestLogger from the shared _shared/logger module for test output.",
+      "tags": ["test", "logger"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:todayLocal",
+      "type": "function",
+      "name": "todayLocal",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [109, 114],
+      "summary": "Returns today's local date as a YYYY-MM-DD string for use as appointment_date in fixtures.",
+      "tags": ["test", "utility", "date"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:fixtureDoctor",
+      "type": "function",
+      "name": "fixtureDoctor",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [135, 172],
+      "summary": "Creates a Supabase auth user via admin API, upserts a profile, and returns the new doctor userId for use in queue sessions and role grants.",
+      "tags": ["test", "fixture", "doctor", "auth"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:doctorToken",
+      "type": "function",
+      "name": "doctorToken",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [175, 195],
+      "summary": "Mints a Supabase access token for a freshly created doctor user so subsequent Edge Function calls can be authenticated as that user.",
+      "tags": ["test", "fixture", "auth", "token"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:grantDoctorRole",
+      "type": "function",
+      "name": "grantDoctorRole",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [197, 208],
+      "summary": "Inserts a user_roles row granting the 'doctor' role to a user within a specific hospital.",
+      "tags": ["test", "fixture", "role", "rbac"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:deleteFixtureDoctors",
+      "type": "function",
+      "name": "deleteFixtureDoctors",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [210, 228],
+      "summary": "Cleanup helper that removes the auth users created by fixtureDoctor (respecting a skip set) to keep the test database clean across runs.",
+      "tags": ["test", "cleanup", "fixture"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:makeSession",
+      "type": "function",
+      "name": "makeSession",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [238, 291],
+      "summary": "Creates a queue_session for a given doctor plus the requested number of 'waiting' bookings, returning the session and booking ids.",
+      "tags": ["test", "fixture", "queue-session", "booking"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:sessionRow",
+      "type": "function",
+      "name": "sessionRow",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [293, 307],
+      "summary": "Reads back the queue_sessions row (with pause/active/current-token columns) for assertions on session state changes.",
+      "tags": ["test", "query", "queue-session"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:bookingRow",
+      "type": "function",
+      "name": "bookingRow",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [309, 321],
+      "summary": "Reads back a single booking row (status, token, consultation timestamps) for status-transition assertions.",
+      "tags": ["test", "query", "booking"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:queueEvents",
+      "type": "function",
+      "name": "queueEvents",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [323, 340],
+      "summary": "Returns queue_runtime_events rows for a session (optionally filtered to a given event_type) for assertion of emitted runtime events.",
+      "tags": ["test", "query", "queue-events"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:jobsByKeyPrefix",
+      "type": "function",
+      "name": "jobsByKeyPrefix",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [342, 356],
+      "summary": "Returns job_queue rows whose idempotency_key starts with the given prefix, used to verify that downstream jobs were enqueued.",
+      "tags": ["test", "query", "job-queue"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:advanceQueue",
+      "type": "function",
+      "name": "advanceQueue",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [358, 365],
+      "summary": "Calls the next_queue_token RPC to advance a queue session one token for state-machine testing.",
+      "tags": ["test", "rpc", "token-engine"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/doctor_operations.test.ts:docOps",
+      "type": "function",
+      "name": "docOps",
+      "filePath": "tests/integration/doctor_operations.test.ts",
+      "lineRange": [368, 396],
+      "summary": "Invokes the doctor-operations Edge Function as the given doctor JWT, returning the parsed JSON response for assertion.",
+      "tags": ["test", "edge-function", "doctor-operations"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/integration/local_stack.test.ts:getLocalStatus",
+      "type": "function",
+      "name": "getLocalStatus",
+      "filePath": "tests/integration/local_stack.test.ts",
+      "lineRange": [33, 50],
+      "summary": "Parses the JSON status block printed by `supabase status` to extract the API URL and anon key.",
+      "tags": ["test", "utility", "bootstrap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/local_stack.test.ts:createClient",
+      "type": "function",
+      "name": "createClient",
+      "filePath": "tests/integration/local_stack.test.ts",
+      "lineRange": [56, 73],
+      "summary": "Sets required Deno env vars from local status and constructs a service-role Supabase client for downstream tests.",
+      "tags": ["test", "bootstrap", "client"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/local_stack.test.ts:db",
+      "type": "function",
+      "name": "db",
+      "filePath": "tests/integration/local_stack.test.ts",
+      "lineRange": [75, 78],
+      "summary": "Caches the createClient result and exposes it as the `db` fixture for the test file.",
+      "tags": ["test", "fixture"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_operations.test.ts:getLocalStatus",
+      "type": "function",
+      "name": "getLocalStatus",
+      "filePath": "tests/integration/queue_operations.test.ts",
+      "lineRange": [38, 55],
+      "summary": "Parses the JSON status block printed by `supabase status` to extract local API URL and anon key.",
+      "tags": ["test", "utility", "bootstrap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_operations.test.ts:bootstrap",
+      "type": "function",
+      "name": "bootstrap",
+      "filePath": "tests/integration/queue_operations.test.ts",
+      "lineRange": [64, 84],
+      "summary": "Sets required Deno env vars, then imports setup_env and db helpers and returns a service-role client.",
+      "tags": ["test", "bootstrap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_operations.test.ts:ctx",
+      "type": "function",
+      "name": "ctx",
+      "filePath": "tests/integration/queue_operations.test.ts",
+      "lineRange": [86, 89],
+      "summary": "Returns a per-test context with the bootstrapped service client and a unique RUN id for fixture namespacing.",
+      "tags": ["test", "context"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_operations.test.ts:testLogger",
+      "type": "function",
+      "name": "testLogger",
+      "filePath": "tests/integration/queue_operations.test.ts",
+      "lineRange": [91, 96],
+      "summary": "Lazily imports createRequestLogger from the shared logger for test output.",
+      "tags": ["test", "logger"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_operations.test.ts:todayLocal",
+      "type": "function",
+      "name": "todayLocal",
+      "filePath": "tests/integration/queue_operations.test.ts",
+      "lineRange": [104, 109],
+      "summary": "Returns today's local date as a YYYY-MM-DD string used as appointment_date for fixtures.",
+      "tags": ["test", "utility", "date"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_operations.test.ts:fixtureDoctor",
+      "type": "function",
+      "name": "fixtureDoctor",
+      "filePath": "tests/integration/queue_operations.test.ts",
+      "lineRange": [125, 157],
+      "summary": "Creates a Supabase auth user and a profile row, returning the doctor userId for queue session setup.",
+      "tags": ["test", "fixture", "doctor", "auth"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/integration/queue_operations.test.ts:deleteFixtureDoctors",
+      "type": "function",
+      "name": "deleteFixtureDoctors",
+      "filePath": "tests/integration/queue_operations.test.ts",
+      "lineRange": [159, 176],
+      "summary": "Cleanup helper removing auth users created by fixtureDoctor.",
+      "tags": ["test", "cleanup", "fixture"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_operations.test.ts:makeSession",
+      "type": "function",
+      "name": "makeSession",
+      "filePath": "tests/integration/queue_operations.test.ts",
+      "lineRange": [185, 240],
+      "summary": "Creates a queue_session with a given doctor plus the requested number of waiting bookings, returning the session and booking ids.",
+      "tags": ["test", "fixture", "queue-session", "booking"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/integration/queue_operations.test.ts:sessionRow",
+      "type": "function",
+      "name": "sessionRow",
+      "filePath": "tests/integration/queue_operations.test.ts",
+      "lineRange": [242, 254],
+      "summary": "Reads a queue_sessions row (active, paused, delay fields) for assertions.",
+      "tags": ["test", "query", "queue-session"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_operations.test.ts:queueEvents",
+      "type": "function",
+      "name": "queueEvents",
+      "filePath": "tests/integration/queue_operations.test.ts",
+      "lineRange": [256, 273],
+      "summary": "Returns queue_runtime_events rows for a session (optionally filtered to a given event_type).",
+      "tags": ["test", "query", "queue-events"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_operations.test.ts:jobsByKeyPrefix",
+      "type": "function",
+      "name": "jobsByKeyPrefix",
+      "filePath": "tests/integration/queue_operations.test.ts",
+      "lineRange": [275, 289],
+      "summary": "Returns job_queue rows whose idempotency_key starts with the given prefix.",
+      "tags": ["test", "query", "job-queue"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_operations.test.ts:alertRows",
+      "type": "function",
+      "name": "alertRows",
+      "filePath": "tests/integration/queue_operations.test.ts",
+      "lineRange": [291, 308],
+      "summary": "Returns alert_events rows for a given hospital and alert_key emitted since the test started.",
+      "tags": ["test", "query", "alerts"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_operations.test.ts:setThreshold",
+      "type": "function",
+      "name": "setThreshold",
+      "filePath": "tests/integration/queue_operations.test.ts",
+      "lineRange": [310, 329],
+      "summary": "Upserts an alert_thresholds row for the test hospital so alert emission behavior can be controlled.",
+      "tags": ["test", "fixture", "alerts"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_runtime.test.ts:getLocalStatus",
+      "type": "function",
+      "name": "getLocalStatus",
+      "filePath": "tests/integration/queue_runtime.test.ts",
+      "lineRange": [41, 58],
+      "summary": "Parses `supabase status` JSON to extract local API URL and anon key.",
+      "tags": ["test", "utility", "bootstrap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_runtime.test.ts:bootstrap",
+      "type": "function",
+      "name": "bootstrap",
+      "filePath": "tests/integration/queue_runtime.test.ts",
+      "lineRange": [70, 92],
+      "summary": "Sets required Deno env vars, imports setup_env, queue_runtime and db helpers, and returns a service-role client.",
+      "tags": ["test", "bootstrap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_runtime.test.ts:ctx",
+      "type": "function",
+      "name": "ctx",
+      "filePath": "tests/integration/queue_runtime.test.ts",
+      "lineRange": [94, 97],
+      "summary": "Returns a per-test context with the bootstrapped service client and a unique RUN id.",
+      "tags": ["test", "context"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_runtime.test.ts:testLogger",
+      "type": "function",
+      "name": "testLogger",
+      "filePath": "tests/integration/queue_runtime.test.ts",
+      "lineRange": [99, 104],
+      "summary": "Lazily imports createRequestLogger from the shared logger module.",
+      "tags": ["test", "logger"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_runtime.test.ts:nextDate",
+      "type": "function",
+      "name": "nextDate",
+      "filePath": "tests/integration/queue_runtime.test.ts",
+      "lineRange": [114, 118],
+      "summary": "Returns a YYYY-MM-DD string offset by N days from today for use as future appointment dates in fixtures.",
+      "tags": ["test", "utility", "date"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_runtime.test.ts:makeSession",
+      "type": "function",
+      "name": "makeSession",
+      "filePath": "tests/integration/queue_runtime.test.ts",
+      "lineRange": [130, 174],
+      "summary": "Creates a queue_session for SEED.DOCTOR_ID on a future date plus the requested number of waiting bookings.",
+      "tags": ["test", "fixture", "queue-session", "booking"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/integration/queue_runtime.test.ts:bookingStatus",
+      "type": "function",
+      "name": "bookingStatus",
+      "filePath": "tests/integration/queue_runtime.test.ts",
+      "lineRange": [176, 186],
+      "summary": "Reads back the current status column for a single booking row.",
+      "tags": ["test", "query", "booking"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_runtime.test.ts:sessionRow",
+      "type": "function",
+      "name": "sessionRow",
+      "filePath": "tests/integration/queue_runtime.test.ts",
+      "lineRange": [188, 200],
+      "summary": "Reads back a queue_sessions row (active, paused, current_live_token, ended_at) for assertions.",
+      "tags": ["test", "query", "queue-session"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_runtime.test.ts:queueEvents",
+      "type": "function",
+      "name": "queueEvents",
+      "filePath": "tests/integration/queue_runtime.test.ts",
+      "lineRange": [202, 219],
+      "summary": "Returns queue_runtime_events rows for a session (optionally filtered to a given event_type) including booking_id and actor_id.",
+      "tags": ["test", "query", "queue-events"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/queue_runtime.test.ts:jobsByKeyPrefix",
+      "type": "function",
+      "name": "jobsByKeyPrefix",
+      "filePath": "tests/integration/queue_runtime.test.ts",
+      "lineRange": [221, 235],
+      "summary": "Returns job_queue rows whose idempotency_key starts with the given prefix for job-emission assertions.",
+      "tags": ["test", "query", "job-queue"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/refund_sync.test.ts:getLocalStatus",
+      "type": "function",
+      "name": "getLocalStatus",
+      "filePath": "tests/integration/refund_sync.test.ts",
+      "lineRange": [34, 51],
+      "summary": "Parses the JSON status block printed by `supabase status`.",
+      "tags": ["test", "utility", "bootstrap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/refund_sync.test.ts:createClient",
+      "type": "function",
+      "name": "createClient",
+      "filePath": "tests/integration/refund_sync.test.ts",
+      "lineRange": [55, 71],
+      "summary": "Sets required Deno env vars and returns a service-role Supabase client.",
+      "tags": ["test", "bootstrap", "client"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/refund_sync.test.ts:db",
+      "type": "function",
+      "name": "db",
+      "filePath": "tests/integration/refund_sync.test.ts",
+      "lineRange": [73, 76],
+      "summary": "Caches the createClient result as the `db` fixture.",
+      "tags": ["test", "fixture"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/refund_sync.test.ts:seedCapturedBooking",
+      "type": "function",
+      "name": "seedCapturedBooking",
+      "filePath": "tests/integration/refund_sync.test.ts",
+      "lineRange": [88, 129],
+      "summary": "Seeds a booking and a captured payment_order row used as the precondition for refund-sync tests.",
+      "tags": ["test", "fixture", "refund", "payment"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/integration/usage_retention.test.ts:getLocalStatus",
+      "type": "function",
+      "name": "getLocalStatus",
+      "filePath": "tests/integration/usage_retention.test.ts",
+      "lineRange": [32, 49],
+      "summary": "Parses the JSON status block printed by `supabase status`.",
+      "tags": ["test", "utility", "bootstrap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/usage_retention.test.ts:createClient",
+      "type": "function",
+      "name": "createClient",
+      "filePath": "tests/integration/usage_retention.test.ts",
+      "lineRange": [53, 69],
+      "summary": "Sets required Deno env vars and returns a service-role Supabase client.",
+      "tags": ["test", "bootstrap", "client"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/usage_retention.test.ts:db",
+      "type": "function",
+      "name": "db",
+      "filePath": "tests/integration/usage_retention.test.ts",
+      "lineRange": [71, 74],
+      "summary": "Caches the createClient result as the `db` fixture.",
+      "tags": ["test", "fixture"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/usage_retention.test.ts:getSubscription",
+      "type": "function",
+      "name": "getSubscription",
+      "filePath": "tests/integration/usage_retention.test.ts",
+      "lineRange": [85, 97],
+      "summary": "Reads the hospital_subscriptions row for SEED.HOSPITAL_ID (current usage counters and metadata).",
+      "tags": ["test", "query", "subscription"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/usage_retention.test.ts:record",
+      "type": "function",
+      "name": "record",
+      "filePath": "tests/integration/usage_retention.test.ts",
+      "lineRange": [99, 106],
+      "summary": "Calls the record_subscription_usage RPC for a given metric and increment value.",
+      "tags": ["test", "rpc", "subscription"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_conversational.test.ts:getLocalStatus",
+      "type": "function",
+      "name": "getLocalStatus",
+      "filePath": "tests/integration/whatsapp_conversational.test.ts",
+      "lineRange": [37, 54],
+      "summary": "Parses the JSON status block printed by `supabase status`.",
+      "tags": ["test", "utility", "bootstrap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_conversational.test.ts:getServiceClientLazy",
+      "type": "function",
+      "name": "getServiceClientLazy",
+      "filePath": "tests/integration/whatsapp_conversational.test.ts",
+      "lineRange": [60, 65],
+      "summary": "Lazily imports and returns a service-role Supabase client, deferring the import until first use.",
+      "tags": ["test", "bootstrap", "client"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_conversational.test.ts:client",
+      "type": "function",
+      "name": "client",
+      "filePath": "tests/integration/whatsapp_conversational.test.ts",
+      "lineRange": [77, 102],
+      "summary": "Bootstraps the conversational test file: sets env vars, creates a service client, lazy-loads the conversation engine, and registers a metric-collector flush hook.",
+      "tags": ["test", "bootstrap", "conversational"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_conversational.test.ts:isoLocal",
+      "type": "function",
+      "name": "isoLocal",
+      "filePath": "tests/integration/whatsapp_conversational.test.ts",
+      "lineRange": [128, 133],
+      "summary": "Formats a Date as a local YYYY-MM-DD string for use as appointment_date in test fixtures.",
+      "tags": ["test", "utility", "date"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_conversational.test.ts:nextWorkday",
+      "type": "function",
+      "name": "nextWorkday",
+      "filePath": "tests/integration/whatsapp_conversational.test.ts",
+      "lineRange": [136, 141],
+      "summary": "Returns the next non-weekend Date at least N days ahead for use as future appointment dates.",
+      "tags": ["test", "utility", "date"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_conversational.test.ts:ddmm",
+      "type": "function",
+      "name": "ddmm",
+      "filePath": "tests/integration/whatsapp_conversational.test.ts",
+      "lineRange": [152, 154],
+      "summary": "Formats a Date as a DD/MM string used as the canonical patient date input in WhatsApp messages.",
+      "tags": ["test", "utility", "date"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_conversational.test.ts:send",
+      "type": "function",
+      "name": "send",
+      "filePath": "tests/integration/whatsapp_conversational.test.ts",
+      "lineRange": [177, 220],
+      "summary": "Drives an inbound WhatsApp message into processInboundMessage for the given phone and asserts the resulting reply job_queue payload.",
+      "tags": ["test", "conversational", "whatsapp", "fixture"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_conversational.test.ts:getState",
+      "type": "function",
+      "name": "getState",
+      "filePath": "tests/integration/whatsapp_conversational.test.ts",
+      "lineRange": [222, 246],
+      "summary": "Calls the get_wa_conversation_state RPC to fetch the current conversation state for a phone and hospital.",
+      "tags": ["test", "rpc", "conversational"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_conversational.test.ts:createDirectBooking",
+      "type": "function",
+      "name": "createDirectBooking",
+      "filePath": "tests/integration/whatsapp_conversational.test.ts",
+      "lineRange": [249, 280],
+      "summary": "Bypasses the conversational flow and calls the create_booking_v2 RPC directly to set up a booked booking for assertions.",
+      "tags": ["test", "rpc", "booking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_conversational.test.ts:getBooking",
+      "type": "function",
+      "name": "getBooking",
+      "filePath": "tests/integration/whatsapp_conversational.test.ts",
+      "lineRange": [282, 305],
+      "summary": "Reads a booking row (status, idempotency_key, booking_source, carry-forwarded/cancellation columns) for post-flow assertions.",
+      "tags": ["test", "query", "booking"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_conversational.test.ts:countBookings",
+      "type": "function",
+      "name": "countBookings",
+      "filePath": "tests/integration/whatsapp_conversational.test.ts",
+      "lineRange": [307, 317],
+      "summary": "Counts bookings for a given phone/date pair in HOSPITAL_A to verify duplication and re-booking behavior.",
+      "tags": ["test", "query", "booking"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_lifecycle.test.ts:getLocalStatus",
+      "type": "function",
+      "name": "getLocalStatus",
+      "filePath": "tests/integration/whatsapp_lifecycle.test.ts",
+      "lineRange": [35, 52],
+      "summary": "Parses the JSON status block printed by `supabase status`.",
+      "tags": ["test", "utility", "bootstrap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_lifecycle.test.ts:createClient",
+      "type": "function",
+      "name": "createClient",
+      "filePath": "tests/integration/whatsapp_lifecycle.test.ts",
+      "lineRange": [57, 73],
+      "summary": "Sets required Deno env vars and returns a service-role Supabase client.",
+      "tags": ["test", "bootstrap", "client"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_lifecycle.test.ts:db",
+      "type": "function",
+      "name": "db",
+      "filePath": "tests/integration/whatsapp_lifecycle.test.ts",
+      "lineRange": [75, 78],
+      "summary": "Caches the createClient result as the `db` fixture.",
+      "tags": ["test", "fixture"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_lifecycle.test.ts:queueMsg",
+      "type": "function",
+      "name": "queueMsg",
+      "filePath": "tests/integration/whatsapp_lifecycle.test.ts",
+      "lineRange": [102, 122],
+      "summary": "Calls the enqueue_whatsapp_message RPC to insert a new whatsapp_messages row and returns its id.",
+      "tags": ["test", "rpc", "whatsapp"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/integration/whatsapp_lifecycle.test.ts:getMsg",
+      "type": "function",
+      "name": "getMsg",
+      "filePath": "tests/integration/whatsapp_lifecycle.test.ts",
+      "lineRange": [124, 136],
+      "summary": "Reads a whatsapp_messages row (status, retries, delivered_at, read_at) for lifecycle-state assertions.",
+      "tags": ["test", "query", "whatsapp"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:getLocalStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:bootstrap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:ctx",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:testLogger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:todayLocal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:fixtureDoctor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:doctorToken",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:grantDoctorRole",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:deleteFixtureDoctors",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:makeSession",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:sessionRow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:bookingRow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:queueEvents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:jobsByKeyPrefix",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:advanceQueue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "function:tests/integration/doctor_operations.test.ts:docOps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/local_stack.test.ts",
+      "target": "function:tests/integration/local_stack.test.ts:getLocalStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/local_stack.test.ts",
+      "target": "function:tests/integration/local_stack.test.ts:createClient",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/local_stack.test.ts",
+      "target": "function:tests/integration/local_stack.test.ts:db",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_operations.test.ts",
+      "target": "function:tests/integration/queue_operations.test.ts:getLocalStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_operations.test.ts",
+      "target": "function:tests/integration/queue_operations.test.ts:bootstrap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_operations.test.ts",
+      "target": "function:tests/integration/queue_operations.test.ts:ctx",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_operations.test.ts",
+      "target": "function:tests/integration/queue_operations.test.ts:testLogger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_operations.test.ts",
+      "target": "function:tests/integration/queue_operations.test.ts:todayLocal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_operations.test.ts",
+      "target": "function:tests/integration/queue_operations.test.ts:fixtureDoctor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_operations.test.ts",
+      "target": "function:tests/integration/queue_operations.test.ts:deleteFixtureDoctors",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_operations.test.ts",
+      "target": "function:tests/integration/queue_operations.test.ts:makeSession",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_operations.test.ts",
+      "target": "function:tests/integration/queue_operations.test.ts:sessionRow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_operations.test.ts",
+      "target": "function:tests/integration/queue_operations.test.ts:queueEvents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_operations.test.ts",
+      "target": "function:tests/integration/queue_operations.test.ts:jobsByKeyPrefix",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_operations.test.ts",
+      "target": "function:tests/integration/queue_operations.test.ts:alertRows",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_operations.test.ts",
+      "target": "function:tests/integration/queue_operations.test.ts:setThreshold",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_runtime.test.ts",
+      "target": "function:tests/integration/queue_runtime.test.ts:getLocalStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_runtime.test.ts",
+      "target": "function:tests/integration/queue_runtime.test.ts:bootstrap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_runtime.test.ts",
+      "target": "function:tests/integration/queue_runtime.test.ts:ctx",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_runtime.test.ts",
+      "target": "function:tests/integration/queue_runtime.test.ts:testLogger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_runtime.test.ts",
+      "target": "function:tests/integration/queue_runtime.test.ts:nextDate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_runtime.test.ts",
+      "target": "function:tests/integration/queue_runtime.test.ts:makeSession",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_runtime.test.ts",
+      "target": "function:tests/integration/queue_runtime.test.ts:bookingStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_runtime.test.ts",
+      "target": "function:tests/integration/queue_runtime.test.ts:sessionRow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_runtime.test.ts",
+      "target": "function:tests/integration/queue_runtime.test.ts:queueEvents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/queue_runtime.test.ts",
+      "target": "function:tests/integration/queue_runtime.test.ts:jobsByKeyPrefix",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/refund_sync.test.ts",
+      "target": "function:tests/integration/refund_sync.test.ts:getLocalStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/refund_sync.test.ts",
+      "target": "function:tests/integration/refund_sync.test.ts:createClient",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/refund_sync.test.ts",
+      "target": "function:tests/integration/refund_sync.test.ts:db",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/refund_sync.test.ts",
+      "target": "function:tests/integration/refund_sync.test.ts:seedCapturedBooking",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/usage_retention.test.ts",
+      "target": "function:tests/integration/usage_retention.test.ts:getLocalStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/usage_retention.test.ts",
+      "target": "function:tests/integration/usage_retention.test.ts:createClient",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/usage_retention.test.ts",
+      "target": "function:tests/integration/usage_retention.test.ts:db",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/usage_retention.test.ts",
+      "target": "function:tests/integration/usage_retention.test.ts:getSubscription",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/usage_retention.test.ts",
+      "target": "function:tests/integration/usage_retention.test.ts:record",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_conversational.test.ts",
+      "target": "function:tests/integration/whatsapp_conversational.test.ts:getLocalStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_conversational.test.ts",
+      "target": "function:tests/integration/whatsapp_conversational.test.ts:getServiceClientLazy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_conversational.test.ts",
+      "target": "function:tests/integration/whatsapp_conversational.test.ts:client",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_conversational.test.ts",
+      "target": "function:tests/integration/whatsapp_conversational.test.ts:isoLocal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_conversational.test.ts",
+      "target": "function:tests/integration/whatsapp_conversational.test.ts:nextWorkday",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_conversational.test.ts",
+      "target": "function:tests/integration/whatsapp_conversational.test.ts:ddmm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_conversational.test.ts",
+      "target": "function:tests/integration/whatsapp_conversational.test.ts:send",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_conversational.test.ts",
+      "target": "function:tests/integration/whatsapp_conversational.test.ts:getState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_conversational.test.ts",
+      "target": "function:tests/integration/whatsapp_conversational.test.ts:createDirectBooking",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_conversational.test.ts",
+      "target": "function:tests/integration/whatsapp_conversational.test.ts:getBooking",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_conversational.test.ts",
+      "target": "function:tests/integration/whatsapp_conversational.test.ts:countBookings",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_lifecycle.test.ts",
+      "target": "function:tests/integration/whatsapp_lifecycle.test.ts:getLocalStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_lifecycle.test.ts",
+      "target": "function:tests/integration/whatsapp_lifecycle.test.ts:createClient",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_lifecycle.test.ts",
+      "target": "function:tests/integration/whatsapp_lifecycle.test.ts:db",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_lifecycle.test.ts",
+      "target": "function:tests/integration/whatsapp_lifecycle.test.ts:queueMsg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/whatsapp_lifecycle.test.ts",
+      "target": "function:tests/integration/whatsapp_lifecycle.test.ts:getMsg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/integration/doctor_operations.test.ts",
+      "target": "file:tests/utils/seed_constants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:tests/integration/local_stack.test.ts",
+      "target": "file:tests/utils/seed_constants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:tests/integration/queue_operations.test.ts",
+      "target": "file:tests/utils/seed_constants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:tests/integration/queue_runtime.test.ts",
+      "target": "file:tests/utils/seed_constants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:tests/integration/refund_sync.test.ts",
+      "target": "file:tests/utils/seed_constants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:tests/integration/usage_retention.test.ts",
+      "target": "file:tests/utils/seed_constants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:tests/integration/whatsapp_conversational.test.ts",
+      "target": "file:tests/utils/seed_constants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:tests/integration/whatsapp_lifecycle.test.ts",
+      "target": "file:tests/utils/seed_constants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

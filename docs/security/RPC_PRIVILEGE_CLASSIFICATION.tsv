@@ -1,0 +1,194 @@
+function_name	arguments	volatility	returns	category	edge_referenced	anon_exec_before	auth_exec_before	service_exec_before	target_execute_roles
+acknowledge_alert	p_alert_id uuid, p_actor_id uuid	v	jsonb	B	yes	true	true	true	service_role
+advance_queue	p_queue_session_id uuid	v	integer	B	yes	true	true	true	service_role
+assign_alert	p_alert_id uuid, p_assignee_id uuid, p_actor_id uuid	v	jsonb	B	yes	true	true	true	service_role
+auto_create_booking_fee_policy		v	trigger	B-trigger	no	true	true	true	unchanged (trigger-returning; not invocable)
+auto_create_cancellation_policy		v	trigger	B-trigger	no	true	true	true	unchanged (trigger-returning; not invocable)
+auto_create_collection_entry		v	trigger	B-trigger	no	true	true	true	unchanged (trigger-returning; not invocable)
+auto_create_hospital_settings		v	trigger	B-trigger	no	true	true	true	unchanged (trigger-returning; not invocable)
+auto_create_trial_subscription		v	trigger	B-trigger	no	true	true	true	unchanged (trigger-returning; not invocable)
+calculate_refund_amount	p_booking_id uuid, p_cancellation_time timestamp with time zone	s	TABLE(refund_amount numeric, refund_percentage numeric, refund_reason text, is_eligible boolean)	D	no	true	true	true	service_role
+call_queue_token	p_queue_session_id uuid, p_token_number integer, p_actor_id uuid	v	jsonb	B	yes	true	true	true	service_role
+capture_cancellation_policy_history		v	trigger	B-trigger	no	true	true	true	unchanged (trigger-returning; not invocable)
+capture_payment	p_gateway_order_id text, p_gateway_payment_id text, p_gateway_signature text, p_gateway_response jsonb	v	boolean	D	no	true	true	true	service_role
+capture_payment	p_gateway_order_id text, p_gateway_payment_id text, p_gateway_signature text, p_gateway_response jsonb, p_gateway_fee_inr numeric	v	boolean	D	no	true	true	true	service_role
+carry_forward_pending_tokens	p_hospital_id uuid, p_from_date date, p_to_date date	v	integer	B	yes	true	true	true	service_role
+change_subscription_plan	p_hospital_id uuid, p_new_plan_name text, p_billing_cycle billing_cycle, p_performed_by uuid	v	uuid	C	no	true	true	true	service_role
+check_booking_rate_limit	p_hospital_id uuid, p_phone text, p_window_minutes integer, p_max_attempts integer	s	boolean	B	no	true	true	true	service_role
+check_partition_readiness		v	TABLE(table_name text, estimated_rows bigint, threshold_value integer, threshold_reached boolean, auto_enabled boolean, action_recommended text)	B	yes	true	true	true	service_role
+claim_idempotency_key	p_key text, p_endpoint text, p_hospital_id uuid, p_user_id uuid, p_request_hash text, p_request_summary jsonb, p_instance_id text	v	TABLE(is_new boolean, status idempotency_status, response_status_code integer, response_body jsonb, mismatch_detected boolean)	B	yes	true	true	true	service_role
+claim_jobs	p_worker_id text, p_job_types text[], p_batch_size integer, p_lease_minutes integer	v	SETOF job_queue	B	no	true	true	true	service_role
+claim_jobs_v2	p_worker_id text, p_job_types text[], p_batch_size integer	v	SETOF job_queue	B	yes	true	true	true	service_role
+claim_webhook_event	p_provider webhook_provider, p_event_types text[], p_batch_size integer	v	SETOF webhook_events	B	no	true	true	true	service_role
+cleanup_expired_restrictions		v	integer	B	no	true	true	true	service_role
+cleanup_idempotency_keys		v	integer	B	no	true	true	true	service_role
+cleanup_operational_data		v	jsonb	B	no	true	true	true	service_role
+cleanup_stale_presence		v	integer	B	no	true	true	true	service_role
+cleanup_stale_presence	p_batch_size integer	v	integer	B	no	true	true	true	service_role
+clear_doctor_delay	p_queue_session_id uuid, p_actor_id uuid	v	jsonb	B	yes	true	true	true	service_role
+close_doctor_session	p_queue_session_id uuid, p_actor_id uuid, p_reason text	v	jsonb	B	yes	true	true	true	service_role
+complete_consultation	p_queue_session_id uuid, p_booking_id uuid, p_actor_id uuid	v	jsonb	B	yes	true	true	true	service_role
+complete_idempotency_key	p_key text, p_endpoint text, p_response_code integer, p_response_body jsonb, p_response_headers jsonb	v	boolean	B	yes	true	true	true	service_role
+complete_job	p_job_id uuid	v	boolean	B	no	true	true	true	service_role
+complete_job_v2	p_job_id uuid, p_worker_id text	v	boolean	B	yes	true	true	true	service_role
+complete_webhook_event	p_event_id uuid	v	boolean	B	yes	true	true	true	service_role
+compute_global_metrics	p_report_date date	v	void	C	no	true	true	true	service_role
+compute_sla_tracking	p_hospital_id uuid, p_date date	v	void	B	yes	true	true	true	service_role
+compute_weekly_rollup	p_hospital_id uuid, p_week_start date	v	void	B	no	true	true	true	service_role
+confirm_refund_processed	p_refund_id uuid, p_gateway_refund_id text, p_gateway_response jsonb	v	boolean	D	yes	true	true	true	service_role
+create_booking	p_hospital_id uuid, p_queue_session_id uuid, p_patient_id uuid, p_patient_name text, p_patient_phone text, p_patient_age integer, p_patient_gender text, p_village text, p_blood_group text, p_has_diabetes boolean, p_has_bp boolean, p_booking_source booking_source, p_doctor_id uuid, p_booked_by uuid, p_appointment_date date, p_platform_fee numeric, p_receptionist_fee numeric, p_hospital_fee numeric, p_idempotency_key text	v	TABLE(booking_id uuid, token_number integer)	B	yes	true	true	true	service_role
+create_hospital_settlement	p_hospital_id uuid, p_start_date date, p_end_date date, p_collected_by uuid	v	uuid	D	yes	true	true	true	service_role
+create_platform_revenue_summary	p_hospital_id uuid, p_start_date date, p_end_date date, p_performed_by uuid	v	uuid	D	no	true	true	true	service_role
+current_user_has_permission	p_hospital_id uuid, p_permission text	s	boolean	D	no	true	true	true	service_role
+current_user_role	p_hospital_id uuid	s	text	A	no	true	true	true	anon,authenticated,service_role
+detect_crashed_workers		v	TABLE(crashed_worker_id text, worker_type text, last_seen timestamp with time zone)	B	no	true	true	true	service_role
+enqueue_job	p_job_type text, p_payload jsonb, p_priority job_priority, p_scheduled_at timestamp with time zone, p_idempotency_key text, p_hospital_id uuid, p_booking_id uuid, p_metadata jsonb	v	uuid	B	yes	true	true	true	service_role
+escalate_alert	p_alert_id uuid, p_actor_id uuid, p_notes text	v	jsonb	B	yes	true	true	true	service_role
+estimate_wait_minutes	p_queue_session_id uuid, p_token_number integer	s	integer	B	yes	true	true	true	service_role
+evaluate_queue_health		v	jsonb	B	yes	true	true	true	service_role
+expire_conversation_states		v	integer	B	yes	true	true	true	service_role
+expire_stale_device_sessions	p_inactive_days integer	v	integer	B	no	true	true	true	service_role
+extend_job_lease	p_job_id uuid, p_worker_id text, p_extend_seconds integer	v	boolean	B	no	true	true	true	service_role
+fail_idempotency_key	p_key text, p_endpoint text, p_error_code text, p_error_message text, p_response_code integer	v	boolean	B	yes	true	true	true	service_role
+fail_job	p_job_id uuid, p_error text	v	boolean	B	no	true	true	true	service_role
+fail_job_v2	p_job_id uuid, p_worker_id text, p_error text	v	boolean	B	yes	true	true	true	service_role
+fail_migration	p_migration_id text, p_error text, p_applied_by text	v	boolean	B	no	true	true	true	service_role
+fail_webhook_event	p_event_id uuid, p_error text	v	boolean	B	yes	true	true	true	service_role
+fetch_pending_notifications	p_limit integer	v	SETOF notification_queue	B	no	true	true	true	service_role
+fetch_pending_whatsapp_messages	p_limit integer	v	SETOF whatsapp_messages	B	yes	true	true	true	service_role
+find_or_create_whatsapp_conversation	p_hospital_id uuid, p_patient_id uuid, p_phone text	v	uuid	B	no	true	true	true	service_role
+fire_alert	p_hospital_id uuid, p_alert_key text, p_severity alert_severity_level, p_current_value numeric, p_threshold_value numeric, p_threshold_unit text, p_message text	v	uuid	B	no	true	true	true	service_role
+fire_managed_alert	p_hospital_id uuid, p_alert_key text, p_severity alert_severity_level, p_current_value numeric, p_threshold_value numeric, p_threshold_unit text, p_message text, p_category text	v	uuid	B	no	true	true	true	service_role
+generate_audit_log_partition_ddl	p_months integer	v	text	D	no	true	true	true	service_role
+generate_booking_partition_ddl	p_months integer	v	text	B	no	true	true	true	service_role
+generate_executive_report	p_report_type text, p_hospital_id uuid, p_from_date date, p_to_date date	s	jsonb	C	yes	true	true	true	service_role
+generate_next_token	p_hospital_id uuid, p_visit_date date	v	integer	B	no	true	true	true	service_role
+generate_partition_ddl	p_parent_table text, p_month date	v	text	B	no	true	true	true	service_role
+generate_wa_messages_partition_ddl	p_months integer	v	text	B	no	true	true	true	service_role
+get_alert_analytics	p_hospital_id uuid, p_from_date date, p_to_date date	s	jsonb	B	yes	true	true	true	service_role
+get_alert_center	p_hospital_id uuid, p_status text, p_severity text, p_category text, p_limit integer	s	jsonb	B	yes	true	true	true	service_role
+get_audit_coverage_report	p_hospital_id uuid, p_from_date date, p_to_date date	s	TABLE(action_type text, category text, default_severity text, logged_count bigint, last_logged_at timestamp with time zone, has_coverage boolean)	D	no	true	true	true	service_role
+get_booking_fee	p_hospital_id uuid, p_booking_source booking_source	s	TABLE(booking_fee numeric, gst_amount numeric, total_fee numeric, consultation_fee numeric, collect_consultation_at_hospital boolean)	D	no	true	true	true	service_role
+get_conversation_state	p_hospital_id uuid, p_phone text	v	SETOF whatsapp_conversation_states	B	yes	true	true	true	service_role
+get_cross_hospital_benchmarks	p_from_date date, p_to_date date	s	jsonb	C	yes	true	true	true	service_role
+get_daily_operations_dashboard	p_hospital_id uuid, p_date date	s	jsonb	B	yes	true	true	true	service_role
+get_dlq_summary		s	TABLE(source dead_letter_source, unresolved_count bigint, critical_count bigint, oldest_item_at timestamp with time zone)	B	yes	true	true	true	service_role
+get_doctor_availability_reason	p_doctor_id uuid, p_hospital_id uuid, p_date date	s	TABLE(is_available boolean, reason text)	B	no	true	true	true	service_role
+get_doctor_dashboard	p_doctor_id uuid, p_hospital_id uuid	s	jsonb	B	yes	true	true	true	service_role
+get_doctor_performance	p_doctor_id uuid, p_hospital_id uuid, p_from_date date, p_to_date date	s	jsonb	B	yes	true	true	true	service_role
+get_doctor_rankings	p_hospital_id uuid, p_from_date date, p_to_date date	s	jsonb	B	yes	true	true	true	service_role
+get_doctor_unavailable_dates	p_doctor_id uuid, p_hospital_id uuid, p_from_date date, p_to_date date	s	TABLE(unavailable_date date, reason text)	B	no	true	true	true	service_role
+get_effective_fees	p_hospital_id uuid, p_booking_source booking_source	s	TABLE(platform_fee numeric, receptionist_fee numeric, hospital_fee numeric, total_amount numeric)	D	yes	true	true	true	service_role
+get_financial_command_center	p_hospital_id uuid, p_date date	s	jsonb	D	yes	true	true	true	service_role
+get_hospital_command_center	p_hospital_id uuid, p_date date	s	jsonb	B	yes	true	true	true	service_role
+get_hospital_feature_flags	p_hospital_id uuid	s	TABLE(flag_key text, display_name text, description text, is_enabled boolean, is_override boolean)	B	no	true	true	true	service_role
+get_hospital_timeline	p_hospital_id uuid, p_from_ts timestamp with time zone, p_to_ts timestamp with time zone, p_event_types text[], p_severity text, p_doctor_id uuid, p_queue_session_id uuid, p_limit integer	s	jsonb	B	yes	true	true	true	service_role
+get_monthly_dashboard	p_hospital_id uuid, p_month_start date	s	jsonb	B	yes	true	true	true	service_role
+get_operational_scores	p_hospital_id uuid, p_date date	s	jsonb	B	yes	true	true	true	service_role
+get_partition_health		v	TABLE(partition_name text, parent_table text, range_start text, range_end text, state partition_state, actual_rows bigint, size_pretty text)	B	no	true	true	true	service_role
+get_partition_maintenance_advice		s	TABLE(table_name text, recommendation text, estimated_rows bigint)	B	no	true	true	true	service_role
+get_platform_revenue_breakdown	p_hospital_id uuid, p_from_date date, p_to_date date	s	TABLE(total_collected numeric, gateway_fees numeric, gst_collected numeric, refunds_issued numeric, net_setura_revenue numeric, booking_count integer, paid_booking_count integer)	D	no	true	true	true	service_role
+get_portfolio_dashboard	p_date date	s	jsonb	C	yes	true	true	true	service_role
+get_predictive_insights	p_hospital_id uuid, p_date date	s	jsonb	B	yes	true	true	true	service_role
+get_queue_config	p_hospital_id uuid, p_doctor_id uuid, p_config_key text	s	jsonb	B	no	true	true	true	service_role
+get_queue_snapshot	p_queue_session_id uuid	s	jsonb	B	yes	true	true	true	service_role
+get_reconciliation_summary	p_hospital_id uuid, p_from_date date, p_to_date date	s	TABLE(total_collected numeric, platform_fee_total numeric, receptionist_fee_total numeric, total_refunded numeric, total_settled numeric, net_outstanding numeric, booking_count integer, paid_booking_count integer)	D	yes	true	true	true	service_role
+get_remaining_token_capacity	p_doctor_id uuid, p_hospital_id uuid, p_date date	s	integer	B	yes	true	true	true	service_role
+get_retention_report		s	TABLE(table_name text, retention_days integer, hard_delete_after_days integer, legal_basis text)	B	no	true	true	true	service_role
+get_revenue_forecast	p_hospital_id uuid, p_date date	s	jsonb	D	yes	true	true	true	service_role
+get_sla_dashboard	p_hospital_id uuid, p_date date	s	jsonb	B	yes	true	true	true	service_role
+get_subscription_limits	p_hospital_id uuid	s	TABLE(max_doctors integer, max_receptionists integer, max_bookings_per_month integer, current_doctor_count integer, current_receptionist_count integer, current_month_bookings integer, subscription_status text, plan_name text, expires_at timestamp with time zone, is_active boolean)	C	no	true	true	true	service_role
+get_subscription_usage	p_hospital_id uuid	s	jsonb	C	no	true	true	true	service_role
+get_user_permissions	p_hospital_id uuid	s	text[]	D	no	true	true	true	service_role
+get_weekly_dashboard	p_hospital_id uuid, p_week_start date	s	jsonb	B	yes	true	true	true	service_role
+handle_whatsapp_delivery_status	p_meta_message_id text, p_status whatsapp_message_status, p_payload jsonb	v	boolean	B	yes	true	true	true	service_role
+has_permission	p_user_id uuid, p_hospital_id uuid, p_permission text	s	boolean	D	no	true	true	true	service_role
+idempotent_capture_payment	p_provider_event_id text, p_payload_hash text, p_raw_payload jsonb, p_gateway_order_id text, p_gateway_payment_id text, p_gateway_signature text	v	TABLE(success boolean, was_duplicate boolean, message text)	D	yes	true	true	true	service_role
+idempotent_create_booking	p_client_request_id text, p_hospital_id uuid, p_queue_session_id uuid, p_patient_id uuid, p_patient_name text, p_patient_phone text, p_patient_age integer, p_patient_gender text, p_village text, p_blood_group text, p_has_diabetes boolean, p_has_bp boolean, p_booking_source booking_source, p_doctor_id uuid, p_booked_by uuid, p_appointment_date date	v	TABLE(booking_id uuid, token_number integer, was_duplicate boolean)	B	no	true	true	true	service_role
+increment_abuse_score	p_hospital_id uuid, p_phone text, p_device_identifier text, p_ip_address inet, p_score integer	v	integer	B	no	true	true	true	service_role
+initiate_refund	p_booking_id uuid, p_refund_amount_inr numeric, p_refund_reason text, p_initiated_by uuid	v	uuid	D	yes	true	true	true	service_role
+insert_emergency_patient	p_queue_session_id uuid, p_patient_name text, p_patient_phone text, p_reason text, p_actor_id uuid, p_idempotency_key text	v	jsonb	B	yes	true	true	true	service_role
+is_doctor_available	p_doctor_id uuid, p_hospital_id uuid, p_date date	s	boolean	B	yes	true	true	true	service_role
+is_feature_enabled	p_hospital_id uuid, p_flag_key text	s	boolean	B	yes	true	true	true	service_role
+is_global_admin		s	boolean	A	no	true	true	true	anon,authenticated,service_role
+is_phone_blocked	p_hospital_id uuid, p_phone text	s	boolean	B	no	true	true	true	service_role
+is_subscription_active	p_hospital_id uuid	s	boolean	C	no	true	true	true	service_role
+log_booking_attempt	p_hospital_id uuid, p_phone text, p_ip_address inet, p_device_identifier text, p_success boolean, p_metadata jsonb	v	void	B	no	true	true	true	service_role
+log_security_event	p_hospital_id uuid, p_user_id uuid, p_event_type security_event_type, p_event_details jsonb, p_risk_score integer, p_ip_address inet, p_user_agent text, p_event_fingerprint text	v	uuid	B	no	true	true	true	service_role
+mark_doctor_delay	p_queue_session_id uuid, p_minutes integer, p_reason text, p_actor_id uuid	v	jsonb	B	yes	true	true	true	service_role
+mark_notification_sent	p_notification_id uuid, p_provider_response jsonb	v	boolean	B	no	true	true	true	service_role
+mark_patient_absent	p_queue_session_id uuid, p_booking_id uuid, p_actor_id uuid	v	jsonb	B	yes	true	true	true	service_role
+open_doctor_session	p_hospital_id uuid, p_doctor_id uuid, p_session_date date, p_max_tokens integer, p_actor_id uuid	v	jsonb	B	yes	true	true	true	service_role
+pause_queue	p_queue_session_id uuid, p_reason text, p_actor_id uuid	v	jsonb	B	yes	true	true	true	service_role
+plan_partitions	p_parent_table text, p_months_ahead integer, p_start_month date	v	TABLE(partition_name text, range_start text, state partition_state)	B	no	true	true	true	service_role
+presence_heartbeat	p_hospital_id uuid, p_role user_role_type, p_channel presence_channel, p_tab_id text, p_metadata jsonb	v	TABLE(active_users integer, active_receptionists integer, hospital_is_online boolean)	B	no	true	true	true	service_role
+presence_leave	p_hospital_id uuid, p_channel presence_channel, p_tab_id text	v	void	B	no	true	true	true	service_role
+queue_notification	p_hospital_id uuid, p_patient_id uuid, p_booking_id uuid, p_channel notification_channel, p_priority notification_priority, p_recipient text, p_template_key text, p_title text, p_message_body text, p_scheduled_for timestamp with time zone, p_idempotency_key text, p_metadata jsonb	v	uuid	B	no	true	true	true	service_role
+queue_whatsapp_message	p_hospital_id uuid, p_patient_id uuid, p_booking_id uuid, p_phone text, p_template_name text, p_message_text text, p_idempotency_key text	v	uuid	B	yes	true	true	true	service_role
+recalculate_queue_position	p_booking_id uuid	v	void	B	yes	false	false	true	service_role
+recall_current_token	p_queue_session_id uuid, p_actor_id uuid	v	jsonb	B	yes	true	true	true	service_role
+reclaim_crashed_worker_jobs		v	integer	B	no	true	true	true	service_role
+reclaim_stale_jobs	p_timeout_minutes integer	v	integer	B	no	true	true	true	service_role
+reclaim_stale_whatsapp_processing	p_stale_minutes integer	v	integer	B	yes	true	true	true	service_role
+recompute_hospital_online_state	p_hospital_id uuid	v	void	B	no	true	true	true	service_role
+record_incoming_whatsapp_message	p_hospital_id uuid, p_phone text, p_meta_message_id text, p_text text, p_patient_name text	v	jsonb	B	yes	true	true	true	service_role
+record_queue_event	p_queue_session_id uuid, p_event_type text, p_token_number integer, p_booking_id uuid, p_actor_id uuid, p_metadata jsonb	v	uuid	B	yes	true	true	true	service_role
+record_settlement_payment	p_settlement_id uuid, p_paid_amount numeric, p_performed_by uuid	v	boolean	D	yes	true	true	true	service_role
+record_subscription_usage	p_hospital_id uuid, p_metric text, p_increment integer	v	jsonb	C	yes	true	true	true	service_role
+refresh_analytics_views		v	boolean	B	no	true	true	true	service_role
+refresh_analytics_views_ordered		v	jsonb	B	yes	true	true	true	service_role
+refresh_outstanding_balance	p_hospital_id uuid	v	boolean	B	no	true	true	true	service_role
+refresh_single_mv	p_view_name text	v	boolean	B	no	true	true	true	service_role
+register_migration	p_migration_id text, p_filename text, p_description text, p_category text, p_depends_on text[], p_version text, p_duration_ms integer, p_checksum text, p_is_reversible boolean, p_rollback_script text, p_applied_by text	v	boolean	B	no	true	true	true	service_role
+register_webhook_event	p_webhook_event_id text, p_event_type text, p_payload jsonb	v	boolean	B	no	true	true	true	service_role
+register_webhook_event_v2	p_provider webhook_provider, p_provider_event_id text, p_event_type text, p_payload_hash text, p_raw_payload jsonb, p_hospital_id uuid	v	TABLE(is_new boolean, event_id uuid)	B	yes	true	true	true	service_role
+register_worker	p_worker_id text, p_worker_type text, p_instance_id text, p_hostname text, p_lease_duration integer	v	worker_registry	B	yes	true	true	true	service_role
+reset_stale_idempotency_keys	p_stuck_minutes integer	v	integer	B	no	true	true	true	service_role
+resolve_alert	p_alert_id uuid, p_actor_id uuid, p_notes text	v	jsonb	B	yes	true	true	true	service_role
+resolve_alert_threshold	p_hospital_id uuid, p_alert_key text, p_fallback numeric	s	numeric	B	no	true	true	true	service_role
+resolve_security_event	p_event_id uuid, p_resolved_by uuid, p_notes text	v	boolean	B	no	true	true	true	service_role
+restore_queue_token	p_queue_session_id uuid, p_booking_id uuid, p_actor_id uuid	v	jsonb	B	yes	true	true	true	service_role
+resume_queue	p_queue_session_id uuid, p_actor_id uuid	v	jsonb	B	yes	true	true	true	service_role
+retry_dead_letter_item	p_dlq_id uuid, p_resolved_by uuid	v	boolean	B	no	true	true	true	service_role
+return_to_waiting	p_queue_session_id uuid, p_booking_id uuid, p_actor_id uuid	v	jsonb	B	yes	true	true	true	service_role
+rollback_feature_flag	p_hospital_id uuid, p_flag_key text, p_target_version integer, p_rolled_back_by uuid, p_reason text	v	boolean	B	no	true	true	true	service_role
+rollback_system_setting	p_key text, p_target_version integer, p_rolled_back_by uuid, p_reason text	v	boolean	B	no	true	true	true	service_role
+run_analytics_rollups	p_target_date date	v	jsonb	B	yes	true	true	true	service_role
+run_health_check		v	jsonb	B	yes	true	true	true	service_role
+run_nightly_tasks	p_hospital_id uuid	v	jsonb	B	no	true	true	true	service_role
+run_retention_cleanup		v	jsonb	B	yes	true	true	true	service_role
+run_scheduled_tasks		v	jsonb	B	yes	true	true	true	service_role
+run_worker_crash_recovery		v	jsonb	B	no	true	true	true	service_role
+save_consultation_note	p_booking_id uuid, p_doctor_id uuid, p_notes text, p_diagnosis_summary text, p_prescription jsonb, p_follow_up_date date, p_attachments jsonb	v	jsonb	B	yes	true	true	true	service_role
+schedule_notification_retry	p_notification_id uuid, p_error text	v	boolean	B	no	true	true	true	service_role
+schedule_partition_creation		v	jsonb	B	yes	true	true	true	service_role
+schedule_whatsapp_retry	p_message_id uuid, p_error text	v	boolean	B	yes	true	true	true	service_role
+search_audit_logs	p_hospital_id uuid, p_actor_id uuid, p_entity_type text, p_action_type text, p_from_ts timestamp with time zone, p_to_ts timestamp with time zone, p_correlation_id text, p_limit integer	s	jsonb	D	yes	true	true	true	service_role
+send_to_dead_letter	p_source dead_letter_source, p_source_id uuid, p_source_table text, p_job_type text, p_hospital_id uuid, p_booking_id uuid, p_patient_id uuid, p_attempt_count integer, p_last_error text, p_payload jsonb, p_priority text	v	uuid	B	no	true	true	true	service_role
+set_conversation_state	p_hospital_id uuid, p_phone text, p_state text, p_context jsonb, p_ttl_minutes integer, p_last_intent text, p_unknown_count integer, p_handoff_reason text	v	uuid	B	yes	true	true	true	service_role
+skip_queue_token	p_queue_session_id uuid, p_booking_id uuid, p_actor_id uuid	v	jsonb	B	yes	true	true	true	service_role
+soft_delete_aged_messages		v	jsonb	B	no	true	true	true	service_role
+start_consultation	p_queue_session_id uuid, p_booking_id uuid, p_actor_id uuid	v	jsonb	B	yes	true	true	true	service_role
+stop_worker	p_worker_id text, p_drain boolean	v	void	B	yes	false	false	true	service_role
+suppress_alerts	p_alert_key text, p_active_until timestamp with time zone, p_actor_id uuid, p_hospital_id uuid, p_reason text	v	jsonb	B	yes	true	true	true	service_role
+sync_subscription_usage	p_hospital_id uuid	v	jsonb	C	yes	true	true	true	service_role
+take_deployment_snapshot	p_label text, p_created_by text	v	uuid	B	no	true	true	true	service_role
+terminate_device_session	p_session_id uuid, p_user_id uuid	v	boolean	B	no	true	true	true	service_role
+trigger_sla_refresh	p_hospital_id uuid, p_date date	v	uuid	B	yes	true	true	true	service_role
+try_fire_queue_alert	p_hospital_id uuid, p_queue_session_id uuid, p_alert_key text, p_severity alert_severity_level, p_current_value numeric, p_threshold_value numeric, p_threshold_unit text, p_message text	v	jsonb	B	no	true	true	true	service_role
+upsert_device_session	p_user_id uuid, p_hospital_id uuid, p_device_name text, p_device_type text, p_ip_address inet, p_user_agent text, p_session_token_hash text	v	uuid	B	no	true	true	true	service_role
+upsert_presence	p_hospital_id uuid, p_tab_id text, p_metadata jsonb	v	void	B	no	true	true	true	service_role
+user_has_hospital_access	p_hospital_id uuid	s	boolean	A	no	true	true	true	anon,authenticated,service_role
+user_has_hospital_role	p_hospital_id uuid, p_roles text[]	s	boolean	A	no	true	true	true	anon,authenticated,service_role
+verify_audit_integrity	p_hospital_id uuid, p_from_ts timestamp with time zone	s	jsonb	D	yes	true	true	true	service_role
+verify_doctor_operations_integrity	p_doctor_id uuid, p_date date	s	jsonb	B	yes	true	true	true	service_role
+verify_integration_matrix	p_hospital_id uuid, p_date date	s	jsonb	B	yes	true	true	true	service_role
+verify_queue_integrity	p_queue_session_id uuid	s	jsonb	B	yes	true	true	true	service_role
+verify_settlement_integrity	p_hospital_id uuid	s	jsonb	D	yes	true	true	true	service_role
+version_feature_flag		v	trigger	B-trigger	no	true	true	true	unchanged (trigger-returning; not invocable)
+version_hospital_settings		v	trigger	B-trigger	no	true	true	true	unchanged (trigger-returning; not invocable)
+version_system_settings		v	trigger	B-trigger	no	true	true	true	unchanged (trigger-returning; not invocable)
+worker_heartbeat	p_worker_id text, p_jobs_in_flight integer, p_metadata jsonb	v	boolean	B	yes	true	true	true	service_role
+write_audit_log	p_hospital_id uuid, p_actor_id uuid, p_entity_type text, p_entity_id uuid, p_action text, p_severity audit_action_severity, p_old_data jsonb, p_new_data jsonb, p_notes text, p_metadata jsonb	v	uuid	D	yes	true	true	true	service_role
+write_booking_ledger_entries		v	trigger	B-trigger	no	true	true	true	unchanged (trigger-returning; not invocable)
+write_queue_metrics_snapshot		v	void	B	no	true	true	true	service_role

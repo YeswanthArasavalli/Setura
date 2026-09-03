@@ -1,0 +1,1645 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 5,
+  "filesSkipped": [
+    "graphify-out/graph.html"
+  ],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 5,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 5
+    }
+  },
+  "results": [
+    {
+      "path": "graphify-out/.graphify_analysis.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 1830,
+      "nonEmptyLines": 1830,
+      "sections": [
+        {
+          "heading": "communities",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "cohesion",
+          "level": 1,
+          "line": 1587
+        },
+        {
+          "heading": "gods",
+          "level": 1,
+          "line": 1684
+        },
+        {
+          "heading": "surprises",
+          "level": 1,
+          "line": 1736
+        },
+        {
+          "heading": "questions",
+          "level": 1,
+          "line": 1793
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "graphify-out/.graphify_labels.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "sections": [
+        {
+          "heading": "0",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "2",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "3",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "4",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "5",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "6",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "7",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "8",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "9",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "10",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "11",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "12",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "13",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "14",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "15",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "16",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "17",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "18",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "19",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "20",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "21",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "22",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "23",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "24",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "25",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "26",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "27",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "28",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "29",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "30",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "31",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "32",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "33",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "34",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "35",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "36",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "37",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "38",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "39",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "40",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "41",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "42",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "43",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "44",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "45",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "46",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "47",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "48",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "49",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "50",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "51",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "52",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "53",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "54",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "55",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "56",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "57",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "58",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "59",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "60",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "61",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "62",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "63",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "64",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "65",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "66",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "67",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "68",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "69",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "70",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "71",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "72",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "73",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "74",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "75",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "76",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "77",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "78",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "79",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "80",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "81",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "82",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "83",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "84",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "85",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "86",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "87",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "88",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "89",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "90",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "91",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "92",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "93",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "94",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 95
+      }
+    },
+    {
+      "path": "graphify-out/GRAPH_REPORT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 480,
+      "nonEmptyLines": 321,
+      "sections": [
+        {
+          "heading": "Graph Report - setura  (2026-08-27)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Corpus Check",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Summary",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "Community Hubs (Navigation)",
+          "level": 2,
+          "line": 13
+        },
+        {
+          "heading": "God Nodes (most connected - your core abstractions)",
+          "level": 2,
+          "line": 93
+        },
+        {
+          "heading": "Surprising Connections (you probably didn't know these)",
+          "level": 2,
+          "line": 108
+        },
+        {
+          "heading": "Import Cycles",
+          "level": 2,
+          "line": 123
+        },
+        {
+          "heading": "Communities (95 total, 11 thin omitted)",
+          "level": 2,
+          "line": 130
+        },
+        {
+          "heading": "Community 0 - \"whatsapp_conversation_engine.ts\"",
+          "level": 3,
+          "line": 134
+        },
+        {
+          "heading": "Community 1 - \"47_enterprise_command_center.sql\"",
+          "level": 3,
+          "line": 139
+        },
+        {
+          "heading": "Community 2 - \"run-background-worker/index.ts\"",
+          "level": 3,
+          "line": 144
+        },
+        {
+          "heading": "Community 3 - \"db.ts\"",
+          "level": 3,
+          "line": 149
+        },
+        {
+          "heading": "Community 4 - \"logger.ts\"",
+          "level": 3,
+          "line": 154
+        },
+        {
+          "heading": "Community 5 - \"SeturError\"",
+          "level": 3,
+          "line": 159
+        },
+        {
+          "heading": "Community 6 - \"types.ts\"",
+          "level": 3,
+          "line": 164
+        },
+        {
+          "heading": "Community 7 - \"privilege_isolation.test.ts\"",
+          "level": 3,
+          "line": 169
+        },
+        {
+          "heading": "Community 8 - \"env.ts\"",
+          "level": 3,
+          "line": 174
+        },
+        {
+          "heading": "Community 9 - \"audit.ts\"",
+          "level": 3,
+          "line": 179
+        },
+        {
+          "heading": "Community 10 - \"queue_runtime.ts\"",
+          "level": 3,
+          "line": 184
+        },
+        {
+          "heading": "Community 11 - \"tasks\"",
+          "level": 3,
+          "line": 189
+        },
+        {
+          "heading": "Community 12 - \"13_payment_engine.sql\"",
+          "level": 3,
+          "line": 194
+        },
+        {
+          "heading": "Community 13 - \"doctor_operations.test.ts\"",
+          "level": 3,
+          "line": 199
+        },
+        {
+          "heading": "Community 14 - \"validate_migrations.ts\"",
+          "level": 3,
+          "line": 204
+        },
+        {
+          "heading": "Community 15 - \"queue_operations.test.ts\"",
+          "level": 3,
+          "line": 209
+        },
+        {
+          "heading": "Community 16 - \"queue_runtime.test.ts\"",
+          "level": 3,
+          "line": 214
+        },
+        {
+          "heading": "Community 17 - \"18_config_versioning_&_rollback.sql\"",
+          "level": 3,
+          "line": 219
+        },
+        {
+          "heading": "Community 18 - \"getServiceClient\"",
+          "level": 3,
+          "line": 224
+        },
+        {
+          "heading": "Community 19 - \"auth.ts\"",
+          "level": 3,
+          "line": 229
+        },
+        {
+          "heading": "Community 20 - \"01_foundation.sql\"",
+          "level": 3,
+          "line": 234
+        },
+        {
+          "heading": "Community 21 - \"04_whatsapp_messaging_engine.sql\"",
+          "level": 3,
+          "line": 239
+        },
+        {
+          "heading": "Community 22 - \"enterprise_command_center.test.ts\"",
+          "level": 3,
+          "line": 244
+        },
+        {
+          "heading": "Community 23 - \"whatsapp_conversational.test.ts\"",
+          "level": 3,
+          "line": 249
+        },
+        {
+          "heading": "Community 24 - \"02_atomic_token_engine_&_bookings.sql\"",
+          "level": 3,
+          "line": 254
+        },
+        {
+          "heading": "Community 25 - \"43_queue_runtime.sql\"",
+          "level": 3,
+          "line": 259
+        },
+        {
+          "heading": "Community 26 - \"07_settlement_engine.sql\"",
+          "level": 3,
+          "line": 264
+        },
+        {
+          "heading": "Community 27 - \"formatE164\"",
+          "level": 3,
+          "line": 269
+        },
+        {
+          "heading": "Community 28 - \"public.dead_letter_queue\"",
+          "level": 3,
+          "line": 274
+        },
+        {
+          "heading": "Community 29 - \"32_subscription_engine.sql\"",
+          "level": 3,
+          "line": 279
+        },
+        {
+          "heading": "Community 30 - \"46_doctor_clinical_operations.sql\"",
+          "level": 3,
+          "line": 284
+        },
+        {
+          "heading": "Community 31 - \"response.ts\"",
+          "level": 3,
+          "line": 289
+        },
+        {
+          "heading": "Community 32 - \"05_notification_queue.sql\"",
+          "level": 3,
+          "line": 294
+        },
+        {
+          "heading": "Community 33 - \"09_abuse_protection_&_rate_limiting.sql\"",
+          "level": 3,
+          "line": 299
+        },
+        {
+          "heading": "Community 34 - \"31_doctor_leave_management.sql\"",
+          "level": 3,
+          "line": 304
+        },
+        {
+          "heading": "Community 35 - \"doctor-operations/index.ts\"",
+          "level": 3,
+          "line": 309
+        },
+        {
+          "heading": "Community 36 - \"11_realtime_presence_schedule_tasks.sql\"",
+          "level": 3,
+          "line": 314
+        },
+        {
+          "heading": "Community 37 - \"16_idempotency_hardening.sql\"",
+          "level": 3,
+          "line": 319
+        },
+        {
+          "heading": "Community 38 - \"multi_role_auth.test.ts\"",
+          "level": 3,
+          "line": 324
+        },
+        {
+          "heading": "Community 39 - \"19_background_worker_engine.sql\"",
+          "level": 3,
+          "line": 329
+        },
+        {
+          "heading": "Community 40 - \"06_background_job_queue.sql\"",
+          "level": 3,
+          "line": 334
+        },
+        {
+          "heading": "Community 41 - \"42_whatsapp_conversational_engine.sql\"",
+          "level": 3,
+          "line": 339
+        },
+        {
+          "heading": "Community 42 - \"22_partition_automation.sql\"",
+          "level": 3,
+          "line": 344
+        },
+        {
+          "heading": "Community 43 - \"26_migration_metadata_&_registry.sql\"",
+          "level": 3,
+          "line": 349
+        },
+        {
+          "heading": "Community 44 - \"23_retention_&_cleanup_engine.sql\"",
+          "level": 3,
+          "line": 354
+        },
+        {
+          "heading": "Community 45 - \"10_audit_&_security_engine.sql\"",
+          "level": 3,
+          "line": 359
+        },
+        {
+          "heading": "Community 46 - \"20_presence_engine.sql\"",
+          "level": 3,
+          "line": 364
+        },
+        {
+          "heading": "Community 47 - \"webhook_signature.ts\"",
+          "level": 3,
+          "line": 369
+        },
+        {
+          "heading": "Community 48 - \"24_operational-monitoring_engine.sql\"",
+          "level": 3,
+          "line": 374
+        },
+        {
+          "heading": "Community 49 - \"25_api_idempotency_registry.sql\"",
+          "level": 3,
+          "line": 379
+        },
+        {
+          "heading": "Community 50 - \"45_queue_operations.sql\"",
+          "level": 3,
+          "line": 384
+        },
+        {
+          "heading": "Community 52 - \"usage_retention.test.ts\"",
+          "level": 3,
+          "line": 389
+        },
+        {
+          "heading": "Community 53 - \"whatsapp_lifecycle.test.ts\"",
+          "level": 3,
+          "line": 394
+        },
+        {
+          "heading": "Community 54 - \"enqueueWhatsApp\"",
+          "level": 3,
+          "line": 399
+        },
+        {
+          "heading": "Community 56 - \"03_doctorscheduling&slotengine.sql\"",
+          "level": 3,
+          "line": 404
+        },
+        {
+          "heading": "Community 57 - \"seed_constants.ts\"",
+          "level": 3,
+          "line": 409
+        },
+        {
+          "heading": "Community 58 - \"gen_types.ts\"",
+          "level": 3,
+          "line": 414
+        },
+        {
+          "heading": "Community 59 - \"notifyQueuePositions\"",
+          "level": 3,
+          "line": 419
+        },
+        {
+          "heading": "Community 60 - \"reporting.ts\"",
+          "level": 3,
+          "line": 424
+        },
+        {
+          "heading": "Community 61 - \"verify-payment/index.ts\"",
+          "level": 3,
+          "line": 429
+        },
+        {
+          "heading": "Community 62 - \"39_schema_alignment.sql\"",
+          "level": 3,
+          "line": 434
+        },
+        {
+          "heading": "Community 64 - \"refund_sync.test.ts\"",
+          "level": 3,
+          "line": 439
+        },
+        {
+          "heading": "Community 67 - \"executive-analytics/index.ts\"",
+          "level": 3,
+          "line": 444
+        },
+        {
+          "heading": "Community 68 - \"queue-control/index.ts\"",
+          "level": 3,
+          "line": 449
+        },
+        {
+          "heading": "Knowledge Gaps",
+          "level": 2,
+          "line": 454
+        },
+        {
+          "heading": "Suggested Questions",
+          "level": 2,
+          "line": 462
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 74
+      }
+    },
+    {
+      "path": "graphify-out/graph.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 48759,
+      "nonEmptyLines": 48759,
+      "sections": [
+        {
+          "heading": "directed",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "multigraph",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "graph",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "nodes",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "links",
+          "level": 1,
+          "line": 16070
+        },
+        {
+          "heading": "hyperedges",
+          "level": 1,
+          "line": 48758
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "graphify-out/manifest.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 776,
+      "nonEmptyLines": 776,
+      "sections": [
+        {
+          "heading": ".qoder/repowiki/en/meta/repowiki-metadata.json",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "deno.json",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "scripts/gen_types.ts",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "scripts/validate_migrations.ts",
+          "level": 1,
+          "line": 20
+        },
+        {
+          "heading": "supabase/.temp/linked-project.json",
+          "level": 1,
+          "line": 26
+        },
+        {
+          "heading": "supabase/functions/_shared/audit.ts",
+          "level": 1,
+          "line": 32
+        },
+        {
+          "heading": "supabase/functions/_shared/auth.ts",
+          "level": 1,
+          "line": 38
+        },
+        {
+          "heading": "supabase/functions/_shared/booking_state.ts",
+          "level": 1,
+          "line": 44
+        },
+        {
+          "heading": "supabase/functions/_shared/cors.ts",
+          "level": 1,
+          "line": 50
+        },
+        {
+          "heading": "supabase/functions/_shared/database.generated.ts",
+          "level": 1,
+          "line": 56
+        },
+        {
+          "heading": "supabase/functions/_shared/db.ts",
+          "level": 1,
+          "line": 62
+        },
+        {
+          "heading": "supabase/functions/_shared/enterprise/broadcasts.ts",
+          "level": 1,
+          "line": 68
+        },
+        {
+          "heading": "supabase/functions/_shared/env.ts",
+          "level": 1,
+          "line": 74
+        },
+        {
+          "heading": "supabase/functions/_shared/errors.ts",
+          "level": 1,
+          "line": 80
+        },
+        {
+          "heading": "supabase/functions/_shared/idempotency.ts",
+          "level": 1,
+          "line": 86
+        },
+        {
+          "heading": "supabase/functions/_shared/logger.ts",
+          "level": 1,
+          "line": 92
+        },
+        {
+          "heading": "supabase/functions/_shared/metrics.ts",
+          "level": 1,
+          "line": 98
+        },
+        {
+          "heading": "supabase/functions/_shared/phone.ts",
+          "level": 1,
+          "line": 104
+        },
+        {
+          "heading": "supabase/functions/_shared/queue/queue_runtime.ts",
+          "level": 1,
+          "line": 110
+        },
+        {
+          "heading": "supabase/functions/_shared/rate_limit.ts",
+          "level": 1,
+          "line": 116
+        },
+        {
+          "heading": "supabase/functions/_shared/realtime.ts",
+          "level": 1,
+          "line": 122
+        },
+        {
+          "heading": "supabase/functions/_shared/reporting.ts",
+          "level": 1,
+          "line": 128
+        },
+        {
+          "heading": "supabase/functions/_shared/response.ts",
+          "level": 1,
+          "line": 134
+        },
+        {
+          "heading": "supabase/functions/_shared/tracing.ts",
+          "level": 1,
+          "line": 140
+        },
+        {
+          "heading": "supabase/functions/_shared/types.ts",
+          "level": 1,
+          "line": 146
+        },
+        {
+          "heading": "supabase/functions/_shared/validation.ts",
+          "level": 1,
+          "line": 152
+        },
+        {
+          "heading": "supabase/functions/_shared/webhook_signature.ts",
+          "level": 1,
+          "line": 158
+        },
+        {
+          "heading": "supabase/functions/_shared/whatsapp/whatsapp_booking_flow.ts",
+          "level": 1,
+          "line": 164
+        },
+        {
+          "heading": "supabase/functions/_shared/whatsapp/whatsapp_cancel_flow.ts",
+          "level": 1,
+          "line": 170
+        },
+        {
+          "heading": "supabase/functions/_shared/whatsapp/whatsapp_conversation_engine.ts",
+          "level": 1,
+          "line": 176
+        },
+        {
+          "heading": "supabase/functions/_shared/whatsapp/whatsapp_handoff_flow.ts",
+          "level": 1,
+          "line": 182
+        },
+        {
+          "heading": "supabase/functions/_shared/whatsapp/whatsapp_intent_router.ts",
+          "level": 1,
+          "line": 188
+        },
+        {
+          "heading": "supabase/functions/_shared/whatsapp/whatsapp_queue_flow.ts",
+          "level": 1,
+          "line": 194
+        },
+        {
+          "heading": "supabase/functions/_shared/whatsapp/whatsapp_reschedule_flow.ts",
+          "level": 1,
+          "line": 200
+        },
+        {
+          "heading": "supabase/functions/_shared/worker.ts",
+          "level": 1,
+          "line": 206
+        },
+        {
+          "heading": "supabase/functions/alert-center/index.ts",
+          "level": 1,
+          "line": 212
+        },
+        {
+          "heading": "supabase/functions/cancel-booking/index.ts",
+          "level": 1,
+          "line": 218
+        },
+        {
+          "heading": "supabase/functions/carry-forward-tokens/index.ts",
+          "level": 1,
+          "line": 224
+        },
+        {
+          "heading": "supabase/functions/command-center/index.ts",
+          "level": 1,
+          "line": 230
+        },
+        {
+          "heading": "supabase/functions/compute-sla/index.ts",
+          "level": 1,
+          "line": 236
+        },
+        {
+          "heading": "supabase/functions/create-booking/index.ts",
+          "level": 1,
+          "line": 242
+        },
+        {
+          "heading": "supabase/functions/create-payment-order/index.ts",
+          "level": 1,
+          "line": 248
+        },
+        {
+          "heading": "supabase/functions/doctor-operations/index.ts",
+          "level": 1,
+          "line": 254
+        },
+        {
+          "heading": "supabase/functions/enterprise-reports/index.ts",
+          "level": 1,
+          "line": 260
+        },
+        {
+          "heading": "supabase/functions/executive-analytics/index.ts",
+          "level": 1,
+          "line": 266
+        },
+        {
+          "heading": "supabase/functions/financial-command-center/index.ts",
+          "level": 1,
+          "line": 272
+        },
+        {
+          "heading": "supabase/functions/monitoring-health-check/index.ts",
+          "level": 1,
+          "line": 278
+        },
+        {
+          "heading": "supabase/functions/process-refund/index.ts",
+          "level": 1,
+          "line": 284
+        },
+        {
+          "heading": "supabase/functions/process-whatsapp-webhook/index.ts",
+          "level": 1,
+          "line": 290
+        },
+        {
+          "heading": "supabase/functions/queue-control/index.ts",
+          "level": 1,
+          "line": 296
+        },
+        {
+          "heading": "supabase/functions/queue-next-patient/index.ts",
+          "level": 1,
+          "line": 302
+        },
+        {
+          "heading": "supabase/functions/refresh-rollups/index.ts",
+          "level": 1,
+          "line": 308
+        },
+        {
+          "heading": "supabase/functions/reschedule-booking/index.ts",
+          "level": 1,
+          "line": 314
+        },
+        {
+          "heading": "supabase/functions/run-background-worker/index.ts",
+          "level": 1,
+          "line": 320
+        },
+        {
+          "heading": "supabase/functions/run-cron-minute/index.ts",
+          "level": 1,
+          "line": 326
+        },
+        {
+          "heading": "supabase/functions/run-cron-nightly/index.ts",
+          "level": 1,
+          "line": 332
+        },
+        {
+          "heading": "supabase/functions/send-reminders/index.ts",
+          "level": 1,
+          "line": 338
+        },
+        {
+          "heading": "supabase/functions/send-whatsapp-message/index.ts",
+          "level": 1,
+          "line": 344
+        },
+        {
+          "heading": "supabase/functions/settlement-engine/index.ts",
+          "level": 1,
+          "line": 350
+        },
+        {
+          "heading": "supabase/functions/update-booking-status/index.ts",
+          "level": 1,
+          "line": 356
+        },
+        {
+          "heading": "supabase/functions/verify-payment/index.ts",
+          "level": 1,
+          "line": 362
+        },
+        {
+          "heading": "supabase/migrations/01_foundation.sql",
+          "level": 1,
+          "line": 368
+        },
+        {
+          "heading": "supabase/migrations/02_atomic_token_engine_&_bookings.sql",
+          "level": 1,
+          "line": 374
+        },
+        {
+          "heading": "supabase/migrations/03_doctorscheduling&slotengine.sql",
+          "level": 1,
+          "line": 380
+        },
+        {
+          "heading": "supabase/migrations/04_whatsapp_messaging_engine.sql",
+          "level": 1,
+          "line": 386
+        },
+        {
+          "heading": "supabase/migrations/05_notification_queue.sql",
+          "level": 1,
+          "line": 392
+        },
+        {
+          "heading": "supabase/migrations/06_background_job_queue.sql",
+          "level": 1,
+          "line": 398
+        },
+        {
+          "heading": "supabase/migrations/07_settlement_engine.sql",
+          "level": 1,
+          "line": 404
+        },
+        {
+          "heading": "supabase/migrations/08_analytics_engine.sql",
+          "level": 1,
+          "line": 410
+        },
+        {
+          "heading": "supabase/migrations/09_abuse_protection_&_rate_limiting.sql",
+          "level": 1,
+          "line": 416
+        },
+        {
+          "heading": "supabase/migrations/10_audit_&_security_engine.sql",
+          "level": 1,
+          "line": 422
+        },
+        {
+          "heading": "supabase/migrations/11_realtime_presence_schedule_tasks.sql",
+          "level": 1,
+          "line": 428
+        },
+        {
+          "heading": "supabase/migrations/12_hospital_configuration_engine.sql",
+          "level": 1,
+          "line": 434
+        },
+        {
+          "heading": "supabase/migrations/13_payment_engine.sql",
+          "level": 1,
+          "line": 440
+        },
+        {
+          "heading": "supabase/migrations/14_dead_letter_queue.sql",
+          "level": 1,
+          "line": 446
+        },
+        {
+          "heading": "supabase/migrations/15_partitioning_strategy.sql",
+          "level": 1,
+          "line": 452
+        },
+        {
+          "heading": "supabase/migrations/16_idempotency_hardening.sql",
+          "level": 1,
+          "line": 458
+        },
+        {
+          "heading": "supabase/migrations/17_queue_monitoring_engine.sql",
+          "level": 1,
+          "line": 464
+        },
+        {
+          "heading": "supabase/migrations/18_config_versioning_&_rollback.sql",
+          "level": 1,
+          "line": 470
+        },
+        {
+          "heading": "supabase/migrations/19_background_worker_engine.sql",
+          "level": 1,
+          "line": 476
+        },
+        {
+          "heading": "supabase/migrations/20_presence_engine.sql",
+          "level": 1,
+          "line": 482
+        },
+        {
+          "heading": "supabase/migrations/21_analytics_rollups.sql",
+          "level": 1,
+          "line": 488
+        },
+        {
+          "heading": "supabase/migrations/22_partition_automation.sql",
+          "level": 1,
+          "line": 494
+        },
+        {
+          "heading": "supabase/migrations/23_retention_&_cleanup_engine.sql",
+          "level": 1,
+          "line": 500
+        },
+        {
+          "heading": "supabase/migrations/24_operational-monitoring_engine.sql",
+          "level": 1,
+          "line": 506
+        },
+        {
+          "heading": "supabase/migrations/25_api_idempotency_registry.sql",
+          "level": 1,
+          "line": 512
+        },
+        {
+          "heading": "supabase/migrations/26_migration_metadata_&_registry.sql",
+          "level": 1,
+          "line": 518
+        },
+        {
+          "heading": "supabase/migrations/27_role_permissions.sql",
+          "level": 1,
+          "line": 524
+        },
+        {
+          "heading": "supabase/migrations/28_booking_enhancements.sql",
+          "level": 1,
+          "line": 530
+        },
+        {
+          "heading": "supabase/migrations/29_cancellation_policy.sql",
+          "level": 1,
+          "line": 536
+        },
+        {
+          "heading": "supabase/migrations/30_device_sessions.sql",
+          "level": 1,
+          "line": 542
+        },
+        {
+          "heading": "supabase/migrations/31_doctor_leave_management.sql",
+          "level": 1,
+          "line": 548
+        },
+        {
+          "heading": "supabase/migrations/32_subscription_engine.sql",
+          "level": 1,
+          "line": 554
+        },
+        {
+          "heading": "supabase/migrations/33_settlement_engine_refactor.sql",
+          "level": 1,
+          "line": 560
+        },
+        {
+          "heading": "supabase/migrations/34_payment_ledger_cleanup.sql",
+          "level": 1,
+          "line": 566
+        },
+        {
+          "heading": "supabase/migrations/35_hospital_config_enhancements.sql",
+          "level": 1,
+          "line": 572
+        },
+        {
+          "heading": "supabase/migrations/36_audit_standardization.sql",
+          "level": 1,
+          "line": 578
+        },
+        {
+          "heading": "supabase/migrations/37_feature_flags.sql",
+          "level": 1,
+          "line": 584
+        },
+        {
+          "heading": "supabase/migrations/38_missing_rpc_functions.sql",
+          "level": 1,
+          "line": 590
+        },
+        {
+          "heading": "supabase/migrations/39_schema_alignment.sql",
+          "level": 1,
+          "line": 596
+        },
+        {
+          "heading": "supabase/migrations/40_subscription_usage_engine.sql",
+          "level": 1,
+          "line": 602
+        },
+        {
+          "heading": "supabase/migrations/41_integration_hardening.sql",
+          "level": 1,
+          "line": 608
+        },
+        {
+          "heading": "supabase/migrations/42_whatsapp_conversational_engine.sql",
+          "level": 1,
+          "line": 614
+        },
+        {
+          "heading": "supabase/migrations/43_queue_runtime.sql",
+          "level": 1,
+          "line": 620
+        },
+        {
+          "heading": "supabase/migrations/44_queue_runtime_flag.sql",
+          "level": 1,
+          "line": 626
+        },
+        {
+          "heading": "supabase/migrations/45_queue_operations.sql",
+          "level": 1,
+          "line": 632
+        },
+        {
+          "heading": "supabase/migrations/46_doctor_clinical_operations.sql",
+          "level": 1,
+          "line": 638
+        },
+        {
+          "heading": "supabase/migrations/47_enterprise_command_center.sql",
+          "level": 1,
+          "line": 644
+        },
+        {
+          "heading": "supabase/migrations/48_privilege_hardening.sql",
+          "level": 1,
+          "line": 650
+        },
+        {
+          "heading": "supabase/migrations/49_phase_1_5_defect_fixes.sql",
+          "level": 1,
+          "line": 656
+        },
+        {
+          "heading": "supabase/seed.sql",
+          "level": 1,
+          "line": 662
+        },
+        {
+          "heading": "tests/integration/doctor_operations.test.ts",
+          "level": 1,
+          "line": 668
+        },
+        {
+          "heading": "tests/integration/enterprise_command_center.test.ts",
+          "level": 1,
+          "line": 674
+        },
+        {
+          "heading": "tests/integration/local_stack.test.ts",
+          "level": 1,
+          "line": 680
+        },
+        {
+          "heading": "tests/integration/multi_role_auth.test.ts",
+          "level": 1,
+          "line": 686
+        },
+        {
+          "heading": "tests/integration/privilege_isolation.test.ts",
+          "level": 1,
+          "line": 692
+        },
+        {
+          "heading": "tests/integration/queue_operations.test.ts",
+          "level": 1,
+          "line": 698
+        },
+        {
+          "heading": "tests/integration/queue_runtime.test.ts",
+          "level": 1,
+          "line": 704
+        },
+        {
+          "heading": "tests/integration/refund_sync.test.ts",
+          "level": 1,
+          "line": 710
+        },
+        {
+          "heading": "tests/integration/usage_retention.test.ts",
+          "level": 1,
+          "line": 716
+        },
+        {
+          "heading": "tests/integration/whatsapp_conversational.test.ts",
+          "level": 1,
+          "line": 722
+        },
+        {
+          "heading": "tests/integration/whatsapp_lifecycle.test.ts",
+          "level": 1,
+          "line": 728
+        },
+        {
+          "heading": "tests/unit/audit_reliability.test.ts",
+          "level": 1,
+          "line": 734
+        },
+        {
+          "heading": "tests/unit/errors.test.ts",
+          "level": 1,
+          "line": 740
+        },
+        {
+          "heading": "tests/unit/response.test.ts",
+          "level": 1,
+          "line": 746
+        },
+        {
+          "heading": "tests/unit/validation.test.ts",
+          "level": 1,
+          "line": 752
+        },
+        {
+          "heading": "tests/unit/webhook_signature.test.ts",
+          "level": 1,
+          "line": 758
+        },
+        {
+          "heading": "tests/utils/seed_constants.ts",
+          "level": 1,
+          "line": 764
+        },
+        {
+          "heading": "tests/utils/setup_env.ts",
+          "level": 1,
+          "line": 770
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 129
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "projectRoot": "d:/Projects/datasets/setura",
+  "batchFiles": [
+    {"path": "tests/integration/doctor_operations.test.ts", "language": "typescript", "sizeLines": 1244, "fileCategory": "code"},
+    {"path": "tests/integration/local_stack.test.ts", "language": "typescript", "sizeLines": 285, "fileCategory": "code"},
+    {"path": "tests/integration/queue_operations.test.ts", "language": "typescript", "sizeLines": 840, "fileCategory": "code"},
+    {"path": "tests/integration/queue_runtime.test.ts", "language": "typescript", "sizeLines": 951, "fileCategory": "code"},
+    {"path": "tests/integration/refund_sync.test.ts", "language": "typescript", "sizeLines": 277, "fileCategory": "code"},
+    {"path": "tests/integration/usage_retention.test.ts", "language": "typescript", "sizeLines": 375, "fileCategory": "code"},
+    {"path": "tests/integration/whatsapp_conversational.test.ts", "language": "typescript", "sizeLines": 1025, "fileCategory": "code"},
+    {"path": "tests/integration/whatsapp_lifecycle.test.ts", "language": "typescript", "sizeLines": 435, "fileCategory": "code"},
+    {"path": "tests/utils/seed_constants.ts", "language": "typescript", "sizeLines": 34, "fileCategory": "code"}
+  ],
+  "batchImportData": {
+    "tests/integration/doctor_operations.test.ts": ["tests/utils/seed_constants.ts"],
+    "tests/integration/local_stack.test.ts": ["tests/utils/seed_constants.ts"],
+    "tests/integration/queue_operations.test.ts": ["tests/utils/seed_constants.ts"],
+    "tests/integration/queue_runtime.test.ts": ["tests/utils/seed_constants.ts"],
+    "tests/integration/refund_sync.test.ts": ["tests/utils/seed_constants.ts"],
+    "tests/integration/usage_retention.test.ts": ["tests/utils/seed_constants.ts"],
+    "tests/integration/whatsapp_conversational.test.ts": ["tests/utils/seed_constants.ts"],
+    "tests/integration/whatsapp_lifecycle.test.ts": ["tests/utils/seed_constants.ts"],
+    "tests/utils/seed_constants.ts": []
+  }
+}

@@ -1,0 +1,2088 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 21,
+  "filesSkipped": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 21,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 21,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "results": [
+    {
+      "path": "supabase/functions/_shared/auth.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 363,
+      "nonEmptyLines": 316,
+      "functions": [
+        {
+          "name": "extractJwt",
+          "startLine": 32,
+          "endLine": 38,
+          "params": [
+            "req"
+          ]
+        },
+        {
+          "name": "selectRole",
+          "startLine": 78,
+          "endLine": 121,
+          "params": [
+            "rows",
+            "scope",
+            "userId",
+            "logger"
+          ]
+        },
+        {
+          "name": "resolveAuth",
+          "startLine": 138,
+          "endLine": 259,
+          "params": [
+            "req",
+            "hospitalId",
+            "logger"
+          ]
+        },
+        {
+          "name": "requireRole",
+          "startLine": 267,
+          "endLine": 278,
+          "params": [
+            "auth",
+            "required"
+          ]
+        },
+        {
+          "name": "requireHospitalAccess",
+          "startLine": 280,
+          "endLine": 288,
+          "params": [
+            "auth",
+            "hospitalId"
+          ]
+        },
+        {
+          "name": "isGlobalAdmin",
+          "startLine": 290,
+          "endLine": 292,
+          "params": [
+            "auth"
+          ]
+        },
+        {
+          "name": "hasRole",
+          "startLine": 294,
+          "endLine": 297,
+          "params": [
+            "auth",
+            "role"
+          ]
+        },
+        {
+          "name": "canManageQueue",
+          "startLine": 299,
+          "endLine": 305,
+          "params": [
+            "auth"
+          ]
+        },
+        {
+          "name": "canViewAnalytics",
+          "startLine": 307,
+          "endLine": 312,
+          "params": [
+            "auth"
+          ]
+        },
+        {
+          "name": "withAuth",
+          "startLine": 330,
+          "endLine": 363,
+          "params": [
+            "handler",
+            "opts",
+            "logger"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "extractJwt",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "ROLE_HIERARCHY",
+          "line": 45,
+          "isDefault": false
+        },
+        {
+          "name": "resolveAuth",
+          "line": 138,
+          "isDefault": false
+        },
+        {
+          "name": "requireRole",
+          "line": 267,
+          "isDefault": false
+        },
+        {
+          "name": "requireHospitalAccess",
+          "line": 280,
+          "isDefault": false
+        },
+        {
+          "name": "isGlobalAdmin",
+          "line": 290,
+          "isDefault": false
+        },
+        {
+          "name": "hasRole",
+          "line": 294,
+          "isDefault": false
+        },
+        {
+          "name": "canManageQueue",
+          "line": 299,
+          "isDefault": false
+        },
+        {
+          "name": "canViewAnalytics",
+          "line": 307,
+          "isDefault": false
+        },
+        {
+          "name": "withAuth",
+          "line": 330,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "extractJwt",
+          "callee": "req.headers.get",
+          "lineNumber": 33
+        },
+        {
+          "caller": "extractJwt",
+          "callee": "auth.split",
+          "lineNumber": 35
+        },
+        {
+          "caller": "extractJwt",
+          "callee": "scheme?.toLowerCase",
+          "lineNumber": 36
+        },
+        {
+          "caller": "selectRole",
+          "callee": "rows.filter",
+          "lineNumber": 88
+        },
+        {
+          "caller": "selectRole",
+          "callee": "primaries.reduce",
+          "lineNumber": 95
+        },
+        {
+          "caller": "selectRole",
+          "callee": "logger?.warn",
+          "lineNumber": 101
+        },
+        {
+          "caller": "selectRole",
+          "callee": "primaries.map",
+          "lineNumber": 104
+        },
+        {
+          "caller": "selectRole",
+          "callee": "logger?.error",
+          "lineNumber": 114
+        },
+        {
+          "caller": "selectRole",
+          "callee": "rows.map",
+          "lineNumber": 117
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "extractJwt",
+          "lineNumber": 143
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "createAuthClient",
+          "lineNumber": 150
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "authClient.auth.getUser",
+          "lineNumber": 151
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "logger?.warn",
+          "lineNumber": 154
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "getServiceClient",
+          "lineNumber": 159
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "db\n    .from(\"profiles\")\n    .select(\"*\")\n    .eq(\"id\", user.id)\n    .single",
+          "lineNumber": 160
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "db\n    .from(\"profiles\")\n    .select(\"*\")\n    .eq",
+          "lineNumber": 160
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "db\n    .from(\"profiles\")\n    .select",
+          "lineNumber": 160
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "db\n    .from",
+          "lineNumber": 160
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "db\n      .from(\"user_roles\")\n      .select(\"role, is_primary\")\n      .eq(\"user_id\", user.id)\n      .eq",
+          "lineNumber": 182
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "db\n      .from(\"user_roles\")\n      .select(\"role, is_primary\")\n      .eq",
+          "lineNumber": 182
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "db\n      .from(\"user_roles\")\n      .select",
+          "lineNumber": 182
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "db\n      .from",
+          "lineNumber": 182
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "logger?.error",
+          "lineNumber": 190
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "selectRole",
+          "lineNumber": 200
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "db\n        .from(\"user_roles\")\n        .select(\"role\")\n        .eq(\"user_id\", user.id)\n        .eq(\"role\", \"global_admin\")\n        .limit",
+          "lineNumber": 214
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "db\n        .from(\"user_roles\")\n        .select(\"role\")\n        .eq(\"user_id\", user.id)\n        .eq",
+          "lineNumber": 214
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "db\n        .from(\"user_roles\")\n        .select(\"role\")\n        .eq",
+          "lineNumber": 214
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "db\n        .from(\"user_roles\")\n        .select",
+          "lineNumber": 214
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "db\n        .from",
+          "lineNumber": 214
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "db\n      .from(\"user_roles\")\n      .select(\"role, is_primary\")\n      .eq",
+          "lineNumber": 234
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "db\n      .from(\"user_roles\")\n      .select",
+          "lineNumber": 234
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "db\n      .from",
+          "lineNumber": 234
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "logger?.error",
+          "lineNumber": 240
+        },
+        {
+          "caller": "resolveAuth",
+          "callee": "selectRole",
+          "lineNumber": 243
+        },
+        {
+          "caller": "requireRole",
+          "callee": "required.includes",
+          "lineNumber": 275
+        },
+        {
+          "caller": "withAuth",
+          "callee": "import",
+          "lineNumber": 340
+        },
+        {
+          "caller": "withAuth",
+          "callee": "handleCors",
+          "lineNumber": 341
+        },
+        {
+          "caller": "withAuth",
+          "callee": "import",
+          "lineNumber": 344
+        },
+        {
+          "caller": "withAuth",
+          "callee": "req.headers.get",
+          "lineNumber": 345
+        },
+        {
+          "caller": "withAuth",
+          "callee": "crypto.randomUUID",
+          "lineNumber": 346
+        },
+        {
+          "caller": "withAuth",
+          "callee": "req.headers.get",
+          "lineNumber": 350
+        },
+        {
+          "caller": "withAuth",
+          "callee": "resolveAuth",
+          "lineNumber": 352
+        },
+        {
+          "caller": "withAuth",
+          "callee": "requireRole",
+          "lineNumber": 355
+        },
+        {
+          "caller": "withAuth",
+          "callee": "handler",
+          "lineNumber": 358
+        },
+        {
+          "caller": "withAuth",
+          "callee": "handleErrorResponse",
+          "lineNumber": 360
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 10,
+        "functionCount": 10,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/_shared/errors.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 322,
+      "nonEmptyLines": 288,
+      "functions": [
+        {
+          "name": "isSeturError",
+          "startLine": 316,
+          "endLine": 318,
+          "params": [
+            "err"
+          ]
+        },
+        {
+          "name": "isRetryable",
+          "startLine": 320,
+          "endLine": 322,
+          "params": [
+            "err"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "SeturError",
+          "startLine": 70,
+          "endLine": 104,
+          "methods": [
+            "constructor",
+            "toJSON"
+          ],
+          "properties": [
+            "code",
+            "statusCode",
+            "retryable",
+            "context",
+            "timestamp"
+          ]
+        },
+        {
+          "name": "UnauthorizedError",
+          "startLine": 108,
+          "endLine": 113,
+          "methods": [
+            "constructor"
+          ],
+          "properties": []
+        },
+        {
+          "name": "ForbiddenError",
+          "startLine": 115,
+          "endLine": 120,
+          "methods": [
+            "constructor"
+          ],
+          "properties": []
+        },
+        {
+          "name": "HospitalAccessDeniedError",
+          "startLine": 122,
+          "endLine": 135,
+          "methods": [
+            "constructor"
+          ],
+          "properties": []
+        },
+        {
+          "name": "RoleInsufficientError",
+          "startLine": 137,
+          "endLine": 150,
+          "methods": [
+            "constructor"
+          ],
+          "properties": []
+        },
+        {
+          "name": "ValidationError",
+          "startLine": 154,
+          "endLine": 162,
+          "methods": [
+            "constructor"
+          ],
+          "properties": [
+            "fieldErrors"
+          ]
+        },
+        {
+          "name": "BookingDuplicateError",
+          "startLine": 166,
+          "endLine": 180,
+          "methods": [
+            "constructor"
+          ],
+          "properties": []
+        },
+        {
+          "name": "HospitalClosedError",
+          "startLine": 182,
+          "endLine": 190,
+          "methods": [
+            "constructor"
+          ],
+          "properties": []
+        },
+        {
+          "name": "QueueFullError",
+          "startLine": 192,
+          "endLine": 201,
+          "methods": [
+            "constructor"
+          ],
+          "properties": []
+        },
+        {
+          "name": "TokenExhaustedError",
+          "startLine": 203,
+          "endLine": 217,
+          "methods": [
+            "constructor"
+          ],
+          "properties": []
+        },
+        {
+          "name": "DoctorUnavailableError",
+          "startLine": 219,
+          "endLine": 228,
+          "methods": [
+            "constructor"
+          ],
+          "properties": []
+        },
+        {
+          "name": "PatientBlockedError",
+          "startLine": 230,
+          "endLine": 243,
+          "methods": [
+            "constructor"
+          ],
+          "properties": []
+        },
+        {
+          "name": "IdempotencyKeyRequiredError",
+          "startLine": 247,
+          "endLine": 257,
+          "methods": [
+            "constructor"
+          ],
+          "properties": []
+        },
+        {
+          "name": "IdempotencyProcessingError",
+          "startLine": 259,
+          "endLine": 270,
+          "methods": [
+            "constructor"
+          ],
+          "properties": []
+        },
+        {
+          "name": "RateLimitError",
+          "startLine": 274,
+          "endLine": 282,
+          "methods": [
+            "constructor"
+          ],
+          "properties": []
+        },
+        {
+          "name": "ConcurrencyError",
+          "startLine": 286,
+          "endLine": 291,
+          "methods": [
+            "constructor"
+          ],
+          "properties": []
+        },
+        {
+          "name": "DbError",
+          "startLine": 295,
+          "endLine": 300,
+          "methods": [
+            "constructor"
+          ],
+          "properties": []
+        },
+        {
+          "name": "InternalError",
+          "startLine": 304,
+          "endLine": 312,
+          "methods": [
+            "constructor"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "SeturError",
+          "line": 70,
+          "isDefault": false
+        },
+        {
+          "name": "UnauthorizedError",
+          "line": 108,
+          "isDefault": false
+        },
+        {
+          "name": "ForbiddenError",
+          "line": 115,
+          "isDefault": false
+        },
+        {
+          "name": "HospitalAccessDeniedError",
+          "line": 122,
+          "isDefault": false
+        },
+        {
+          "name": "RoleInsufficientError",
+          "line": 137,
+          "isDefault": false
+        },
+        {
+          "name": "ValidationError",
+          "line": 154,
+          "isDefault": false
+        },
+        {
+          "name": "BookingDuplicateError",
+          "line": 166,
+          "isDefault": false
+        },
+        {
+          "name": "HospitalClosedError",
+          "line": 182,
+          "isDefault": false
+        },
+        {
+          "name": "QueueFullError",
+          "line": 192,
+          "isDefault": false
+        },
+        {
+          "name": "TokenExhaustedError",
+          "line": 203,
+          "isDefault": false
+        },
+        {
+          "name": "DoctorUnavailableError",
+          "line": 219,
+          "isDefault": false
+        },
+        {
+          "name": "PatientBlockedError",
+          "line": 230,
+          "isDefault": false
+        },
+        {
+          "name": "IdempotencyKeyRequiredError",
+          "line": 247,
+          "isDefault": false
+        },
+        {
+          "name": "IdempotencyProcessingError",
+          "line": 259,
+          "isDefault": false
+        },
+        {
+          "name": "RateLimitError",
+          "line": 274,
+          "isDefault": false
+        },
+        {
+          "name": "ConcurrencyError",
+          "line": 286,
+          "isDefault": false
+        },
+        {
+          "name": "DbError",
+          "line": 295,
+          "isDefault": false
+        },
+        {
+          "name": "InternalError",
+          "line": 304,
+          "isDefault": false
+        },
+        {
+          "name": "isSeturError",
+          "line": 316,
+          "isDefault": false
+        },
+        {
+          "name": "isRetryable",
+          "line": 320,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 84
+        },
+        {
+          "caller": "constructor",
+          "callee": "new Date().toISOString",
+          "lineNumber": 90
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 110
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 117
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 124
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 139
+        },
+        {
+          "caller": "constructor",
+          "callee": "required.join",
+          "lineNumber": 140
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 158
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 168
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 184
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 194
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 205
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 221
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 232
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 249
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 261
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 276
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 288
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 297
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 309
+        },
+        {
+          "caller": "isRetryable",
+          "callee": "isSeturError",
+          "lineNumber": 321
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 20,
+        "functionCount": 2,
+        "classCount": 18
+      }
+    },
+    {
+      "path": "supabase/functions/_shared/rate_limit.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 123,
+      "nonEmptyLines": 109,
+      "functions": [
+        {
+          "name": "checkAndLogBookingAttempt",
+          "startLine": 27,
+          "endLine": 111,
+          "params": [
+            "phone",
+            "ip",
+            "config",
+            "logger"
+          ]
+        },
+        {
+          "name": "extractIp",
+          "startLine": 116,
+          "endLine": 123,
+          "params": [
+            "req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "checkAndLogBookingAttempt",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "extractIp",
+          "line": 116,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "normalizePhone",
+          "lineNumber": 33
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "getServiceClient",
+          "lineNumber": 37
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "db\n    .from(\"blocked_numbers\")\n    .select(\"id\")\n    .eq(\"hospital_id\", config.hospitalId)\n    .eq(\"normalized_phone\", normalized)\n    .eq(\"restriction_status\", \"active\")\n    .gt(\"blocked_until\", new Date().toISOString())\n    .single",
+          "lineNumber": 40
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "db\n    .from(\"blocked_numbers\")\n    .select(\"id\")\n    .eq(\"hospital_id\", config.hospitalId)\n    .eq(\"normalized_phone\", normalized)\n    .eq(\"restriction_status\", \"active\")\n    .gt",
+          "lineNumber": 40
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "db\n    .from(\"blocked_numbers\")\n    .select(\"id\")\n    .eq(\"hospital_id\", config.hospitalId)\n    .eq(\"normalized_phone\", normalized)\n    .eq",
+          "lineNumber": 40
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "db\n    .from(\"blocked_numbers\")\n    .select(\"id\")\n    .eq(\"hospital_id\", config.hospitalId)\n    .eq",
+          "lineNumber": 40
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "db\n    .from(\"blocked_numbers\")\n    .select(\"id\")\n    .eq",
+          "lineNumber": 40
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "db\n    .from(\"blocked_numbers\")\n    .select",
+          "lineNumber": 40
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "db\n    .from",
+          "lineNumber": 40
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "new Date().toISOString",
+          "lineNumber": 46
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "logger.warn",
+          "lineNumber": 50
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "new Date(\n    Date.now() - windowMinutes * 60 * 1000,\n  ).toISOString",
+          "lineNumber": 61
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "Date.now",
+          "lineNumber": 62
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "db\n    .from(\"booking_attempt_logs\")\n    .select(\"id\", { count: \"exact\", head: true })\n    .eq(\"hospital_id\", config.hospitalId)\n    .eq(\"normalized_phone\", normalized)\n    .gte",
+          "lineNumber": 65
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "db\n    .from(\"booking_attempt_logs\")\n    .select(\"id\", { count: \"exact\", head: true })\n    .eq(\"hospital_id\", config.hospitalId)\n    .eq",
+          "lineNumber": 65
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "db\n    .from(\"booking_attempt_logs\")\n    .select(\"id\", { count: \"exact\", head: true })\n    .eq",
+          "lineNumber": 65
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "db\n    .from(\"booking_attempt_logs\")\n    .select",
+          "lineNumber": 65
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "db\n    .from",
+          "lineNumber": 65
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "logger.warn",
+          "lineNumber": 74
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "db.from(\"booking_attempt_logs\").insert",
+          "lineNumber": 82
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "db.from",
+          "lineNumber": 82
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "logger.warn",
+          "lineNumber": 89
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "db.from(\"booking_attempt_logs\").insert",
+          "lineNumber": 105
+        },
+        {
+          "caller": "checkAndLogBookingAttempt",
+          "callee": "db.from",
+          "lineNumber": 105
+        },
+        {
+          "caller": "extractIp",
+          "callee": "req.headers.get(\"X-Forwarded-For\")?.split(\",\")[0]?.trim",
+          "lineNumber": 118
+        },
+        {
+          "caller": "extractIp",
+          "callee": "req.headers.get(\"X-Forwarded-For\")?.split",
+          "lineNumber": 118
+        },
+        {
+          "caller": "extractIp",
+          "callee": "req.headers.get",
+          "lineNumber": 118
+        },
+        {
+          "caller": "extractIp",
+          "callee": "req.headers.get",
+          "lineNumber": 119
+        },
+        {
+          "caller": "extractIp",
+          "callee": "req.headers.get",
+          "lineNumber": 120
+        }
+      ],
+      "metrics": {
+        "importCount": 5,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/_shared/reporting.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 113,
+      "nonEmptyLines": 95,
+      "functions": [
+        {
+          "name": "isPlainObject",
+          "startLine": 22,
+          "endLine": 24,
+          "params": [
+            "v"
+          ]
+        },
+        {
+          "name": "flattenObject",
+          "startLine": 27,
+          "endLine": 46,
+          "params": [
+            "obj",
+            "prefix"
+          ]
+        },
+        {
+          "name": "csvEscape",
+          "startLine": 48,
+          "endLine": 54,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "reportToCsv",
+          "startLine": 61,
+          "endLine": 91,
+          "params": [
+            "report"
+          ]
+        },
+        {
+          "name": "reportToPdfReady",
+          "startLine": 94,
+          "endLine": 113,
+          "params": [
+            "report"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "flattenObject",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "reportToCsv",
+          "line": 61,
+          "isDefault": false
+        },
+        {
+          "name": "reportToPdfReady",
+          "line": 94,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "isPlainObject",
+          "callee": "Array.isArray",
+          "lineNumber": 23
+        },
+        {
+          "caller": "flattenObject",
+          "callee": "Object.entries",
+          "lineNumber": 33
+        },
+        {
+          "caller": "flattenObject",
+          "callee": "isPlainObject",
+          "lineNumber": 36
+        },
+        {
+          "caller": "flattenObject",
+          "callee": "out.push",
+          "lineNumber": 37
+        },
+        {
+          "caller": "flattenObject",
+          "callee": "flattenObject",
+          "lineNumber": 37
+        },
+        {
+          "caller": "flattenObject",
+          "callee": "Array.isArray",
+          "lineNumber": 38
+        },
+        {
+          "caller": "flattenObject",
+          "callee": "out.push",
+          "lineNumber": 39
+        },
+        {
+          "caller": "flattenObject",
+          "callee": "JSON.stringify",
+          "lineNumber": 39
+        },
+        {
+          "caller": "flattenObject",
+          "callee": "out.push",
+          "lineNumber": 41
+        },
+        {
+          "caller": "csvEscape",
+          "callee": "String",
+          "lineNumber": 49
+        },
+        {
+          "caller": "csvEscape",
+          "callee": "/[\",\\n]/.test",
+          "lineNumber": 50
+        },
+        {
+          "caller": "csvEscape",
+          "callee": "s.replaceAll",
+          "lineNumber": 51
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "isPlainObject",
+          "lineNumber": 62
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "Array.isArray",
+          "lineNumber": 63
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "rows.every",
+          "lineNumber": 65
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "isPlainObject",
+          "lineNumber": 65
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "Array.from",
+          "lineNumber": 66
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "rows.reduce",
+          "lineNumber": 67
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "Object.keys",
+          "lineNumber": 68
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "acc.add",
+          "lineNumber": 68
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "columns.map(csvEscape).join",
+          "lineNumber": 73
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "columns.map",
+          "lineNumber": 73
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "lines.push",
+          "lineNumber": 77
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "columns.map((c) => csvEscape(r[c])).join",
+          "lineNumber": 77
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "columns.map",
+          "lineNumber": 77
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "csvEscape",
+          "lineNumber": 77
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "lines.join",
+          "lineNumber": 80
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "flattenObject",
+          "lineNumber": 83
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "lines.push",
+          "lineNumber": 87
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "csvEscape",
+          "lineNumber": 87
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "csvEscape",
+          "lineNumber": 87
+        },
+        {
+          "caller": "reportToCsv",
+          "callee": "lines.join",
+          "lineNumber": 90
+        },
+        {
+          "caller": "reportToPdfReady",
+          "callee": "isPlainObject",
+          "lineNumber": 95
+        },
+        {
+          "caller": "reportToPdfReady",
+          "callee": "Object.entries(data).map",
+          "lineNumber": 97
+        },
+        {
+          "caller": "reportToPdfReady",
+          "callee": "Object.entries",
+          "lineNumber": 97
+        },
+        {
+          "caller": "reportToPdfReady",
+          "callee": "isPlainObject",
+          "lineNumber": 99
+        },
+        {
+          "caller": "reportToPdfReady",
+          "callee": "Array.isArray",
+          "lineNumber": 99
+        },
+        {
+          "caller": "reportToPdfReady",
+          "callee": "String",
+          "lineNumber": 105
+        },
+        {
+          "caller": "reportToPdfReady",
+          "callee": "new Date().toISOString",
+          "lineNumber": 109
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/_shared/response.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 205,
+      "nonEmptyLines": 190,
+      "functions": [
+        {
+          "name": "json",
+          "startLine": 34,
+          "endLine": 42,
+          "params": [
+            "body",
+            "status",
+            "req"
+          ]
+        },
+        {
+          "name": "successResponse",
+          "startLine": 44,
+          "endLine": 59,
+          "params": [
+            "data",
+            "correlationId",
+            "req",
+            "meta",
+            "status"
+          ]
+        },
+        {
+          "name": "createdResponse",
+          "startLine": 61,
+          "endLine": 67,
+          "params": [
+            "data",
+            "correlationId",
+            "req"
+          ]
+        },
+        {
+          "name": "errorResponse",
+          "startLine": 69,
+          "endLine": 92,
+          "params": [
+            "code",
+            "message",
+            "statusCode",
+            "correlationId",
+            "req",
+            "extra"
+          ]
+        },
+        {
+          "name": "fromSeturError",
+          "startLine": 94,
+          "endLine": 112,
+          "params": [
+            "err",
+            "correlationId",
+            "req"
+          ]
+        },
+        {
+          "name": "unauthorizedResponse",
+          "startLine": 114,
+          "endLine": 125,
+          "params": [
+            "correlationId",
+            "req"
+          ]
+        },
+        {
+          "name": "forbiddenResponse",
+          "startLine": 127,
+          "endLine": 132,
+          "params": [
+            "correlationId",
+            "req"
+          ]
+        },
+        {
+          "name": "validationErrorResponse",
+          "startLine": 134,
+          "endLine": 143,
+          "params": [
+            "message",
+            "fieldErrors",
+            "correlationId",
+            "req"
+          ]
+        },
+        {
+          "name": "conflictResponse",
+          "startLine": 145,
+          "endLine": 152,
+          "params": [
+            "code",
+            "message",
+            "correlationId",
+            "req"
+          ]
+        },
+        {
+          "name": "rateLimitResponse",
+          "startLine": 154,
+          "endLine": 177,
+          "params": [
+            "retryAfterSeconds",
+            "correlationId",
+            "req"
+          ]
+        },
+        {
+          "name": "internalErrorResponse",
+          "startLine": 179,
+          "endLine": 190,
+          "params": [
+            "correlationId",
+            "req"
+          ]
+        },
+        {
+          "name": "handleErrorResponse",
+          "startLine": 196,
+          "endLine": 205,
+          "params": [
+            "err",
+            "correlationId",
+            "req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "successResponse",
+          "line": 44,
+          "isDefault": false
+        },
+        {
+          "name": "createdResponse",
+          "line": 61,
+          "isDefault": false
+        },
+        {
+          "name": "errorResponse",
+          "line": 69,
+          "isDefault": false
+        },
+        {
+          "name": "fromSeturError",
+          "line": 94,
+          "isDefault": false
+        },
+        {
+          "name": "unauthorizedResponse",
+          "line": 114,
+          "isDefault": false
+        },
+        {
+          "name": "forbiddenResponse",
+          "line": 127,
+          "isDefault": false
+        },
+        {
+          "name": "validationErrorResponse",
+          "line": 134,
+          "isDefault": false
+        },
+        {
+          "name": "conflictResponse",
+          "line": 145,
+          "isDefault": false
+        },
+        {
+          "name": "rateLimitResponse",
+          "line": 154,
+          "isDefault": false
+        },
+        {
+          "name": "internalErrorResponse",
+          "line": 179,
+          "isDefault": false
+        },
+        {
+          "name": "handleErrorResponse",
+          "line": 196,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "json",
+          "callee": "JSON.stringify",
+          "lineNumber": 35
+        },
+        {
+          "caller": "json",
+          "callee": "buildCorsHeaders",
+          "lineNumber": 39
+        },
+        {
+          "caller": "json",
+          "callee": "req?.headers.get",
+          "lineNumber": 39
+        },
+        {
+          "caller": "successResponse",
+          "callee": "new Date().toISOString",
+          "lineNumber": 55
+        },
+        {
+          "caller": "successResponse",
+          "callee": "json",
+          "lineNumber": 58
+        },
+        {
+          "caller": "createdResponse",
+          "callee": "successResponse",
+          "lineNumber": 66
+        },
+        {
+          "caller": "errorResponse",
+          "callee": "new Date().toISOString",
+          "lineNumber": 89
+        },
+        {
+          "caller": "errorResponse",
+          "callee": "json",
+          "lineNumber": 91
+        },
+        {
+          "caller": "fromSeturError",
+          "callee": "errorResponse",
+          "lineNumber": 99
+        },
+        {
+          "caller": "unauthorizedResponse",
+          "callee": "errorResponse",
+          "lineNumber": 118
+        },
+        {
+          "caller": "forbiddenResponse",
+          "callee": "errorResponse",
+          "lineNumber": 131
+        },
+        {
+          "caller": "validationErrorResponse",
+          "callee": "errorResponse",
+          "lineNumber": 140
+        },
+        {
+          "caller": "conflictResponse",
+          "callee": "errorResponse",
+          "lineNumber": 151
+        },
+        {
+          "caller": "rateLimitResponse",
+          "callee": "new Date().toISOString",
+          "lineNumber": 167
+        },
+        {
+          "caller": "rateLimitResponse",
+          "callee": "JSON.stringify",
+          "lineNumber": 169
+        },
+        {
+          "caller": "rateLimitResponse",
+          "callee": "String",
+          "lineNumber": 173
+        },
+        {
+          "caller": "rateLimitResponse",
+          "callee": "buildCorsHeaders",
+          "lineNumber": 174
+        },
+        {
+          "caller": "rateLimitResponse",
+          "callee": "req?.headers.get",
+          "lineNumber": 174
+        },
+        {
+          "caller": "internalErrorResponse",
+          "callee": "errorResponse",
+          "lineNumber": 183
+        },
+        {
+          "caller": "handleErrorResponse",
+          "callee": "isSeturError",
+          "lineNumber": 201
+        },
+        {
+          "caller": "handleErrorResponse",
+          "callee": "fromSeturError",
+          "lineNumber": 202
+        },
+        {
+          "caller": "handleErrorResponse",
+          "callee": "internalErrorResponse",
+          "lineNumber": 204
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 11,
+        "functionCount": 12,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/_shared/validation.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 156,
+      "nonEmptyLines": 133,
+      "functions": [
+        {
+          "name": "normalizePhone",
+          "startLine": 29,
+          "endLine": 35,
+          "params": [
+            "raw"
+          ]
+        },
+        {
+          "name": "parseBody",
+          "startLine": 99,
+          "endLine": 134,
+          "params": [
+            "req",
+            "schema",
+            "maxBytes"
+          ]
+        },
+        {
+          "name": "isValidAdvanceBookingDate",
+          "startLine": 138,
+          "endLine": 148,
+          "params": [
+            "date",
+            "maxAdvanceDays"
+          ]
+        },
+        {
+          "name": "getWeekday",
+          "startLine": 154,
+          "endLine": 156,
+          "params": [
+            "date"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "UuidSchema",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "OptionalUuidSchema",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "normalizePhone",
+          "line": 29,
+          "isDefault": false
+        },
+        {
+          "name": "PhoneSchema",
+          "line": 37,
+          "isDefault": false
+        },
+        {
+          "name": "DateSchema",
+          "line": 45,
+          "isDefault": false
+        },
+        {
+          "name": "FutureDateSchema",
+          "line": 50,
+          "isDefault": false
+        },
+        {
+          "name": "GenderSchema",
+          "line": 55,
+          "isDefault": false
+        },
+        {
+          "name": "BloodGroupSchema",
+          "line": 57,
+          "isDefault": false
+        },
+        {
+          "name": "BookingSourceSchema",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "CreateBookingSchema",
+          "line": 73,
+          "isDefault": false
+        },
+        {
+          "name": "parseBody",
+          "line": 99,
+          "isDefault": false
+        },
+        {
+          "name": "isValidAdvanceBookingDate",
+          "line": 138,
+          "isDefault": false
+        },
+        {
+          "name": "getWeekday",
+          "line": 154,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "normalizePhone",
+          "callee": "raw.replace",
+          "lineNumber": 30
+        },
+        {
+          "caller": "normalizePhone",
+          "callee": "phone.startsWith",
+          "lineNumber": 31
+        },
+        {
+          "caller": "normalizePhone",
+          "callee": "phone.slice",
+          "lineNumber": 32
+        },
+        {
+          "caller": "parseBody",
+          "callee": "req.headers.get",
+          "lineNumber": 105
+        },
+        {
+          "caller": "parseBody",
+          "callee": "parseInt",
+          "lineNumber": 106
+        },
+        {
+          "caller": "parseBody",
+          "callee": "req.json",
+          "lineNumber": 114
+        },
+        {
+          "caller": "parseBody",
+          "callee": "schema.safeParse",
+          "lineNumber": 121
+        },
+        {
+          "caller": "parseBody",
+          "callee": "issue.path.join",
+          "lineNumber": 126
+        },
+        {
+          "caller": "parseBody",
+          "callee": "fieldErrors[key].push",
+          "lineNumber": 128
+        },
+        {
+          "caller": "isValidAdvanceBookingDate",
+          "callee": "today.setHours",
+          "lineNumber": 143
+        },
+        {
+          "caller": "isValidAdvanceBookingDate",
+          "callee": "target.getTime",
+          "lineNumber": 145
+        },
+        {
+          "caller": "isValidAdvanceBookingDate",
+          "callee": "today.getTime",
+          "lineNumber": 145
+        },
+        {
+          "caller": "isValidAdvanceBookingDate",
+          "callee": "Math.floor",
+          "lineNumber": 146
+        },
+        {
+          "caller": "getWeekday",
+          "callee": "new Date(date).getDay",
+          "lineNumber": 155
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 13,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/alert-center/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 405,
+      "nonEmptyLines": 346,
+      "functions": [
+        {
+          "name": "loadAuthorizedAlert",
+          "startLine": 120,
+          "endLine": 150,
+          "params": [
+            "db",
+            "alertId",
+            "hospitalId"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "loadAuthorizedAlert",
+          "callee": "db\n    .from(\"alert_events\")\n    .select(\n      \"id, hospital_id, alert_key, severity, message, is_resolved, acknowledged_at, assigned_to, escalated_at\",\n    )\n    .eq(\"id\", alertId)\n    .maybeSingle",
+          "lineNumber": 125
+        },
+        {
+          "caller": "loadAuthorizedAlert",
+          "callee": "db\n    .from(\"alert_events\")\n    .select(\n      \"id, hospital_id, alert_key, severity, message, is_resolved, acknowledged_at, assigned_to, escalated_at\",\n    )\n    .eq",
+          "lineNumber": 125
+        },
+        {
+          "caller": "loadAuthorizedAlert",
+          "callee": "db\n    .from(\"alert_events\")\n    .select",
+          "lineNumber": 125
+        },
+        {
+          "caller": "loadAuthorizedAlert",
+          "callee": "db\n    .from",
+          "lineNumber": 125
+        }
+      ],
+      "metrics": {
+        "importCount": 10,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/carry-forward-tokens/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 432,
+      "nonEmptyLines": 377,
+      "metrics": {
+        "importCount": 11,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/command-center/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 503,
+      "nonEmptyLines": 433,
+      "functions": [
+        {
+          "name": "loadBroadcastSession",
+          "startLine": 128,
+          "endLine": 160,
+          "params": [
+            "db",
+            "queueSessionId",
+            "hospitalId"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "loadBroadcastSession",
+          "callee": "db\n    .from(\"queue_sessions\")\n    .select(\"id, hospital_id, current_live_token\")\n    .eq(\"id\", queueSessionId)\n    .maybeSingle",
+          "lineNumber": 133
+        },
+        {
+          "caller": "loadBroadcastSession",
+          "callee": "db\n    .from(\"queue_sessions\")\n    .select(\"id, hospital_id, current_live_token\")\n    .eq",
+          "lineNumber": 133
+        },
+        {
+          "caller": "loadBroadcastSession",
+          "callee": "db\n    .from(\"queue_sessions\")\n    .select",
+          "lineNumber": 133
+        },
+        {
+          "caller": "loadBroadcastSession",
+          "callee": "db\n    .from",
+          "lineNumber": 133
+        }
+      ],
+      "metrics": {
+        "importCount": 11,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/compute-sla/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 203,
+      "nonEmptyLines": 181,
+      "metrics": {
+        "importCount": 9,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/create-booking/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 688,
+      "nonEmptyLines": 621,
+      "metrics": {
+        "importCount": 14,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/enterprise-reports/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 402,
+      "nonEmptyLines": 342,
+      "metrics": {
+        "importCount": 11,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/executive-analytics/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 327,
+      "nonEmptyLines": 270,
+      "metrics": {
+        "importCount": 9,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/financial-command-center/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 190,
+      "nonEmptyLines": 152,
+      "metrics": {
+        "importCount": 9,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/queue-control/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 392,
+      "nonEmptyLines": 335,
+      "metrics": {
+        "importCount": 11,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/refresh-rollups/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 310,
+      "nonEmptyLines": 264,
+      "metrics": {
+        "importCount": 9,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "supabase/functions/settlement-engine/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 520,
+      "nonEmptyLines": 465,
+      "metrics": {
+        "importCount": 11,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/unit/errors.test.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 150,
+      "nonEmptyLines": 132,
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/unit/response.test.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 146,
+      "nonEmptyLines": 129,
+      "functions": [
+        {
+          "name": "readJson",
+          "startLine": 36,
+          "endLine": 38,
+          "params": [
+            "resp"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "readJson",
+          "callee": "JSON.parse",
+          "lineNumber": 37
+        },
+        {
+          "caller": "readJson",
+          "callee": "resp.text",
+          "lineNumber": 37
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/unit/validation.test.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 202,
+      "nonEmptyLines": 177,
+      "functions": [
+        {
+          "name": "jsonRequest",
+          "startLine": 116,
+          "endLine": 122,
+          "params": [
+            "body",
+            "headers"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "jsonRequest",
+          "callee": "JSON.stringify",
+          "lineNumber": 120
+        },
+        {
+          "caller": "fmt",
+          "callee": "d.toISOString().split",
+          "lineNumber": 175
+        },
+        {
+          "caller": "fmt",
+          "callee": "d.toISOString",
+          "lineNumber": 175
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/utils/setup_env.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 39,
+      "nonEmptyLines": 37,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

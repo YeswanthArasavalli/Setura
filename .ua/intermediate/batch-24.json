@@ -1,0 +1,50 @@
+{
+  "nodes": [
+    {
+      "id": "document:.qoder/repowiki/en/content/Testing Strategy/Integration Testing.md",
+      "type": "document",
+      "name": "Integration Testing.md",
+      "filePath": ".qoder/repowiki/en/content/Testing Strategy/Integration Testing.md",
+      "summary": "Qoder wiki page describing how to set up and run integration tests for the Setura Hospital OS against a local Supabase stack, covering database initialization, service configuration, environment setup, and testing strategies for API endpoints, edge functions, webhooks, background jobs, queues, payments, and external integrations.",
+      "tags": ["qoder-wiki", "troubleshooting", "integration-testing", "supabase", "deno"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Testing Strategy/Mocking Strategies.md",
+      "type": "document",
+      "name": "Mocking Strategies.md",
+      "filePath": ".qoder/repowiki/en/content/Testing Strategy/Mocking Strategies.md",
+      "summary": "Qoder wiki page explaining the mocking strategies used across Setura Hospital OS to test external services (WhatsApp API, payment gateways), database operations, authentication, and third-party integrations without a general-purpose mocking framework.",
+      "tags": ["qoder-wiki", "troubleshooting", "mocking", "test-doubles", "deno"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Testing Strategy/Test Infrastructure.md",
+      "type": "document",
+      "name": "Test Infrastructure.md",
+      "filePath": ".qoder/repowiki/en/content/Testing Strategy/Test Infrastructure.md",
+      "summary": "Qoder wiki page covering the test infrastructure for Setura Hospital OS, including test configuration, environment variable management, seed data generation, integration test interaction with a local Supabase stack, and CI execution of automated testing.",
+      "tags": ["qoder-wiki", "troubleshooting", "test-infrastructure", "ci-cd", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Testing Strategy/Testing Strategy.md",
+      "type": "document",
+      "name": "Testing Strategy.md",
+      "filePath": ".qoder/repowiki/en/content/Testing Strategy/Testing Strategy.md",
+      "summary": "Qoder wiki page defining the testing strategy for Setura Hospital OS using a testing pyramid: unit tests, integration tests against a local Supabase stack, and end-to-end scenarios for critical user workflows, with guidance for edge functions, background jobs, and performance testing.",
+      "tags": ["qoder-wiki", "troubleshooting", "testing-strategy", "testing-pyramid", "ci-cd"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.qoder/repowiki/en/content/Testing Strategy/Unit Testing.md",
+      "type": "document",
+      "name": "Unit Testing.md",
+      "filePath": ".qoder/repowiki/en/content/Testing Strategy/Unit Testing.md",
+      "summary": "Qoder wiki page explaining the unit testing approach for Setura Hospital OS using Deno's built-in test runner, covering patterns for error handling, response formatting, input validation, async operations, and edge function unit tests.",
+      "tags": ["qoder-wiki", "troubleshooting", "unit-testing", "deno", "test-patterns"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

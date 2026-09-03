@@ -1,0 +1,13 @@
+{
+  "projectRoot": "d:/Projects/datasets/setura",
+  "batchFiles": [
+    {"path": "docs/security/PRIVILEGE_MODEL.md", "language": "markdown", "sizeLines": 366, "fileCategory": "docs"},
+    {"path": "docs/security/RPC_PRIVILEGE_CLASSIFICATION.tsv", "language": "csv", "sizeLines": 194, "fileCategory": "data"},
+    {"path": "docs/security/WEBHOOK_SIGNATURE_BOUNDARY.md", "language": "markdown", "sizeLines": 121, "fileCategory": "docs"}
+  ],
+  "batchImportData": {
+    "docs/security/PRIVILEGE_MODEL.md": [],
+    "docs/security/RPC_PRIVILEGE_CLASSIFICATION.tsv": [],
+    "docs/security/WEBHOOK_SIGNATURE_BOUNDARY.md": []
+  }
+}
