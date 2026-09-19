@@ -24,6 +24,11 @@ supabase/.branches/
 # --- Dependency / build output (defense-in-depth; apps/web/.gitignore also covers) ---
 node_modules/
 
+# --- Generated release provenance (CI/`deno task release:manifest` output) ---
+# Provenance metadata regenerated per release candidate; never a committed
+# source-of-truth artifact (it embeds per-run commit/build hashes).
+release/
+
 # --- Session / run logs ---
 # Generic rule catches new disposable run logs. The specific logs that
 # Phase 7 completion reports cite as authoritative evidence are explicitly

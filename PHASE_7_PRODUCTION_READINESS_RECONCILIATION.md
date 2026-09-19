@@ -168,6 +168,22 @@ What a production deployment concretely requires, per current source:
    (.qoder) untracked. The hygiene commit is **LOCAL ONLY — NOT PUSHED**
    (`PHASE_7_G7_02_DEPLOYMENT_ARCHITECTURE.md`;
    `PHASE_7_G7_03_REPOSITORY_HYGIENE_REPORT.md`).
+   **G7-02 I-2 CI/CD extension (2026-09-19): the CI pipeline was
+   extended (2 → 4 jobs) locally** — `quality` now enforces the
+   migration manifest (`scripts/validate_migration_manifest.ts`,
+   append-only vs the PR base) and names the reused F16-04 privilege
+   guard; a new `frontend` job runs `npm ci`/typecheck/build/test and a
+   built-bundle secret + source-map scan
+   (`scripts/check_frontend_secrets.ts`); a `release-validation` job
+   (push:main only) runs the consolidated regression
+   (`deno task test:consolidated`) and emits a provenance manifest
+   (`scripts/release_manifest.ts`, `deployment: NOT PERFORMED`).
+   Verifier green on the real tree (56/56, 0 issues); +10 guard unit
+   tests (91 passed / 0 failed); frontend typecheck/build/vitest green
+   locally. This is **CI configuration + local tooling only**: no
+   GitHub Actions execution (no push), no deploy, no environment, no
+   secret. The commit is LOCAL ONLY — NOT PUSHED
+   (`PHASE_7_G7_02_I2_CI_IMPLEMENTATION_REPORT.md`).
 
 **Status: NOT IMPLEMENTED** (requirements enumerated; nothing
 provisioned — per brief §7, nothing was deployed).
@@ -483,7 +499,7 @@ priorities as required by the Phase 7 brief §20.
 | ID | Area | Current state | Evidence | Risk | Required action | Dependencies | Production impact | Priority | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | G7-01 | Worker crash recovery | RESOLVED — reclaim invariant PROVEN (local); earlier FAIL was stale pre-migration-52 evidence | `_g701_repro1.log` 4/4; `_g701_regression_worker.log` 7/7; live `pg_proc` + `migration_registry` | In-flight jobs stranded on worker crash | ~~Diagnose, fix, rerun~~ done — no code change required | local stack | Pilot can run autonomous jobs (prod execution still gated by G7-02/03/09) | P0 | CLOSED (local) |
-| G7-02 | Deployment pipeline | PLANNED (architecture doc) — repo + GitHub remote exist (premise corrected); CD pipeline absent; tree hygiene incomplete | `PHASE_7_G7_02_DEPLOYMENT_ARCHITECTURE.md`; `git remote -v`; `git ls-files` counts | Nothing can reach production safely; tracked local artifacts (hygiene now committed locally — G7-03) | Hygiene commit (DONE locally) → CI/CD extension → staging → gated production (all authorization-gated) | user authorization | Absolute blocker for all production claims | P0 | OPEN — PLANNED (hygiene I-1 done locally, unpushed) |
+| G7-02 | Deployment pipeline | PLANNED (architecture doc) — repo + GitHub remote exist (premise corrected); CD pipeline absent; tree hygiene incomplete | `PHASE_7_G7_02_DEPLOYMENT_ARCHITECTURE.md`; `git remote -v`; `git ls-files` counts | Nothing can reach production safely; tracked local artifacts (hygiene now committed locally — G7-03) | Hygiene commit (DONE locally) → CI/CD extension (I-2 DONE locally, unpushed; GitHub execution UNPROVEN) → staging → gated production (all authorization-gated) | user authorization | Absolute blocker for all production claims | P0 | OPEN — PLANNED (hygiene I-1 + CI/CD I-2 done locally, unpushed) |
 | G7-03 | Production secrets/Vault provisioning | Placeholders only; no vault seeding path | `.env.example`; migration 53 reads Vault | Scheduler/worker/cron endpoints stay fail-closed 403 | Provisioning runbook (placeholders only) for platform secrets + Vault + `scheduler_http_config` | G7-02 | Scheduler autonomy dead | P0 | OPEN |
 | G7-04 | Production privilege verification | Local-only census | Gate 2 / Phase 5 reports | Local≠prod privilege posture | Catalog re-measure on deployed DB post-migration | G7-02 | Certification gate | P0 | OPEN |
 | G7-05 | Real Razorpay boundary | BLOCKED (no credentials) | Phase 3 §; Phase 6 §I | Financial flows unexercised against gateway | Razorpay test-mode then live verification (authorization required) | G7-02/03 | Revenue path | P1 | OPEN |

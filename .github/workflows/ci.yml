@@ -1,14 +1,30 @@
-# SETURA — Phase 0 CI skeleton
+# SETURA — CI (Phase 0 skeleton, extended for G7-02 I-2 CI/CD & release control)
 #
-# Two jobs:
-#   quality   — static gates, no services required:
-#               format check, lint, type check, migration validation,
-#               unit tests.
-#   stack     — boots the full local Supabase stack (all migrations +
-#               seed applied by `supabase start`), then runs the
-#               integration smoke suite against it.
+# VALIDATE ONLY. This workflow deploys nothing: no `supabase db push`, no
+# `supabase functions deploy`, no `supabase secrets set`, no hosted/staging/
+# production target. See PHASE_7_G7_02_DEPLOYMENT_ARCHITECTURE.md §5 and the
+# G7-02 I-2 brief §19.
 #
-# Failure of ANY step fails the pipeline. No step is advisory.
+# Jobs
+#   quality            — static + unit + migration integrity (PR-blocking):
+#                        fmt, lint, type check, migration validation
+#                        (which IS the F16-04 privilege guard — see step),
+#                        migration-manifest integrity (+ append-only vs base
+#                        on PRs), unit tests, deno.lock drift check.
+#   frontend           — apps/web: npm ci, typecheck, build, vitest, and a
+#                        built-bundle secret/source-map scan.
+#   stack              — boots the full local Supabase stack (migrations +
+#                        seed), then runs the complete integration suite.
+#   release-validation — on merges to main / manual dispatch only: a curated
+#                        consolidated regression (E1, worker, scheduler,
+#                        financial, S1) against a fresh stack + npm audit +
+#                        release provenance manifest. This separates release
+#                        checks from PR checks (brief §12); it never deploys.
+#
+# Failure of ANY step in a PR-blocking job fails the pipeline. No step uses
+# `|| true`, `continue-on-error`, or a downgraded security check. Pre-existing
+# repository-wide formatting findings are the documented G7-03 baseline; this
+# package neither hides nor silently "fixes" them (brief §20/§21).
 
 name: CI
 
@@ -16,6 +32,7 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -23,14 +40,18 @@ concurrency:
 
 env:
   DENO_VERSION: v2.8.3
+  NODE_VERSION: "20"
 
 jobs:
   quality:
-    name: fmt / lint / typecheck / migrations / unit tests
+    name: fmt / lint / typecheck / migrations / manifest / unit tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Full history so the PR append-only check can read the base manifest.
+          fetch-depth: 0
 
       - name: Setup Deno
         uses: denoland/setup-deno@v2
@@ -46,11 +67,81 @@ jobs:
       - name: Type check (Edge Functions + scripts + tests)
         run: deno task check
 
+      - name: Dependency drift check (deno.lock must not change)
+        run: |
+          deno task check >/dev/null 2>&1 || true
+          git diff --exit-code deno.lock || {
+            echo "::error::deno.lock changed during dependency resolution — a remote dependency drifted from the pinned lockfile."; exit 1; }
+
       - name: Validate migrations (deps, duplicates, indexes, rollback risks)
         run: deno task validate:migrations
 
+      # The F16-04 mechanical privilege guard is NOT a fragile grep: it is the
+      # PRIVILEGE REGRESSION DETECTION rules (P1/P2) inside validate_migrations.ts
+      # above, which fail any post-baseline migration that introduces a new
+      # SECURITY DEFINER routine without an explicit GRANT/REVOKE or SET
+      # search_path. Named here to make the guard explicit in the pipeline.
+      - name: Privilege lint (F16-04 guard — enforced by validate:migrations)
+        run: deno task validate:migrations
+
+      - name: Migration manifest integrity (disk <-> MANIFEST.sha256)
+        run: deno task validate:migration-manifest
+
+      - name: Migration manifest append-only vs PR base
+        if: github.event_name == 'pull_request'
+        run: |
+          git show "${{ github.event.pull_request.base.sha }}:supabase/migrations/MANIFEST.sha256" \
+            > "$RUNNER_TEMP/base_manifest.sha256"
+          deno run --allow-read scripts/validate_migration_manifest.ts \
+            --baseline-manifest "$RUNNER_TEMP/base_manifest.sha256"
+
       - name: Unit tests
         run: deno task test
+
+  frontend:
+    name: apps/web typecheck / build / test / secret scan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: ${{ env.DENO_VERSION }}
+
+      - name: npm ci (lockfile-integrity install; fails if lock and package.json disagree)
+        run: npm ci
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Production build
+        # Uses placeholder, local-safe public VITE_* values only. No real secret
+        # is available to or needed by the client build (anon key is public by
+        # design; service-role keys must NEVER be present).
+        env:
+          VITE_SUPABASE_URL: "http://127.0.0.1:54321"
+          VITE_SUPABASE_ANON_KEY: "ci-placeholder-anon-key"
+        run: npm run build
+
+      - name: Unit tests (vitest)
+        run: npm run test
+
+      - name: Built-bundle secret & source-map scan
+        # Fails if a service-role key / server secret name leaked into dist, or
+        # if the production build shipped source maps (brief §11 sourcemap policy).
+        run: deno run --allow-read ../../scripts/check_frontend_secrets.ts dist --deny-sourcemaps
 
   stack:
     name: supabase start + integration tests
@@ -80,5 +171,72 @@ jobs:
             -c "SELECT count(*) AS table_count FROM information_schema.tables WHERE table_schema = 'public';" \
             -c "SELECT count(*) AS seeded_hospitals FROM public.hospitals WHERE id = '00000000-0000-4000-8000-000000000001';"
 
-      - name: Integration smoke tests (seed verification)
+      - name: Integration tests (full suite against the fresh stack)
         run: deno task test:integration
+
+  release-validation:
+    name: consolidated regression + provenance (release checks; no deploy)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: ${{ env.DENO_VERSION }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start local Supabase stack
+        run: supabase start
+
+      - name: Supply-chain audit (production deps; release gate, not per-PR)
+        working-directory: apps/web
+        run: npm audit --omit=dev --audit-level=high
+
+      # A single curated consolidated-regression pass (E1, worker, scheduler,
+      # financial, S1) against one freshly reset stack. Any failure fails the
+      # job — no manifest is emitted claiming PASS.
+      - name: Consolidated regression (E1 / W1 / scheduler / financial / S1)
+        id: regression
+        run: deno task test:consolidated
+
+      - name: Generate release provenance manifest (all subsets passed)
+        if: success()
+        env:
+          RELEASE_COMMIT: ${{ github.sha }}
+          RELEASE_BRANCH: ${{ github.ref_name }}
+          RELEASE_SOURCE_REVISION: ${{ github.sha }}
+        run: |
+          deno task release:manifest \
+            --backend PASS --worker PASS --scheduler PASS \
+            --financial PASS --security PASS
+
+      - name: Generate release provenance manifest (regression did not fully pass)
+        if: failure()
+        env:
+          RELEASE_COMMIT: ${{ github.sha }}
+          RELEASE_BRANCH: ${{ github.ref_name }}
+          RELEASE_SOURCE_REVISION: ${{ github.sha }}
+        # Honest defaults are UNPROVEN; a failed run never produces a PASS.
+        run: deno task release:manifest
+
+      - name: Upload release provenance artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-manifest
+          path: release/manifest.json
+          if-no-files-found: warn
