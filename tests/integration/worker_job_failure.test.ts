@@ -111,7 +111,6 @@ async function enqueueJob(idempotencyKey: string): Promise<string> {
     p_scheduled_at: new Date().toISOString(),
     p_idempotency_key: idempotencyKey,
     p_hospital_id: SEED.HOSPITAL_ID,
-    p_booking_id: null,
     p_metadata: { p0a_test: RUN },
   });
   assertEquals(error, null);
@@ -135,7 +134,9 @@ async function getJob(jobId: string): Promise<JobRow> {
   return data as unknown as JobRow;
 }
 
-async function getDlqRow(jobId: string): Promise<Record<string, unknown> | null> {
+async function getDlqRow(
+  jobId: string,
+): Promise<Record<string, unknown>[]> {
   const client = await db();
   const { data, error } = await client
     .from("dead_letter_jobs")
@@ -173,7 +174,6 @@ async function claimJob(jobId: string): Promise<void> {
     p_worker_id: WORKER_ID,
     p_worker_type: "test",
     p_instance_id: RUN,
-    p_hostname: null,
     p_lease_duration: 60,
   });
   assertEquals(error, null);
@@ -242,7 +242,7 @@ Deno.test("p0a: retryable failure reschedules with backoff and never dead-letter
     );
 
     // No dead-letter row for a retryable failure.
-    assertEquals(await getDlqRow(jobId), []);
+    assertEquals((await getDlqRow(jobId)).length, 0);
 
     // The active lease is closed as 'failed'.
     const leases = await getLeases(jobId);

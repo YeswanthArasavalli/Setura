@@ -1,0 +1,74 @@
+﻿deno : [0m[32mCheck[0m tests/integration/worker_lifecycle.test.ts
+At line:1 char:59
++ ... lyContinue; deno test --allow-net --allow-env --allow-run --allow-rea ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([0m[32mCheck...fecycle.test.ts 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[0m[38;5;245mrunning 4 tests from ./tests/integration/worker_lifecycle.test.ts[0m
+w1: a real worker claims, leases and completes a job end-to-end ...
+[0m[38;5;245m------- output -------[0m
+{"ts":"2026-09-18T17:58:33.258Z","level":"info","msg":"Worker registered","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-happy-882c815a","workerType":"test","instanceId":"882c815a"}
+{"ts":"2026-09-18T17:58:33.286Z","level":"info","msg":"Jobs claimed","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-happy-882c815a","count":1,"jobTypes":["w1_lifecycle_selftest"],"jobIds":["7bf1bb14-92df-4fd3-ae31-65338e1183de"]}
+{"ts":"2026-09-18T17:58:33.333Z","level":"debug","msg":"Job completed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"7bf1bb14-92df-4fd3-ae31-65338e1183de","jobType":"w1_lifecycle_selftest","attempt":1,"workerId":"w1-happy-882c815a"}
+{"ts":"2026-09-18T17:58:33.333Z","level":"info","msg":"job.w1_lifecycle_selftest completed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"7bf1bb14-92df-4fd3-ae31-65338e1183de","jobType":"w1_lifecycle_selftest","attempt":1,"workerId":"w1-happy-882c815a","durationMs":9}
+[0m[38;5;245m----- output end -----[0m
+w1: a real worker claims, leases and completes a job end-to-end ... [0m[32mok[0m [0m[38;5;245m(1s)[0m
+w1: a persistently failing handler retries then dead-letters with correct columns ...
+[0m[38;5;245m------- output -------[0m
+{"ts":"2026-09-18T17:58:33.388Z","level":"info","msg":"Worker registered","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-fail-882c815a","workerType":"test","instanceId":"882c815a"}
+{"ts":"2026-09-18T17:58:33.405Z","level":"info","msg":"Jobs claimed","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-fail-882c815a","count":1,"jobTypes":["w1_lifecycle_selftest"],"jobIds":["e4819f58-3c9f-4eaa-8949-1286355bb225"]}
+{"ts":"2026-09-18T17:58:33.407Z","level":"error","msg":"Job processing failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"e4819f58-3c9f-4eaa-8949-1286355bb225","jobType":"w1_lifecycle_selftest","attempt":1,"workerId":"w1-fail-882c815a","error":{"name":"Error","message":"w1 deterministic failure","stack":"Error: w1 deterministic failure\n    at Object.process (file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:283:15)\n    at Module.processJob (file:///D:/Projects/datasets/setura/supabase/functions/_shared/worker.ts:246:21)\n    at file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:293:31\n    at async innerWrapped (ext:cli/40_test.js:280:5)\n    at async exitSanitizer (ext:cli/40_test.js:191:27)\n    at async outerWrapped (ext:cli/40_test.js:223:14)"}}
+{"ts":"2026-09-18T17:58:33.416Z","level":"warn","msg":"Job failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"e4819f58-3c9f-4eaa-8949-1286355bb225","jobType":"w1_lifecycle_selftest","attempt":1,"workerId":"w1-fail-882c815a","errorMessage":"w1 deterministic failure"}
+{"ts":"2026-09-18T17:58:33.444Z","level":"info","msg":"Jobs claimed","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-fail-882c815a","count":1,"jobTypes":["w1_lifecycle_selftest"],"jobIds":["e4819f58-3c9f-4eaa-8949-1286355bb225"]}
+{"ts":"2026-09-18T17:58:33.445Z","level":"error","msg":"Job processing failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"e4819f58-3c9f-4eaa-8949-1286355bb225","jobType":"w1_lifecycle_selftest","attempt":2,"workerId":"w1-fail-882c815a","error":{"name":"Error","message":"w1 deterministic failure","stack":"Error: w1 deterministic failure\n    at Object.process (file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:283:15)\n    at Module.processJob (file:///D:/Projects/datasets/setura/supabase/functions/_shared/worker.ts:246:21)\n    at file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:293:31\n    at async innerWrapped (ext:cli/40_test.js:280:5)\n    at async exitSanitizer (ext:cli/40_test.js:191:27)\n    at async outerWrapped (ext:cli/40_test.js:223:14)"}}
+{"ts":"2026-09-18T17:58:33.454Z","level":"warn","msg":"Job failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"e4819f58-3c9f-4eaa-8949-1286355bb225","jobType":"w1_lifecycle_selftest","attempt":2,"workerId":"w1-fail-882c815a","errorMessage":"w1 deterministic failure"}
+{"ts":"2026-09-18T17:58:33.476Z","level":"info","msg":"Jobs claimed","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-fail-882c815a","count":1,"jobTypes":["w1_lifecycle_selftest"],"jobIds":["e4819f58-3c9f-4eaa-8949-1286355bb225"]}
+{"ts":"2026-09-18T17:58:33.477Z","level":"error","msg":"Job processing failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"e4819f58-3c9f-4eaa-8949-1286355bb225","jobType":"w1_lifecycle_selftest","attempt":3,"workerId":"w1-fail-882c815a","error":{"name":"Error","message":"w1 deterministic failure","stack":"Error: w1 deterministic failure\n    at Object.process (file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:283:15)\n    at Module.processJob (file:///D:/Projects/datasets/setura/supabase/functions/_shared/worker.ts:246:21)\n    at file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:293:31\n    at async innerWrapped (ext:cli/40_test.js:280:5)\n    at async exitSanitizer (ext:cli/40_test.js:191:27)\n    at async outerWrapped (ext:cli/40_test.js:223:14)"}}
+{"ts":"2026-09-18T17:58:33.485Z","level":"warn","msg":"Job failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"e4819f58-3c9f-4eaa-8949-1286355bb225","jobType":"w1_lifecycle_selftest","attempt":3,"workerId":"w1-fail-882c815a","errorMessage":"w1 deterministic failure"}
+{"ts":"2026-09-18T17:58:33.512Z","level":"info","msg":"Jobs claimed","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-fail-882c815a","count":1,"jobTypes":["w1_lifecycle_selftest"],"jobIds":["e4819f58-3c9f-4eaa-8949-1286355bb225"]}
+{"ts":"2026-09-18T17:58:33.512Z","level":"error","msg":"Job processing failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"e4819f58-3c9f-4eaa-8949-1286355bb225","jobType":"w1_lifecycle_selftest","attempt":4,"workerId":"w1-fail-882c815a","error":{"name":"Error","message":"w1 deterministic failure","stack":"Error: w1 deterministic failure\n    at Object.process (file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:283:15)\n    at Module.processJob (file:///D:/Projects/datasets/setura/supabase/functions/_shared/worker.ts:246:21)\n    at file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:293:31\n    at async innerWrapped (ext:cli/40_test.js:280:5)\n    at async exitSanitizer (ext:cli/40_test.js:191:27)\n    at async outerWrapped (ext:cli/40_test.js:223:14)"}}
+{"ts":"2026-09-18T17:58:33.521Z","level":"warn","msg":"Job failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"e4819f58-3c9f-4eaa-8949-1286355bb225","jobType":"w1_lifecycle_selftest","attempt":4,"workerId":"w1-fail-882c815a","errorMessage":"w1 deterministic failure"}
+{"ts":"2026-09-18T17:58:33.545Z","level":"info","msg":"Jobs claimed","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-fail-882c815a","count":1,"jobTypes":["w1_lifecycle_selftest"],"jobIds":["e4819f58-3c9f-4eaa-8949-1286355bb225"]}
+{"ts":"2026-09-18T17:58:33.545Z","level":"error","msg":"Job processing failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"e4819f58-3c9f-4eaa-8949-1286355bb225","jobType":"w1_lifecycle_selftest","attempt":5,"workerId":"w1-fail-882c815a","error":{"name":"Error","message":"w1 deterministic failure","stack":"Error: w1 deterministic failure\n    at Object.process (file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:283:15)\n    at Module.processJob (file:///D:/Projects/datasets/setura/supabase/functions/_shared/worker.ts:246:21)\n    at file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:293:31\n    at async innerWrapped (ext:cli/40_test.js:280:5)\n    at async exitSanitizer (ext:cli/40_test.js:191:27)\n    at async outerWrapped (ext:cli/40_test.js:223:14)"}}
+{"ts":"2026-09-18T17:58:33.556Z","level":"warn","msg":"Job failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"e4819f58-3c9f-4eaa-8949-1286355bb225","jobType":"w1_lifecycle_selftest","attempt":5,"workerId":"w1-fail-882c815a","errorMessage":"w1 deterministic failure"}
+[0m[38;5;245m----- output end -----[0m
+w1: a persistently failing handler retries then dead-letters with correct columns ... [0m[32mok[0m [0m[38;5;245m(238ms)[0m
+w1: a crashed worker's in-flight job is reclaimed (not stranded) ...
+[0m[38;5;245m------- output -------[0m
+{"ts":"2026-09-18T17:58:33.627Z","level":"info","msg":"Worker registered","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-dead-882c815a","workerType":"test","instanceId":"882c815a"}
+{"ts":"2026-09-18T17:58:33.634Z","level":"info","msg":"Jobs claimed","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-dead-882c815a","count":1,"jobTypes":["w1_lifecycle_selftest"],"jobIds":["49a7fe36-8912-43fc-a7e2-9fc9136da729"]}
+[0m[38;5;245m----- output end -----[0m
+w1: a crashed worker's in-flight job is reclaimed (not stranded) ... [0m[31mFAILED[0m [0m[38;5;245m(85ms)[0m
+w1: enqueue is idempotent on the dedup key ÔÇö no second job row ... [0m[32mok[0m [0m[38;5;245m(46ms)[0m
+
+[0m[1m[37m[41m ERRORS [0m
+
+w1: a crashed worker's in-flight job is reclaimed (not stranded) [0m[38;5;245m=> ./tests/integration/worker_lifecycle.test.ts:350:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal.
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   {[22m[39m
+[31m[1m-     code: "42702",[22m[39m
+[31m[1m-     details: "It could refer to either a PL/pgSQL variable or a table column.",[22m[39m
+[31m[1m-     hint: null,[22m[39m
+[31m[1m-     message: 'column reference "worker_type" is ambiguous',[22m[39m
+[31m[1m-   }[22m[39m
+[32m[1m+   null[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/worker_lifecycle.test.ts[0m:[0m[33m391[0m:[0m[33m5[0m
+
+[0m[1m[37m[41m FAILURES [0m
+
+w1: a crashed worker's in-flight job is reclaimed (not stranded) [0m[38;5;245m=> ./tests/integration/worker_lifecycle.test.ts:350:6[0m
+
+[0m[31mFAILED[0m | 3 passed | 1 failed [0m[38;5;245m(1s)[0m
+
+[0m[1m[31merror[0m: Test failed

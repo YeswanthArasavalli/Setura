@@ -31,7 +31,11 @@ const JOB_TYPES = [
   "send_notification",
   "refresh_analytics",
   "compute_sla",
-  "create_partition",
+  // P0-B: "create_partition" removed. It had no handler (a claimed
+  // job threw "Unsupported job type"), has no producer, and the
+  // partition_config parents are still plain tables — executing the
+  // DDL routine would fail (42P01). Runtime partitioning awaits a
+  // deliberate maintenance-window conversion, not an orphan job type.
 ];
 
 async function processSendWhatsapp(

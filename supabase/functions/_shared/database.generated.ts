@@ -4345,6 +4345,30 @@ export type Database = {
         }
         Relationships: []
       }
+      scheduler_http_config: {
+        Row: {
+          base_url: string | null
+          id: number
+          minute_cron: string
+          nightly_cron: string
+          updated_at: string
+        }
+        Insert: {
+          base_url?: string | null
+          id?: number
+          minute_cron?: string
+          nightly_cron?: string
+          updated_at?: string
+        }
+        Update: {
+          base_url?: string | null
+          id?: number
+          minute_cron?: string
+          nightly_cron?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       security_events: {
         Row: {
           created_at: string
@@ -7142,6 +7166,8 @@ export type Database = {
         Args: { p_error: string; p_message_id: string }
         Returns: boolean
       }
+      scheduler_fire_minute: { Args: never; Returns: Json }
+      scheduler_fire_nightly: { Args: never; Returns: Json }
       search_audit_logs: {
         Args: {
           p_action_type?: string

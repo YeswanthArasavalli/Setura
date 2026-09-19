@@ -18,6 +18,7 @@ import {
   InternalError,
   isRetryable,
   isSeturError,
+  NotImplementedError,
   QueueFullError,
   RateLimitError,
   RoleInsufficientError,
@@ -119,6 +120,19 @@ Deno.test("DbError and InternalError are 500, non-retryable", () => {
   assertEquals(new DbError("x").retryable, false);
   assertEquals(new InternalError().statusCode, 500);
   assertEquals(new InternalError().code, "INTERNAL_ERROR");
+});
+
+Deno.test("NotImplementedError is 501, NOT_IMPLEMENTED, non-retryable", () => {
+  // P0-D: a retired action must not surface as a 500 server fault.
+  const err = new NotImplementedError("record_payment retired", {
+    action: "record_payment",
+  });
+  assertEquals(err.statusCode, 501);
+  assertEquals(err.code, "NOT_IMPLEMENTED");
+  assertEquals(err.retryable, false);
+  assertEquals(err.name, "NotImplementedError");
+  assertEquals(err.context.action, "record_payment");
+  assertInstanceOf(err, SeturError);
 });
 
 Deno.test("isSeturError / isRetryable type guards", () => {

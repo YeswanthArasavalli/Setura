@@ -22,8 +22,8 @@ import {
 } from "../_shared/idempotency.ts";
 import { handleErrorResponse, successResponse } from "../_shared/response.ts";
 import {
-  ForbiddenError,
   InternalError,
+  NotImplementedError,
   ValidationError,
 } from "../_shared/errors.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
@@ -35,7 +35,9 @@ const CreateSettlementSchema = z.object({
   action: z.enum(["create", "record_payment", "get_outstanding"]),
   startDate: DateSchema.optional(),
   endDate: DateSchema.optional(),
-  // For record_payment
+  // Accepted-but-ignored: `record_payment` is retired (see the P0-D
+  // short-circuit below). Keeping these optional lets a legacy payload
+  // parse and receive the honest 501 instead of a confusing 422.
   settlementId: z.string().uuid().optional(),
   paidAmountInr: z.number().positive().optional(),
 }).refine(
@@ -43,12 +45,6 @@ const CreateSettlementSchema = z.object({
   {
     message: "startDate and endDate required for create action",
     path: ["startDate"],
-  },
-).refine(
-  (d) => d.action !== "record_payment" || (d.settlementId && d.paidAmountInr),
-  {
-    message: "settlementId and paidAmountInr required for record_payment",
-    path: ["settlementId"],
   },
 );
 
@@ -95,6 +91,27 @@ Deno.serve(async (req: Request): Promise<Response> => {
       req,
       CreateSettlementSchema,
     );
+
+    // ── P0-D: record_payment is retired ─────────────────────────────────────
+    // Migration 33 turned the hospital->SETURA settlement payment into a
+    // deliberate SQL no-op: SETURA captures booking fees directly via
+    // Razorpay, so the payment RPC just RAISE NOTICEs and RETURNs FALSE. The
+    // old handler read that FALSE as a server fault and threw InternalError ->
+    // EVERY record_payment call returned HTTP 500.
+    // The action is simply not available in the platform-revenue model, so
+    // return the contract-defined 501 (docs/ERROR_CONTRACT.md) here, BEFORE
+    // the idempotency claim, the RPC call, the settlement lookup, any audit
+    // write or any balance mutation. Nothing is fabricated and no financial
+    // state is touched; the correct operation remains action=create
+    // (create_platform_revenue_summary under the hood).
+    if (body.action === "record_payment") {
+      throw new NotImplementedError(
+        "record_payment is not available: there is no hospital->SETURA " +
+          "payment flow in the platform-revenue settlement model (migration " +
+          "33). Use action=create to close a billing period.",
+        { action: "record_payment" },
+      );
+    }
 
     const db = getServiceClient();
 
@@ -392,92 +409,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
           };
         }
 
-        if (body.action === "record_payment") {
-          // ── Record payment against settlement ──────────────────────────────
-          const { data: existing, error: existingErr } = await db
-            .from("hospital_settlements")
-            .select("hospital_id, remaining_due, settlement_status")
-            .eq("id", body.settlementId!)
-            .single();
-
-          if (existingErr || !existing) {
-            throw new ValidationError(
-              "Settlement not found",
-              {
-                settlementId: ["Not found"],
-              },
-            );
-          }
-
-          if (existing.hospital_id !== hospitalId) {
-            throw new ForbiddenError(
-              "Settlement belongs to different hospital",
-            );
-          }
-
-          const { data: ok, error: payErr } = await db.rpc(
-            "record_settlement_payment",
-            {
-              p_settlement_id: body.settlementId!,
-              p_paid_amount: body.paidAmountInr!,
-              p_performed_by: auth.userId,
-            },
-          );
-
-          if (payErr) {
-            throw new InternalError(
-              "Payment recording failed",
-              {
-                error: payErr.message,
-                code: payErr.code,
-              },
-            );
-          }
-
-          if (!ok) {
-            throw new InternalError(
-              "Settlement payment RPC returned false",
-            );
-          }
-
-          const { data: updated, error: updatedErr } = await db
-            .from("hospital_settlements")
-            .select(
-              "id, remaining_due, settlement_status, amount_paid_to_setura",
-            )
-            .eq("id", body.settlementId!)
-            .single();
-
-          if (updatedErr || !updated) {
-            throw new InternalError(
-              "Failed to fetch updated settlement",
-              { error: updatedErr?.message },
-            );
-          }
-
-          await logAuditEvent({
-            hospitalId,
-            actorUserId: auth.userId,
-            entityType: "hospital_settlement",
-            entityId: body.settlementId!,
-            actionType: "settlement_paid",
-            severity: "high",
-            newData: {
-              paidAmount: body.paidAmountInr,
-              status: (updated as Record<string, unknown>)?.settlement_status,
-            },
-          }, logger);
-
-          metrics.increment("settlement.payment_recorded");
-
-          return {
-            statusCode: 200,
-            body: {
-              settlement: updated,
-              alreadyExists: false,
-            },
-          };
-        }
+        // P0-D: `record_payment` is handled by the early short-circuit above
+        // (returns 501 before any DB access). Only `create` reaches this
+        // idempotent callback now; the old no-op-RPC branch that always
+        // returned HTTP 500 has been removed.
 
         throw new InternalError("Unknown action");
       },

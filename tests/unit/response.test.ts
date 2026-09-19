@@ -26,6 +26,7 @@ import {
   validationErrorResponse,
 } from "../../supabase/functions/_shared/response.ts";
 import {
+  NotImplementedError,
   RateLimitError,
   UnauthorizedError,
   ValidationError,
@@ -113,6 +114,25 @@ Deno.test("handleErrorResponse: typed error → mapped, unknown → 500", async 
     (fallbackBody.error as { message: string }).message,
     "An unexpected error occurred",
   );
+});
+
+Deno.test("handleErrorResponse: NotImplementedError maps to 501, not 500", async () => {
+  // P0-D: the retired settlement record_payment action must be a 501 whose
+  // message reaches the client, never a generic 500 that hides intent.
+  const resp = handleErrorResponse(
+    new NotImplementedError("record_payment retired", { action: "x" }),
+    CID,
+  );
+  assertEquals(resp.status, 501);
+  const body = await readJson(resp);
+  const error = body.error as {
+    code: string;
+    message: string;
+    retryable: boolean;
+  };
+  assertEquals(error.code, "NOT_IMPLEMENTED");
+  assertEquals(error.retryable, false);
+  assertStringIncludes(error.message, "record_payment retired");
 });
 
 Deno.test("named error builders return their documented statuses", () => {

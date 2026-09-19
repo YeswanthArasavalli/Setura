@@ -311,6 +311,26 @@ export class InternalError extends SeturError {
   }
 }
 
+/**
+ * NotImplementedError — the endpoint/action exists but is intentionally
+ * not available. Maps to HTTP 501 per docs/ERROR_CONTRACT.md
+ * ("NOT_IMPLEMENTED | 501 | No | Endpoint/action not available").
+ *
+ * Use it instead of InternalError when an operation was deliberately
+ * retired (e.g. settlement `record_payment` after migration 33 turned the
+ * hospital->SETURA flow into a no-op): a caller mistake or a removed
+ * capability is not an unexpected server fault and must not surface as 500.
+ */
+export class NotImplementedError extends SeturError {
+  constructor(
+    message = "This action is not available",
+    context: ErrorContext = {},
+  ) {
+    super(message, "NOT_IMPLEMENTED", 501, false, context);
+    this.name = "NotImplementedError";
+  }
+}
+
 // ─── Type guard ──────────────────────────────────────────────────────────────
 
 export function isSeturError(err: unknown): err is SeturError {

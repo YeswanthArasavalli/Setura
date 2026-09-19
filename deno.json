@@ -13,7 +13,7 @@
     "fmt:check": "deno fmt --check",
     "lint": "deno lint",
     "check": "deno check scripts/*.ts tests/unit/*.ts tests/integration/*.ts tests/utils/*.ts supabase/functions/*/index.ts",
-    "test": "deno test --allow-env tests/unit/",
+    "test": "deno test --allow-env --allow-read tests/unit/",
     "test:integration": "deno test --allow-net --allow-env --allow-run tests/integration/",
     "validate:migrations": "deno run --allow-read scripts/validate_migrations.ts",
     "gen:types": "deno run --allow-run=supabase --allow-read --allow-write scripts/gen_types.ts",

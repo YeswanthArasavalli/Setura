@@ -12,7 +12,13 @@
  *   6. Subscription usage sync (gauges + storage, all hospitals)
  *   7. Schedule future partitions (if auto-enabled)
  *   8. Health check snapshot
- *   9. Trigger background worker for any queued jobs created above
+ *
+ * Nightly tasks are SYNCHRONOUS by frozen architecture constraint
+ * (P2-09 / drift D-05: "verify run-cron-nightly does NOT wake the
+ * worker"). A former Step 9 fetched run-background-worker with a
+ * derived credential (P1-07: wrong secret, always 403). Removing the
+ * prohibited call resolved the pair — see
+ * docs/security/NIGHTLY_SYNCHRONOUS_CONSTRAINT.md.
  *
  * Each step is wrapped in independent try/catch.
  * Partial failure is logged but does not abort subsequent steps.
@@ -26,6 +32,7 @@ import { createTraceContext, elapsedMs } from "../_shared/tracing.ts";
 import { createMetrics } from "../_shared/metrics.ts";
 import { successResponse } from "../_shared/response.ts";
 import { logAuditEvent } from "../_shared/audit.ts";
+import { verifyCronRequest } from "../_shared/cron_auth.ts";
 import { Env } from "../_shared/env.ts";
 import type { Logger } from "../_shared/logger.ts";
 
@@ -67,33 +74,11 @@ Deno.serve(async (req: Request): Promise<Response> => {
     return new Response("Method Not Allowed", { status: 405 });
   }
 
-  const secret = req.headers.get("X-Cron-Secret");
-  const expectedSecret = Env.CRON_SECRET;
-
-  if (!secret || !expectedSecret) {
-    return new Response("Forbidden", {
-      status: 403,
-    });
-  }
-
-  if (secret.length !== expectedSecret.length) {
-    return new Response("Forbidden", {
-      status: 403,
-    });
-  }
-
-  let diff = 0;
-
-  for (let i = 0; i < secret.length; i++) {
-    diff |= secret.charCodeAt(i) ^
-      expectedSecret.charCodeAt(i);
-  }
-
-  if (diff !== 0) {
-    return new Response("Forbidden", {
-      status: 403,
-    });
-  }
+  // Fail-closed cron auth (P0-C: extracted to _shared/cron_auth.ts,
+  // unit-proven there). Missing header, unconfigured CRON_SECRET,
+  // length mismatch or any byte mismatch are all 403.
+  const forbidden = verifyCronRequest(req, Env.CRON_SECRET);
+  if (forbidden) return forbidden;
 
   const trace = createTraceContext(req);
   const logger = createRequestLogger(req, ENDPOINT).child({
@@ -284,24 +269,15 @@ Deno.serve(async (req: Request): Promise<Response> => {
     }, logger),
   );
 
-  // ── Step 9: Trigger background worker for post-nightly jobs ──────────────
-  stepResults.push(
-    await runStep("trigger_worker", async () => {
-      const resp = await fetch(
-        `${Env.SUPABASE_URL}/functions/v1/run-background-worker`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Cron-Secret": Env.SUPABASE_SERVICE_KEY.slice(-20),
-          },
-          body: JSON.stringify({}),
-          signal: AbortSignal.timeout(30_000),
-        },
-      );
-      return { workerTriggered: resp.ok, status: resp.status };
-    }, logger),
-  );
+  // ── P0-C (P1-07 + P2-09): the former Step 9 "trigger_worker" fetch
+  // to run-background-worker was REMOVED, not repaired. Nightly tasks
+  // are synchronous by frozen constraint (ROADMAP I-03, drift D-05);
+  // the call was prohibited behavior whose only runtime effect was a
+  // permanent 403 from the wrong derived secret (P1-07). Fixing the
+  // secret alone would have activated the forbidden wake. Worker
+  // wake-up belongs exclusively to the flag-gated minute cron path
+  // (run-cron-minute, ENABLE_WORKER_TRIGGER) and the future scheduler
+  // decision (NPD-05).
 
   // ── Audit the nightly run ─────────────────────────────────────────────────
   const failedSteps = stepResults.filter((r) => !r.ok);
