@@ -329,13 +329,20 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
         let patient: DbPatient;
 
+        // Match BOTH the canonical E.164 form and the legacy raw form:
+        // before this fix the INSERT below persisted the raw 10-digit
+        // phone while the lookup filtered on E.164, so the canonical
+        // patient was never found on rebooking (E1 defect). limit(1)
+        // because the DB dedupe index includes the name, so several
+        // patient rows may legitimately share one phone.
         const { data: existingPatient } = await db
           .from("patients")
           .select("*")
           .eq("hospital_id", hospitalId)
-          .eq("normalized_phone", normalizedPhone)
+          .in("normalized_phone", [normalizedPhone, body.patientPhone])
           .eq("is_deleted", false)
-          .single();
+          .limit(1)
+          .maybeSingle();
 
         if (existingPatient) {
           patient = existingPatient as DbPatient;
@@ -366,7 +373,9 @@ Deno.serve(async (req: Request): Promise<Response> => {
             .insert({
               hospital_id: hospitalId,
               full_name: body.patientName,
-              normalized_phone: body.patientPhone,
+              // Persist the SAME canonical E.164 form the lookup above
+              // filters on — the column's declared meaning.
+              normalized_phone: normalizedPhone,
               age: body.patientAge,
               gender: body.patientGender,
               village: body.village,
@@ -379,13 +388,15 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
           if (patientError || !newPatient) {
             // Race condition: another request created the same patient
-            // Retry fetch once
+            // Retry fetch once (same dual-form phone match as above).
             const { data: racePatient } = await db
               .from("patients")
               .select("*")
               .eq("hospital_id", hospitalId)
-              .eq("normalized_phone", body.patientPhone)
-              .single();
+              .in("normalized_phone", [normalizedPhone, body.patientPhone])
+              .eq("is_deleted", false)
+              .limit(1)
+              .maybeSingle();
 
             if (!racePatient) {
               throw new InternalError("Failed to create patient", {

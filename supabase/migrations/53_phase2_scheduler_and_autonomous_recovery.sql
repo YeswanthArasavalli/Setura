@@ -265,8 +265,17 @@ BEGIN
             v_stale_jobs := 0;
     END;
 
+    -- Migration 53: the no-arg call public.cleanup_stale_presence()
+    -- was made ambiguous (SQLSTATE 42725) by two coexisting
+    -- overloads - the original () and a later (p_batch_size integer
+    -- DEFAULT 1000); a zero-argument call matches both and the
+    -- scheduler aborted. This defect was dormant only because nothing
+    -- ever invoked run_scheduled_tasks until Phase 2 wired a
+    -- scheduler. Call the bounded batched overload explicitly (a single
+    -- integer argument resolves to exactly one candidate); it performs
+    -- the same stale-presence purge, in a bounded batch.
     BEGIN
-        v_stale_presence := public.cleanup_stale_presence();
+        v_stale_presence := public.cleanup_stale_presence(1000);
     EXCEPTION
         WHEN undefined_function THEN
             v_stale_presence := 0;
@@ -357,6 +366,7 @@ DECLARE
     v_jobs      INTEGER;
     v_queued    INTEGER;
     v_result    JSONB;
+    v_stale_presence INTEGER;
 BEGIN
     -- 6.1 Both schedules registered with their expected commands.
     SELECT COUNT(*) INTO v_jobs
@@ -460,6 +470,11 @@ BEGIN
             'HTTP request despite being unprovisioned';
     END IF;
 
+    -- 6.6 The scheduler's stale-presence purge must resolve to exactly
+    -- one function (the ambiguous no-arg call raised 42725 once the
+    -- scheduler actually invoked run_scheduled_tasks).
+    v_stale_presence := public.cleanup_stale_presence(1000);
+
     v_result := public.scheduler_fire_nightly();
 
     IF v_result ->> 'fired' <> 'false'
@@ -501,8 +516,12 @@ VALUES (
     'enqueues zero HTTP when unprovisioned; and wire the previously '
     'zero-caller run_worker_crash_recovery (detect_crashed_workers -> '
     'reclaim_crashed_worker_jobs) into run_scheduled_tasks so the '
-    'minute tick performs autonomous crash recovery; all new/changed '
-    'SECURITY DEFINER functions restated service_role-only and '
+    'minute tick performs autonomous crash recovery; also resolves the '
+    'latent SQLSTATE 42725 in run_scheduled_tasks (ambiguous no-arg '
+    'cleanup_stale_presence() with two coexisting overloads, dormant '
+    'until the scheduler first invoked it) by calling the bounded '
+    'batched overload explicitly; all new/changed SECURITY DEFINER '
+    'functions restated service_role-only and '
     'verified, including the fail-closed no-op path',
     'schema',
     'applied',

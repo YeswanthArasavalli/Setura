@@ -229,7 +229,6 @@ Deno.serve(
           status: "cancelled",
           cancellation_reason: body.cancellationReason,
           cancelled_at: now,
-          cancelled_by: auth.userId,
           updated_at: now,
         })
         .eq(

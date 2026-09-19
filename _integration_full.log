@@ -1,0 +1,305 @@
+deno : [0m[32mTask[0m [0m[36mtest:integration[0m deno test --allow-net 
+--allow-env --allow-run tests/integration/
+At line:1 char:2
++  deno task test:integration 2>&1 | Out-String | Set-Content _integrat ...
++  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([0m[32mTask[...ts/integration/ 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[0m[32mCheck[0m tests/integration/booking_fee_refund.test.ts
+[0m[32mCheck[0m tests/integration/doctor_operations.test.ts
+[0m[32mCheck[0m tests/integration/enterprise_command_center.test.ts
+[0m[32mCheck[0m tests/integration/hospital_core_journey.test.ts
+[0m[32mCheck[0m tests/integration/local_stack.test.ts
+[0m[32mCheck[0m tests/integration/multi_role_auth.test.ts
+[0m[32mCheck[0m tests/integration/privilege_isolation.test.ts
+[0m[32mCheck[0m tests/integration/queue_operations.test.ts
+[0m[32mCheck[0m tests/integration/queue_runtime.test.ts
+[0m[32mCheck[0m tests/integration/refund_sync.test.ts
+[0m[32mCheck[0m tests/integration/scheduler_autonomy.test.ts
+[0m[32mCheck[0m tests/integration/settlement_record_payment.test.ts
+[0m[32mCheck[0m tests/integration/usage_retention.test.ts
+[0m[32mCheck[0m tests/integration/whatsapp_conversational.test.ts
+[0m[32mCheck[0m tests/integration/whatsapp_lifecycle.test.ts
+[0m[32mCheck[0m tests/integration/worker_job_failure.test.ts
+[0m[32mCheck[0m tests/integration/worker_lease_persistence.test.ts
+[0m[32mCheck[0m tests/integration/worker_lifecycle.test.ts
+[0m[38;5;245mrunning 3 tests from ./tests/integration/booking_fee_refund.test.ts[0m
+P0-04: create_booking writes booking_fee_inr from the platform fee ... [0m[32mok[0m [0m[38;5;245m(761ms)[0m
+P0-04: calculate_refund_amount refunds the platform fee (non-zero) ... [0m[32mok[0m [0m[38;5;245m(20ms)[0m
+P0-04: cleanup fixtures ... [0m[32mok[0m [0m[38;5;245m(86ms)[0m
+[0m[38;5;245mrunning 16 tests from ./tests/integration/doctor_operations.test.ts[0m
+doc: open session is idempotent and records session_started ... [0m[32mok[0m [0m[38;5;245m(868ms)[0m
+doc: early closure records event, notifies patients, refuses reopen ... [0m[32mok[0m [0m[38;5;245m(245ms)[0m
+doc: consultation start stamps timestamp and is idempotent ... [0m[32mok[0m [0m[38;5;245m(371ms)[0m
+doc: completion returns duration, stamps timestamp, enqueues SLA refresh ... [0m[32mok[0m [0m[38;5;245m(242ms)[0m
+doc: return to waiting clears stale start timestamp and is idempotent ... [0m[32mok[0m [0m[38;5;245m(190ms)[0m
+doc: concurrent consultation starts ÔÇö exactly one wins ... [0m[32mok[0m [0m[38;5;245m(167ms)[0m
+doc: emergency insertion jumps the queue and dedupes on key ... [0m[32mok[0m [0m[38;5;245m(188ms)[0m
+doc: break pauses consultations and resume restores them ... [0m[32mok[0m [0m[38;5;245m(336ms)[0m
+doc: dashboard reflects the full consultation day accurately ... [0m[32mok[0m [0m[38;5;245m(408ms)[0m
+doc: clinical notes are append-only and attributed to the hospital ... [0m[32mok[0m [0m[38;5;245m(141ms)[0m
+doc: consultation notes cascade with booking deletion ... [0m[32mok[0m [0m[38;5;245m(140ms)[0m
+doc: clinical_action and clinical_note are registered audit actions ... [0m[32mok[0m [0m[38;5;245m(8ms)[0m
+doc http: doctor runs a full consultation day with audit trail ... [0m[32mok[0m [0m[38;5;245m(881ms)[0m
+doc http: a doctor cannot operate another doctor's session ... [0m[32mok[0m [0m[38;5;245m(512ms)[0m
+doc: hospital isolation holds at the endpoint and RPC layers ... [0m[32mok[0m [0m[38;5;245m(494ms)[0m
+zz doc: cleanup leaves no fixtures behind ... [0m[32mok[0m [0m[38;5;245m(1s)[0m
+[0m[38;5;245mrunning 23 tests from ./tests/integration/enterprise_command_center.test.ts[0m
+ent: setup fixture hospitals, actors and source data ... [0m[32mok[0m [0m[38;5;245m(1s)[0m
+ent: command center overview is exact against fixtures ... [0m[32mok[0m [0m[38;5;245m(11ms)[0m
+ent: operational scores stay within 0-100 bounds ... [0m[32mok[0m [0m[38;5;245m(10ms)[0m
+ent: timeline streams fired alerts with filters and isolation ... [0m[32mok[0m [0m[38;5;245m(43ms)[0m
+ent: daily / weekly / monthly dashboards return shaped data ... [0m[32mok[0m [0m[38;5;245m(22ms)[0m
+ent: doctor performance and rankings match fixture bookings ... [0m[32mok[0m [0m[38;5;245m(20ms)[0m
+ent: financial command center reconciles exactly ... [0m[32mok[0m [0m[38;5;245m(11ms)[0m
+ent: revenue forecast is deterministic ... [0m[32mok[0m [0m[38;5;245m(14ms)[0m
+ent: financial isolation between tenants ... [0m[32mok[0m [0m[38;5;245m(19ms)[0m
+ent: SLA dashboard and predictive insights return shaped data ... [0m[32mok[0m [0m[38;5;245m(17ms)[0m
+ent: alert dedupe, acknowledge, assign, escalate, resolve ... [0m[32mok[0m [0m[38;5;245m(95ms)[0m
+ent: suppression windows gate alert firing ... [0m[32mok[0m [0m[38;5;245m(27ms)[0m
+ent: alert center listing and analytics are tenant-scoped ... [0m[32mok[0m [0m[38;5;245m(31ms)[0m
+ent: portfolio and benchmarks aggregate both tenants ... [0m[32mok[0m [0m[38;5;245m(24ms)[0m
+ent: report engine supports all 8 report types ... [0m[32mok[0m [0m[38;5;245m(80ms)[0m
+ent: integrity verification RPCs pass on fixture data ... [0m[32mok[0m [0m[38;5;245m(28ms)[0m
+ent: executive audit search filters by action and actor ... [0m[32mok[0m [0m[38;5;245m(24ms)[0m
+ent: broadcasts respect flag gating and idempotency ... [0m[32mok[0m [0m[38;5;245m(456ms)[0m
+ent http: command-center overview and timeline ... [0m[32mok[0m [0m[38;5;245m(404ms)[0m
+ent http: auth gates enforce roles and portfolio scope ... [0m[32mok[0m [0m[38;5;245m(436ms)[0m
+ent http: alert acknowledgment is audited ... [0m[32mok[0m [0m[38;5;245m(386ms)[0m
+ent http: report generation in json, csv and pdf-ready ... [0m[32mok[0m [0m[38;5;245m(570ms)[0m
+zz ent: cleanup removes non-audited fixtures ... [0m[32mok[0m [0m[38;5;245m(410ms)[0m
+[0m[38;5;245mrunning 18 tests from ./tests/integration/hospital_core_journey.test.ts[0m
+E1 00: provision isolated fixture tenants and actors ... [0m[32mok[0m [0m[38;5;245m(1s)[0m
+E1 01: registration + appointment over HTTP create a linked booked token ... [0m[32mok[0m [0m[38;5;245m(486ms)[0m
+E1 02: invalid input, tenant mismatch and unauthorized access are refused ... [0m[32mok[0m [0m[38;5;245m(213ms)[0m
+E1 03: walk-in rebooking reuses the canonical patient (no duplicate identity) ... [0m[32mok[0m [0m[38;5;245m(253ms)[0m
+E1 04: replaying the registration request returns the same booking, no second token ... [0m[32mok[0m [0m[38;5;245m(314ms)[0m
+E1 05: 8 concurrent create_booking calls allocate distinct gapless tokens ... [0m[32mok[0m [0m[38;5;245m(69ms)[0m
+E1 06: reception check-in moves the walk-in to checked_in ... [0m[32mok[0m [0m[38;5;245m(330ms)[0m
+E1 07: a cancelled booking keeps its token but is NOT callable ... [0m[32mok[0m [0m[38;5;245m(634ms)[0m
+E1 08: queue-control calls the checked-in walk-in; repeat call is idempotent ... [0m[32mok[0m [0m[38;5;245m(421ms)[0m
+E1 09: doctor-operations refuses non-doctors and runs the full consult leg ... [0m[32mok[0m [0m[38;5;245m(512ms)[0m
+E1 10: call_next advances to the lowest active token (booking 1) ... [0m[32mok[0m [0m[38;5;245m(85ms)[0m
+E1 11: manual_whatsapp booking snapshots platform 10 + receptionist 5 ... [0m[32mok[0m [0m[38;5;245m(135ms)[0m
+E1 12: capture writes order+booking+ledger atomically and dedupes replay ... [0m[32mok[0m [0m[38;5;245m(41ms)[0m
+E1 13: every booking enqueued exactly one confirmation job ... [0m[32mok[0m [0m[38;5;245m(5ms)[0m
+E1 14: patient history reads respect tenant isolation (real RLS) ... [0m[32mok[0m [0m[38;5;245m(38ms)[0m
+E1 15: remaining capacity sums BOTH shifts (50), not just the first ... [0m[32mok[0m [0m[38;5;245m(9ms)[0m
+E1 16: invalid writes are refused without side effects ... [0m[32mok[0m [0m[38;5;245m(78ms)[0m
+E1 99: cleanup ÔÇö hospital B fully removed, hospital A stays inert ledger residue ... [0m[32mok[0m [0m[38;5;245m(177ms)[0m
+[0m[38;5;245mrunning 11 tests from ./tests/integration/local_stack.test.ts[0m
+migrations: registry records applied migrations incl. 39 ... [0m[32mok[0m [0m[38;5;245m(679ms)[0m
+seed: hospital exists with expected attributes ... [0m[32mok[0m [0m[38;5;245m(5ms)[0m
+seed: exactly 4 profiles (idempotent, no duplicates) ... [0m[32mok[0m [0m[38;5;245m(5ms)[0m
+seed: role assignment matches the seeded users ... [0m[32mok[0m [0m[38;5;245m(6ms)[0m
+seed: doctor specialization with 300 INR fee ... [0m[32mok[0m [0m[38;5;245m(5ms)[0m
+seed: 12 doctor schedule slots (6 days +ù 2 shifts) ... [0m[32mok[0m [0m[38;5;245m(5ms)[0m
+seed: 7 working-hours rows, Sunday closed ... [0m[32mok[0m [0m[38;5;245m(6ms)[0m
+seed: hospital settings converged to seed values ... [0m[32mok[0m [0m[38;5;245m(5ms)[0m
+seed: booking fee policy matches seed values ... [0m[32mok[0m [0m[38;5;245m(5ms)[0m
+seed: queue configuration keys present ... [0m[32mok[0m [0m[38;5;245m(5ms)[0m
+seed: hospital feature flags enabled ... [0m[32mok[0m [0m[38;5;245m(5ms)[0m
+[0m[38;5;245mrunning 12 tests from ./tests/integration/multi_role_auth.test.ts[0m
+d1: setup hospitals and multi-role actors ... [0m[32mok[0m [0m[38;5;245m(2s)[0m
+d1: a single primary role resolves to that role ... [0m[32mok[0m [0m[38;5;245m(68ms)[0m
+d1: multiple roles at one hospital resolve to the primary ... [0m[32mok[0m [0m[38;5;245m(67ms)[0m
+d1: primary doctor with a receptionist role resolves to doctor ... [0m[32mok[0m [0m[38;5;245m(61ms)[0m
+d1: primary hospital_admin with a secondary role resolves to hospital_admin ... [0m[32mok[0m [0m[38;5;245m(104ms)[0m
+d1: multi-hospital primary roles resolve per selected hospital ...
+[0m[38;5;245m------- post-test output -------[0m
+{"ts":"2026-09-19T11:06:37.233Z","level":"warn","msg":"Multiple primary roles; resolved to least privileged","service":"setura-edge","version":"unknown","env":"test","userId":"b0e899c8-9f7e-4202-bce4-95d308e45233","scope":"no hospital context","candidates":["hospital_admin","doctor"],"resolved":"doctor"}
+[0m[38;5;245m----- post-test output end -----[0m
+d1: multi-hospital primary roles resolve per selected hospital ... [0m[32mok[0m [0m[38;5;245m(168ms)[0m
+d1: a role set with no primary fails closed ...
+[0m[38;5;245m------- post-test output -------[0m
+{"ts":"2026-09-19T11:06:37.287Z","level":"error","msg":"No primary role; denying access","service":"setura-edge","version":"unknown","env":"test","userId":"5fbea368-132c-4c5f-90cc-95c753fa7fd3","scope":"hospital 48002edf-bb39-4096-af4f-b513a5915ae1","roles":["doctor","receptionist"]}
+[0m[38;5;245m----- post-test output end -----[0m
+d1: a role set with no primary fails closed ... [0m[32mok[0m [0m[38;5;245m(128ms)[0m
+d1: a role at one hospital grants nothing at another ... [0m[32mok[0m [0m[38;5;245m(107ms)[0m
+d1: global_admin resolves at any hospital without a grant there ... [0m[32mok[0m [0m[38;5;245m(127ms)[0m
+d1: an inactive profile is denied regardless of role set ... [0m[32mok[0m [0m[38;5;245m(64ms)[0m
+d1: no token and a garbage token are both rejected ...
+[0m[38;5;245m------- post-test output -------[0m
+{"ts":"2026-09-19T11:06:37.670Z","level":"warn","msg":"JWT validation failed","service":"setura-edge","version":"unknown","env":"test","authError":"invalid JWT: unable to parse or verify signature, token is malformed: could not JSON decode header: invalid character '\\u009e' looking for beginning of value"}
+[0m[38;5;245m----- post-test output end -----[0m
+d1: no token and a garbage token are both rejected ... [0m[32mok[0m [0m[38;5;245m(8ms)[0m
+d1: teardown removes every fixture row ... [0m[32mok[0m [0m[38;5;245m(412ms)[0m
+[0m[38;5;245mrunning 22 tests from ./tests/integration/privilege_isolation.test.ts[0m
+privilege: setup two tenants with real tokens and real rows ... [0m[32mok[0m [0m[38;5;245m(1s)[0m
+privilege: Category A RLS helpers remain callable ... [0m[32mok[0m [0m[38;5;245m(71ms)[0m
+privilege: Category D RPCs are refused for anon ... [0m[32mok[0m [0m[38;5;245m(103ms)[0m
+privilege: Category D RPCs are refused for authenticated ... [0m[32mok[0m [0m[38;5;245m(165ms)[0m
+privilege: Category D refusal wrote nothing ... [0m[32mok[0m [0m[38;5;245m(5ms)[0m
+privilege: Category D read-only RPCs still work for service_role ... [0m[32mok[0m [0m[38;5;245m(45ms)[0m
+privilege: Category C RPCs are refused for anon and authenticated ... [0m[32mok[0m [0m[38;5;245m(164ms)[0m
+privilege: Category C RPCs still work for service_role ... [0m[32mok[0m [0m[38;5;245m(28ms)[0m
+privilege: Category B internal RPCs are refused for anon and authenticated ... [0m[32mok[0m [0m[38;5;245m(69ms)[0m
+privilege: Category B RPCs still work for service_role ... [0m[32mok[0m [0m[38;5;245m(22ms)[0m
+privilege: INVOKER operational functions are service-only ... [0m[32mok[0m [0m[38;5;245m(82ms)[0m
+isolation: whatsapp_conversation_states is unreachable by clients ... [0m[32mok[0m [0m[38;5;245m(20ms)[0m
+isolation: queue_runtime_events is scoped to the caller's hospital ... [0m[32mok[0m [0m[38;5;245m(34ms)[0m
+isolation: analytics_refresh_logs is global-admin only ... [0m[32mok[0m [0m[38;5;245m(47ms)[0m
+isolation: alert_activity_log and alert_suppressions are hospital scoped ... [0m[32mok[0m [0m[38;5;245m(24ms)[0m
+isolation: alert_events is not client-readable across tenants ... [0m[32mok[0m [0m[38;5;245m(13ms)[0m
+d4: system_settings cannot be read anonymously ... [0m[32mok[0m [0m[38;5;245m(36ms)[0m
+d4: role_permissions (the authorization matrix) is not public ... [0m[32mok[0m [0m[38;5;245m(15ms)[0m
+alerts: cross-hospital mutation is refused by the database ... [0m[32mok[0m [0m[38;5;245m(33ms)[0m
+alerts: the legitimate hospital admin path still works ... [0m[32mok[0m [0m[38;5;245m(29ms)[0m
+alerts: suppress_alerts enforces scope before it reports anything ... [0m[32mok[0m [0m[38;5;245m(31ms)[0m
+privilege: teardown removes every fixture row ... [0m[32mok[0m [0m[38;5;245m(207ms)[0m
+[0m[38;5;245mrunning 12 tests from ./tests/integration/queue_operations.test.ts[0m
+ops: mark doctor delay updates session, records event, notifies patients ... [0m[32mok[0m [0m[38;5;245m(797ms)[0m
+ops: repeat delay is idempotent; changed delay re-notifies ... [0m[32mok[0m [0m[38;5;245m(235ms)[0m
+ops: clear delay is idempotent and records previous minutes ...
+[0m[38;5;245m------- post-test output -------[0m
+{"ts":"2026-09-19T11:06:42.210Z","level":"info","msg":"Doctor delay cleared","service":"setura-edge","version":"unknown","env":"test","sessionId":"eaf00fcb-d276-4ec9-8175-e6f1966e640a","previousMinutes":25,"actorId":"00000000-0000-4000-8000-0000000000a4"}
+[0m[38;5;245m----- post-test output end -----[0m
+ops: clear delay is idempotent and records previous minutes ... [0m[32mok[0m [0m[38;5;245m(178ms)[0m
+ops: snapshot exposes delay-aware estimates and health metrics ... [0m[32mok[0m [0m[38;5;245m(205ms)[0m
+ops: evaluator fires congestion alert once and dedupes on re-run ... [0m[32mok[0m [0m[38;5;245m(155ms)[0m
+ops: evaluator detects stalled queue and records incident once ... [0m[32mok[0m [0m[38;5;245m(145ms)[0m
+ops: evaluator fires pause-exceeded alert for long pauses ... [0m[32mok[0m [0m[38;5;245m(142ms)[0m
+ops: evaluator fires SLA breach when daily avg wait exceeds threshold ... [0m[32mok[0m [0m[38;5;245m(33ms)[0m
+ops: alerts are attributed to the right tenant with its own thresholds ... [0m[32mok[0m [0m[38;5;245m(47ms)[0m
+ops: admin alert notifications are enqueued once per alert ... [0m[32mok[0m [0m[38;5;245m(33ms)[0m
+ops: queue_control and operational_alert are registered audit actions ... [0m[32mok[0m [0m[38;5;245m(4ms)[0m
+zz ops: cleanup leaves no fixtures behind ... [0m[32mok[0m [0m[38;5;245m(460ms)[0m
+[0m[38;5;245mrunning 16 tests from ./tests/integration/queue_runtime.test.ts[0m
+queue: advance_queue calls the next token and records an event ... [0m[32mok[0m [0m[38;5;245m(735ms)[0m
+queue: advance respects priority_score over token order ... [0m[32mok[0m [0m[38;5;245m(37ms)[0m
+queue: 5-way concurrent advance picks 5 distinct tokens ... [0m[32mok[0m [0m[38;5;245m(110ms)[0m
+queue: pause blocks advance, is idempotent, and resume restores flow ... [0m[32mok[0m [0m[38;5;245m(141ms)[0m
+queue: recall returns the called booking and repeats safely ... [0m[32mok[0m [0m[38;5;245m(116ms)[0m
+queue: skip marks skipped, refuses re-skip, restore brings it back ... [0m[32mok[0m [0m[38;5;245m(146ms)[0m
+queue: mark absent sets no_show and refuses repeats ... [0m[32mok[0m [0m[38;5;245m(50ms)[0m
+queue: manual call overrides order and is idempotent ... [0m[32mok[0m [0m[38;5;245m(99ms)[0m
+queue: shared state machine enforces the doctor workflow ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+queue: snapshot reconstructs full state with wait estimates ... [0m[32mok[0m [0m[38;5;245m(48ms)[0m
+queue: completion event recorded exactly once on exhaustion ... [0m[32mok[0m [0m[38;5;245m(45ms)[0m
+queue: pause/resume enqueue one WhatsApp job per waiting patient ... [0m[32mok[0m [0m[38;5;245m(144ms)[0m
+queue: trigger_sla_refresh collapses bursts into one job ... [0m[32mok[0m [0m[38;5;245m(19ms)[0m
+queue: skip racing a terminal transition - exactly one wins ... [0m[32mok[0m [0m[38;5;245m(38ms)[0m
+queue: foreign bookings cannot be controlled through another session ... [0m[32mok[0m [0m[38;5;245m(42ms)[0m
+zz: fixture cleanup ... [0m[32mok[0m [0m[38;5;245m(261ms)[0m
+[0m[38;5;245mrunning 5 tests from ./tests/integration/refund_sync.test.ts[0m
+refund: initiation cancels the booking and creates refund record ... [0m[32mok[0m [0m[38;5;245m(637ms)[0m
+refund: confirmation syncs payment status, ledger and settlement input ... [0m[32mok[0m [0m[38;5;245m(20ms)[0m
+refund: replayed confirmation is a no-op (no duplicate ledger entry) ... [0m[32mok[0m [0m[38;5;245m(12ms)[0m
+refund: confirmation of unknown refund id returns false ... [0m[32mok[0m [0m[38;5;245m(6ms)[0m
+refund: cleanup fixtures ... [0m[32mok[0m [0m[38;5;245m(36ms)[0m
+[0m[38;5;245mrunning 3 tests from ./tests/integration/scheduler_autonomy.test.ts[0m
+phase2: run_scheduled_tasks reclaims a crashed worker's job (v2 recovery wired in) ...
+[0m[38;5;245m------- post-test output -------[0m
+{"ts":"2026-09-19T11:06:47.216Z","level":"info","msg":"Worker registered","service":"setura-edge","version":"unknown","env":"test","test":"phase2","workerId":"p2-dead-ae5e1d9b","workerType":"test","instanceId":"ae5e1d9b"}
+{"ts":"2026-09-19T11:06:47.226Z","level":"info","msg":"Jobs claimed","service":"setura-edge","version":"unknown","env":"test","test":"phase2","workerId":"p2-dead-ae5e1d9b","count":1,"jobTypes":["phase2_scheduler_selftest"],"jobIds":["e0d77a1e-61f2-4d98-a95a-dc88f69a6a47"]}
+[0m[38;5;245m----- post-test output end -----[0m
+phase2: run_scheduled_tasks reclaims a crashed worker's job (v2 recovery wired in) ... [0m[32mok[0m [0m[38;5;245m(786ms)[0m
+phase2: scheduler_fire_minute is a clean no-op until provisioned ... [0m[32mok[0m [0m[38;5;245m(7ms)[0m
+phase2: anon cannot EXECUTE scheduler_fire_minute (SQLSTATE 42501) ... [0m[32mok[0m [0m[38;5;245m(5ms)[0m
+[0m[38;5;245mrunning 3 tests from ./tests/integration/settlement_record_payment.test.ts[0m
+settlement: authenticated record_payment returns 501, not 500 ... [0m[32mok[0m [0m[38;5;245m(1s)[0m
+settlement: record_payment is refused regardless of settlement existence ... [0m[32mok[0m [0m[38;5;245m(52ms)[0m
+settlement: unauthenticated record_payment is still denied (not 501) ... [0m[32mok[0m [0m[38;5;245m(10ms)[0m
+[0m[38;5;245mrunning 8 tests from ./tests/integration/usage_retention.test.ts[0m
+usage: concurrent booking increments are atomic ... [0m[32mok[0m [0m[38;5;245m(646ms)[0m
+usage: whatsapp/api/queue counters accumulate in metadata.usage ... [0m[32mok[0m [0m[38;5;245m(38ms)[0m
+usage: month rollover resets extended counters ... [0m[32mok[0m [0m[38;5;245m(14ms)[0m
+usage: unknown metric is rejected ... [0m[32mok[0m [0m[38;5;245m(11ms)[0m
+usage: sync recomputes doctor/receptionist gauges ... [0m[32mok[0m [0m[38;5;245m(36ms)[0m
+usage: get_subscription_usage exposes limits and counters ... [0m[32mok[0m [0m[38;5;245m(6ms)[0m
+retention: cleanup deletes expired jobs, preserves ledger/audit ... [0m[32mok[0m [0m[38;5;245m(75ms)[0m
+retention: immutable tables have no hard-delete policy ... [0m[32mok[0m [0m[38;5;245m(6ms)[0m
+[0m[38;5;245mrunning 28 tests from ./tests/integration/whatsapp_conversational.test.ts[0m
+wa booking: new patient ÔÇö asks for name first ... [0m[32mok[0m [0m[38;5;245m(1s)[0m
+wa booking: name given ÔÇö advances to date selection ... [0m[32mok[0m [0m[38;5;245m(61ms)[0m
+wa booking: valid date ÔÇö asks for confirmation with fee ... [0m[32mok[0m [0m[38;5;245m(63ms)[0m
+wa booking: yes ÔÇö booking created with token via RPC ... [0m[32mok[0m [0m[38;5;245m(86ms)[0m
+wa booking: existing patient skips the name step ... [0m[32mok[0m [0m[38;5;245m(108ms)[0m
+wa booking: duplicate same-day booking is refused politely ... [0m[32mok[0m [0m[38;5;245m(115ms)[0m
+wa booking: create_booking idempotency key is replay-safe ... [0m[32mok[0m [0m[38;5;245m(12ms)[0m
+wa booking: hospital isolation ÔÇö booking stays in its tenant ... [0m[32mok[0m [0m[38;5;245m(267ms)[0m
+wa queue: active booking ÔÇö token, live token, ahead, wait ... [0m[32mok[0m [0m[38;5;245m(74ms)[0m
+wa queue: no active booking ÔÇö polite redirect ... [0m[32mok[0m [0m[38;5;245m(46ms)[0m
+wa queue: completed booking reports completion ... [0m[32mok[0m [0m[38;5;245m(45ms)[0m
+wa queue: cancelled booking reports cancellation ... [0m[32mok[0m [0m[38;5;245m(58ms)[0m
+wa reschedule: success ÔÇö old rescheduled, new booking + token ... [0m[32mok[0m [0m[38;5;245m(192ms)[0m
+wa reschedule: doctor unavailable on requested date ... [0m[32mok[0m [0m[38;5;245m(143ms)[0m
+wa reschedule: hospital closed (holiday) on requested date ... [0m[32mok[0m [0m[38;5;245m(109ms)[0m
+wa reschedule: invalid date re-prompts without state loss ... [0m[32mok[0m [0m[38;5;245m(136ms)[0m
+wa reschedule: concurrent cancellation aborts cleanly ... [0m[32mok[0m [0m[38;5;245m(153ms)[0m
+wa cancel: success with reason recorded ... [0m[32mok[0m [0m[38;5;245m(97ms)[0m
+wa cancel: already cancelled is idempotent ... [0m[32mok[0m [0m[38;5;245m(51ms)[0m
+wa cancel: refund path for paid booking ... [0m[32mok[0m [0m[38;5;245m(156ms)[0m
+wa cancel: no refund for unpaid booking ... [0m[32mok[0m [0m[38;5;245m(115ms)[0m
+wa conversation: expired state resets to idle ... [0m[32mok[0m [0m[38;5;245m(104ms)[0m
+wa conversation: strong intent interrupts an in-progress flow ... [0m[32mok[0m [0m[38;5;245m(85ms)[0m
+wa conversation: repeated unknown input escalates to handoff ... [0m[32mok[0m [0m[38;5;245m(151ms)[0m
+wa conversation: repeated Meta message is a no-op ... [0m[32mok[0m [0m[38;5;245m(43ms)[0m
+wa conversation: explicit human handoff request ... [0m[32mok[0m [0m[38;5;245m(58ms)[0m
+wa conversation: inbound messages are persisted as received ... [0m[32mok[0m [0m[38;5;245m(7ms)[0m
+wa conversation: reply jobs carry phone, text and hospital ... [0m[32mok[0m [0m[38;5;245m(47ms)[0m
+[0m[38;5;245mrunning 9 tests from ./tests/integration/whatsapp_lifecycle.test.ts[0m
+whatsapp: queue_whatsapp_message is idempotent on its key ... [0m[32mok[0m [0m[38;5;245m(740ms)[0m
+whatsapp: fetch_pending claims atomically (no double claim) ... [0m[32mok[0m [0m[38;5;245m(30ms)[0m
+whatsapp: schedule_whatsapp_retry backs off then exhausts ... [0m[32mok[0m [0m[38;5;245m(42ms)[0m
+whatsapp: delivery webhook reconciliation reaches read, terminal protected ... [0m[32mok[0m [0m[38;5;245m(46ms)[0m
+whatsapp: webhook replay is deduplicated via register_webhook_event_v2 ... [0m[32mok[0m [0m[38;5;245m(13ms)[0m
+whatsapp: stale processing rows are reclaimed after worker crash ... [0m[32mok[0m [0m[38;5;245m(25ms)[0m
+whatsapp: conversations and messages are hospital-scoped ... [0m[32mok[0m [0m[38;5;245m(36ms)[0m
+whatsapp: send-whatsapp-message rejects missing worker secret ... [0m[32mok[0m [0m[38;5;245m(171ms)[0m
+whatsapp: cleanup fixtures ... [0m[32mok[0m [0m[38;5;245m(27ms)[0m
+[0m[38;5;245mrunning 5 tests from ./tests/integration/worker_job_failure.test.ts[0m
+p0a: retryable failure reschedules with backoff and never dead-letters ... [0m[32mok[0m [0m[38;5;245m(667ms)[0m
+p0a: terminal failure dead-letters into original_job_id with full context ... [0m[32mok[0m [0m[38;5;245m(63ms)[0m
+p0a: repeated terminal failure keeps exactly one dead-letter row ... [0m[32mok[0m [0m[38;5;245m(77ms)[0m
+p0a: unknown job id returns FALSE without error ... [0m[32mok[0m [0m[38;5;245m(5ms)[0m
+p0a: anon cannot execute fail_job_v2 (SQLSTATE 42501) ... [0m[32mok[0m [0m[38;5;245m(604ms)[0m
+[0m[38;5;245mrunning 2 tests from ./tests/integration/worker_lease_persistence.test.ts[0m
+p0e: claim_jobs_v2 persists job_queue.lease_expires_at consistent with worker_job_leases ... [0m[32mok[0m [0m[38;5;245m(783ms)[0m
+p0e: anon cannot execute claim_jobs_v2 (SQLSTATE 42501) ... [0m[32mok[0m [0m[38;5;245m(577ms)[0m
+[0m[38;5;245mrunning 4 tests from ./tests/integration/worker_lifecycle.test.ts[0m
+w1: a real worker claims, leases and completes a job end-to-end ...
+[0m[38;5;245m------- post-test output -------[0m
+{"ts":"2026-09-19T11:06:58.219Z","level":"info","msg":"Worker registered","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-happy-8d490697","workerType":"test","instanceId":"8d490697"}
+{"ts":"2026-09-19T11:06:58.228Z","level":"info","msg":"Jobs claimed","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-happy-8d490697","count":1,"jobTypes":["w1_lifecycle_selftest"],"jobIds":["072bcd06-6df6-418e-a27b-51af95c2499c"]}
+{"ts":"2026-09-19T11:06:58.252Z","level":"debug","msg":"Job completed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"072bcd06-6df6-418e-a27b-51af95c2499c","jobType":"w1_lifecycle_selftest","attempt":1,"workerId":"w1-happy-8d490697"}
+{"ts":"2026-09-19T11:06:58.252Z","level":"info","msg":"job.w1_lifecycle_selftest completed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"072bcd06-6df6-418e-a27b-51af95c2499c","jobType":"w1_lifecycle_selftest","attempt":1,"workerId":"w1-happy-8d490697","durationMs":9}
+[0m[38;5;245m----- post-test output end -----[0m
+w1: a real worker claims, leases and completes a job end-to-end ... [0m[32mok[0m [0m[38;5;245m(753ms)[0m
+w1: a persistently failing handler retries then dead-letters with correct columns ...
+[0m[38;5;245m------- post-test output -------[0m
+{"ts":"2026-09-19T11:06:58.302Z","level":"info","msg":"Worker registered","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-fail-8d490697","workerType":"test","instanceId":"8d490697"}
+{"ts":"2026-09-19T11:06:58.320Z","level":"info","msg":"Jobs claimed","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-fail-8d490697","count":1,"jobTypes":["w1_lifecycle_selftest"],"jobIds":["d211a888-2b55-4b63-a4c3-e683faa488f8"]}
+{"ts":"2026-09-19T11:06:58.321Z","level":"error","msg":"Job processing failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"d211a888-2b55-4b63-a4c3-e683faa488f8","jobType":"w1_lifecycle_selftest","attempt":1,"workerId":"w1-fail-8d490697","error":{"name":"Error","message":"w1 deterministic failure","stack":"Error: w1 deterministic failure\n    at Object.process (file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:283:37)\n    at Module.processJob (file:///D:/Projects/datasets/setura/supabase/functions/_shared/worker.ts:246:21)\n    at file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:292:31\n    at async innerWrapped (ext:cli/40_test.js:280:5)\n    at async exitSanitizer (ext:cli/40_test.js:191:27)\n    at async outerWrapped (ext:cli/40_test.js:223:14)"}}
+{"ts":"2026-09-19T11:06:58.331Z","level":"warn","msg":"Job failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"d211a888-2b55-4b63-a4c3-e683faa488f8","jobType":"w1_lifecycle_selftest","attempt":1,"workerId":"w1-fail-8d490697","errorMessage":"w1 deterministic failure"}
+{"ts":"2026-09-19T11:06:58.348Z","level":"info","msg":"Jobs claimed","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-fail-8d490697","count":1,"jobTypes":["w1_lifecycle_selftest"],"jobIds":["d211a888-2b55-4b63-a4c3-e683faa488f8"]}
+{"ts":"2026-09-19T11:06:58.348Z","level":"error","msg":"Job processing failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"d211a888-2b55-4b63-a4c3-e683faa488f8","jobType":"w1_lifecycle_selftest","attempt":2,"workerId":"w1-fail-8d490697","error":{"name":"Error","message":"w1 deterministic failure","stack":"Error: w1 deterministic failure\n    at Object.process (file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:283:37)\n    at Module.processJob (file:///D:/Projects/datasets/setura/supabase/functions/_shared/worker.ts:246:21)\n    at file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:292:31\n    at async innerWrapped (ext:cli/40_test.js:280:5)\n    at async exitSanitizer (ext:cli/40_test.js:191:27)\n    at async outerWrapped (ext:cli/40_test.js:223:14)"}}
+{"ts":"2026-09-19T11:06:58.355Z","level":"warn","msg":"Job failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"d211a888-2b55-4b63-a4c3-e683faa488f8","jobType":"w1_lifecycle_selftest","attempt":2,"workerId":"w1-fail-8d490697","errorMessage":"w1 deterministic failure"}
+{"ts":"2026-09-19T11:06:58.373Z","level":"info","msg":"Jobs claimed","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-fail-8d490697","count":1,"jobTypes":["w1_lifecycle_selftest"],"jobIds":["d211a888-2b55-4b63-a4c3-e683faa488f8"]}
+{"ts":"2026-09-19T11:06:58.373Z","level":"error","msg":"Job processing failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"d211a888-2b55-4b63-a4c3-e683faa488f8","jobType":"w1_lifecycle_selftest","attempt":3,"workerId":"w1-fail-8d490697","error":{"name":"Error","message":"w1 deterministic failure","stack":"Error: w1 deterministic failure\n    at Object.process (file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:283:37)\n    at Module.processJob (file:///D:/Projects/datasets/setura/supabase/functions/_shared/worker.ts:246:21)\n    at file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:292:31\n    at async innerWrapped (ext:cli/40_test.js:280:5)\n    at async exitSanitizer (ext:cli/40_test.js:191:27)\n    at async outerWrapped (ext:cli/40_test.js:223:14)"}}
+{"ts":"2026-09-19T11:06:58.378Z","level":"warn","msg":"Job failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"d211a888-2b55-4b63-a4c3-e683faa488f8","jobType":"w1_lifecycle_selftest","attempt":3,"workerId":"w1-fail-8d490697","errorMessage":"w1 deterministic failure"}
+{"ts":"2026-09-19T11:06:58.393Z","level":"info","msg":"Jobs claimed","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-fail-8d490697","count":1,"jobTypes":["w1_lifecycle_selftest"],"jobIds":["d211a888-2b55-4b63-a4c3-e683faa488f8"]}
+{"ts":"2026-09-19T11:06:58.394Z","level":"error","msg":"Job processing failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"d211a888-2b55-4b63-a4c3-e683faa488f8","jobType":"w1_lifecycle_selftest","attempt":4,"workerId":"w1-fail-8d490697","error":{"name":"Error","message":"w1 deterministic failure","stack":"Error: w1 deterministic failure\n    at Object.process (file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:283:37)\n    at Module.processJob (file:///D:/Projects/datasets/setura/supabase/functions/_shared/worker.ts:246:21)\n    at file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:292:31\n    at async innerWrapped (ext:cli/40_test.js:280:5)\n    at async exitSanitizer (ext:cli/40_test.js:191:27)\n    at async outerWrapped (ext:cli/40_test.js:223:14)"}}
+{"ts":"2026-09-19T11:06:58.400Z","level":"warn","msg":"Job failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"d211a888-2b55-4b63-a4c3-e683faa488f8","jobType":"w1_lifecycle_selftest","attempt":4,"workerId":"w1-fail-8d490697","errorMessage":"w1 deterministic failure"}
+{"ts":"2026-09-19T11:06:58.416Z","level":"info","msg":"Jobs claimed","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-fail-8d490697","count":1,"jobTypes":["w1_lifecycle_selftest"],"jobIds":["d211a888-2b55-4b63-a4c3-e683faa488f8"]}
+{"ts":"2026-09-19T11:06:58.416Z","level":"error","msg":"Job processing failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"d211a888-2b55-4b63-a4c3-e683faa488f8","jobType":"w1_lifecycle_selftest","attempt":5,"workerId":"w1-fail-8d490697","error":{"name":"Error","message":"w1 deterministic failure","stack":"Error: w1 deterministic failure\n    at Object.process (file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:283:37)\n    at Module.processJob (file:///D:/Projects/datasets/setura/supabase/functions/_shared/worker.ts:246:21)\n    at file:///D:/Projects/datasets/setura/tests/integration/worker_lifecycle.test.ts:292:31\n    at async innerWrapped (ext:cli/40_test.js:280:5)\n    at async exitSanitizer (ext:cli/40_test.js:191:27)\n    at async outerWrapped (ext:cli/40_test.js:223:14)"}}
+{"ts":"2026-09-19T11:06:58.423Z","level":"warn","msg":"Job failed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"d211a888-2b55-4b63-a4c3-e683faa488f8","jobType":"w1_lifecycle_selftest","attempt":5,"workerId":"w1-fail-8d490697","errorMessage":"w1 deterministic failure"}
+[0m[38;5;245m----- post-test output end -----[0m
+w1: a persistently failing handler retries then dead-letters with correct columns ... [0m[32mok[0m [0m[38;5;245m(182ms)[0m
+w1: a crashed worker's in-flight job is reclaimed (not stranded) ...
+[0m[38;5;245m------- post-test output -------[0m
+{"ts":"2026-09-19T11:06:58.488Z","level":"info","msg":"Worker registered","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-dead-8d490697","workerType":"test","instanceId":"8d490697"}
+{"ts":"2026-09-19T11:06:58.497Z","level":"info","msg":"Jobs claimed","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-dead-8d490697","count":1,"jobTypes":["w1_lifecycle_selftest"],"jobIds":["72d39833-608d-45f9-a2ac-51aae209f187"]}
+{"ts":"2026-09-19T11:06:58.549Z","level":"info","msg":"Worker registered","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-live-8d490697","workerType":"test","instanceId":"8d490697"}
+{"ts":"2026-09-19T11:06:58.557Z","level":"info","msg":"Jobs claimed","service":"setura-edge","version":"unknown","env":"test","test":"w1","workerId":"w1-live-8d490697","count":1,"jobTypes":["w1_lifecycle_selftest"],"jobIds":["72d39833-608d-45f9-a2ac-51aae209f187"]}
+{"ts":"2026-09-19T11:06:58.563Z","level":"debug","msg":"Job completed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"72d39833-608d-45f9-a2ac-51aae209f187","jobType":"w1_lifecycle_selftest","attempt":2,"workerId":"w1-live-8d490697"}
+{"ts":"2026-09-19T11:06:58.563Z","level":"info","msg":"job.w1_lifecycle_selftest completed","service":"setura-edge","version":"unknown","env":"test","test":"w1","jobId":"72d39833-608d-45f9-a2ac-51aae209f187","jobType":"w1_lifecycle_selftest","attempt":2,"workerId":"w1-live-8d490697","durationMs":6}
+[0m[38;5;245m----- post-test output end -----[0m
+w1: a crashed worker's in-flight job is reclaimed (not stranded) ... [0m[32mok[0m [0m[38;5;245m(120ms)[0m
+w1: enqueue is idempotent on the dedup key ÔÇö no second job row ... [0m[32mok[0m [0m[38;5;245m(29ms)[0m
+
+[0m[32mok[0m | 200 passed | 0 failed [0m[38;5;245m(42s)[0m
+
+

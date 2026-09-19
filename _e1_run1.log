@@ -1,0 +1,216 @@
+deno : [0m[32mCheck[0m tests/integration/hospital_core_journey.test.ts
+At line:1 char:9
++  $out = deno test --allow-net --allow-env --allow-run tests/integrati ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([0m[32mCheck...journey.test.ts 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[0m[38;5;245mrunning 18 tests from ./tests/integration/hospital_core_journey.test.ts[0m
+E1 00: provision isolated fixture tenants and actors ... [0m[31mFAILED[0m [0m[38;5;245m(1s)[0m
+E1 01: registration + appointment over HTTP create a linked booked token ... [0m[31mFAILED[0m [0m[38;5;245m(0ms)[0m
+E1 02: invalid input, tenant mismatch and unauthorized access are refused ... [0m[31mFAILED[0m [0m[38;5;245m(0ms)[0m
+E1 03: walk-in rebooking reuses the canonical patient (no duplicate identity) ... [0m[31mFAILED[0m [0m[38;5;245m(0ms)[0m
+E1 04: replaying the registration request returns the same booking, no second token ... [0m[31mFAILED[0m [0m[38;5;245m(0ms)[0m
+E1 05: 8 concurrent create_booking calls allocate distinct gapless tokens ... [0m[32mok[0m [0m[38;5;245m(188ms)[0m
+E1 06: reception check-in moves the walk-in to checked_in ... [0m[31mFAILED[0m [0m[38;5;245m(0ms)[0m
+E1 07: a cancelled booking keeps its token but is NOT callable ... [0m[31mFAILED[0m [0m[38;5;245m(0ms)[0m
+E1 08: queue-control calls the checked-in walk-in; repeat call is idempotent ... [0m[31mFAILED[0m [0m[38;5;245m(0ms)[0m
+E1 09: doctor-operations refuses non-doctors and runs the full consult leg ... [0m[31mFAILED[0m [0m[38;5;245m(0ms)[0m
+E1 10: call_next advances to the lowest active token (booking 1) ... [0m[31mFAILED[0m [0m[38;5;245m(0ms)[0m
+E1 11: manual_whatsapp booking snapshots platform 10 + receptionist 5 ... [0m[31mFAILED[0m [0m[38;5;245m(0ms)[0m
+E1 12: capture writes order+booking+ledger atomically and dedupes replay ... [0m[31mFAILED[0m [0m[38;5;245m(61ms)[0m
+E1 13: every booking enqueued exactly one confirmation job ... [0m[31mFAILED[0m [0m[38;5;245m(35ms)[0m
+E1 14: patient history reads respect tenant isolation (real RLS) ... [0m[31mFAILED[0m [0m[38;5;245m(0ms)[0m
+E1 15: remaining capacity sums BOTH shifts (50), not just the first ... [0m[31mFAILED[0m [0m[38;5;245m(22ms)[0m
+E1 16: invalid writes are refused without side effects ... [0m[31mFAILED[0m [0m[38;5;245m(25ms)[0m
+E1 99: fixture tenants cascade-clean every journey artifact ... [0m[31mFAILED[0m [0m[38;5;245m(226ms)[0m
+
+[0m[1m[37m[41m ERRORS [0m
+
+E1 00: provision isolated fixture tenants and actors [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:306:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal.
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   {[22m[39m
+[31m[1m-     code: "23505",[22m[39m
+[31m[1m-     details: "Key (hospital_id)=(36791a7b-8451-42be-9185-10b62b3f374e) already exists.",[22m[39m
+[31m[1m-     hint: null,[22m[39m
+[31m[1m-     message: 'duplicate key value violates unique constraint "hospital_settings_hospital_id_key"',[22m[39m
+[31m[1m-   }[22m[39m
+[32m[1m+   null[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m337[0m:[0m[33m5[0m
+
+E1 01: registration + appointment over HTTP create a linked booked token [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:398:6[0m
+[0m[1m[31merror[0m: TypeError: Cannot read properties of undefined (reading 'receptionA')
+    J.tokens.receptionA,
+[0m[31m             ^[0m
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m403[0m:[0m[33m14[0m
+
+E1 02: invalid input, tenant mismatch and unauthorized access are refused [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:463:6[0m
+[0m[1m[31merror[0m: TypeError: Cannot read properties of undefined (reading 'receptionA')
+    J.tokens.receptionA,
+[0m[31m             ^[0m
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m467[0m:[0m[33m14[0m
+
+E1 03: walk-in rebooking reuses the canonical patient (no duplicate identity) [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:511:6[0m
+[0m[1m[31merror[0m: TypeError: Cannot read properties of undefined (reading 'receptionA')
+    J.tokens.receptionA,
+[0m[31m             ^[0m
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m514[0m:[0m[33m14[0m
+
+E1 04: replaying the registration request returns the same booking, no second token [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:551:6[0m
+[0m[1m[31merror[0m: TypeError: Cannot read properties of undefined (reading 'receptionA')
+    J.tokens.receptionA,
+[0m[31m             ^[0m
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m557[0m:[0m[33m14[0m
+
+E1 06: reception check-in moves the walk-in to checked_in [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:689:6[0m
+[0m[1m[31merror[0m: TypeError: Cannot read properties of undefined (reading 'receptionA')
+    J.tokens.receptionA,
+[0m[31m             ^[0m
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m692[0m:[0m[33m14[0m
+
+E1 07: a cancelled booking keeps its token but is NOT callable [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:705:6[0m
+[0m[1m[31merror[0m: TypeError: Cannot read properties of undefined (reading 'receptionA')
+    J.tokens.receptionA,
+[0m[31m             ^[0m
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m711[0m:[0m[33m14[0m
+
+E1 08: queue-control calls the checked-in walk-in; repeat call is idempotent [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:784:6[0m
+[0m[1m[31merror[0m: TypeError: Cannot read properties of undefined (reading 'receptionA')
+    J.tokens.receptionA,
+[0m[31m             ^[0m
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m787[0m:[0m[33m14[0m
+
+E1 09: doctor-operations refuses non-doctors and runs the full consult leg [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:823:6[0m
+[0m[1m[31merror[0m: TypeError: Cannot read properties of undefined (reading 'receptionA')
+    J.tokens.receptionA,
+[0m[31m             ^[0m
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m827[0m:[0m[33m14[0m
+
+E1 10: call_next advances to the lowest active token (booking 1) [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:931:6[0m
+[0m[1m[31merror[0m: TypeError: Cannot read properties of undefined (reading 'doctorA')
+    J.tokens.doctorA,
+[0m[31m             ^[0m
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m934[0m:[0m[33m14[0m
+
+E1 11: manual_whatsapp booking snapshots platform 10 + receptionist 5 [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:950:6[0m
+[0m[1m[31merror[0m: TypeError: Cannot read properties of undefined (reading 'receptionA')
+    J.tokens.receptionA,
+[0m[31m             ^[0m
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m953[0m:[0m[33m14[0m
+
+E1 12: capture writes order+booking+ledger atomically and dedupes replay [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:978:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal.
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   {[22m[39m
+[31m[1m-     code: "42804",[22m[39m
+[31m[1m-     details: null,[22m[39m
+[31m[1m-     hint: "You will need to rewrite or cast the expression.",[22m[39m
+[31m[1m-     message: 'column "processing_status" is of type webhook_processing_status but expression is of type text',[22m[39m
+[31m[1m-   }[22m[39m
+[32m[1m+   null[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m1009[0m:[0m[33m3[0m
+
+E1 13: every booking enqueued exactly one confirmation job [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1080:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal: one confirm job per booking
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   0[22m[39m
+[32m[1m+   5[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m1094[0m:[0m[33m3[0m
+
+E1 14: patient history reads respect tenant isolation (real RLS) [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1118:6[0m
+[0m[1m[31merror[0m: TypeError: Cannot read properties of undefined (reading 'receptionA')
+  const clientA = createAuthClient(J.tokens.receptionA);
+[0m[31m                                            ^[0m
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m1121[0m:[0m[33m45[0m
+
+E1 15: remaining capacity sums BOTH shifts (50), not just the first [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1155:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal.
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   {[22m[39m
+[31m[1m-     code: "PGRST202",[22m[39m
+[31m[1m-     details: "Searched for the function public.get_remaining_token_capacity with parameters p_date, p_hospital_id or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache.",[22m[39m
+[31m[1m-     hint: "Perhaps you meant to call the function public.get_remaining_token_capacity(p_date, p_doctor_id, p_hospital_id)",[22m[39m
+[31m[1m-     message: "Could not find the function public.get_remaining_token_capacity(p_date, p_hospital_id) in the schema cache",[22m[39m
+[31m[1m-   }[22m[39m
+[32m[1m+   null[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m1173[0m:[0m[33m3[0m
+
+E1 16: invalid writes are refused without side effects [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1188:6[0m
+[0m[1m[31merror[0m: TypeError: Cannot read properties of undefined (reading 'doctorA')
+    J.tokens.doctorA,
+[0m[31m             ^[0m
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m1211[0m:[0m[33m14[0m
+
+E1 99: fixture tenants cascade-clean every journey artifact [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1225:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal.
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   8[22m[39m
+[32m[1m+   0[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m1278[0m:[0m[33m3[0m
+
+[0m[1m[37m[41m FAILURES [0m
+
+E1 00: provision isolated fixture tenants and actors [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:306:6[0m
+E1 01: registration + appointment over HTTP create a linked booked token [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:398:6[0m
+E1 02: invalid input, tenant mismatch and unauthorized access are refused [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:463:6[0m
+E1 03: walk-in rebooking reuses the canonical patient (no duplicate identity) [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:511:6[0m
+E1 04: replaying the registration request returns the same booking, no second token [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:551:6[0m
+E1 06: reception check-in moves the walk-in to checked_in [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:689:6[0m
+E1 07: a cancelled booking keeps its token but is NOT callable [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:705:6[0m
+E1 08: queue-control calls the checked-in walk-in; repeat call is idempotent [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:784:6[0m
+E1 09: doctor-operations refuses non-doctors and runs the full consult leg [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:823:6[0m
+E1 10: call_next advances to the lowest active token (booking 1) [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:931:6[0m
+E1 11: manual_whatsapp booking snapshots platform 10 + receptionist 5 [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:950:6[0m
+E1 12: capture writes order+booking+ledger atomically and dedupes replay [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:978:6[0m
+E1 13: every booking enqueued exactly one confirmation job [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1080:6[0m
+E1 14: patient history reads respect tenant isolation (real RLS) [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1118:6[0m
+E1 15: remaining capacity sums BOTH shifts (50), not just the first [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1155:6[0m
+[0m[1m[31merror[0m: Test failed
+E1 16: invalid writes are refused without side effects [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1188:6[0m
+E1 99: fixture tenants cascade-clean every journey artifact [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1225:6[0m
+
+[0m[31mFAILED[0m | 1 passed | 17 failed [0m[38;5;245m(2s)[0m
+
+

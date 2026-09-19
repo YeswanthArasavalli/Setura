@@ -1,0 +1,106 @@
+deno : [0m[32mCheck[0m tests/integration/hospital_core_journey.test.ts
+At line:1 char:9
++  $out = deno test --allow-net --allow-env --allow-run tests/integrati ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([0m[32mCheck...journey.test.ts 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[0m[38;5;245mrunning 18 tests from ./tests/integration/hospital_core_journey.test.ts[0m
+E1 00: provision isolated fixture tenants and actors ... [0m[32mok[0m [0m[38;5;245m(1s)[0m
+E1 01: registration + appointment over HTTP create a linked booked token ... [0m[32mok[0m [0m[38;5;245m(390ms)[0m
+E1 02: invalid input, tenant mismatch and unauthorized access are refused ... [0m[31mFAILED[0m [0m[38;5;245m(78ms)[0m
+E1 03: walk-in rebooking reuses the canonical patient (no duplicate identity) ... [0m[32mok[0m [0m[38;5;245m(266ms)[0m
+E1 04: replaying the registration request returns the same booking, no second token ... [0m[32mok[0m [0m[38;5;245m(422ms)[0m
+E1 05: 8 concurrent create_booking calls allocate distinct gapless tokens ... [0m[32mok[0m [0m[38;5;245m(93ms)[0m
+E1 06: reception check-in moves the walk-in to checked_in ... [0m[32mok[0m [0m[38;5;245m(202ms)[0m
+E1 07: a cancelled booking keeps its token but is NOT callable ... [0m[31mFAILED[0m [0m[38;5;245m(486ms)[0m
+E1 08: queue-control calls the checked-in walk-in; repeat call is idempotent ... [0m[32mok[0m [0m[38;5;245m(285ms)[0m
+E1 09: doctor-operations refuses non-doctors and runs the full consult leg ... [0m[32mok[0m [0m[38;5;245m(688ms)[0m
+E1 10: call_next advances to the lowest active token (booking 1) ... [0m[32mok[0m [0m[38;5;245m(106ms)[0m
+E1 11: manual_whatsapp booking snapshots platform 10 + receptionist 5 ... [0m[32mok[0m [0m[38;5;245m(203ms)[0m
+E1 12: capture writes order+booking+ledger atomically and dedupes replay ... [0m[31mFAILED[0m [0m[38;5;245m(17ms)[0m
+E1 13: every booking enqueued exactly one confirmation job ... [0m[32mok[0m [0m[38;5;245m(10ms)[0m
+E1 14: patient history reads respect tenant isolation (real RLS) ... [0m[32mok[0m [0m[38;5;245m(45ms)[0m
+E1 15: remaining capacity sums BOTH shifts (50), not just the first ... [0m[31mFAILED[0m [0m[38;5;245m(12ms)[0m
+E1 16: invalid writes are refused without side effects ... [0m[32mok[0m [0m[38;5;245m(79ms)[0m
+E1 99: cleanup ÔÇö hospital B fully removed, hospital A stays inert ledger residue ... [0m[32mok[0m [0m[38;5;245m(205ms)[0m
+
+[0m[1m[37m[41m ERRORS [0m
+
+E1 02: invalid input, tenant mismatch and unauthorized access are refused [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:485:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal: {"success":false,"error":{"code":"VALIDATION_ERROR","message":"Validation failed","retryable":false,"fieldErrors":{"patientName":["Name must be at least 2 characters"]}},"correlationId":"a4cf7ede-4c60-4b9a-85fe-237838457383","timestamp":"2026-09-19T10:44:34.319Z"}
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   422[22m[39m
+[32m[1m+   400[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m494[0m:[0m[33m3[0m
+
+E1 07: a cancelled booking keeps its token but is NOT callable [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:727:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal: {"success":false,"error":{"code":"INTERNAL_ERROR","message":"Cancel failed","retryable":false},"correlationId":"c24b3cc4-10db-4064-8b86-6dba43a50f1a","timestamp":"2026-09-19T10:44:35.793Z"}
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   500[22m[39m
+[32m[1m+   200[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m753[0m:[0m[33m3[0m
+
+E1 12: capture writes order+booking+ledger atomically and dedupes replay [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1000:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal.
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   {[22m[39m
+[31m[1m-     code: "42804",[22m[39m
+[31m[1m-     details: null,[22m[39m
+[31m[1m-     hint: "You will need to rewrite or cast the expression.",[22m[39m
+[31m[1m-     message: 'column "processing_status" is of type webhook_processing_status but expression is of type text',[22m[39m
+[31m[1m-   }[22m[39m
+[32m[1m+   null[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m1031[0m:[0m[33m3[0m
+
+E1 15: remaining capacity sums BOTH shifts (50), not just the first [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1177:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal: capacity must be the SUM of shifts (booked=0)
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   45[22m[39m
+[32m[1m+   50[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m1201[0m:[0m[33m3[0m
+
+[0m[1m[37m[41m FAILURES [0m
+
+E1 02: invalid input, tenant mismatch and unauthorized access are refused [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:485:6[0m
+E1 07: a cancelled booking keeps its token but is NOT callable [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:727:6[0m
+E1 12: capture writes order+booking+ledger atomically and dedupes replay [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1000:6[0m
+E1 15: remaining capacity sums BOTH shifts (50), not just the first [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1177:6[0m
+
+[0m[31mFAILED[0m | 14 passed | 4 failed [0m[38;5;245m(5s)[0m
+
+[0m[1m[31merror[0m: Test failed
+

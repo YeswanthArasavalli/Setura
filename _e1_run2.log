@@ -1,0 +1,298 @@
+deno : [0m[32mCheck[0m tests/integration/hospital_core_journey.test.ts
+At line:1 char:126
++ ... ';"; $out = deno test --allow-net --allow-env --allow-run tests/integ ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([0m[32mCheck...journey.test.ts 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[0m[38;5;245mrunning 18 tests from ./tests/integration/hospital_core_journey.test.ts[0m
+E1 00: provision isolated fixture tenants and actors ... [0m[32mok[0m [0m[38;5;245m(2s)[0m
+E1 01: registration + appointment over HTTP create a linked booked token ... [0m[31mFAILED[0m [0m[38;5;245m(1s)[0m
+E1 02: invalid input, tenant mismatch and unauthorized access are refused ... [0m[31mFAILED[0m [0m[38;5;245m(138ms)[0m
+E1 03: walk-in rebooking reuses the canonical patient (no duplicate identity) ... [0m[31mFAILED[0m [0m[38;5;245m(90ms)[0m
+E1 04: replaying the registration request returns the same booking, no second token ... [0m[31mFAILED[0m [0m[38;5;245m(112ms)[0m
+E1 05: 8 concurrent create_booking calls allocate distinct gapless tokens ... [0m[32mok[0m [0m[38;5;245m(146ms)[0m
+E1 06: reception check-in moves the walk-in to checked_in ... [0m[31mFAILED[0m [0m[38;5;245m(424ms)[0m
+E1 07: a cancelled booking keeps its token but is NOT callable ... [0m[31mFAILED[0m [0m[38;5;245m(155ms)[0m
+E1 08: queue-control calls the checked-in walk-in; repeat call is idempotent ... [0m[31mFAILED[0m [0m[38;5;245m(550ms)[0m
+E1 09: doctor-operations refuses non-doctors and runs the full consult leg ... [0m[31mFAILED[0m [0m[38;5;245m(450ms)[0m
+E1 10: call_next advances to the lowest active token (booking 1) ... [0m[31mFAILED[0m [0m[38;5;245m(75ms)[0m
+E1 11: manual_whatsapp booking snapshots platform 10 + receptionist 5 ... [0m[31mFAILED[0m [0m[38;5;245m(90ms)[0m
+E1 12: capture writes order+booking+ledger atomically and dedupes replay ... [0m[31mFAILED[0m [0m[38;5;245m(26ms)[0m
+E1 13: every booking enqueued exactly one confirmation job ... [0m[31mFAILED[0m [0m[38;5;245m(10ms)[0m
+E1 14: patient history reads respect tenant isolation (real RLS) ... [0m[31mFAILED[0m [0m[38;5;245m(244ms)[0m
+E1 15: remaining capacity sums BOTH shifts (50), not just the first ... [0m[32mok[0m [0m[38;5;245m(16ms)[0m
+E1 16: invalid writes are refused without side effects ... [0m[31mFAILED[0m [0m[38;5;245m(118ms)[0m
+E1 99: cleanup ÔÇö hospital B fully removed, hospital A stays inert ledger residue ... [0m[31mFAILED[0m [0m[38;5;245m(207ms)[0m
+
+[0m[1m[37m[41m ERRORS [0m
+
+E1 01: registration + appointment over HTTP create a linked booked token [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:412:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal: {"success":false,"error":{"code":"VALIDATION_ERROR","message":"Validation failed","retryable":false,"fieldErrors":{"patientPhone":["Must be a valid 10-digit Indian mobile number"],"patientGender":["Invalid enum value. Expected 'M' | 'F' | 'Other', received 'male'"]}},"correlationId":"57ae43f6-cb48-4fe1-a347-9ea6ffb18fec","timestamp":"2026-09-19T10:42:04.992Z"}
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   422[22m[39m
+[32m[1m+   201[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m422[0m:[0m[33m3[0m
+
+E1 02: invalid input, tenant mismatch and unauthorized access are refused [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:477:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal: {"success":false,"error":{"code":"VALIDATION_ERROR","message":"Validation failed","retryable":false,"fieldErrors":{"patientName":["Name must be at least 2 characters"],"patientPhone":["Must be a valid 10-digit Indian mobile number"],"patientGender":["Invalid enum value. Expected 'M' | 'F' | 'Other', received 'male'"]}},"correlationId":"7a17407a-1b26-4664-a173-828c0a50cd1a","timestamp":"2026-09-19T10:42:05.181Z"}
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   422[22m[39m
+[32m[1m+   400[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m486[0m:[0m[33m3[0m
+
+E1 03: walk-in rebooking reuses the canonical patient (no duplicate identity) [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:525:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal: {"success":false,"error":{"code":"VALIDATION_ERROR","message":"Validation failed","retryable":false,"fieldErrors":{"patientPhone":["Must be a valid 10-digit Indian mobile number"],"patientGender":["Invalid enum value. Expected 'M' | 'F' | 'Other', received 'male'"]}},"correlationId":"c99d31ca-34dd-4d45-9949-17b1be5057d2","timestamp":"2026-09-19T10:42:05.274Z"}
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   422[22m[39m
+[32m[1m+   201[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m533[0m:[0m[33m3[0m
+
+E1 04: replaying the registration request returns the same booking, no second token [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:565:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal: {"success":false,"error":{"code":"VALIDATION_ERROR","message":"Validation failed","retryable":false,"fieldErrors":{"patientPhone":["Must be a valid 10-digit Indian mobile number"],"patientGender":["Invalid enum value. Expected 'M' | 'F' | 'Other', received 'male'"]}},"correlationId":"0467de02-4072-46ca-a3b8-456a6ee040d9","timestamp":"2026-09-19T10:42:05.380Z"}
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   422[22m[39m
+[32m[1m+   201[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m576[0m:[0m[33m3[0m
+
+E1 06: reception check-in moves the walk-in to checked_in [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:703:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal: {"success":false,"error":{"code":"VALIDATION_ERROR","message":"Validation failed","retryable":false,"fieldErrors":{"bookingId":["Required"]}},"correlationId":"7bcef1bb-cd01-4174-ac46-2083297fd575","timestamp":"2026-09-19T10:42:05.956Z"}
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   422[22m[39m
+[32m[1m+   200[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m710[0m:[0m[33m3[0m
+
+E1 07: a cancelled booking keeps its token but is NOT callable [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:719:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal: {"success":false,"error":{"code":"VALIDATION_ERROR","message":"Validation failed","retryable":false,"fieldErrors":{"patientPhone":["Must be a valid 10-digit Indian mobile number"],"patientGender":["Invalid enum value. Expected 'M' | 'F' | 'Other', received 'male'"]}},"correlationId":"de0f1793-f378-4377-8097-f01fe3398b90","timestamp":"2026-09-19T10:42:06.114Z"}
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   422[22m[39m
+[32m[1m+   201[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m730[0m:[0m[33m3[0m
+
+E1 08: queue-control calls the checked-in walk-in; repeat call is idempotent [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:798:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal: {"success":false,"error":{"code":"VALIDATION_ERROR","message":"Validation failed","retryable":false,"fieldErrors":{"queueSessionId":["Required"]}},"correlationId":"36b86e3f-879d-4685-bec3-113984037ab9","timestamp":"2026-09-19T10:42:06.660Z"}
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   422[22m[39m
+[32m[1m+   200[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m809[0m:[0m[33m3[0m
+
+E1 09: doctor-operations refuses non-doctors and runs the full consult leg [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:837:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal.
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   "c5fd291a-ba4d-428e-add4-66c1886c21f8"[22m[39m
+[32m[1m+   undefined[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m857[0m:[0m[33m3[0m
+
+E1 10: call_next advances to the lowest active token (booking 1) [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:945:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal: {"success":false,"error":{"code":"VALIDATION_ERROR","message":"Validation failed","retryable":false,"fieldErrors":{"queueSessionId":["queueSessionId is required for this action"]}},"correlationId":"519872e4-4fc8-4f0e-9877-538dd3ac49ec","timestamp":"2026-09-19T10:42:07.188Z"}
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   422[22m[39m
+[32m[1m+   200[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m952[0m:[0m[33m3[0m
+
+E1 11: manual_whatsapp booking snapshots platform 10 + receptionist 5 [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:964:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal: {"success":false,"error":{"code":"VALIDATION_ERROR","message":"Validation failed","retryable":false,"fieldErrors":{"patientPhone":["Must be a valid 10-digit Indian mobile number"],"patientGender":["Invalid enum value. Expected 'M' | 'F' | 'Other', received 'male'"]}},"correlationId":"55b42f82-3dd8-49e1-a2ce-d07c523dab11","timestamp":"2026-09-19T10:42:07.281Z"}
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   422[22m[39m
+[32m[1m+   201[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m972[0m:[0m[33m3[0m
+
+E1 12: capture writes order+booking+ledger atomically and dedupes replay [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:992:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal.
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   {[22m[39m
+[31m[1m-     code: "42804",[22m[39m
+[31m[1m-     details: null,[22m[39m
+[31m[1m-     hint: "You will need to rewrite or cast the expression.",[22m[39m
+[31m[1m-     message: 'column "processing_status" is of type webhook_processing_status but expression is of type text',[22m[39m
+[31m[1m-   }[22m[39m
+[32m[1m+   null[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m1023[0m:[0m[33m3[0m
+
+E1 13: every booking enqueued exactly one confirmation job [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1094:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal: one confirm job per booking
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   0[22m[39m
+[32m[1m+   5[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m1108[0m:[0m[33m3[0m
+
+E1 14: patient history reads respect tenant isolation (real RLS) [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1132:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal.
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   {[22m[39m
+[31m[1m-     code: "22P02",[22m[39m
+[31m[1m-     details: null,[22m[39m
+[31m[1m-     hint: null,[22m[39m
+[31m[1m-     message: 'invalid input syntax for type uuid: "undefined"',[22m[39m
+[31m[1m-   }[22m[39m
+[32m[1m+   null[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m1143[0m:[0m[33m3[0m
+
+E1 16: invalid writes are refused without side effects [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1202:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal.
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   {[22m[39m
+[31m[1m-     code: "22P02",[22m[39m
+[31m[1m-     details: null,[22m[39m
+[31m[1m-     hint: null,[22m[39m
+[31m[1m-     message: 'invalid input syntax for type uuid: "undefined"',[22m[39m
+[31m[1m-   }[22m[39m
+[32m[1m+   null[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+[0m[1m[31merror[0m: Test failed
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[1m[3mrow[0m ([0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m294[0m:[0m[33m3[0m)
+    at async [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m1234[0m:[0m[33m17[0m
+
+E1 99: cleanup ÔÇö hospital B fully removed, hospital A stays inert ledger residue [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1240:6[0m
+[0m[1m[31merror[0m: AssertionError: Values are not equal: financially-inactive tenant must fully delete
+
+
+    [90m[1m[Diff][22m[39m [31m[1mActual[22m[39m / [32m[1mExpected[22m[39m
+
+
+[31m[1m-   {[22m[39m
+[31m[1m-     code: "P0001",[22m[39m
+[31m[1m-     details: null,[22m[39m
+[31m[1m-     hint: null,[22m[39m
+[31m[1m-     message: "config_versions is append-only",[22m[39m
+[31m[1m-   }[22m[39m
+[32m[1m+   null[22m[39m
+
+  throw new AssertionError(message);
+[0m[31m        ^[0m
+    at [0m[1m[3massertEquals[0m ([0m[36mhttps://deno.land/std@0.224.0/assert/assert_equals.ts[0m:[0m[33m52[0m:[0m[33m9[0m)
+    at [0m[2m[38;5;245mfile:///D:/Projects/datasets/setura/[0m[0m[36mtests/integration/hospital_core_journey.test.ts[0m:[0m[33m1290[0m:[0m[33m3[0m
+
+[0m[1m[37m[41m FAILURES [0m
+
+E1 01: registration + appointment over HTTP create a linked booked token [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:412:6[0m
+E1 02: invalid input, tenant mismatch and unauthorized access are refused [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:477:6[0m
+E1 03: walk-in rebooking reuses the canonical patient (no duplicate identity) [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:525:6[0m
+E1 04: replaying the registration request returns the same booking, no second token [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:565:6[0m
+E1 06: reception check-in moves the walk-in to checked_in [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:703:6[0m
+E1 07: a cancelled booking keeps its token but is NOT callable [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:719:6[0m
+E1 08: queue-control calls the checked-in walk-in; repeat call is idempotent [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:798:6[0m
+E1 09: doctor-operations refuses non-doctors and runs the full consult leg [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:837:6[0m
+E1 10: call_next advances to the lowest active token (booking 1) [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:945:6[0m
+E1 11: manual_whatsapp booking snapshots platform 10 + receptionist 5 [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:964:6[0m
+E1 12: capture writes order+booking+ledger atomically and dedupes replay [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:992:6[0m
+E1 13: every booking enqueued exactly one confirmation job [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1094:6[0m
+E1 14: patient history reads respect tenant isolation (real RLS) [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1132:6[0m
+E1 16: invalid writes are refused without side effects [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1202:6[0m
+E1 99: cleanup ÔÇö hospital B fully removed, hospital A stays inert ledger residue [0m[38;5;245m=> ./tests/integration/hospital_core_journey.test.ts:1240:6[0m
+
+[0m[31mFAILED[0m | 3 passed | 15 failed [0m[38;5;245m(7s)[0m
+
+

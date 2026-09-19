@@ -1,0 +1,31 @@
+deno : [0m[32mCheck[0m tests/integration/hospital_core_journey.test.ts
+At line:1 char:9
++  $out = deno test --allow-net --allow-env --allow-run tests/integrati ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([0m[32mCheck...journey.test.ts 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[0m[38;5;245mrunning 18 tests from ./tests/integration/hospital_core_journey.test.ts[0m
+E1 00: provision isolated fixture tenants and actors ... [0m[32mok[0m [0m[38;5;245m(1s)[0m
+E1 01: registration + appointment over HTTP create a linked booked token ... [0m[32mok[0m [0m[38;5;245m(540ms)[0m
+E1 02: invalid input, tenant mismatch and unauthorized access are refused ... [0m[32mok[0m [0m[38;5;245m(195ms)[0m
+E1 03: walk-in rebooking reuses the canonical patient (no duplicate identity) ... [0m[32mok[0m [0m[38;5;245m(160ms)[0m
+E1 04: replaying the registration request returns the same booking, no second token ... [0m[32mok[0m [0m[38;5;245m(220ms)[0m
+E1 05: 8 concurrent create_booking calls allocate distinct gapless tokens ... [0m[32mok[0m [0m[38;5;245m(109ms)[0m
+E1 06: reception check-in moves the walk-in to checked_in ... [0m[32mok[0m [0m[38;5;245m(406ms)[0m
+E1 07: a cancelled booking keeps its token but is NOT callable ... [0m[32mok[0m [0m[38;5;245m(588ms)[0m
+E1 08: queue-control calls the checked-in walk-in; repeat call is idempotent ... [0m[32mok[0m [0m[38;5;245m(415ms)[0m
+E1 09: doctor-operations refuses non-doctors and runs the full consult leg ... [0m[32mok[0m [0m[38;5;245m(820ms)[0m
+E1 10: call_next advances to the lowest active token (booking 1) ... [0m[32mok[0m [0m[38;5;245m(97ms)[0m
+E1 11: manual_whatsapp booking snapshots platform 10 + receptionist 5 ... [0m[32mok[0m [0m[38;5;245m(165ms)[0m
+E1 12: capture writes order+booking+ledger atomically and dedupes replay ... [0m[32mok[0m [0m[38;5;245m(51ms)[0m
+E1 13: every booking enqueued exactly one confirmation job ... [0m[32mok[0m [0m[38;5;245m(5ms)[0m
+E1 14: patient history reads respect tenant isolation (real RLS) ... [0m[32mok[0m [0m[38;5;245m(66ms)[0m
+E1 15: remaining capacity sums BOTH shifts (50), not just the first ... [0m[32mok[0m [0m[38;5;245m(11ms)[0m
+E1 16: invalid writes are refused without side effects ... [0m[32mok[0m [0m[38;5;245m(78ms)[0m
+E1 99: cleanup ÔÇö hospital B fully removed, hospital A stays inert ledger residue ... [0m[32mok[0m [0m[38;5;245m(190ms)[0m
+
+[0m[32mok[0m | 18 passed | 0 failed [0m[38;5;245m(5s)[0m
+
+
