@@ -154,9 +154,20 @@ What a production deployment concretely requires, per current source:
 8. **Domain + HTTPS + `site_url`/redirect URLs in Auth + `ALLOWED_ORIGINS`
    alignment** (CORS default already encodes `setura.in` /
    `app.setura.in` in `env.ts`).
-9. **CI/CD**: none exists (ci.yml stops at tests), and the tree is not
-   a Git repo — the repository/transport decision precedes any
-   pipeline.
+9. **CI/CD**: none exists (ci.yml stops at tests).
+   **Premise correction (G7-02 session, 2026-09-19): the tree IS now
+   a Git repository** with a pushed GitHub remote (5 commits,
+   `main == origin/main`) — superseding the AGENTS.md §13 "not a Git
+   repo" finding. Repository hygiene has since been performed locally in
+   the **G7-03 hygiene package (2026-09-19)**: a root `.gitignore` was
+   created and 218 confirmed local/generated/session artifacts were
+   `git rm --cached` (tracked 539 → 321, nothing deleted from disk), and
+   the forward migration-immutability baseline
+   `supabase/migrations/MANIFEST.sha256` (56 migrations, 0 mismatches)
+   was committed. D8 (graphify-out tracking) intentionally DEFERRED; D9
+   (.qoder) untracked. The hygiene commit is **LOCAL ONLY — NOT PUSHED**
+   (`PHASE_7_G7_02_DEPLOYMENT_ARCHITECTURE.md`;
+   `PHASE_7_G7_03_REPOSITORY_HYGIENE_REPORT.md`).
 
 **Status: NOT IMPLEMENTED** (requirements enumerated; nothing
 provisioned — per brief §7, nothing was deployed).
@@ -472,7 +483,7 @@ priorities as required by the Phase 7 brief §20.
 | ID | Area | Current state | Evidence | Risk | Required action | Dependencies | Production impact | Priority | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | G7-01 | Worker crash recovery | RESOLVED — reclaim invariant PROVEN (local); earlier FAIL was stale pre-migration-52 evidence | `_g701_repro1.log` 4/4; `_g701_regression_worker.log` 7/7; live `pg_proc` + `migration_registry` | In-flight jobs stranded on worker crash | ~~Diagnose, fix, rerun~~ done — no code change required | local stack | Pilot can run autonomous jobs (prod execution still gated by G7-02/03/09) | P0 | CLOSED (local) |
-| G7-02 | Deployment pipeline | No deploy stage; tree not a Git repo | `ci.yml` (tests only); AGENTS §13 | Nothing can reach production; no rollback transport | Repo/hosting decision + deploy workflow (functions, migrations, frontend) | user authorization | Absolute blocker for all production claims | P0 | OPEN |
+| G7-02 | Deployment pipeline | PLANNED (architecture doc) — repo + GitHub remote exist (premise corrected); CD pipeline absent; tree hygiene incomplete | `PHASE_7_G7_02_DEPLOYMENT_ARCHITECTURE.md`; `git remote -v`; `git ls-files` counts | Nothing can reach production safely; tracked local artifacts (hygiene now committed locally — G7-03) | Hygiene commit (DONE locally) → CI/CD extension → staging → gated production (all authorization-gated) | user authorization | Absolute blocker for all production claims | P0 | OPEN — PLANNED (hygiene I-1 done locally, unpushed) |
 | G7-03 | Production secrets/Vault provisioning | Placeholders only; no vault seeding path | `.env.example`; migration 53 reads Vault | Scheduler/worker/cron endpoints stay fail-closed 403 | Provisioning runbook (placeholders only) for platform secrets + Vault + `scheduler_http_config` | G7-02 | Scheduler autonomy dead | P0 | OPEN |
 | G7-04 | Production privilege verification | Local-only census | Gate 2 / Phase 5 reports | Local≠prod privilege posture | Catalog re-measure on deployed DB post-migration | G7-02 | Certification gate | P0 | OPEN |
 | G7-05 | Real Razorpay boundary | BLOCKED (no credentials) | Phase 3 §; Phase 6 §I | Financial flows unexercised against gateway | Razorpay test-mode then live verification (authorization required) | G7-02/03 | Revenue path | P1 | OPEN |
@@ -486,7 +497,7 @@ priorities as required by the Phase 7 brief §20.
 | G7-13 | F16-05 / F16-06 test debts | Open in source | AGENTS §13 | Privilege-denial proof weaker than claimed | Targeted test fixes (SQLSTATE-specific asserts; coverage uplift) | none | Security certification quality | P2 | OPEN |
 | G7-14 | Load headroom (queue+worker) | No load data | roadmap §uncertainty 7 | Unknown at pilot volume | Load test on queue/worker path | G7-01/02 | Scaling risk | P3 | OPEN |
 | G7-15 | Notifications staff UI | NOT IMPLEMENTED | Phase 6 §J.4 | Staff cannot see notification state | Decide placement (D4), then build | D4 | UX/ops only | P3 | OPEN |
-| G7-16 | Migration immutability assurance | Cannot verify no applied migration was edited | no Git history | Silent schema drift | Establish repo history at G7-02, then checksum audits | G7-02 | Integrity assurance | P3 | OPEN |
+| G7-16 | Migration immutability assurance | BASELINE ESTABLISHED (2026-09-19, G7-03): `MANIFEST.sha256` committed (56 migrations, verified 0 mismatches/0 missing/0 manifest-only, deterministic); `git log --diff-filter=M` shows exactly one post-addition edit (migration 53, commit 40d6b4a — in-session rewrite re-applied before any release); pre-import (before 2026-09-03) state unprovable forever; CI enforcement of the manifest still NOT IMPLEMENTED | `supabase/migrations/MANIFEST.sha256`; `PHASE_7_G7_03_REPOSITORY_HYGIENE_REPORT.md` §12-13; `git log` | Silent schema drift only detectable from baseline date forward, and only once CI gates it | Wire manifest verification into CI (future package) | G7-02 hygiene (done locally) | Integrity assurance | P3 | OPEN (forward baseline established; CI enforcement pending) |
 
 ---
 
@@ -566,7 +577,7 @@ Gap register: COMPLETE
 
 P0 blockers:
 (none open — G7-01 CLOSED locally 2026-09-19)
-G7-02 no deployment pipeline / non-Git tree
+G7-02 deploy pipeline absent; repo/remote exist; hygiene DONE locally (G7-03 package, unpushed)
 G7-03 production secrets + Vault provisioning absent
 G7-04 production privilege catalog unverified (no deployment)
 

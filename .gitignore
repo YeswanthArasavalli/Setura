@@ -1,0 +1,51 @@
+# SETURA — root .gitignore
+# Established at the G7-03 repository-hygiene / release baseline (2026-09-19).
+#
+# Scope discipline: this file ignores ONLY local / generated / tooling
+# artifacts. Project source of truth REMAINS tracked and is deliberately
+# NOT ignored: application source, tests, migrations, Edge Functions,
+# shared modules, frontend source, configuration, scripts, CI workflow,
+# `.env.example` (placeholders), the migration MANIFEST, and the
+# authoritative root-level *.md evidence reports.
+
+# --- Agent / tooling local scratch ---
+.remember/
+.ua/
+
+# --- Qoder generated repository wiki (D9) ---
+# Generated documentation output. Not a build input, not a runtime input,
+# not referenced by CI or any non-generated source file.
+.qoder/
+
+# --- Supabase CLI local state (never part of source of truth) ---
+supabase/.temp/
+supabase/.branches/
+
+# --- Dependency / build output (defense-in-depth; apps/web/.gitignore also covers) ---
+node_modules/
+
+# --- Session / run logs ---
+# Generic rule catches new disposable run logs. The specific logs that
+# Phase 7 completion reports cite as authoritative evidence are explicitly
+# allow-listed below so they remain trackable (a blanket *.log must never
+# silently hide required project evidence). The general evidence-log
+# retention policy remains open decision D15.
+*.log
+
+# Retained authoritative run evidence (referenced by Phase 7 reports)
+!_e1_run1.log
+!_e1_run2.log
+!_e1_run3.log
+!_e1_run4.log
+!_g701_repro1.log
+!_g701_regression_worker.log
+!_g707_scheduler.log
+!_w1_test.log
+!_integration_full.log
+
+# --- Graphify navigation index (D8) ---
+# Whether to track `graphify-out/` + `GRAPH_REPORT.md` is a project/
+# governance decision. G7-02 recorded it as DEFERRED (D8); it is NOT
+# silently resolved here, so no ignore rule is applied and the existing
+# files remain tracked.
+# graphify-out/
