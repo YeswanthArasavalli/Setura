@@ -37,8 +37,9 @@ Therefore B1 (server inspection) and B3–B8 (server configuration) are `BLOCKED
   resolves to `main` locally, so `main` is the effective default branch as seen
   from the clone. Server-side default-branch *settings* (merge button policy,
   etc.) are `UNPROVEN` (no API).
-- **Branch state:** `HEAD == origin/main == 514c337`, ahead 0 / behind 0,
-  working tree clean at inspection time.
+- **Branch state:** `HEAD == origin/main == 395eaa5` (I-2/I-3 correction commit,
+  pushed by the repository owner during the blocker-resolution follow-up),
+  ahead 0 / behind 0, working tree clean at inspection time.
 - **Existing rulesets / branch protection:** `UNPROVEN` — requires API.
 - **Existing required status checks:** `UNPROVEN` — requires API.
 - **Existing GitHub Environments (staging/production):** `UNPROVEN` — requires
@@ -197,7 +198,7 @@ access instead.
 ## B12 — Evidence summary
 
 1. Repository identity: `YeswanthArasavalli/Setura` (user-owned).
-2. Branch state: `HEAD == origin/main == 514c337`, clean tree.
+2. Branch state: `HEAD == origin/main == 395eaa5`, clean tree.
 3. Current GitHub rules: `UNPROVEN` (no API access).
 4. Changes made: `ci.yml` least-privilege `permissions: contents: read` (B5);
    Part A scope/format correction in `deno.json` + 2 test files.
@@ -214,7 +215,9 @@ access instead.
     GitHub API/admin access unavailable.
 15. Not performed: push, deploy, provisioning, secret creation, env creation,
     ruleset creation, CODEOWNERS, any application logic change.
-16. Push occurred this session: **NO**.
+16. Push occurred: **NO by this agent.** The owner separately committed
+    `395eaa5` (the B5 + Part A changes) and pushed it to `origin/main` during
+    the follow-up; no push or commit was performed by the package itself.
 17. Deployment occurred: **NO**.
 
 ---
@@ -227,3 +230,43 @@ server access (**B5** least-privilege token permissions) is **IMPLEMENTED**;
 (rulesets, required checks, environments, secrets, deployment wiring) are
 **BLOCKED** because GitHub API/admin access is not available in this
 environment. No GitHub governance was fabricated.
+
+---
+
+## Blocker-resolution follow-up (same package, later run)
+
+Re-checked both original blockers against the live environment:
+
+1. **Docker — RESOLVED.** The daemon came up (Docker 29.6.2) and the local
+   Supabase stack was confirmed running. The Edge Runtime container was in its
+   known F16-01 exited state and was recovered with
+   `docker start supabase_edge_runtime_setura`. The consolidated regression then
+   **executed**: `57 passed / 1 failed`. The lone failure `E1 09` was
+   source-traced to a **Sunday-only test-fixture date rollover**
+   (`clinicDate()` bumps Sunday→Monday) diverging from the production
+   `open_doctor_session` `CURRENT_DATE` default — a **test-harness defect, not a
+   product defect**, not caused by I-2/I-3. *Recommended follow-up (NOT applied
+   here, as no product/test change was authorized and it is not a product
+   defect): make the E1 doctor-session leg deterministic across weekdays — either
+   pass an explicit `p_session_date = CLINIC.date` through the doctor-session
+   primitive, or skip/anchor the "today session" assertions when
+   `getDay() === 0`. Left as a small, isolated test-only change for explicit
+   authorization.*
+
+2. **GitHub admin/API access — STILL BLOCKED.** Re-verified: `gh` not installed,
+   `GITHUB_TOKEN` and `GH_TOKEN` both unset. The only git credential is the
+   Git Credential Manager `manager` helper (a git-protocol credential for
+   push/pull, not an admin REST token); extracting it to call the branch-
+   protection / environments API would be the prohibited "undocumented
+   credential" path and was not attempted. Therefore B1 server inspection and
+   B3–B8 server configuration remain **BLOCKED / UNPROVEN**; none was invented.
+
+**In-tree governance state after the follow-up:** the B5 `permissions:
+contents: read` block and the Part A fmt/lint scoping are present in the working
+tree as tracked files (committed by the owner as `395eaa5`). Local CI recheck on
+the current tree: `fmt:check` 150 files / exit 0, `lint` 91 files / 0 problems,
+`check` exit 0, `test` 91/91, `validate:migrations` 0 err / 4 pre-existing warn,
+`validate:migration-manifest` 0 issues; frontend `npm ci` (258 pkgs, exit 0),
+typecheck, build, vitest 17/17 and secret/source-map scan 0/0. Git diff review
+confirmed **no `.sql`, no `supabase/migrations`, no `supabase/functions`, no
+`graphify-out`, no secret** among the changed files.

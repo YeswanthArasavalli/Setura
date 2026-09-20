@@ -149,29 +149,62 @@ test      (vitest run)           -> 17 passed / 0 failed (3 files)
 secret + source-map scan         -> 0 secret hits, 0 source maps (sourcemaps denied) -> exit 0
 ```
 
-`npm ci` itself requires registry access; the existing `node_modules`
-(lockfile-pinned `package-lock.json` present) satisfied the build, so the
-lockfile-integrity step is **locally satisfied by the pinned install and is
-executed for real in the CI `frontend` job** (UNPROVEN on GitHub). No frontend
-application behavior was modified.
+`npm ci` was executed for real in the blocker-resolution follow-up (registry
+reachable: `npm ping` PONG; `npm ci` → "added 258 packages, audited 259",
+exit 0), so the lockfile-integrity install step is now **locally PROVEN** as
+well as typecheck / build / vitest 17-17 / secret+source-map scan. It remains
+`UNPROVEN` only in the sense that it has not been observed green on GitHub.
+No frontend application behavior was modified.
 
 ---
 
-## A7 — Consolidated regression — **BLOCKED**
+## A7 — Consolidated regression — **EXECUTED (was BLOCKED; blocker resolved)**
 
-`deno task test:consolidated` needs the local Supabase stack, which needs Docker.
-`docker ps` failed to reach the Docker daemon
-(`dockerDesktopLinuxEngine … cannot find the file specified`). Per the spec, the
-environment was not fought and no result was fabricated.
+*First pass:* `deno task test:consolidated` was originally `BLOCKED` because the
+Docker daemon was down and no result was fabricated.
 
-Static verification of task composition instead: all **9** consolidated test
-files referenced by `deno task test:consolidated` exist under
-`tests/integration/` — `hospital_core_journey` (E1), `worker_lifecycle` /
-`worker_lease_persistence` / `worker_job_failure` (W1), `scheduler_autonomy`,
-`booking_fee_refund` / `refund_sync` / `settlement_record_payment` (financial),
-`security_s1` (S1). 19 integration test files present in total.
+*After Docker was started (same package, blocker-resolution follow-up):* the
+local Supabase stack was confirmed running (`supabase_db_setura` etc.), and the
+Edge Runtime container was recovered from its known F16-01 exited state
+(`docker start supabase_edge_runtime_setura` → Up). The real consolidated
+regression was then executed against the live stack:
 
-**Status: BLOCKED (Docker daemon unavailable), not PASS.**
+```text
+deno task test:consolidated  ->  FAILED | 57 passed | 1 failed (23s)
+```
+
+Coverage actually executed (runtime, not composition): E1 hospital_core_journey
+(18 tests), W1 worker_lifecycle / worker_lease_persistence / worker_job_failure,
+scheduler_autonomy, financial booking_fee_refund / refund_sync /
+settlement_record_payment, security_s1. The `worker_lifecycle` "w1 deterministic
+failure" log lines are an intentional self-test (a job deliberately throws and is
+retried then dead-lettered) — not a defect.
+
+**The single failure is `E1 09` and is a weekday test-harness issue, NOT a product
+defect and NOT an I-2/I-3 regression** (source-proven):
+
+- `clinicDate()` (`hospital_core_journey.test.ts:117`) rolls **Sunday → Monday**
+  (`if (getDay() === 0) setDate(+1)`), so E1 01 books and creates the queue
+  session for `CLINIC.date` (Monday).
+- E1 09 calls `doctor-operations` `start_session` → `open_doctor_session`, whose
+  `p_session_date` defaults to the DB `CURRENT_DATE` (Sunday).
+- Different `(hospital, doctor, date)` tuple → the RPC creates a **new Sunday
+  session** instead of converging on `J.sessionId`, so the
+  `assertEquals(queue_session_id, J.sessionId)` at line 872 sees two different
+  UUIDs.
+- The run timestamp (`2026-09-20T04:50Z`) confirms the day is **Sunday**. On any
+  Mon–Sat run `CLINIC.date == CURRENT_DATE` and it passes.
+
+Cross-run data contamination was ruled out: each run mints a fresh random
+hospital slug and `doctorA` UUID, and the other 17 E1 legs plus every worker /
+scheduler / financial / security test passed against the same persisted DB.
+
+No product code, migration, RLS or test assertion was changed to obtain this
+classification. **Status: CONSOLIDATED REGRESSION = 57 PASS / 1 FAIL, the failure
+being a pre-existing Sunday-only fixture/`CURRENT_DATE` divergence (test-harness
+defect), not a product defect.** See
+`PHASE_7_G7_02_I3_BRANCH_PROTECTION_ENVIRONMENT_REPORT.md` for the recommended
+follow-up test fix.
 
 ---
 
@@ -213,7 +246,9 @@ downgraded check, no security gate touched.
 
 The 27 root `*.md` and 128 `graphify-out/` files remain byte-for-byte unformatted;
 they are prose / protected generated output and were out-of-scope to mass-edit.
-The `stack` and `release-validation` jobs remain UNVERIFIED locally (Docker).
+The `stack` / `release-validation` Docker steps were subsequently executed for
+real against the local stack (see A7), yielding 57 pass / 1 Sunday-only
+fixture fail.
 
 ---
 
@@ -222,8 +257,10 @@ The `stack` and `release-validation` jobs remain UNVERIFIED locally (Docker).
 - **Locally implemented:** `IMPLEMENTED` and, after this validation, `LOCALLY
   VERIFIED` for every Docker-free gate (fmt/lint now green; migrations, manifest,
   provenance, unit suite, frontend build/test/scan all pass).
-- **GitHub Actions execution:** `UNPROVEN` (no push performed this session; the
-  workflow has never been observed green on GitHub).
-- **Consolidated regression / integration stack:** `BLOCKED` locally (Docker
-  daemon unavailable).
+- **GitHub Actions execution:** `UNPROVEN` — the correction was committed
+  (`395eaa5`) and pushed to `origin/main` by the repository owner during the
+  follow-up, but the workflow run itself has not been observed green on GitHub.
+- **Consolidated regression:** `EXECUTED` against the local stack — 57 pass /
+  1 fail; the failure is a pre-existing **Sunday-only test-harness date
+  divergence** (E1 09), not a product defect (see A7).
 - **Production claim:** `NONE`. Nothing was deployed; no credential exists.
