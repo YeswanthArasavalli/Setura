@@ -107,14 +107,21 @@ const RUN = crypto.randomUUID().replace(/\D/g, "").slice(0, 7).padEnd(7, "7");
 const FIXTURE_PASSWORD = `E1-${RUN}-fixture-pass`;
 
 /**
- * Clinic date = today when today is a Mon-Sat working day (the
- * fixture doctor schedules Mon-Sat), else tomorrow. isValidAdvance-
- * BookingDate accepts diffDays >= 0, and running the queue/doctor
- * legs on TODAY is what the session-scoped operations require.
+ * Clinic date = TODAY, for every weekday. The doctor leg's
+ * `open_doctor_session` RPC resolves its session from the SERVER's
+ * `CURRENT_DATE`, while the booking/queue/counter legs key off this
+ * fixture date. They converge on one session only while the fixture
+ * date equals the server's current date — which is exactly what the
+ * Mon-Sat runs already relied on. The former Sunday→Monday bump made
+ * `CLINIC.date` tomorrow while the RPC still saw today, producing a
+ * second (Sunday) session and a non-deterministic E1 09 divergence.
+ * The fixture doctor's schedule is inserted for `CLINIC.weekday`, so
+ * it stays available (and the queue/doctor legs stay in sync) on any
+ * weekday, including Sunday. Do NOT reintroduce a per-weekday offset:
+ * it silently desynchronises the fixture from `CURRENT_DATE`.
  */
 function clinicDate(): { date: string; weekday: number } {
   const d = new Date();
-  if (d.getDay() === 0) d.setDate(d.getDate() + 1);
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
   return { date: `${d.getFullYear()}-${m}-${day}`, weekday: d.getDay() };

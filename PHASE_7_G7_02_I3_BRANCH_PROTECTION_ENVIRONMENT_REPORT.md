@@ -253,6 +253,16 @@ Re-checked both original blockers against the live environment:
    `getDay() === 0`. Left as a small, isolated test-only change for explicit
    authorization.*
 
+   *Addendum (2026-09-20, factual only):* that isolated test-only change was
+   later applied under explicit authorization — the `clinicDate()` Sunday→Monday
+   rollover was removed (Option B test-date anchoring; Option A was rejected
+   because the doctor-session API contract exposes no session-date field and
+   adding one would change production behavior). Re-proof on a live Sunday run:
+   **58 PASS / 0 FAIL consolidated, E1 18/18 twice**, with `git diff` showing
+   only `hospital_core_journey.test.ts`. No product code changed. See
+   `PHASE_7_E1_09_TEST_DETERMINISM_FIX_REPORT.md`. This does not affect the I-3
+   governance status below.
+
 2. **GitHub admin/API access — STILL BLOCKED.** Re-verified: `gh` not installed,
    `GITHUB_TOKEN` and `GH_TOKEN` both unset. The only git credential is the
    Git Credential Manager `manager` helper (a git-protocol credential for

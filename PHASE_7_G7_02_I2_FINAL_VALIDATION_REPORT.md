@@ -206,6 +206,21 @@ defect), not a product defect.** See
 `PHASE_7_G7_02_I3_BRANCH_PROTECTION_ENVIRONMENT_REPORT.md` for the recommended
 follow-up test fix.
 
+> **Later-package update (2026-09-20, factual only).** The recommended test-only
+> fix was subsequently applied under explicit authorization (see
+> `PHASE_7_E1_09_TEST_DETERMINISM_FIX_REPORT.md`). On a genuine Sunday run the
+> `clinicDate()` Sunday→Monday rollover was removed so the fixture anchors to the
+> same current date the doctor-session RPC resolves via `CURRENT_DATE`; no
+> production SQL/migration/Edge Function/RLS/assertion changed. Re-proof against
+> the live stack:
+>
+> ```text
+> Before: 57 PASS / 1 FAIL   ->   After: 58 PASS / 0 FAIL
+> E1 in isolation: 18 PASS / 0 FAIL (two consecutive runs)
+> ```
+>
+> The historical 57/1 evidence above is the pre-fix run and is retained as-is.
+
 ---
 
 ## A8 — Final I-2 decision & correction applied
