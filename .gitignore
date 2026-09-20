@@ -10,6 +10,7 @@
 
 # --- Agent / tooling local scratch ---
 .remember/
+.vercel-tmp/
 .ua/
 
 # --- Qoder generated repository wiki (D9) ---
