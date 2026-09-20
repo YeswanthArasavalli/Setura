@@ -22,11 +22,30 @@
 #                        checks from PR checks (brief §12); it never deploys.
 #
 # Failure of ANY step in a PR-blocking job fails the pipeline. No step uses
-# `|| true`, `continue-on-error`, or a downgraded security check. Pre-existing
-# repository-wide formatting findings are the documented G7-03 baseline; this
-# package neither hides nor silently "fixes" them (brief §20/§21).
+# `|| true`, `continue-on-error`, or a downgraded security check.
+#
+# Formatter/linter scope (G7-02 I-2 final validation): `deno fmt --check` and
+# `deno lint` are the Deno-managed-source gates. deno.json excludes the
+# non-Deno-managed subtrees that were never meant to be policed by them:
+#   - `graphify-out/`  : generated navigation index the repo policy forbids
+#                        editing; formatting it validates nothing.
+#   - `apps/`          : the Vite/React frontend, governed by its own
+#                        toolchain and the dedicated `frontend` job below.
+#   - `**/*.md` (fmt)  : prose evidence reports, not formatter-governed code.
+# No Deno application source, script or test is excluded, so no genuine Deno
+# defect is hidden; the two real test-source formatting drifts were fixed
+# directly rather than scoped out.
 
 name: CI
+
+# G7-02 I-3 (B5): least-privilege GITHUB_TOKEN. This workflow validates only;
+# it deploys nothing. `actions/checkout` needs read, and `upload-artifact`
+# authenticates with a separate runtime-scoped token, not `contents: write`.
+# No job requires write/id-token/packages/deployments scope, so the whole
+# workflow is pinned to read-only. Creating deployment authority is explicitly
+# out of I-3 scope.
+permissions:
+  contents: read
 
 on:
   push:

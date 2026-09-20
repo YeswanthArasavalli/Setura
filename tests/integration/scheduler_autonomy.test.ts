@@ -178,7 +178,10 @@ async function getLease(
 async function cleanup(jobIds: string[], workerIds: string[]): Promise<void> {
   const client = await db();
   if (jobIds.length > 0) {
-    await client.from("dead_letter_jobs").delete().in("original_job_id", jobIds);
+    await client.from("dead_letter_jobs").delete().in(
+      "original_job_id",
+      jobIds,
+    );
     await client.from("job_queue").delete().in("id", jobIds);
   }
   for (const workerId of workerIds) {

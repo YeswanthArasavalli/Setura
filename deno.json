@@ -28,14 +28,19 @@
     "exclude": [
       "supabase/functions/_shared/database.generated.ts",
       "supabase/.temp/",
-      "supabase/.branches/"
+      "supabase/.branches/",
+      "graphify-out/",
+      "apps/",
+      "**/*.md"
     ]
   },
   "lint": {
     "exclude": [
       "supabase/functions/_shared/database.generated.ts",
       "supabase/.temp/",
-      "supabase/.branches/"
+      "supabase/.branches/",
+      "graphify-out/",
+      "apps/"
     ],
     "rules": {
       "exclude": ["no-import-prefix"]

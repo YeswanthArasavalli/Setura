@@ -708,7 +708,11 @@ Deno.test("S1 13: doctor A cannot mutate another doctor's booking in the SAME ho
 
   const pre = await row("bookings", otherBooking, "status, assigned_doctor_id");
   assertExists(pre);
-  assertEquals(pre!.assigned_doctor_id, doctorA2, "booking owned by the OTHER doctor");
+  assertEquals(
+    pre!.assigned_doctor_id,
+    doctorA2,
+    "booking owned by the OTHER doctor",
+  );
 
   // Doctor A (a legitimate A doctor) tries to complete the other doctor's
   // booking within the same tenant -> refused by the ownership check
