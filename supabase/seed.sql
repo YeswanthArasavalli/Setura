@@ -58,32 +58,61 @@ BEGIN
         encrypted_password, email_confirmed_at,
         raw_app_meta_data, raw_user_meta_data,
         confirmation_token, recovery_token,
-        created_at, updated_at
+        created_at, updated_at,
+        email_change_token_new, email_change
     ) VALUES
     ('00000000-0000-0000-0000-000000000000', v_global_admin,
      'authenticated', 'authenticated', 'root@setura.test',
      v_password, v_now,
      '{"provider":"email","providers":["email"]}',
      jsonb_build_object('sub', v_global_admin::text),
-     '', '', v_now, v_now),
+     '', '', v_now, v_now, '', ''),
     ('00000000-0000-0000-0000-000000000000', v_hosp_admin,
      'authenticated', 'authenticated', 'admin@surya.test',
      v_password, v_now,
      '{"provider":"email","providers":["email"]}',
      jsonb_build_object('sub', v_hosp_admin::text),
-     '', '', v_now, v_now),
+     '', '', v_now, v_now, '', ''),
     ('00000000-0000-0000-0000-000000000000', v_doctor,
      'authenticated', 'authenticated', 'dr@surya.test',
      v_password, v_now,
      '{"provider":"email","providers":["email"]}',
      jsonb_build_object('sub', v_doctor::text),
-     '', '', v_now, v_now),
+     '', '', v_now, v_now, '', ''),
     ('00000000-0000-0000-0000-000000000000', v_receptionist,
      'authenticated', 'authenticated', 'reception@surya.test',
      v_password, v_now,
      '{"provider":"email","providers":["email"]}',
      jsonb_build_object('sub', v_receptionist::text),
-     '', '', v_now, v_now)
+     '', '', v_now, v_now, '', '')
+    ON CONFLICT (id) DO NOTHING;
+
+    -- ─── 1b. AUTH IDENTITIES ───────────────────────────────────
+    -- Hosted GoTrue (v2.197+) resolves password logins through
+    -- auth.identities; users inserted directly into auth.users
+    -- without a matching identity row cause a 500 on login.
+    -- id = user_id keeps the rows deterministic; ON CONFLICT keeps
+    -- the seed idempotent.
+    INSERT INTO auth.identities (
+        id, user_id, provider_id, identity_data,
+        provider, last_sign_in_at, created_at, updated_at
+    ) VALUES
+    (v_global_admin, v_global_admin, 'root@setura.test',
+     jsonb_build_object('sub', v_global_admin::text, 'email', 'root@setura.test',
+                        'email_verified', true, 'phone_verified', false),
+     'email', v_now, v_now, v_now),
+    (v_hosp_admin, v_hosp_admin, 'admin@surya.test',
+     jsonb_build_object('sub', v_hosp_admin::text, 'email', 'admin@surya.test',
+                        'email_verified', true, 'phone_verified', false),
+     'email', v_now, v_now, v_now),
+    (v_doctor, v_doctor, 'dr@surya.test',
+     jsonb_build_object('sub', v_doctor::text, 'email', 'dr@surya.test',
+                        'email_verified', true, 'phone_verified', false),
+     'email', v_now, v_now, v_now),
+    (v_receptionist, v_receptionist, 'reception@surya.test',
+     jsonb_build_object('sub', v_receptionist::text, 'email', 'reception@surya.test',
+                        'email_verified', true, 'phone_verified', false),
+     'email', v_now, v_now, v_now)
     ON CONFLICT (id) DO NOTHING;
 
     -- ─── 2. PROFILES ───────────────────────────────────────────

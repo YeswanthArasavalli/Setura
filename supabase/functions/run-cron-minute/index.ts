@@ -349,6 +349,10 @@ Deno.serve(
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              // Hosted deployments gate /functions/v1/* behind the apikey
+              // header; without it the platform gateway 401s the call before
+              // the target function's own X-Cron-Secret check runs.
+              "apikey": Env.SUPABASE_ANON_KEY,
               "X-Cron-Secret": Env.CRON_SECRET,
             },
             body: JSON.stringify(
@@ -389,6 +393,8 @@ Deno.serve(
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
+                // See send-reminders note: apikey required by hosted gateway.
+                "apikey": Env.SUPABASE_ANON_KEY,
                 "X-Cron-Secret": Env.CRON_SECRET,
               },
               body: JSON.stringify(
