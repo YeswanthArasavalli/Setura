@@ -130,7 +130,7 @@ Local regression after cleanup (all against the cleaned tree):
 
 - Vercel CLI 59.23.2 installed (npm global). Login via device flow was
   initiated and the authorization URL opened in the owner's browser
-  (`user_code=RPJN-WTWD`). `vercel whoami` at report time: **not logged in**
+  (`user_code` redacted; code expired with the abandoned session). `vercel whoami` at report time: **not logged in**
   — the owner has not completed (or the code has since expired) browser
   authorization. Per tasking §11, only this leg is stopped.
 - Not started (each requires the auth to complete): project env configuration
