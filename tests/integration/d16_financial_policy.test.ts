@@ -113,12 +113,13 @@ interface BookingRow {
 
 async function newBooking(
   source: "walkin" | "online" | "manual_whatsapp" = "walkin",
+  tag: string = "x",
 ): Promise<BookingRow> {
   const client = await db();
   const { data, error } = await client.rpc("create_booking", {
     p_hospital_id: SEED.HOSPITAL_ID,
     p_patient_name: `D16 ${RUN} ${source}`,
-    p_patient_phone: `9122${RUN}${source.slice(0, 2)}`,
+    p_patient_phone: `9122${RUN}${tag}`,
     p_patient_age: 40,
     p_patient_gender: "male",
     p_booking_source: source,
@@ -126,7 +127,9 @@ async function newBooking(
     p_platform_fee: PLATFORM_FEE,
     p_receptionist_fee: RECEPTIONIST_FEE,
     p_hospital_fee: HOSPITAL_FEE,
-    p_idempotency_key: `d16-${source}-${RUN}`,
+    // Unique per TEST: create_booking is idempotent, so reusing one key
+    // across tests would silently return the same booking row.
+    p_idempotency_key: `d16-${source}-${tag}-${RUN}`,
   });
   assertEquals(error, null);
   assertExists(data);
@@ -142,7 +145,10 @@ async function newBooking(
   return b as BookingRow;
 }
 
-async function ledgerSum(bookingId: string, entryType: string): Promise<number> {
+async function ledgerSum(
+  bookingId: string,
+  entryType: string,
+): Promise<number> {
   const client = await db();
   const { data, error } = await client
     .from("financial_ledger")
@@ -154,7 +160,10 @@ async function ledgerSum(bookingId: string, entryType: string): Promise<number> 
   return rows.reduce((s, r) => s + Number(r.amount_inr), 0);
 }
 
-async function ledgerCount(bookingId: string, entryType: string): Promise<number> {
+async function ledgerCount(
+  bookingId: string,
+  entryType: string,
+): Promise<number> {
   const client = await db();
   const { count, error } = await client
     .from("financial_ledger")
@@ -208,6 +217,9 @@ async function createAndCapture(
     p_gateway_payment_id: `d16pay_${RUN}_${bookingId.slice(0, 4)}`,
     p_gateway_signature: `d16-sig-${RUN}`,
     p_gateway_response: { event: "payment.captured" },
+    // Explicit fee resolves the PGRST203 overload ambiguity between the
+    // 4-arg and 5-arg capture_payment candidates.
+    p_gateway_fee_inr: 2,
   });
   assertEquals(capErr, null);
   assertEquals(cap, true, "capture_payment must succeed");
@@ -234,7 +246,9 @@ async function confirmRefund(refundId: string): Promise<boolean> {
   const client = await db();
   const { data, error } = await client.rpc("confirm_refund_processed", {
     p_refund_id: refundId,
-    p_gateway_refund_id: `d16ref_${RUN}`,
+    // Derived from the refund id: payment_refunds.gateway_refund_id is
+    // UNIQUE, so a per-run constant would collide across sequential refunds.
+    p_gateway_refund_id: `d16ref_${RUN}_${refundId.slice(0, 8)}`,
     p_gateway_response: { status: "processed" },
   });
   assertEquals(error, null);
@@ -244,7 +258,7 @@ async function confirmRefund(refundId: string): Promise<boolean> {
 // ─── Q1 + Q3 + Q4: no revenue / settlement before capture ────────────────────
 
 Deno.test("D16 Q1: create_booking records booking_fee_inr = platform fee only", async () => {
-  const b = await newBooking("walkin");
+  const b = await newBooking("walkin", "q1");
   assertEquals(Number(b.booking_fee_inr), PLATFORM_FEE);
   // The Razorpay charge basis is the platform fee, NOT the display total.
   assert(
@@ -254,7 +268,7 @@ Deno.test("D16 Q1: create_booking records booking_fee_inr = platform fee only", 
 });
 
 Deno.test("D16 Q3/Q4: a created booking recognises NO revenue and NO collected settlement", async () => {
-  const b = await newBooking("manual_whatsapp");
+  const b = await newBooking("manual_whatsapp", "q4");
   assertEquals(b.payment_completed, false);
   // No capture-time collection ledger entry exists yet.
   assertEquals(await ledgerSum(b.id, "booking_fee_collected"), 0);
@@ -268,7 +282,7 @@ Deno.test("D16 Q3/Q4: a created booking recognises NO revenue and NO collected s
 });
 
 Deno.test("D16 Q3: a pending payment order still recognises NO revenue", async () => {
-  const b = await newBooking("online");
+  const b = await newBooking("online", "pd");
   const client = await db();
   const { error } = await client.from("payment_orders").insert({
     hospital_id: SEED.HOSPITAL_ID,
@@ -286,7 +300,7 @@ Deno.test("D16 Q3: a pending payment order still recognises NO revenue", async (
 // ─── Q3 + Q1: revenue recognised at capture, on the platform fee ─────────────
 
 Deno.test("D16 Q3: capture recognises collected revenue equal to the platform fee", async () => {
-  const b = await newBooking("online");
+  const b = await newBooking("online", "cp");
   await createAndCapture(b.id);
 
   assertEquals(
@@ -301,15 +315,23 @@ Deno.test("D16 Q3: capture recognises collected revenue equal to the platform fe
   assertExists(row);
   assertEquals(Number(row!.platform_fee), PLATFORM_FEE);
   assertEquals(Number(row!.total_amount), PLATFORM_FEE);
-  assertEquals(Number(row!.receptionist_fee), 0, "SETURA does not collect receptionist fee");
-  assertEquals(Number(row!.hospital_fee), 0, "SETURA does not collect hospital fee");
+  assertEquals(
+    Number(row!.receptionist_fee),
+    0,
+    "SETURA does not collect receptionist fee",
+  );
+  assertEquals(
+    Number(row!.hospital_fee),
+    0,
+    "SETURA does not collect hospital fee",
+  );
   assertEquals(Number(row!.setura_revenue), PLATFORM_FEE);
 });
 
 // ─── Q5: full refund zeroes the collection; order fully refunded ─────────────
 
 Deno.test("D16 Q5: a full refund zeroes the collection and marks the order refunded", async () => {
-  const b = await newBooking("online");
+  const b = await newBooking("online", "ff");
   await createAndCapture(b.id);
 
   const rid = await refund(b.id, PLATFORM_FEE);
@@ -327,13 +349,16 @@ Deno.test("D16 Q5: a full refund zeroes the collection and marks the order refun
     .select("payment_status")
     .eq("booking_id", b.id)
     .single();
-  assertEquals((order as { payment_status: string }).payment_status, "refunded");
+  assertEquals(
+    (order as { payment_status: string }).payment_status,
+    "refunded",
+  );
 });
 
 // ─── Q5: partial refund reduces ONLY the refunded amount, sequentially ───────
 
 Deno.test("D16 Q5: sequential partial refunds reduce the collection amount exactly", async () => {
-  const b = await newBooking("online");
+  const b = await newBooking("online", "ps");
   await createAndCapture(b.id); // collected 100
 
   const r1 = await refund(b.id, 40);
@@ -346,7 +371,10 @@ Deno.test("D16 Q5: sequential partial refunds reduce the collection amount exact
     .select("payment_status")
     .eq("booking_id", b.id)
     .single();
-  assertEquals((o1 as { payment_status: string }).payment_status, "partially_refunded");
+  assertEquals(
+    (o1 as { payment_status: string }).payment_status,
+    "partially_refunded",
+  );
 
   const r2 = await refund(b.id, 60);
   assertEquals(await confirmRefund(r2), true);
@@ -365,7 +393,7 @@ Deno.test("D16 Q5: sequential partial refunds reduce the collection amount exact
 // ─── Q2 / invariant: over-refund is rejected ─────────────────────────────────
 
 Deno.test("D16 Q2: cumulative over-refund is rejected (total_refunded <= total_collected)", async () => {
-  const b = await newBooking("online");
+  const b = await newBooking("online", "of");
   await createAndCapture(b.id); // collected 100
 
   const r1 = await refund(b.id, 70);
@@ -390,7 +418,7 @@ Deno.test("D16 Q2: cumulative over-refund is rejected (total_refunded <= total_c
 // ─── Q5 idempotency: a replayed refund confirmation does not double-count ────
 
 Deno.test("D16 Q5: replaying confirm_refund_processed is idempotent", async () => {
-  const b = await newBooking("online");
+  const b = await newBooking("online", "rp");
   await createAndCapture(b.id);
   const rid = await refund(b.id, 40);
 
@@ -408,13 +436,17 @@ Deno.test("D16 Q5: replaying confirm_refund_processed is idempotent", async () =
     "replay must not add a second refund_debit",
   );
   const row = await dce(b.id);
-  assertEquals(Number(row!.total_amount), 60, "replay must not re-reduce the collection");
+  assertEquals(
+    Number(row!.total_amount),
+    60,
+    "replay must not re-reduce the collection",
+  );
 });
 
 // ─── Q6: refund basis (calculate_refund_amount) is the platform fee ──────────
 
 Deno.test("D16 Q6: calculate_refund_amount is bounded by the platform fee, never the total", async () => {
-  const b = await newBooking("online");
+  const b = await newBooking("online", "cr");
   await createAndCapture(b.id);
   const client = await db();
   const { data, error } = await client.rpc("calculate_refund_amount", {
@@ -435,7 +467,7 @@ Deno.test("D16 Q6: calculate_refund_amount is bounded by the platform fee, never
 // ─── Multi-tenancy: every generated financial row carries the owning hospital ─
 
 Deno.test("D16 tenancy: captured money is attributed to the booking's hospital only", async () => {
-  const b = await newBooking("online");
+  const b = await newBooking("online", "tn");
   await createAndCapture(b.id);
   const client = await db();
   const { data: ledger } = await client

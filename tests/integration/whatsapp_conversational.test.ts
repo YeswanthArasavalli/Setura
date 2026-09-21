@@ -732,11 +732,23 @@ Deno.test("wa reschedule: hospital closed (holiday) on requested date", async ()
     );
   assertEquals(holErr, null);
 
-  await send(PHONE_HOLIDAY, "reschedule");
-  const r = await send(PHONE_HOLIDAY, ddmm(DATE_HOL));
+  try {
+    await send(PHONE_HOLIDAY, "reschedule");
+    const r = await send(PHONE_HOLIDAY, ddmm(DATE_HOL));
 
-  assertEquals(r.state, "rescheduling");
-  assertStringIncludes(r.replies[0].toLowerCase(), "holiday");
+    assertEquals(r.state, "rescheduling");
+    assertStringIncludes(r.replies[0].toLowerCase(), "holiday");
+  } finally {
+    // Holiday dates are computed relative to "now", so a leaked row
+    // collides with DATE_A/DATE_B of a later run on a nearby day and
+    // breaks unrelated reschedule tests. Remove it (same pattern as
+    // the doctor_availability_overrides cleanup above).
+    await db
+      .from("hospital_holidays")
+      .delete()
+      .eq("hospital_id", HOSPITAL_A)
+      .eq("holiday_date", isoLocal(DATE_HOL));
+  }
 });
 
 Deno.test("wa reschedule: invalid date re-prompts without state loss", async () => {

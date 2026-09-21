@@ -61,7 +61,10 @@ BEGIN
     INTO v_order
     FROM public.payment_orders
     WHERE booking_id = p_booking_id
-      AND payment_status = 'captured'
+      -- D16 (Q5): a partially refunded order still owes the remaining
+      -- collected amount, so sequential partial refunds must be
+      -- initiatable; the cumulative cap below bounds them.
+      AND payment_status IN ('captured', 'partially_refunded')
     FOR UPDATE;
 
     IF NOT FOUND THEN

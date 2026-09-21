@@ -467,8 +467,9 @@ Deno.test("ent: setup fixture hospitals, actors and source data", async () => {
   }
 
   // Financial source data (exact amounts for reconciliation).
-  // Note: dceA1 is auto-created by trigger from the completed booking's fee snapshots.
-  // We only manually insert additional DCE rows without booking_id.
+  // D16 (Q3/Q4, migration 59): the completed booking was never payment
+  // -captured, so its trigger-written DCE row is a zero-value placeholder.
+  // The manual online entry below is the only money SETURA collected.
   const dceA2 = {
     hospital_id: hospitalA,
     collection_date: TODAY,
@@ -552,10 +553,11 @@ Deno.test("ent: command center overview is exact against fixtures", async () => 
   const availability = queues.doctor_availability as unknown[];
   assertEquals(availability.length, 1);
 
-  // Finance of the day mirrors the DCE fixture exactly.
+  // Finance of the day mirrors the DCE fixture exactly (D16: only the
+  // captured/manual rows carry money; see the fixture comment above).
   const finance = overview.finance as Record<string, unknown>;
-  assertEquals(Number(finance.revenue_today), 800);
-  assertEquals(Number(finance.platform_fee_today), 80);
+  assertEquals(Number(finance.revenue_today), 300);
+  assertEquals(Number(finance.platform_fee_today), 30);
   assertEquals(Number(finance.refunds_today), 0);
 });
 
@@ -728,25 +730,26 @@ Deno.test("ent: financial command center reconciles exactly", async () => {
   }) as Record<string, unknown>;
 
   const dc = fin.daily_collections as Record<string, unknown>;
-  assertEquals(Number(dc.total_collected), 800);
-  assertEquals(Number(dc.platform_fee), 80);
-  assertEquals(Number(dc.hospital_fee), 650);
-  assertEquals(Number(dc.receptionist_fee), 70);
+  // D16 (Q4, migration 59): revenue appears only at capture. Hospital A's
+  // completed walk-in booking was never captured, so its DCE placeholder
+  // contributes 0; only the manual online entry (300) carries money.
+  assertEquals(Number(dc.total_collected), 300);
+  assertEquals(Number(dc.platform_fee), 30);
+  assertEquals(Number(dc.hospital_fee), 250);
+  assertEquals(Number(dc.receptionist_fee), 20);
   assertEquals(Number(dc.refunds), 0);
-  assertEquals(Number(dc.net_collections), 800);
+  assertEquals(Number(dc.net_collections), 300);
 
   // Payment-count semantics after decision D-3 (migration 49):
   // online_payments / offline_payments count entries that actually
   // carried money, not DCE rows. Hospital A has FOUR DCE rows today --
-  // three written by the frozen trg_auto_create_collection trigger (one
-  // per booking) plus one manual online entry -- but only two carry a
-  // non-zero total_amount: the completed walkin booking (500) and the
-  // manual online entry (300). The two waiting bookings have no fee
-  // snapshots, so they have not paid and are not payments. Their rows
-  // still exist and still contribute zero to every monetary total
-  // asserted above, which is why total_collected is unchanged at 800.
+  // three written by trg_auto_create_collection (one per booking) plus
+  // one manual online entry -- but only the manual online entry carries
+  // a non-zero total_amount: under D16 the uncaptured completed walk-in
+  // booking is a zero placeholder, and the two waiting bookings never
+  // paid. So exactly one payment is counted.
   assertEquals(dc.online_payments, 1);
-  assertEquals(dc.offline_payments, 1);
+  assertEquals(dc.offline_payments, 0);
 
   const si = fin.settlement_intelligence as Record<string, unknown>;
   assertEquals(Number(si.outstanding_balance), 0);
@@ -781,7 +784,7 @@ Deno.test("ent: financial isolation between tenants", async () => {
 
   const dcA = finA.daily_collections as Record<string, unknown>;
   const dcB = finB.daily_collections as Record<string, unknown>;
-  assertEquals(Number(dcA.total_collected), 800);
+  assertEquals(Number(dcA.total_collected), 300);
   assertEquals(Number(dcB.total_collected), 700);
 });
 
@@ -1043,7 +1046,7 @@ Deno.test("ent: portfolio and benchmarks aggregate both tenants", async () => {
   assertExists(rowA);
   assertExists(rowB);
   assertEquals(Number(rowA.bookings_today), 3);
-  assertEquals(Number(rowA.revenue_today), 800);
+  assertEquals(Number(rowA.revenue_today), 300);
   assertEquals(Number(rowB.revenue_today), 700);
 
   const benchmarks = await rpc("get_cross_hospital_benchmarks", {
@@ -1056,7 +1059,7 @@ Deno.test("ent: portfolio and benchmarks aggregate both tenants", async () => {
   assertEquals(Number(benchA.bookings), 3);
   assertEquals(Number(benchA.completed), 1);
   assertEquals(Number(benchA.avg_consultation_minutes), 12);
-  assertEquals(Number(benchA.revenue_inr), 800);
+  assertEquals(Number(benchA.revenue_inr), 300);
 });
 
 // ─── 9. Reporting engine ────────────────────────────────────────────────────

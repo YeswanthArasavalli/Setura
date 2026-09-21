@@ -196,12 +196,17 @@ Deno.serve(async (req: Request): Promise<Response> => {
             `,
           )
           .eq("booking_id", body.bookingId)
-          .eq("payment_status", "captured")
-          .single();
+          // F3B-01: accept the same refundable states the canonical SQL
+          // path (initiate_refund, migration 60) allows — 'captured' and
+          // 'partially_refunded' — so sequential partial refunds reach the
+          // DB. The cumulative total_refunded <= total_collected cap in SQL
+          // remains the authoritative guard; this prefetch only routes to it.
+          .in("payment_status", ["captured", "partially_refunded"])
+          .maybeSingle();
 
         if (paymentOrderError || !paymentOrder) {
-          throw new ValidationError("No captured payment found", {
-            bookingId: ["Payment not in captured state"],
+          throw new ValidationError("No refundable payment found", {
+            bookingId: ["Payment not in a refundable state"],
           });
         }
 
