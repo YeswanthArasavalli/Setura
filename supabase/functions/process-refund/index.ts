@@ -205,7 +205,14 @@ Deno.serve(async (req: Request): Promise<Response> => {
           });
         }
 
-        const totalInr = Number(booking.total_amount_snapshot);
+        // D16 (Q2): the canonical refund basis is the amount SETURA
+        // actually collected on this payment order (payment_orders
+        // .amount_inr == booking_fee_inr once create-payment-order
+        // charges the platform fee), NOT the booking display total.
+        // Every refund path (direct, cancel-booking, WhatsApp) shares
+        // this basis; initiate_refund additionally enforces the
+        // cumulative total_refunded <= total_collected invariant.
+        const totalInr = Number(paymentOrder.amount_inr);
         const refundInr = body.fullRefund
           ? totalInr
           : (body.amountInr ?? totalInr);

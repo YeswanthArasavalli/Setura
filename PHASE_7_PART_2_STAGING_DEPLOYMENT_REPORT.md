@@ -309,3 +309,16 @@ PASS, build PASS, unit 91/91, `fmt:check`/`check` clean, bundle + repo
 secret scans clean (counts only; stock supabase-demo anon JWT remains as an
 accepted test fixture), deployed Preview serving the same bundle hash that
 passed the scan and UI E1.
+
+## 12. GitHub-connected Vercel project 404 — RESOLVED (config-only, 2026-09-21)
+
+| Field | Value |
+| --- | --- |
+| GitHub-connected project | `setura` (`prj_PZq3TlY28vzz3hF6x0TKpvxK6gMH`), repo `YeswanthArasavalli/Setura` (private), production branch `main` |
+| Same as Claude-proven project? | **YES — one and the same project** (git production deploy `dpl_DynFNvr1edqWSgUw57c5wBeA2vAm` and CLI preview `dpl_4hrRKBanaxP9DZE1PfMpxzHdUTrp` both live under it) |
+| Original 404 cause (cause class G) | Project Root Directory was repo root with framework/build unset → the GitHub-triggered production deploy of commit `56065ed` had `builds=[]`/`routes=[]` (nothing built; app lives in `apps/web`) → `/` returned the Vercel edge 404 (`bom1::vbtl9-…`). CLI previews were unaffected because `vercel deploy` uploaded from `apps/web` and used `apps/web/vercel.json` (`gitRootDirectory: apps/web` in deploy meta) |
+| Fix (Vercel Dashboard config only, no git change) | `rootDirectory → apps/web` (PATCH, re-read confirmed); added the two browser-safe env vars (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` = staging publishable, never echoed) to the **production** target — they had previously been preview-scoped only. No repo source, Supabase, RLS, auth or CORS change |
+| Redeploy | `vercel redeploy` of the same git deploy → `setura-qik0nujz1-…vercel.app`, READY, aliased to `https://setura-delta.vercel.app` |
+| Verification | `/` serves the SPA with the **identical proven bundle hash** `/assets/index-CbyZK61h.js`; hard `/login` → 200 shell; real-browser smoke 4/4: login (Auth 200) → dashboard (7 bookings, authenticated PostgREST 200s) → protected `/reception/patients` renders → zero localhost/127.0.0.1 traffic (only `setura-delta.vercel.app` + `gzcq…supabase.co`). Bundle scan: 0 real secret values (same classified library-literal profile as §6) |
+| Known remaining gap (evidence-captured, NOT fixed here) | Edge Function calls (`queue-control` observed) from origin `https://setura-delta.vercel.app` are CORS-blocked: staging `ALLOWED_ORIGINS` secret lists only the two preview + localhost origins; preflight returns first-listed origin as non-matching fallback. Remedy is one owner-approved secrets update adding `https://setura-delta.vercel.app` (+ branch alias if wanted) to `ALLOWED_ORIGINS`; deliberately not applied because this package forbade modifying Supabase and the gap is unrelated to the 404 |
+| Result | 404 **PROVEN fixed** on the owner's actual URL; function-call enablement = owner decision (one-line config) |

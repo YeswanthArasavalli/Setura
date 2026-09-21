@@ -142,7 +142,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
         const { data: booking, error: bookingErr } = await db
           .from("bookings")
           .select(
-            "id, hospital_id, status, payment_completed, total_amount_snapshot, booking_reference, patient_name",
+            "id, hospital_id, status, payment_completed, booking_fee_inr, total_amount_snapshot, booking_reference, patient_name",
           )
           .eq("id", body.bookingId)
           .eq("is_deleted", false)
@@ -188,8 +188,12 @@ Deno.serve(async (req: Request): Promise<Response> => {
           );
         }
 
+        // D16 (Q1): SETURA collects ONLY the booking/platform fee. The
+        // Razorpay order amount is booking_fee_inr (== platform fee),
+        // never total_amount_snapshot, which also carries the hospital
+        // consultation and receptionist amounts SETURA does not collect.
         const amountInr = Number(
-          booking.total_amount_snapshot ??
+          booking.booking_fee_inr ??
             0,
         );
 
@@ -202,9 +206,9 @@ Deno.serve(async (req: Request): Promise<Response> => {
         }
         if (amountInr <= 0) {
           throw new ValidationError(
-            "No payment required for this booking (zero fee)",
+            "No payment required for this booking (zero platform fee)",
             {
-              amount: ["Total amount is 0"],
+              amount: ["Booking fee is 0"],
             },
           );
         }
