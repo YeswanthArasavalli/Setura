@@ -16,6 +16,10 @@ export function buildCorsHeaders(requestOrigin: string | null): HeadersInit {
       "X-Correlation-ID",
       "X-Request-ID",
       "X-Hospital-ID",
+      // supabase-js always sends `apikey`/`x-client-info` cross-origin, so the
+      // browser preflight requires them here or every function POST is blocked.
+      "apikey",
+      "X-Client-Info",
     ].join(", "),
     "Access-Control-Max-Age": "86400",
     "Access-Control-Allow-Credentials": "true",

@@ -3,8 +3,8 @@
 Date: 2026-09-20/21 (UTC+5:30 session)
 Scope: real hosted staging deployment (Supabase + verification), hosted
 defect discovery/fix loop, source classification and cleanup, local
-regression. Vercel leg status is stated explicitly. No production work was
-performed or claimed.
+regression, staging credential rotation, Vercel Preview frontend deploy, live
+UI E1 and UI tenant-isolation. No production work was performed or claimed.
 
 Classification vocabulary (per AGENTS.md §5): PROVEN = verified against the
 live hosted environment in this session · IMPLEMENTED = present in source,
@@ -53,10 +53,10 @@ Through the actual authenticated hosted HTTPS API with disposable data:
 | Tenant A mutation targeting hospital B | PROVEN — 403 `HOSPITAL_ACCESS_DENIED` |
 | Tenant A REST filter on B's rows | PROVEN — 200, 0 rows |
 
-The full UI-driven journey (queue → doctor → consultation → billing UI →
-history screens) is **not** hosted-proven — it awaits the Vercel frontend
-(§6). External legs (real WhatsApp delivery, real payment) remain BLOCKED by
-design.
+The full UI-driven journey (walk-in → queue → doctor → consultation →
+billing snapshot → history) has since been **PROVEN through the deployed Vercel
+SPA** (§6), along with UI-level tenant isolation. External legs (real
+WhatsApp delivery, real payment) remain BLOCKED by design.
 
 ## 4. Scheduler and Worker (hosted, live)
 
@@ -104,6 +104,9 @@ client-side budget; changing it is a tuning decision, not a defect fix.
 | --- | --- | --- |
 | `supabase/seed.sql` (auth.identities + email_change* fix) | A — real product fix | KEPT (committed upstream by owner) |
 | `supabase/functions/run-cron-minute/index.ts` (apikey) | A — real product fix | KEPT (committed) |
+| `supabase/functions/_shared/cors.ts` (add `apikey` + `X-Client-Info` to `Access-Control-Allow-Headers`) | A — real product fix (see D5) | KEPT (needs commit) |
+| `apps/web/vercel.json` (framework vite, build/output, SPA catch-all rewrite) | B — deployment config | KEPT (needs commit) |
+| `apps/web/.gitignore` (`.vercel`, `.env*`) | B — deployment hygiene | KEPT (committed) |
 | `supabase/migrations/57_phase2_scheduler_pg_net_timeout.sql` | A — real product fix | KEPT (needs commit) |
 | `supabase/migrations/58_phase2_queue_health_negative_age_fix.sql` + `MANIFEST.sha256` line | A — real product fix | KEPT (needs commit; manifest entry regenerated to match the committed file body after a mid-session divergence — validation passes) |
 | `.gitignore` (`.vercel-tmp/`) | B — deployment hygiene | KEPT (needs commit) |
@@ -126,53 +129,113 @@ Local regression after cleanup (all against the cleaned tree):
 | `deno task lint` / `check` / `fmt:check` | — | **all clean** (fmt baseline improved: 0 vs 8 previously — remaining offenders were the removed bootstrap scripts) |
 | `deno task check:frontend-secrets` | — | **0 secret hits** on local dist |
 
-## 6. Vercel / Frontend Staging — BLOCKED (awaiting user authorization)
+## 6. Vercel Preview Frontend + Live UI (completed 2026-09-21)
 
-- Vercel CLI 59.23.2 installed (npm global). Login via device flow was
-  initiated and the authorization URL opened in the owner's browser
-  (`user_code` redacted; code expired with the abandoned session). `vercel whoami` at report time: **not logged in**
-  — the owner has not completed (or the code has since expired) browser
-  authorization. Per tasking §11, only this leg is stopped.
-- Not started (each requires the auth to complete): project env configuration
-  (ONLY `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` — publishable),
-  preview (non-production) deploy, deployed-bundle scan (§13 list incl.
-  localhost/127.0.0.1/service_role/secret patterns), live
-  frontend→hosted-backend checks, UI-driven tenant-isolation and full E1
-  screens.
-- No Vercel token was requested, pasted, or stored. All local
-  auth/device-code/bootstrap artifacts were removed (§5).
-- Frontend build baseline on the local toolchain: PASS (§5 table), so the
-  Vercel build risk is configuration, not code.
+- Authentication: owner completed the device flow; `vercel whoami` =
+  `yeswantharasavalli`. No token was ever requested, pasted or stored by
+  this agent.
+- Project reuse (no duplicates): existing `setura`
+  (`prj_PZq3TlY28vzz3hF6x0TKpvxK6gMH`), attached via `vercel link` from
+  `apps/web`. `vercel link` side effects verified benign (appended
+  `VERCEL_OIDC_TOKEN` to gitignored `.env.local`; `.env*`/`.vercel` added to
+  `apps/web/.gitignore`).
+- **Frontend env security**: purged **27** forbidden project env vars left
+  by earlier attempts (SERVICE_ROLE_KEY, SUPABASE_SECRET/JWT, CRON/WORKER/
+  META/RAZORPAY secrets, NEXT_PUBLIC_* — removed 27 / failed 0). Final state:
+  exactly **two** browser-safe vars in Preview — `VITE_SUPABASE_URL` and
+  `VITE_SUPABASE_ANON_KEY` (publishable key, fetched in-memory, never
+  echoed).
+- Preview (NOT production) deploys: first
+  `setura-5h2ods4ir-…vercel.app`, current canonical
+  **`https://setura-l6xqmysgs-yeswantharasavallis-projects.vercel.app`**
+  (adds SPA catch-all rewrite; each preview deploy mints a new URL, so both
+  origins are in the backend CORS allow-list). `vercel.json` pins
+  framework vite / build / `dist` output because the project preset is
+  "Other".
+- Environment change (documented): Vercel **Deployment Protection**
+  (`ssoProtection=all_except_custom_domains`) was removed on this staging
+  project via the Vercel REST API so the disposable preview is testable; the
+  CLI token was read from the local store and never printed.
 
-## 7. SECURITY EXPOSURE — requires owner action (found during §10/§6)
+### Additional hosted defects found via the real browser (D4/D5)
+
+| # | Defect | Root cause | Fix | Verification |
+| --- | --- | --- | --- | --- |
+| D4 | every Edge Function call from the deployed SPA blocked by CORS (`Access-Control-Allow-Origin: https://setura.in`) | staging secrets never set `ALLOWED_ORIGINS`; `env.ts` defaults to the production origin list | staging secret set: `ALLOWED_ORIGINS` = both preview origins + local dev origins (config, not source) | preflight echoes requesting origin; unknown origin receives non-matching fallback (browser-blocked) |
+| D5 | after D4, preflight still rejected the POST: `Request header field apikey is not allowed by Access-Control-Allow-Headers` | shared `cors.ts` allow-list omitted `apikey`/`X-Client-Info`, which supabase-js always sends cross-origin — the local stack never preflighted, so the gap stayed invisible | source fix in `supabase/functions/_shared/cors.ts`; `create-booking`, `queue-control`, `doctor-operations` redeployed | preflight `Access-Control-Allow-Headers` includes `apikey`; zero CORS errors in live journey; unit CORS test still passes (inclusion assertion); `deno check` + `fmt --check` clean |
+
+- **Deployed-bundle scan** (actual served JS+CSS+HTML, 467,168 bytes, on the
+  canonical URL): staging host = 2 (expected baked `VITE_SUPABASE_URL`),
+  publishable key present = 3 (browser-safe by design), all server-secret
+  patterns (`CRON_SECRET`, `WORKER_SECRET`, `RAZORPAY/rzp_`, `META_APP_SECRET`,
+  Vault/setura_cron, `DB_PASSWORD`/`postgres://`, port 54321, demo JWT/key)
+  **= 0**. The `localhost`×3, `127.0.0.1`×1 and `sb_secret`×1 hits were each
+  context-inspected and are supabase-js v2.116.0 library internals (a
+  dead-backend `http://localhost:9999` constant, allow-list hostname
+  literals, and `startsWith("sb_secret_")` prefix *detection* code) — **zero
+  real secret values**; PASS.
+- **Live UI E1** (real browser on the deployed SPA, Monday = hospital open):
+  **6/6 PASS** — reception login → walk-in "UI E1 Patient C" (doctor
+  assigned) → booking detail token **#7**, source `walkin`, status `booked`,
+  Payment `Pending`, backend fee snapshot Platform/Receptionist/Hospital/
+  Total ₹0 (General Medicine; snapshot displayed, no payment flow invented)
+  → queue board position 3, est. wait 30m → doctor console full sequence
+  (call next ×3 → start consultation → note + diagnosis saved → complete) →
+  reception history search shows the patient, 1 visit, final status
+  **completed** with consult start/complete timestamps.
+- **UI tenant isolation (separate mandatory gate): PASS** — logged in as
+  Tenant B (reception-b@surya.test): dashboard 0 bookings, patients searches
+  (name/phone/broad) all "No matches", queue "No active queue sessions
+  today", and a direct route to A's booking id renders only "Booking not
+  found or not visible to your account" (hospital-scoped query returns
+  empty). Control re-check as Tenant A found the record (token 7, completed)
+  — proving isolation, not absence. Zero leakage.
+- Secondary UI findings (recorded, NOT fixed — product decisions): doctor
+  dropdown label renders "specialty · specialty" instead of the doctor name;
+  the dropdown briefly shows "No doctors available" before the list resolves
+  (submitting during that window silently creates an unqueued walk-in).
+- Post-fix spot-check on the final URL: login + queue board
+  (queue-control 200×3, live state "Now serving #2", deep link served) —
+  **2/2 PASS**.
+- Razorpay / Meta WhatsApp / SMTP remain **BLOCKED** by design (§8); no real
+  payment or message was attempted through the UI.
+
+## 7. SECURITY EXPOSURE — resolved (credential rotated + re-verified)
 
 Mid-session, repository tooling created and **pushed** commit `d9d7b2f`
-(“Add staging probes, Vercel scripts, seed tweaks”) to
-`origin/main` (github.com/YeswanthArasavalli/Setura), which included:
+(“Add staging probes, Vercel scripts, seed tweaks”) to `origin/main`
+(github.com/YeswanthArasavalli/Setura), which included `_keys.json` holding
+the **staging project secret key**. Assessment: it grants full RLS-bypass on
+the *staging* project only (disposable data, no production credential), but
+was in pushed history and had to be treated as compromised.
 
-- `_keys.json` containing the **staging project service_role secret key**
-  (its own commit message flags this),
-- temporary probes, `.vercel-tmp` scripts/pid (now removed from the working
-  tree; still present in pushed Git history).
+Repository visibility: **empirically PRIVATE** (unauthenticated GitHub API
+returns 404), verified rather than guessed — this bounds the exposure.
 
-Assessment: the key grants full RLS-bypass on the *staging* project only
-(disposable data, no production credentials involved), but it is in pushed
-public-account Git history and must be treated as compromised.
+Rotation performed via the Supabase Management API (owner task package
+explicitly authorized it), old value never printed or echoed:
 
-Required actions (deliberately NOT performed unilaterally — destructive git
-history rewriting and credential rotation are owner decisions):
+| Action | Result |
+| --- | --- |
+| Compromised `secret` key `id 876bfa45…` | **DELETE → revoked** |
+| Fresh `secret` key `id 04aa43cf…` | **POST → created**, live and used by all §3 re-verification |
+| `publishable` key `id 6b518e11…` | intentionally NOT rotated — browser-safe by design and the Vault scheduler credential depends on it |
+| Legacy JWT pair (`anon` + `service_role`) | **residual** — this platform generation exposes no `/rotate`/`/rollback` route (both 404); values never echoed, repo private, project disposable. Optional dashboard follow-up for the owner if belt-and-braces legacy revocation is wanted |
 
-1. **Rotate** the staging API keys (Supabase Dashboard → API settings) —
-   or accept rotation-by-teardown when the disposable project is deleted.
-2. Decide on history handling: a follow-up commit removing the tracked
-   artifacts (already staged as deletions in the working tree) stops
-   *forward* propagation; scrubbing `origin/main` history needs an explicit
-   force-push decision.
-3. Repo visibility: confirm private status on GitHub.
+Post-rotation hosted re-verification (the rotation claim is runtime-backed,
+not asserted): a 10/10 battery — Tenant A + B login (200), `create-booking`
+(201, token issued), idempotent replay (semantic-identical, exactly 1 row),
+A/B RLS isolation (own rows / 0 foreign), cross-tenant read (0 rows), and
+cross-tenant mutation (403 `HOSPITAL_ACCESS_DENIED`) — plus scheduler
+(cron ticks, pg_net 200s, 20s budget + ACL intact via migration 57),
+`get_queue_health` snapshots (migration 58 clamp live) and 2 fresh worker
+heartbeats. Migrations **57** and **58** confirmed intact (real product
+fixes, retained).
 
-Working-tree state ready for a clean follow-up commit: deleted probes/scripts/
-keys, updated `.gitignore`, migrations 57/58 + manifest, report file. Nothing
-was committed or pushed by this agent.
+History handling: the compromised file is deleted from the working tree and
+forward propagation is stopped; **scrubbing `origin/main` history is
+DEFERRED** — it requires a destructive force-push, an explicit owner decision
+NOT taken here.
 
 ## 8. External integrations
 
@@ -191,12 +254,58 @@ default, F16-0x) remain as recorded — out of Part 2 scope; note that hosted
 v2-worker lease behavior was not separately certified this session beyond
 observed claim/retry/dead-letter activity.
 
-## 10. Resume checklist (Part 2 completion remainder)
+## 10. Part 2 completion status
 
-1. Owner completes/refreshes Vercel device authorization (`vercel login`).
-2. Configure ONLY browser-safe env vars; preview deploy `apps/web`.
-3. Fetch deployed bundle → run §13 scan patterns → record results.
-4. Live frontend → hosted backend: login, reception walk-in, queue/doctor
-   screens, history; UI-level tenant isolation A↔B.
-5. Commit the working-tree cleanup + report (owner-approved commit).
-6. Rotate staging keys / decide history action (§7).
+1. Vercel device authorization — **DONE** (`whoami` = yeswantharasavalli).
+2. Browser-safe env vars only + preview deploy `apps/web` — **DONE** (27
+   forbidden vars purged; 2 `VITE_*` remain; non-production).
+3. Deployed-bundle scan — **DONE** (0 real secret values; §6).
+4. Live frontend → hosted backend (login, walk-in, queue/doctor, history)
+   and UI tenant isolation A↔B — **DONE** (E1 6/6, isolation gate PASS; §6).
+5. Commit working-tree changes — **DONE** via the owner-authorized PART 2
+   FINALIZATION package: `cors.ts` (D5) + `apps/web/vercel.json` + this
+   report committed and pushed to `origin/main` (normal commit + normal
+   push; no history rewrite).
+6. Rotate staging keys — **DONE** (§7). History scrub — **DEFERRED**
+   (destructive force-push, owner decision).
+
+### Final status vocabulary (per §24)
+
+| Area | Status |
+| --- | --- |
+| Staging backend, migrations 57/58, RLS, RPCs, Edge Functions | PROVEN (hosted) |
+| Credential rotation + post-rotation re-verification | PROVEN (hosted) |
+| Vercel Preview deploy (non-production), env lockdown | PROVEN |
+| Deployed-bundle secret scan | PROVEN (0 real secrets) |
+| Live UI E1 (reception→doctor→billing snapshot→history) | PROVEN (6/6) |
+| UI tenant isolation A↔B | PROVEN (zero leakage) |
+| Scheduler (pg_cron + pg_net + 20s budget) & worker claim/retry/dead-letter | PROVEN (hosted, live) |
+| Razorpay / Meta WhatsApp / SMTP real delivery | BLOCKED (no credentials) |
+| Git history scrub of `d9d7b2f` | DEFERRED (owner force-push decision) |
+| `cors.ts` + `vercel.json` commit | DONE (Part 2 finalization commit) |
+| Production readiness / "certified" / "secure" | NOT CLAIMED |
+
+## 11. PART 2 CONCLUSION — STAGING + VERCEL FRONTEND COMPLETE
+
+**PROVEN (hosted staging only):** Supabase staging backend (58 migrations,
+94/94 RLS, Edge Functions), hosted Auth, scheduler + worker, hosted API E1,
+credential rotation + re-verification, Vercel Preview deploy with
+browser-safe-only env, frontend → hosted staging, UI authentication, UI E1
+(6/6), UI tenant isolation (zero leakage), D4 CORS-origin fix, D5
+browser request-header (`apikey`/`X-Client-Info`) fix.
+
+**BLOCKED:** Razorpay, Meta/WhatsApp, SMTP (no credentials, by design).
+
+**DEFERRED (owner decisions):** historical Git secret scrub of `d9d7b2f`
+(force-push); optional Dashboard revocation of the legacy JWT pair (values
+never echoed; repo private; project disposable).
+
+**NOT CLAIMED:** production deployment, production readiness, real hospital
+pilot, real external payment/WhatsApp/SMTP delivery. Staging evidence is
+staging evidence; none of it is converted into a production claim.
+
+Finalization regression at the committed tree: frontend 17/17, typecheck
+PASS, build PASS, unit 91/91, `fmt:check`/`check` clean, bundle + repo
+secret scans clean (counts only; stock supabase-demo anon JWT remains as an
+accepted test fixture), deployed Preview serving the same bundle hash that
+passed the scan and UI E1.
