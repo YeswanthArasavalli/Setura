@@ -18,6 +18,7 @@ import { ApiError, describeError } from "@/lib/errors";
 import { useAsyncAction } from "@/hooks/useAsyncAction";
 import { todayISO } from "@/lib/dates";
 import type { BookingSource, CreateBookingResponse } from "@/types/api";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -33,6 +34,28 @@ interface Props {
   source: BookingSource;
   title: string;
   description: string;
+}
+
+/**
+ * Immutable snapshot of a just-created booking, assembled ONLY from the live
+ * `CreateBookingResponse` and data already on the form / doctor read surface.
+ * `estimatedWaitMinutes` and `queueSessionId` are carried verbatim from the
+ * response — the former is NOT persisted on the booking row, so it would be
+ * lost if the confirmation were re-derived from a BookingDetail read. No value
+ * here is recomputed, and no fee/financial field is retained.
+ */
+interface Confirmation {
+  bookingId: string;
+  tokenNumber: number;
+  bookingReference: string;
+  appointmentDate: string;
+  queueSessionId: string | null;
+  estimatedWaitMinutes: number | null;
+  patientName: string;
+  patientPhone: string;
+  /** Resolved only from the assignable-doctor read surface; null when no
+   *  doctor was selected (never fabricated). */
+  doctorLabel: string | null;
 }
 
 /**
@@ -66,6 +89,10 @@ export function BookingForm({ source, title, description }: Props) {
 
   // Optional find-existing affordance (name/phone → patient).
   const [matches, setMatches] = useState<PatientRow[]>([]);
+
+  // Post-creation operational confirmation. When set, the form is replaced by
+  // a faithful summary built from the live response snapshot (see above).
+  const [confirmation, setConfirmation] = useState<Confirmation | null>(null);
 
   useEffect(() => {
     if (!hospitalId || phone.replace(/\D/g, "").length < 6) {
@@ -142,9 +169,114 @@ export function BookingForm({ source, title, description }: Props) {
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     const result = await action.run();
-    if (result) {
-      navigate(`/bookings/${result.bookingId}`);
-    }
+    if (!result) return; // failure is surfaced through action.error, never here
+
+    // Resolve the doctor label ONLY from the already-loaded assignable-doctor
+    // read surface; a booking created without an assignment has none. The
+    // token/reference/wait/queue fields are taken verbatim from the response.
+    const selected = doctorId
+      ? doctors.find((d) => d.doctorId === doctorId) ?? null
+      : null;
+    setConfirmation({
+      bookingId: result.bookingId,
+      tokenNumber: result.tokenNumber,
+      bookingReference: result.bookingReference,
+      appointmentDate: result.appointmentDate,
+      queueSessionId: result.queueSessionId,
+      estimatedWaitMinutes: result.estimatedWaitMinutes,
+      patientName: name.trim(),
+      patientPhone: phone.trim(),
+      doctorLabel: selected?.label ?? null,
+    });
+  }
+
+  function createAnother() {
+    // Fresh submission: clear the confirmation, the idempotency key and every
+    // collected field, but keep the doctor roster cached (it is per-tenant).
+    setConfirmation(null);
+    action.reset();
+    setName("");
+    setPhone("");
+    setAge("");
+    setGender("");
+    setVillage("");
+    setDoctorId("");
+    setDate(todayISO());
+    setMatches([]);
+  }
+
+  if (confirmation) {
+    const queued = confirmation.queueSessionId !== null;
+    return (
+      <Card className="max-w-lg">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            {source === "walkin" ? "Walk-in created" : "Appointment created"}
+            <Badge variant={queued ? "success" : "warning"}>
+              {queued ? "In queue" : "Not queued"}
+            </Badge>
+          </CardTitle>
+          <CardDescription>
+            Confirmation from the booking service — shown exactly as returned.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2 text-sm">
+            <ConfirmRow label="Patient">
+              {confirmation.patientName}
+              {confirmation.patientPhone ? ` · ${confirmation.patientPhone}` : ""}
+            </ConfirmRow>
+            <ConfirmRow label="Doctor">
+              {confirmation.doctorLabel ?? "No doctor assigned"}
+            </ConfirmRow>
+            <ConfirmRow label="Token">
+              <span className="font-mono">{confirmation.tokenNumber}</span>
+            </ConfirmRow>
+            <ConfirmRow label="Booking reference">
+              <span className="font-mono">
+                {confirmation.bookingReference || "—"}
+              </span>
+            </ConfirmRow>
+            <ConfirmRow label="Date">{confirmation.appointmentDate}</ConfirmRow>
+            <ConfirmRow label="Queue">
+              {queued
+                ? "Added to the doctor's live queue"
+                : "No queue assignment — not callable from the Doctor Console"}
+            </ConfirmRow>
+            {queued && (
+              <ConfirmRow label="Queue session">
+                <span className="font-mono">
+                  {confirmation.queueSessionId}
+                </span>
+              </ConfirmRow>
+            )}
+            {queued && confirmation.estimatedWaitMinutes !== null && (
+              <ConfirmRow label="Est. wait">
+                {confirmation.estimatedWaitMinutes} min
+              </ConfirmRow>
+            )}
+          </div>
+
+          <div className="flex gap-3">
+            <Button
+              type="button"
+              className="flex-1"
+              onClick={() => navigate(`/bookings/${confirmation.bookingId}`)}
+            >
+              Open Booking
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="flex-1"
+              onClick={createAnother}
+            >
+              Create Another
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
@@ -297,6 +429,21 @@ export function BookingForm({ source, title, description }: Props) {
         </form>
       </CardContent>
     </Card>
+  );
+}
+
+function ConfirmRow({
+  label,
+  children,
+}: {
+  label: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="text-right">{children}</span>
+    </div>
   );
 }
 
