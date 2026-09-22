@@ -10,6 +10,9 @@ import { supabase } from "@/lib/supabase";
  * is the enforcement boundary. Tables WITHOUT a SELECT policy for staff
  * (payment_ledger, notifications) are intentionally NOT read here; they are
  * surfaced only through Edge Functions / booking snapshot fields.
+ * consultation_notes gained exactly such a staff SELECT policy in migration
+ * 63, so its note/diagnosis text is read below — still through RLS only,
+ * never a service-role path.
  */
 
 export interface PatientRow {
@@ -128,6 +131,39 @@ export async function getBooking(
     .maybeSingle();
   if (error) throw error;
   return (data as BookingRow) ?? null;
+}
+
+export interface ConsultationNoteRow {
+  id: string;
+  booking_id: string;
+  doctor_id: string | null;
+  notes: string;
+  diagnosis_summary: string | null;
+  created_at: string;
+}
+
+/**
+ * Append-only clinical notes of one booking (migration 63 read surface).
+ *
+ * Faithful pass-through: no reformatting, no summarising, no client-side
+ * inference. RLS (consultation_notes_staff_read) decides visibility — an
+ * unauthorized or cross-tenant caller simply gets zero rows, so the caller
+ * must never treat "empty" as "does not exist".
+ */
+export async function listConsultationNotes(
+  hospitalId: string,
+  bookingId: string,
+): Promise<ConsultationNoteRow[]> {
+  const { data, error } = await supabase
+    .from("consultation_notes")
+    .select(
+      "id,booking_id,doctor_id,notes,diagnosis_summary,created_at",
+    )
+    .eq("hospital_id", hospitalId)
+    .eq("booking_id", bookingId)
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  return asArray<ConsultationNoteRow>(data);
 }
 
 export interface HospitalDoctorOption {
