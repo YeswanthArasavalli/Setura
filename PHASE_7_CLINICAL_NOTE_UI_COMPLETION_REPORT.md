@@ -171,3 +171,108 @@ See `git status --short` output recorded in the session: modified
 `tests/integration/consultation_notes_read.test.ts`,
 `apps/web/src/routes/BookingDetail.test.tsx`, this report
 (transient `_tmp_s10/` scratch dir is not intended to be committed).
+
+## 13. Vercel environment-variable follow-up (pre-commit config pass)
+
+### 13.1 Reported concern
+
+§9 incident 2 claimed the **stored** Vercel env values contain wrapping double
+quotes and that any future cloud build would ship a broken bundle. This pass
+set out to inspect and, if true, correct the existing project
+(`setura`, `prj_PZq3TlY28vzz3hF6x0TKpvxK6gMH`, alias `setura-delta.vercel.app`)
+only — no second project, no domain, no credential changes.
+
+### 13.2 Inspection (Step 1) — secret values never echoed
+
+`vercel env ls` + one-off `vercel env pull` (into a gitignored temp dir,
+since deleted):
+
+| Variable | Targets | Stored value | Quote state |
+| --- | --- | --- | --- |
+| `VITE_SUPABASE_URL` | Production, Preview | present | **unquoted** (`https://gzcqasntcbqqmgsoikms.supabase.co`) |
+| `VITE_SUPABASE_ANON_KEY` | Production, Preview | present | **unquoted** (publishable `sb_pub…`, 46 chars, not echoed) |
+
+Production and Preview hold identical staging-backed values (intentional:
+backend remains STAGING). Unrelated `POSTGRES_*` / `TURBO_*` / `NX_*` vars
+(Vercel-provisioned Postgres additions) were left untouched.
+
+### 13.3 Root cause — correction of the §9 claim
+
+The wrapping quotes are a **local-file artifact of `vercel env pull`**, which
+writes every value dotenv-quoted (`KEY="value"`), combined with the local
+prebuilt build path preserving those quotes when feeding process env. The
+values **stored in Vercel itself were never quote-wrapped**. Therefore
+**no Vercel settings were modified in this pass** (none required), and
+nothing was rotated, created or deleted.
+
+### 13.4 Cloud-build proof (Step 3)
+
+A genuine Vercel cloud build exists and was verified via build logs —
+deployment `setura-xbmsy68nz` (id `dpl_87D15vWaZDvQCqLq7KhdFcRx2xTt`,
+Production, ~14 s billable build, machine iad1): Vercel cloned
+`github.com/YeswanthArasavalli/Setura` `main` @ `ad47215`, ran
+`tsc --noEmit && vite build` in Vercel's own environment with Vercel-injected
+env vars (no committed `.env` exists; no local quote-stripping involved),
+then promoted to `https://setura-delta.vercel.app`.
+
+**Git-state deviation (recorded, not caused by this pass):** before this
+session, the seven Phase C paths had already been committed and pushed as
+`ad47215 "Expose consultation notes to staff + UI"` (HEAD = origin/main);
+the previously stated base `202f1a8` is that commit's parent. This pass made
+no commits and no pushes.
+
+### 13.5 Bundle verification (Step 4) — served `index-DiLS7UrZ.js`
+
+- Staging Supabase URL: present, clean (`const vb="https://gzcqasntcbqqmgsoikms.supabase.co"`
+  — the quote characters are JS string delimiters; a stored wrapping quote
+  would appear as an escaped `\"` inside the literal, and none does)
+- Publishable anon key: present (not echoed)
+- Local-stack endpoint `127.0.0.1:54321` / `localhost:54321`: **0 occurrences**
+  (the few `localhost` / `127.0.0.1` / `:9999` strings in the bundle are
+  supabase-js library-internal default constants and PKCE allowlists, shipped
+  in every supabase-js bundle — not env injections)
+- Production domain (`setura.in` or any custom domain): absent
+- `service_role` / Razorpay / Meta-WhatsApp secrets: **0 occurrences**
+- Source maps: 0 `sourceMappingURL` refs, no `.map` served
+- Phase C clinical-note UI: `Consultation` card, `Clinical Notes`,
+  `refresh-check`, `No diagnosis recorded.` strings all present
+
+### 13.6 Controlled browser re-verification (Step 5) — cloud-built bundle
+
+Against `https://setura-delta.vercel.app` (real browser, real staging data):
+
+- Reception Tenant A (`reception@surya.test`): booking
+  `16328001-b7ea-4a5b-a9c6-9b03d83dff2a` renders the Consultation card —
+  `Clinical Notes` → `refresh-check`, Diagnosis → `No diagnosis recorded.` —
+  verbatim; `consultation_notes` → 200, 1 row.
+- Doctor Tenant A (`dr@surya.test`, author): same card visible; author
+  resolved to `Dr. Anitha Rao`.
+- Tenant B (`reception-b@surya.test`) deep link to the Tenant A booking:
+  exactly `Booking not found or not visible to your account.`; DOM scan for
+  every Tenant A marker (`refresh-check`, patient identifiers, `Anitha`,
+  `Clinical Notes`) → 0 matches; Tenant B `consultation_notes` → 200 with
+  0 Tenant A rows (hospital-scoped `…0002`).
+- Console: **0 application errors**; **0 application-originated 4xx/5xx**
+  across all three sessions (the previously noted `user_roles` 401 flake did
+  not recur). Screenshots retained locally under `.remember/tmp/`.
+- Non-blocking observation (not fixed, out of scope): on `/bookings/:id` the
+  back-link targets `/reception` even for doctor-role users — candidate
+  follow-up.
+
+### 13.7 Source-file impact (Step 6)
+
+`git status --short` / `git diff --stat` / `git diff --name-only`: clean
+before this pass; the only file this pass modifies is **this report**. No
+application source, migration, config or Vercel project setting was changed.
+All inspection scratch files (pulled env, downloaded bundle) were deleted.
+
+### 13.8 Classification (updated)
+
+| Item | Classification |
+| --- | --- |
+| Vercel environment configuration | CORRECTED AS UNNECESSARY → verified CLEAN; no settings change needed or made; §9 incident-2 root cause reassigned to the local `env pull`/prebuilt path |
+| Cloud build + env injection | PROVEN (Vercel-built `ad47215` deploy, clean bundle served on the alias) |
+| Clinical-note UI | PROVEN STAGING (now on a Vercel **cloud-built** bundle) |
+| Backend read surface | PROVEN STAGING (unchanged by this pass) |
+| Production | UNPROVEN — untouched; D5 and D13 remain DEFERRED BY OWNER |
+
