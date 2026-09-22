@@ -208,12 +208,30 @@ const ENABLE_METRICS = optionalBooleanEnv(
 // CORS
 // ─────────────────────────────────────────────────────────────────────────────
 
-const ALLOWED_ORIGINS_RAW = optionalEnv(
-  "ALLOWED_ORIGINS",
-  IS_PRODUCTION
-    ? "https://setura.in,https://app.setura.in"
-    : "http://localhost:3000,http://localhost:5173",
-);
+// Fail closed in production: `ALLOWED_ORIGINS` must name the real frontend
+// origin(s). There is deliberately no production default — inventing a domain
+// here would silently mint a CORS allow list for an origin that may not exist
+// and may not be ours (D13 is an owner decision, not a code constant). With the
+// variable unset in production the list is empty, so every cross-origin browser
+// request is denied (no `Access-Control-Allow-Origin`) while same-origin and
+// server-to-server calls, which CORS does not govern, keep working.
+const ALLOWED_ORIGINS_RAW = IS_PRODUCTION
+  ? (Deno.env.get("ALLOWED_ORIGINS")?.trim() ??
+    (() => {
+      console.warn(
+        JSON.stringify({
+          level: "warn",
+          message: "ALLOWED_ORIGINS is unset in production; all cross-origin " +
+            "browser requests to Edge Functions will be rejected",
+          scope: "env",
+        }),
+      );
+      return "";
+    })())
+  : optionalEnv(
+    "ALLOWED_ORIGINS",
+    "http://localhost:3000,http://localhost:5173",
+  );
 
 const ALLOWED_ORIGINS = ALLOWED_ORIGINS_RAW
   .split(",")

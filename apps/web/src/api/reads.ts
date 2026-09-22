@@ -134,10 +134,15 @@ export interface HospitalDoctorOption {
   doctorId: string;
   specialization: string;
   consultationFee: number;
-  /** Only populated for roles whose RLS allows reading `profiles` (e.g.
-   *  hospital_admin); a receptionist sees null — so the UI must fall back to
-   *  the specialization label. We never fabricate a name client-side. */
+  /** Populated whenever the caller's RLS exposes `profiles` (see
+   *  `profiles_staff_read_doctors`, migration 61). We never fabricate a name
+   *  client-side, so a null here means the directory row genuinely was not
+   *  readable and the label falls back to the specialization. */
   doctorName: string | null;
+  /** Ready-to-render picker label: the doctor name plus specialty when the
+   *  name is readable, otherwise the specialization alone (name + specialty
+   *  used to render as a duplicated token for single-specialty doctors). */
+  label: string;
 }
 
 /**
@@ -148,8 +153,10 @@ export interface HospitalDoctorOption {
  * doctor-assigned booking, so a doctor-less walk-in gets a token but is not
  * reachable by the Doctor Console. This read uses the existing
  * `doctor_specializations` SELECT policy (`user_has_hospital_access`); the
- * doctor's human name is embedded via `profiles` and will simply be null when
- * the caller's RLS does not expose it.
+ * doctor's human name is embedded via `profiles` and is readable by any
+ * same-hospital staff member since migration 61 (it stays null only if that
+ * policy is somehow not in effect, in which case the label degrades to the
+ * specialization).
  */
 export async function listHospitalDoctors(
   hospitalId: string,
@@ -174,15 +181,45 @@ export async function listHospitalDoctors(
   const byId = new Map<string, HospitalDoctorOption>();
   for (const r of rows) {
     if (!byId.has(r.doctor_id)) {
+      const doctorName = r.profiles?.full_name ?? null;
       byId.set(r.doctor_id, {
         doctorId: r.doctor_id,
         specialization: r.specialization_name,
         consultationFee: Number(r.consultation_fee ?? 0),
-        doctorName: r.profiles?.full_name ?? null,
+        doctorName,
+        label: doctorName
+          ? `${doctorName} · ${r.specialization_name}`
+          : r.specialization_name,
       });
     }
   }
   return [...byId.values()];
+}
+
+/**
+ * Doctor id → human name for a set of ids already visible to the caller
+ * (migration 61). Used to label queue sessions, which are per-doctor and
+ * otherwise indistinguishable to reception. Read-only; no hospital filter is
+ * applied because `profiles` is not hospital-keyed — RLS
+ * (profiles_staff_read_doctors) only ever exposes doctors sharing a hospital
+ * with the caller, so the result is tenant-scoped by construction.
+ */
+export async function listDoctorNames(
+  doctorIds: string[],
+): Promise<Map<string, string>> {
+  const ids = [...new Set(doctorIds.filter(Boolean))];
+  if (ids.length === 0) return new Map();
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id,full_name")
+    .in("id", ids)
+    .eq("is_active", true);
+  if (error) throw error;
+  const names = new Map<string, string>();
+  for (const r of asArray<{ id: string; full_name: string | null }>(data)) {
+    if (r.full_name) names.set(r.id, r.full_name);
+  }
+  return names;
 }
 
 const BOOKING_SELECT =

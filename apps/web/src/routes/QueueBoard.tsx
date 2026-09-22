@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/auth/AuthProvider";
 import { getQueueSnapshot, queueControl } from "@/api/queue";
-import { listTodaysBookings, type BookingRow } from "@/api/reads";
+import { listDoctorNames, listTodaysBookings, type BookingRow } from "@/api/reads";
 import { describeError } from "@/lib/errors";
 import { todayISO } from "@/lib/dates";
 import type { QueueControlAction, QueueSnapshot } from "@/types/api";
@@ -23,6 +23,9 @@ import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 export function QueueBoard() {
   const { hospitalId } = useAuth();
   const [sessions, setSessions] = useState<BookingRow[]>([]);
+  const [doctorNames, setDoctorNames] = useState<Map<string, string>>(
+    new Map(),
+  );
   const [sessionId, setSessionId] = useState<string>("");
   const [snapshot, setSnapshot] = useState<QueueSnapshot | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -34,8 +37,26 @@ export function QueueBoard() {
     listTodaysBookings(hospitalId, todayISO())
       .then((r) => {
         if (!active) return;
-        setSessions(r.filter((b) => b.queue_session_id));
+        const queued = r.filter((b) => b.queue_session_id);
+        setSessions(queued);
         setError(null);
+        // Label each session with its doctor (migration 61 exposes the
+        // directory read to same-hospital staff); failures degrade to the
+        // neutral fallback label and never block the queue itself.
+        const ids = [
+          ...new Set(
+            queued.map((b) => b.assigned_doctor_id).filter((v): v is string =>
+              !!v,
+            ),
+          ),
+        ];
+        return listDoctorNames(ids).then((names) => {
+          if (active) setDoctorNames(names);
+        }).catch(() => {
+          // Directory read is a labelling nicety only: keep the queue usable
+          // with neutral labels rather than surfacing a failure here.
+          if (active) setDoctorNames(new Map());
+        });
       })
       .catch((e) => active && setError(describeError(e)));
     return () => {
@@ -43,16 +64,23 @@ export function QueueBoard() {
     };
   }, [hospitalId]);
 
-  // Distinct active sessions today, keyed by queue_session_id.
+  // Distinct active sessions today, keyed by queue_session_id. A session is
+  // per-doctor, so the doctor is the only label reception can act on; "Session
+  // N" was ambiguous once more than one doctor was calling.
   const sessionOptions = useMemo(() => {
     const map = new Map<string, string>();
     for (const b of sessions) {
-      if (b.queue_session_id && !map.has(b.queue_session_id)) {
-        map.set(b.queue_session_id, `Session ${map.size + 1}`);
-      }
+      if (!b.queue_session_id || map.has(b.queue_session_id)) continue;
+      const doctor = b.assigned_doctor_id
+        ? doctorNames.get(b.assigned_doctor_id)
+        : undefined;
+      map.set(
+        b.queue_session_id,
+        doctor ? `Dr. ${doctor}` : `Queue ${map.size + 1}`,
+      );
     }
     return [...map.entries()];
-  }, [sessions]);
+  }, [sessions, doctorNames]);
 
   useEffect(() => {
     if (!sessionId) setSessionId(sessionOptions[0]?.[0] ?? "");

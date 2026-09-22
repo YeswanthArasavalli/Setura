@@ -152,13 +152,12 @@ Deno.test("rateLimitResponse sets Retry-After header", () => {
   assertEquals(resp.headers.get("Retry-After"), "42");
 });
 
-Deno.test("responses carry CORS headers from Env.ALLOWED_ORIGINS", () => {
+Deno.test("responses keep the shared CORS headers and fail closed on origin", () => {
   const resp = successResponse({}, CID);
-  // no Origin header on the request → falls back to first allowed origin
-  assertEquals(
-    resp.headers.get("Access-Control-Allow-Origin"),
-    "http://localhost:3000",
-  );
+  // No Origin header on the request → the response must NOT advertise an
+  // allowed origin (it used to echo the first ALLOWED_ORIGINS entry).
+  assertEquals(resp.headers.get("Access-Control-Allow-Origin"), null);
+  assertEquals(resp.headers.get("Vary"), "Origin");
   assertStringIncludes(
     resp.headers.get("Access-Control-Allow-Headers") ?? "",
     "Idempotency-Key",

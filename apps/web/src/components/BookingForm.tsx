@@ -56,6 +56,13 @@ export function BookingForm({ source, title, description }: Props) {
   const [date, setDate] = useState(todayISO());
   const [doctorId, setDoctorId] = useState("");
   const [doctors, setDoctors] = useState<HospitalDoctorOption[]>([]);
+  // `loading`/`error` are tracked separately from the list itself: an empty
+  // list during the first fetch (or after a failed one) is NOT evidence that
+  // the hospital has no doctors, and rendering it as "No doctors available"
+  // let a receptionist submit an unqueued walk-in on a transient state.
+  const [doctorsState, setDoctorsState] = useState<
+    "loading" | "ready" | "error"
+  >("loading");
 
   // Optional find-existing affordance (name/phone → patient).
   const [matches, setMatches] = useState<PatientRow[]>([]);
@@ -82,9 +89,18 @@ export function BookingForm({ source, title, description }: Props) {
   useEffect(() => {
     if (!hospitalId) return;
     let active = true;
+    setDoctorsState("loading");
     listHospitalDoctors(hospitalId)
-      .then((r) => active && setDoctors(r))
-      .catch(() => active && setDoctors([]));
+      .then((r) => {
+        if (!active) return;
+        setDoctors(r);
+        setDoctorsState("ready");
+      })
+      .catch(() => {
+        if (!active) return;
+        setDoctors([]);
+        setDoctorsState("error");
+      });
     return () => {
       active = false;
     };
@@ -212,23 +228,34 @@ export function BookingForm({ source, title, description }: Props) {
               id="doctor"
               value={doctorId}
               onChange={(e) => setDoctorId(e.target.value)}
+              disabled={doctorsState === "loading"}
               className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
             >
               <option value="">
-                {doctors.length === 0
-                  ? "No doctors available"
-                  : "— No assignment (token not queued) —"}
+                {doctorsState === "loading"
+                  ? "Loading doctors…"
+                  : doctorsState === "error"
+                    ? "Doctor list unavailable — retry before assigning"
+                    : doctors.length === 0
+                      ? "No doctors on record for this hospital"
+                      : "— No assignment (token not queued) —"}
               </option>
               {doctors.map((d) => (
                 <option key={d.doctorId} value={d.doctorId}>
-                  {d.doctorName ?? d.specialization} · {d.specialization}
+                  {d.label}
                 </option>
               ))}
             </select>
-            {!doctorId && (
-              <p className="mt-1 text-xs text-muted-foreground">
+            {doctorsState !== "loading" && !doctorId && (
+              <p
+                className={`mt-1 text-xs ${
+                  source === "walkin"
+                    ? "text-destructive"
+                    : "text-muted-foreground"
+                }`}
+              >
                 {source === "walkin"
-                  ? "Without a doctor the walk-in gets a token but does not enter any doctor's queue."
+                  ? "Without a doctor the walk-in gets a token but does not enter any doctor's queue — the Doctor Console cannot call it."
                   : "Assign a doctor to attach this appointment to their queue."}
               </p>
             )}
@@ -254,12 +281,18 @@ export function BookingForm({ source, title, description }: Props) {
             </p>
           ) : null}
 
-          <Button type="submit" className="w-full" disabled={action.running}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={action.running || doctorsState === "loading"}
+          >
             {action.running
               ? "Submitting…"
-              : source === "walkin"
-                ? "Create walk-in & issue token"
-                : "Create appointment"}
+              : doctorsState === "loading"
+                ? "Loading doctors…"
+                : source === "walkin"
+                  ? "Create walk-in & issue token"
+                  : "Create appointment"}
           </Button>
         </form>
       </CardContent>

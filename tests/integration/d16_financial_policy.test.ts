@@ -96,7 +96,6 @@ const RUN = crypto.randomUUID().slice(0, 8);
 const PLATFORM_FEE = 100; // booking_fee_inr == what SETURA collects
 const RECEPTIONIST_FEE = 30; // NOT collected by SETURA (Q1)
 const HOSPITAL_FEE = 500; // NOT collected by SETURA (Q1)
-const TOTAL = PLATFORM_FEE + RECEPTIONIST_FEE + HOSPITAL_FEE; // display only
 
 // Far-future appointment so calculate_refund_amount's same-day 0% branch
 // never applies; cancellation_time is inside the Tier-1 full-refund window.
