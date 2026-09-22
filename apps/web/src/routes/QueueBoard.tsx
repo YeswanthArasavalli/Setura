@@ -76,7 +76,9 @@ export function QueueBoard() {
         : undefined;
       map.set(
         b.queue_session_id,
-        doctor ? `Dr. ${doctor}` : `Queue ${map.size + 1}`,
+        // profiles.full_name already carries any honorific ("Dr. Anitha Rao");
+        // prefixing another "Dr. " produced "Dr. Dr. …" on staging.
+        doctor ? doctor : `Queue ${map.size + 1}`,
       );
     }
     return [...map.entries()];
