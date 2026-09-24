@@ -15,6 +15,7 @@ const NAV: NavItem[] = [
   { to: "/reception/book", label: "Appointment", roles: ["receptionist", "hospital_admin", "global_admin"] },
   { to: "/reception/walk-in", label: "Walk-in", roles: ["receptionist", "hospital_admin", "global_admin"] },
   { to: "/reception/patients", label: "Patients", roles: ["receptionist", "hospital_admin", "global_admin"] },
+  { to: "/reception/notifications", label: "Notifications", roles: ["receptionist", "hospital_admin", "global_admin"] },
   { to: "/queue", label: "Queue / Tokens", roles: ["receptionist", "hospital_admin", "global_admin"] },
   { to: "/doctor", label: "Doctor Console", roles: ["doctor", "hospital_admin", "global_admin"] },
 ];

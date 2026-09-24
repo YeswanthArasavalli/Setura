@@ -7,6 +7,7 @@ import { ReceptionDashboard } from "@/routes/ReceptionDashboard";
 import { BookAppointment } from "@/routes/BookAppointment";
 import { WalkIn } from "@/routes/WalkIn";
 import { Patients } from "@/routes/Patients";
+import { Notifications } from "@/routes/Notifications";
 import { QueueBoard } from "@/routes/QueueBoard";
 import { DoctorConsole } from "@/routes/DoctorConsole";
 import { BookingDetail } from "@/routes/BookingDetail";
@@ -75,6 +76,14 @@ export default function App() {
           element={
             <RequireRole roles={[...RECEPTION_ROLES]}>
               <Patients />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/reception/notifications"
+          element={
+            <RequireRole roles={[...RECEPTION_ROLES]}>
+              <Notifications />
             </RequireRole>
           }
         />

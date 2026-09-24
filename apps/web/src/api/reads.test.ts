@@ -18,7 +18,8 @@ import {
 const from = vi.fn();
 vi.mock("@/lib/supabase", () => ({ supabase: { from } }));
 
-const { listHospitalDoctors, listDoctorNames } = await import("@/api/reads");
+const { listHospitalDoctors, listDoctorNames, listNotifications } =
+  await import("@/api/reads");
 
 function builder(result: { data: unknown; error: unknown }) {
   const b: Record<string, unknown> = {};
@@ -93,5 +94,39 @@ describe("listDoctorNames", () => {
     const names = await listDoctorNames([]);
     expect(names.size).toBe(0);
     expect(from).not.toHaveBeenCalled();
+  });
+});
+
+describe("listNotifications", () => {
+  it("reads notification_queue scoped to the caller's hospital, newest first", async () => {
+    const b = builder({ data: [], error: null });
+    from.mockReturnValue(b);
+
+    await listNotifications("h-1");
+
+    // RLS is the enforcement boundary; the client still pins the tenant and
+    // never reads a route/query-supplied hospital id here.
+    expect(from).toHaveBeenCalledWith("notification_queue");
+    expect(b.eq).toHaveBeenCalledWith("hospital_id", "h-1");
+    expect(b.order).toHaveBeenCalledWith(
+      "created_at",
+      { ascending: false },
+    );
+    // The select must carry the delivery-status lifecycle fields and never a
+    // secret/provider-token column.
+    const select = (b.select as ReturnType<typeof vi.fn>).mock
+      .calls[0][0] as string;
+    for (const col of [
+      "channel",
+      "status",
+      "retry_count",
+      "sent_at",
+      "delivered_at",
+      "failed_at",
+      "last_error",
+    ]) {
+      expect(select).toContain(col);
+    }
+    expect(select).not.toMatch(/token|secret|credential|password/i);
   });
 });

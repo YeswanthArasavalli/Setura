@@ -8,11 +8,14 @@ import { supabase } from "@/lib/supabase";
  * hospital_admin|receptionist see their hospital, doctors see assigned rows).
  * We add an explicit hospital_id filter defensively, but RLS — not the client —
  * is the enforcement boundary. Tables WITHOUT a SELECT policy for staff
- * (payment_ledger, notifications) are intentionally NOT read here; they are
- * surfaced only through Edge Functions / booking snapshot fields.
- * consultation_notes gained exactly such a staff SELECT policy in migration
- * 63, so its note/diagnosis text is read below — still through RLS only,
- * never a service-role path.
+ * (payment_ledger) are intentionally NOT read here; they are surfaced only
+ * through Edge Functions / booking snapshot fields. consultation_notes gained
+ * exactly such a staff SELECT policy in migration 63, so its note/diagnosis
+ * text is read below — still through RLS only, never a service-role path.
+ * notification_queue has carried a staff-readable SELECT policy since
+ * migration 05 (`notif_queue_admin`, receptionist/hospital_admin +
+ * global_admin, tenant-scoped), so its delivery-status lifecycle is read
+ * below for the read-only Notifications surface (Phase 7).
  */
 
 export interface PatientRow {
@@ -164,6 +167,53 @@ export async function listConsultationNotes(
     .order("created_at", { ascending: true });
   if (error) throw error;
   return asArray<ConsultationNoteRow>(data);
+}
+
+export interface NotificationRow {
+  id: string;
+  hospital_id: string;
+  patient_id: string | null;
+  booking_id: string | null;
+  channel: string;
+  priority: string;
+  status: string;
+  recipient: string;
+  title: string | null;
+  retry_count: number;
+  scheduled_for: string;
+  sent_at: string | null;
+  delivered_at: string | null;
+  failed_at: string | null;
+  last_error: string | null;
+  created_at: string;
+}
+
+/**
+ * Recent notifications for the tenant (Phase 7 read-only delivery-status
+ * surface).
+ *
+ * Reads `notification_queue` — the canonical notification lifecycle table whose
+ * `channel` enum already includes WhatsApp-bound sends, so a single read gives
+ * the full queued → sent → delivered / failed story for every channel without
+ * touching the conversational `whatsapp_messages` engine (out of scope). RLS
+ * (`notif_queue_admin`, migration 05) decides visibility: an unauthorized or
+ * cross-tenant caller simply gets zero rows, so "empty" must never be read as
+ * "does not exist". This is a SELECT-only surface — no retry/resend/cancel.
+ */
+export async function listNotifications(
+  hospitalId: string,
+  limit = 100,
+): Promise<NotificationRow[]> {
+  const { data, error } = await supabase
+    .from("notification_queue")
+    .select(
+      "id,hospital_id,patient_id,booking_id,channel,priority,status,recipient,title,retry_count,scheduled_for,sent_at,delivered_at,failed_at,last_error,created_at",
+    )
+    .eq("hospital_id", hospitalId)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (error) throw error;
+  return asArray<NotificationRow>(data);
 }
 
 export interface HospitalDoctorOption {
