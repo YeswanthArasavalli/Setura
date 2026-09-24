@@ -1,11 +1,15 @@
 # PHASE 7 — Payment Status UX Implementation Report
 
-**Phase type:** frontend-only product fix + local validation. Staging deployment
-and browser validation were **NOT performed** (see §10 and §15); commit/push was
-therefore withheld under the phase's own stop condition.
+**Phase type:** frontend-only product fix + local validation + staging
+deployment + real browser validation. This follow-up session restored browser
+tooling, committed and pushed the change (which is this project's staging deploy
+path), then validated the deployed `setura-delta.vercel.app` in a real browser.
 **Date:** 2026-09-24
 **Authoritative investigation:** `PHASE_7_PAYMENT_STATUS_UX_INVESTIGATION_REPORT.md` (not reopened)
-**Baseline at start and at end:** `HEAD == origin/main == 449ba1193b116d68bcc62227fc99e98d8c9f3822` (`449ba11`)
+**Baseline at start:** `HEAD == origin/main == 449ba1193b116d68bcc62227fc99e98d8c9f3822` (`449ba11`)
+**Implementation commit:** `59298274f9077726683ee8bf4b5bd6f6f5856f40` (`5929827`) —
+`feat: clarify payment status for zero-fee bookings`, pushed to `origin/main`;
+this reconciliation lands in a subsequent documentation-only commit on `main`.
 
 **Explicit statements required by the brief:**
 
@@ -202,59 +206,62 @@ re-run (the brief explicitly forbids turning this into a broad audit).
 
 ## 9. Staging deployment
 
-**NOT PERFORMED — BLOCKED by the phase's own ordering and this project's
-deployment topology.**
+**PERFORMED via the project's own Git-connected path — no drift, no config change.**
 
 This project's staging frontend is deployed by its **Git-connected Vercel
 project** (`setura`, ref `prj_PZq3TlY28vzz3hF6x0TKpvxK6gMH`, Root Directory
 `apps/web`): a push to `main` triggers the cloud build and promotes the
-`setura-delta.vercel.app` alias. There is therefore no way to deploy this change
-to staging **without** first committing and pushing it — which the stop
-condition forbids while browser validation is impossible.
+`setura-delta.vercel.app` alias. That is exactly what was done — commit `5929827`
+pushed to `origin/main`, which triggered the build.
 
-The alternative (root-level CLI upload) was rejected deliberately rather than
-left unexplored: running `vercel deploy --prod` from inside `apps/web` is a
-known-failing path ("The specified Root Directory 'apps/web' does not exist"),
-and the workaround requires staging temporary `.vercel/project.json` and
-`.vercelignore` files at the repository root plus a `--prebuilt` upload. That
-would place an artifact on the public staging alias that corresponds to **no
-commit**, creating deployed-vs-`HEAD` drift that the next legitimate push
-silently overwrites — an unacceptable evidence and recovery hazard for a UX
-label change. **No Vercel setting, environment variable or project was created
-or modified. No `vercel.json` change. Nothing was deployed.**
+- Vercel build `setura-2hganjdwc-yeswantharasavallis-projects.vercel.app`
+  reached **Ready** (Production, ~15 s build) and carries the alias
+  `https://setura-delta.vercel.app`.
+- **Deployed-bundle freshness confirmed independently:** the live
+  `https://setura-delta.vercel.app` references `assets/index-Cp6ghPMO.js`, which
+  contains the string `"No payment required"`. This closes the documented caveat
+  that a staging bundle may predate `HEAD` — the observed browser result is
+  attributable to commit `5929827`, not a stale build.
 
-CLI sanity was checked only: Vercel CLI 59.23.2 is installed; `vercel whoami`
-timed out (`Worker timed out after 10 seconds / Failed to spawn get latest
-worker`), an environment/tooling condition, not a product one. `apps/web/dist/`
-is a local build artifact and is gitignored (untracked-file check confirmed only
-the two new `src/lib/` files are pending).
+**No Vercel project, setting, environment variable, Root Directory or
+`vercel.json` was created or modified; no `.vercel` config, no `--prebuilt` /
+detached upload, and no deployed-vs-`HEAD` drift was introduced.** The public
+staging alias corresponds to a real pushed commit.
 
 ---
 
 ## 10. Browser validation
 
-**BLOCKED — cannot be performed in this session.** Browser tooling is
-unavailable: the Browser subagent is disabled by the user configuration, and the
-`browser-use` MCP bridge had already failed at transport level earlier in this
-same session (`Timed out waiting for pipe mcp-28336-556153`, before any request
-reached the site). No login, navigation, screenshot or DOM assertion was
-obtained, and **no staging browser proof is claimed**.
+**PERFORMED against the live staging alias `https://setura-delta.vercel.app`**
+(real browser, real staging backend `gzcqasntcbqqmgsoikms.supabase.co`).
 
-Additional limitation that a browser alone would not resolve: even with working
-browser tooling, the **secondary** states cannot be observed on staging today,
-because the read-only staging census (investigation §6) found **0** bookings with
-`booking_fee_inr > 0`, **0** paid bookings and **0** payment orders. Fabricating
-those rows is out of scope and forbidden. So the observable browser states are:
+Primary acceptance test — ₹0 unpaid walk-in:
+
+- **Reception Dashboard** (Tenant A `reception@surya.test`, hospital
+  `…0001`): all **7** of today's ₹0 `walkin` / `manual_free` bookings render
+  the Payment column as **"No payment required"** — none show the old generic
+  "Pending", and none show "Paid".
+- **BookingDetail** (Tenant A booking `1533cce8-fc5b-4a64-8d41-4afc0b1d2c9a`,
+  `walkin`, every fee snapshot ₹0): the "Payment & billing" row reads
+  **"No payment required"** — not "Payment pending", not "Paid". This proves
+  both UI surfaces use the same shared mapping.
+
+Data limitation honoured (read-only census, confirmed this session): staging
+holds **14** bookings, **all** `booking_fee_inr = 0` and unpaid — **0** rows with
+`booking_fee_inr > 0`, **0** paid rows and **0** payment orders. The secondary
+states therefore **cannot** be observed without fabricating financial rows, which
+is forbidden and was **not** done.
 
 | State | Classification |
 | --- | --- |
-| ₹0 unpaid walk-in → "No payment required" | **NOT OBSERVED** (browser BLOCKED); locally **PROVEN** by render tests |
-| non-zero unpaid → "Payment pending" | **NOT TESTED** in browser (and no staging row exists to observe) |
-| paid → "Paid" | **NOT TESTED** in browser (and no staging row exists to observe) |
+| ₹0 unpaid walk-in → "No payment required" | **PROVEN STAGING** (both BookingDetail + Reception Dashboard) |
+| non-zero unpaid → "Payment pending" | **NOT OBSERVED** (0 such staging rows; fabrication forbidden) — locally **PROVEN** by unit + render tests |
+| paid → "Paid" | **NOT OBSERVED** (0 such staging rows; fabrication forbidden) — locally **PROVEN** by unit + render tests, incl. the critical paid+zero-fee ordering guard |
 
-Consequently this phase's evidence for correctness is
-**unit-verified + statically verified**, deliberately **not**
-browser-verified or staging-verified.
+Console during validation: **0 errors, 0 warnings.** Network: every request to
+the staging backend returned **200** — **0 app-origin 4xx/5xx, 0 CORS failures,
+no `localhost` / `127.0.0.1` requests.** `NOT OBSERVED` is **not** upgraded to
+`PROVEN` for the two states staging cannot supply.
 
 ---
 
@@ -270,14 +277,21 @@ Function is untouched; no query, filter or read path was added.
 
 The badge is a pure derivation from fields of an **already RLS-authorized**
 booking row (`bookings_read_admin` / `bookings_read_doctor`, migration 02:734-759
-— unchanged), so it cannot widen exposure. The Tenant A / Tenant B staging check
-was **NOT TESTED in this phase** because it requires the browser, which is
-BLOCKED; the cross-tenant behaviour it would re-confirm is already established
-from the earlier controlled walkthrough (Tenant B sees zero Tenant A rows; a
-foreign booking deep-link returns an empty RLS-filtered set with no leak). That
-prior evidence is **cited, not reproduced**, and is not upgraded to fresh proof.
-**Tenant isolation: PRESERVED BY CONSTRUCTION (PROVEN statically) / runtime
-re-verification NOT TESTED.**
+— unchanged), so it cannot widen exposure. **Runtime re-verification was
+PERFORMED in the browser this session:**
+
+- Tenant B `reception-b@surya.test` (hospital `…0002`) Reception Dashboard →
+  **"No bookings today" / 0**, while Tenant A has 7 ₹0 bookings on the same
+  date — no Tenant A row is visible to Tenant B.
+- Tenant B **direct URL** to real Tenant A booking
+  `1533cce8-fc5b-4a64-8d41-4afc0b1d2c9a` → renders **"Booking not found or not
+  visible to your account."** The underlying PostgREST query
+  (`…/rest/v1/bookings?…hospital_id=eq.…0002&id=eq.1533cce8…`) returned **200
+  with an empty set** — no Tenant A data exposed, no error.
+
+**Tenant isolation: PROVEN STAGING**, and the code path remains
+**PRESERVED BY CONSTRUCTION (PROVEN statically)** — no RLS, query, filter or
+read surface changed.
 
 ---
 
@@ -331,69 +345,47 @@ re-run: this diff contains no backend, SQL or configuration source.
 
 ## 15. Remaining limitations
 
-1. **Browser validation BLOCKED** → no staging visual proof of
-   "No payment required"; correctness rests on unit + static verification only.
-2. **Staging deployment NOT PERFORMED** → `setura-delta.vercel.app` still serves
-   the pre-change bundle; the deployed UI will keep showing "Pending" for ₹0
-   bookings until this change is pushed (or otherwise deployed).
-3. **Commit/push WITHHELD** by the phase's explicit rule
-   ("STOP before commit/push unless the agreed workflow explicitly permits
-   committing without browser validation"). This phase was not granted that
-   exception, so the working tree carries the change uncommitted.
-4. **Non-zero and paid UI states cannot be observed on staging at all** (0 such
+1. **Non-zero and paid UI states cannot be observed on staging at all** (0 such
    rows exist and none may be fabricated) — permanently
-   **NOT OBSERVED / NOT TESTED** for this environment, independent of tooling.
-5. **Local Supabase stack was not running** (earlier: `127.0.0.1:54322` refused;
-   Docker tooling unreachable), so no local end-to-end render against live data
-   was attempted; not required for a pure presentation change.
-6. Refund / partial-refund badges remain **out of scope and unimplemented**, as
+   **NOT OBSERVED / NOT TESTED** in the browser for this environment,
+   independent of tooling. They remain locally **PROVEN** by unit + render tests
+   including the critical paid + zero-fee ordering guard.
+2. Refund / partial-refund badges remain **out of scope and unimplemented**, as
    decided: they require a new backend read surface. `payment_status_detail`
    still has **no runtime writer** for `not_applicable` / `awaiting_payment`,
    unchanged and deliberately not addressed here.
-7. Root-level markdown reports are not `deno fmt`-clean, consistent with the
+3. Root-level markdown reports are not `deno fmt`-clean, consistent with the
    documented pre-existing condition; no source file is affected.
 
-To close the remaining gaps in the next session, in order: restore browser
-tooling → commit + push to `main` (which is this project's staging deploy path) →
-browser-validate the ₹0 walk-in booking on `setura-delta.vercel.app` → record
-NOT OBSERVED for the states staging cannot supply.
+The earlier session's limitations — browser tooling BLOCKED, staging NOT
+deployed and commit/push WITHHELD — are **resolved**: browser tooling was
+restored, the change was committed + pushed (`5929827`), the Git-connected
+Vercel build reached Ready on `setura-delta.vercel.app`, and the ₹0 walk-in
+state plus tenant isolation were validated in a real browser.
 
 ---
 
 ## 16. Git state
 
-**No commit was made and nothing was pushed.** `HEAD` is unchanged from the
-pre-flight baseline:
+The implementation was committed and pushed to `main` (the project's staging
+deploy path). Exactly the six intended files were staged — the three modified
+routes/test files, the two new `src/lib/paymentStatus*` files and this report —
+and **no** unrelated historical report, generated file, `.env`, `.vercel` or
+`dist` was included.
 
 ```
-$ git rev-parse HEAD
-449ba1193b116d68bcc62227fc99e98d8c9f3822
-$ git rev-parse origin/main
-449ba1193b116d68bcc62227fc99e98d8c9f3822
-$ git diff --stat
- apps/web/src/routes/BookingDetail.test.tsx | 107 +++++++++++++++++++++++++++++
- apps/web/src/routes/BookingDetail.tsx      |  17 +++--
- apps/web/src/routes/ReceptionDashboard.tsx |   3 +-
- 3 files changed, 122 insertions(+), 5 deletions(-)
-$ git diff --check            (no output)
-$ git status --short
- M apps/web/src/routes/BookingDetail.test.tsx
- M apps/web/src/routes/BookingDetail.tsx
- M apps/web/src/routes/ReceptionDashboard.tsx
-?? PHASE_7_FEE_CONFIGURATION_INVESTIGATION_REPORT.md
-?? PHASE_7_LOCAL_ONLINE_PAYMENT_ORDER_VALIDATION_REPORT.md
-?? PHASE_7_ONLINE_NONZERO_PAYMENT_ORDER_VALIDATION_REPORT.md
-?? PHASE_7_PAYMENT_STATUS_UX_INVESTIGATION_REPORT.md
-?? PHASE_7_PAYMENT_STATUS_UX_IMPLEMENTATION_REPORT.md
-?? apps/web/src/lib/paymentStatus.ts
-?? apps/web/src/lib/paymentStatus.test.ts
+$ git commit -m "feat: clarify payment status for zero-fee bookings"
+[main 5929827] ... 6 files changed, 691 insertions(+), 5 deletions(-)
+$ git push origin main
+   449ba11..5929827  main -> main
+$ git rev-parse HEAD        59298274f9077726683ee8bf4b5bd6f6f5856f40
+$ git rev-parse origin/main 59298274f9077726683ee8bf4b5bd6f6f5856f40
 ```
 
-`HEAD == origin/main == 449ba11` (not ahead, not behind). The change set is
-**3 modified + 2 new frontend source files, uncommitted**; the intended commit
-message for the authorized follow-up remains
-`feat: clarify payment status for zero-fee bookings`. No force push, no rebase,
-no history rewrite, no unrelated cleanup was performed.
+`HEAD == origin/main == 5929827`, working tree clean apart from four unrelated
+untracked historical reports that are deliberately left out of scope. No force
+push, no rebase, no history rewrite and no `git add .` was used. This report
+reconciliation is committed as a subsequent documentation-only commit.
 
 ---
 
@@ -411,9 +403,10 @@ no history rewrite, no unrelated cleanup was performed.
 | Production build | **PASS** |
 | Secret / source-map scan | **PASS** |
 | Backend, SQL, migration, fee, payment, refund, settlement change | **NONE** (PROVEN by diff scope) |
-| Staging deployment | **BLOCKED / NOT PERFORMED** |
-| Browser validation | **BLOCKED** → **NOT OBSERVED** |
-| Non-zero + paid states on staging | **NOT OBSERVED** (no such rows; fabrication forbidden) |
-| Tenant isolation runtime re-check | **NOT TESTED** (browser BLOCKED); unchanged code path **PROVEN** statically |
-| Commit / push | **NOT PERFORMED** (withheld per stop condition 11) |
+| Staging deployment | **PROVEN** — commit `5929827` pushed; Vercel build Ready on `setura-delta.vercel.app`; live bundle contains "No payment required" |
+| Browser validation — ₹0 unpaid walk-in | **PROVEN STAGING** (BookingDetail + Reception Dashboard) |
+| Non-zero + paid states on staging | **NOT OBSERVED** (no such rows; fabrication forbidden) — locally **PROVEN** |
+| Tenant isolation runtime re-check | **PROVEN STAGING** (Tenant B sees 0 Tenant A rows + foreign deep-link empty RLS); code path unchanged |
+| Console / network during validation | **0 errors, 0 warnings, 0 4xx/5xx, 0 CORS, no localhost** |
+| Commit / push | **DONE** — `5929827` pushed to `origin/main`; report reconciliation in a follow-up docs commit |
 | Production deployment | **NONE** |
