@@ -9,6 +9,7 @@ import {
   type ConsultationNoteRow,
 } from "@/api/reads";
 import { describeError } from "@/lib/errors";
+import { paymentStatus } from "@/lib/paymentStatus";
 import { Badge, statusVariant } from "@/components/ui/badge";
 import {
   Card,
@@ -21,7 +22,9 @@ import {
 /** Booking detail + payment/billing state (Phase 6 §15/§16). All amounts are
  *  read from the backend's immutable fee snapshot on the booking row; the
  *  client never recomputes a fee and never reads the payment ledger directly
- *  (staff have no SELECT on it — the snapshot is the authorized surface). */
+ *  (staff have no SELECT on it — the snapshot is the authorized surface).
+ *  The payment badge is derived by the shared `paymentStatus` mapping, so the
+ *  reception list and this page cannot disagree. */
 export function BookingDetail() {
   const { hospitalId } = useAuth();
   const { bookingId } = useParams<{ bookingId: string }>();
@@ -161,9 +164,7 @@ export function BookingDetail() {
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
               <Row label="Payment">
-                <Badge variant={row.payment_completed ? "success" : "secondary"}>
-                  {row.payment_completed ? "Paid" : "Pending"}
-                </Badge>
+                <PaymentBadge row={row} />
               </Row>
               {row.payment_status_detail && (
                 <Row label="Detail">{row.payment_status_detail}</Row>
@@ -264,6 +265,14 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
       <span className="text-right">{children}</span>
     </div>
   );
+}
+
+/** Payment badge for one booking row. Presentation only: the two authoritative
+ *  fields (`payment_completed`, then `booking_fee_inr`) are mapped by the
+ *  shared helper so an INR 0 walk-in no longer reads as an unpaid payment. */
+function PaymentBadge({ row }: { row: BookingRow }) {
+  const status = paymentStatus(row);
+  return <Badge variant={status.variant}>{status.label}</Badge>;
 }
 
 function fmt(n: number | null): string {

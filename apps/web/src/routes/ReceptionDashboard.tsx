@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/auth/AuthProvider";
 import { listTodaysBookings, type BookingRow } from "@/api/reads";
 import { describeError } from "@/lib/errors";
+import { paymentStatus } from "@/lib/paymentStatus";
 import { todayISO } from "@/lib/dates";
 import {
   Card,
@@ -131,7 +132,7 @@ export function ReceptionDashboard() {
                         {r.status.replace("_", " ")}
                       </Badge>
                     </TD>
-                    <TD>{r.payment_completed ? "Paid" : "Pending"}</TD>
+                    <TD>{paymentStatus(r).label}</TD>
                     <TD className="text-right">
                       <Link
                         to={`/bookings/${r.id}`}

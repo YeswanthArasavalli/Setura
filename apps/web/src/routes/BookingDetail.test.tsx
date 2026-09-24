@@ -214,3 +214,110 @@ describe("BookingDetail consultation card", () => {
     ).toBeInTheDocument();
   });
 });
+
+/**
+ * The payment badge mapping on the detail surface (Phase 7 payment-status UX
+ * fix). These pin the APPROVED three-way semantics and, above all, their
+ * ORDER: `payment_completed` is evaluated before `booking_fee_inr`, so a paid
+ * state can never be hidden behind "No payment required", and a null/absent fee
+ * is never read as a zero fee. Pure presentation over an already-fetched row -
+ * no fee is computed and no financial rule is asserted.
+ */
+function booking(
+  overrides: Partial<BookingRow>,
+): BookingRow {
+  return { ...completedBooking, ...overrides };
+}
+
+async function renderWith(row: BookingRow) {
+  getBooking.mockResolvedValue(row);
+  renderDetail();
+  await waitForBooking();
+}
+
+describe("BookingDetail payment badge (Phase 7 payment-status UX)", () => {
+  it("shows 'No payment required' for an unpaid zero-fee walk-in", async () => {
+    // Matches the real staging walk-in shape: fee and snapshots all zero.
+    await renderWith(
+      booking({
+        booking_source: "walkin",
+        booking_fee_inr: 0,
+        platform_fee_snapshot: 0,
+        receptionist_fee_snapshot: 0,
+        hospital_fee_snapshot: 0,
+        total_amount_snapshot: 0,
+        payment_completed: false,
+        payment_reference: null,
+        payment_status_detail: null,
+      }),
+    );
+
+    expect(screen.getByText("No payment required")).toBeInTheDocument();
+    expect(screen.queryByText("Payment pending")).toBeNull();
+    expect(screen.queryByText("Paid")).toBeNull();
+  });
+
+  it("shows 'Payment pending' for an unpaid non-zero booking", async () => {
+    await renderWith(
+      booking({
+        booking_fee_inr: 20,
+        platform_fee_snapshot: 20,
+        total_amount_snapshot: 20,
+        payment_completed: false,
+        payment_reference: null,
+      }),
+    );
+
+    expect(screen.getByText("Payment pending")).toBeInTheDocument();
+    expect(screen.queryByText("No payment required")).toBeNull();
+  });
+
+  it("shows 'Paid' for a captured non-zero booking", async () => {
+    await renderWith(
+      booking({ booking_fee_inr: 20, payment_completed: true }),
+    );
+
+    expect(screen.getByText("Paid")).toBeInTheDocument();
+    expect(screen.queryByText("Payment pending")).toBeNull();
+    expect(screen.queryByText("No payment required")).toBeNull();
+  });
+
+  it("CRITICAL: keeps 'Paid' when a zero-fee row is also marked paid", async () => {
+    // A non-runtime (fixture / offline-recognition) row can carry
+    // payment_completed = true with booking_fee_inr = 0. The badge must still
+    // read Paid - never an all-clear that hides collected money.
+    await renderWith(
+      booking({ booking_fee_inr: 0, payment_completed: true }),
+    );
+
+    expect(screen.getByText("Paid")).toBeInTheDocument();
+    expect(screen.queryByText("No payment required")).toBeNull();
+  });
+
+  it("falls back to 'Payment pending' when the fee is null (null is not zero)", async () => {
+    await renderWith(
+      booking({ booking_fee_inr: null, payment_completed: false }),
+    );
+
+    expect(screen.getByText("Payment pending")).toBeInTheDocument();
+    expect(screen.queryByText("No payment required")).toBeNull();
+  });
+
+  it("derives nothing from total_amount_snapshot", async () => {
+    // Hospital-side money is display only (D16): a large total on an unpaid
+    // zero-fee booking must not change the badge.
+    await renderWith(
+      booking({
+        booking_fee_inr: 0,
+        total_amount_snapshot: 500,
+        hospital_fee_snapshot: 500,
+        payment_completed: false,
+      }),
+    );
+
+    expect(screen.getByText("No payment required")).toBeInTheDocument();
+    // ₹500 legitimately renders twice (Hospital fee and Total); neither feeds
+    // the badge.
+    expect(screen.getAllByText("₹500").length).toBeGreaterThanOrEqual(1);
+  });
+});
