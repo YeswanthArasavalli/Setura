@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/auth/AuthProvider";
 import { listTodaysBookings, type BookingRow } from "@/api/reads";
 import { describeError } from "@/lib/errors";
+import { CANCELLATION_LABEL, cancellationOutcome } from "@/lib/cancellationStatus";
 import { paymentStatus } from "@/lib/paymentStatus";
 import { todayISO } from "@/lib/dates";
 import {
@@ -49,6 +50,14 @@ export function ReceptionDashboard() {
     ["checked_in", "waiting"].includes(r.status),
   );
   const current = (rows ?? []).find((r) => r.status === "called");
+  // Cancelled bookings were already identifiable by their badge; counting them
+  // makes the day's cancellation volume visible at a glance. The reason and
+  // timestamp deliberately stay on the booking detail page: this table is a
+  // one-line-per-token queue view, and staff free text does not fit that row
+  // without redesigning it. The wording comes from the shared helper so the
+  // list and the detail page cannot drift apart.
+  const cancelledCount = (rows ?? []).filter((r) => cancellationOutcome(r))
+    .length;
 
   return (
     <div className="space-y-6">
@@ -81,7 +90,7 @@ export function ReceptionDashboard() {
         </p>
       )}
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
         <Stat label="Today's bookings" value={rows ? String(rows.length) : "…"} />
         <Stat label="Waiting" value={rows ? String(waiting.length) : "…"} />
         <Stat
@@ -91,6 +100,10 @@ export function ReceptionDashboard() {
         <Stat
           label="Completed"
           value={rows ? String(byStatus["completed"] ?? 0) : "…"}
+        />
+        <Stat
+          label={CANCELLATION_LABEL}
+          value={rows ? String(cancelledCount) : "…"}
         />
       </div>
 

@@ -79,6 +79,30 @@ export interface CreateBookingResponse {
   };
 }
 
+// ─── cancel-booking (Schema / successResponse) ───────────────────────────────
+
+export interface CancelBookingRequest {
+  bookingId: string;
+  /** Staff free text. The backend enforces the 3–500 character boundary. */
+  cancellationReason: string;
+  /** Only a REQUEST for the existing backend refund path. The Edge Function
+   *  decides whether a refund is valid and computes its amount (D16); the
+   *  console never sends, derives or displays a refund figure. */
+  initiateRefund: boolean;
+}
+
+export interface CancelBookingResponse {
+  bookingId: string;
+  cancelled: boolean;
+  /** True on the idempotent replay of an already-cancelled booking. */
+  alreadyCancelled: boolean;
+  /** OPTIONAL BY CONTRACT: `cancel-booking` reports the refund outcome only on
+   *  the response that actually performed the transition, so the already
+   *  cancelled replay omits the field entirely. `undefined` therefore means
+   *  “not reported”, never “no refund”. */
+  refundInitiated?: boolean;
+}
+
 // ─── queue-control (snapshot / actions) ──────────────────────────────────────
 
 export type QueueControlAction =

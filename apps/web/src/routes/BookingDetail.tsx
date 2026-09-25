@@ -1,6 +1,7 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useAuth } from "@/auth/AuthProvider";
+import { cancelBooking } from "@/api/cancellations";
 import {
   getBooking,
   listConsultationNotes,
@@ -8,9 +9,21 @@ import {
   type BookingRow,
   type ConsultationNoteRow,
 } from "@/api/reads";
+import { useAsyncAction } from "@/hooks/useAsyncAction";
 import { describeError } from "@/lib/errors";
+import {
+  canOfferCancellation,
+  cancellationOutcome,
+  cancellationReasonError,
+  mayOfferRefund,
+  refundOutcomeLabel,
+} from "@/lib/cancellationStatus";
 import { paymentStatus } from "@/lib/paymentStatus";
+import type { CancelBookingResponse } from "@/types/api";
 import { Badge, statusVariant } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/input";
 import {
   Card,
   CardContent,
@@ -19,6 +32,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+/** Roles `cancel-booking` admits via requireRole. Rendering the control for
+ *  them is a convenience only — the Edge Function re-authorizes every call, so
+ *  this list is never the security boundary. */
+const CANCELLATION_ROLES = [
+  "receptionist",
+  "hospital_admin",
+  "global_admin",
+] as const;
+
 /** Booking detail + payment/billing state (Phase 6 §15/§16). All amounts are
  *  read from the backend's immutable fee snapshot on the booking row; the
  *  client never recomputes a fee and never reads the payment ledger directly
@@ -26,7 +48,7 @@ import {
  *  The payment badge is derived by the shared `paymentStatus` mapping, so the
  *  reception list and this page cannot disagree. */
 export function BookingDetail() {
-  const { hospitalId } = useAuth();
+  const { hospitalId, role } = useAuth();
   const { bookingId } = useParams<{ bookingId: string }>();
   const [row, setRow] = useState<BookingRow | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -36,6 +58,12 @@ export function BookingDetail() {
   const [notesLoading, setNotesLoading] = useState(true);
   const [doctorNames, setDoctorNames] = useState<Map<string, string>>(
     new Map(),
+  );
+  const [confirming, setConfirming] = useState(false);
+  const [reason, setReason] = useState("");
+  const [wantRefund, setWantRefund] = useState(false);
+  const [cancelResult, setCancelResult] = useState<CancelBookingResponse | null>(
+    null,
   );
 
   useEffect(() => {
@@ -90,6 +118,58 @@ export function BookingDetail() {
     };
   }, [row?.assigned_doctor_id, notes]);
 
+  /** Reload the booking from the backend. Used after a cancellation attempt so
+   *  the page renders the database's state rather than anything the client
+   *  assumed; a failed reload keeps the row already on screen and only adds an
+   *  error banner, so the page is never blanked by a cancellation problem. */
+  const refetch = useCallback(async () => {
+    if (!hospitalId || !bookingId) return;
+    try {
+      setRow(await getBooking(hospitalId, bookingId));
+    } catch (e) {
+      setError(describeError(e));
+    }
+  }, [hospitalId, bookingId]);
+
+  // One idempotency key per logical cancellation, reused across retries by
+  // useAsyncAction, so a double-click replays instead of re-transitioning.
+  const cancel = useAsyncAction(
+    useCallback(
+      (key: string, id: string, tenant: string) =>
+        cancelBooking(
+          {
+            bookingId: id,
+            cancellationReason: reason,
+            initiateRefund: wantRefund,
+          },
+          tenant,
+          key,
+        ),
+      [reason, wantRefund],
+    ),
+  );
+
+  const closeConfirm = useCallback(() => {
+    setConfirming(false);
+    setReason("");
+    setWantRefund(false);
+  }, []);
+
+  const submitCancellation = useCallback(async () => {
+    if (!hospitalId || !bookingId) return;
+    if (cancellationReasonError(reason)) return; // defensive: button is disabled
+    const res = await cancel.run(bookingId, hospitalId);
+    if (res) {
+      setCancelResult(res);
+      closeConfirm();
+    }
+    // Always reload after an attempt — the transition succeeded, was already
+    // done, or was rejected (a concurrency rejection means the row moved while
+    // the form was open). The page must show the database's state, never an
+    // optimistic local `status = "cancelled"`.
+    await refetch();
+  }, [hospitalId, bookingId, reason, cancel, closeConfirm, refetch]);
+
   if (!hospitalId) {
     return <p className="text-muted-foreground">No hospital tenant attached.</p>;
   }
@@ -99,6 +179,16 @@ export function BookingDetail() {
   const doctorLabel = doctorId
     ? doctorNames.get(doctorId) ?? null
     : null;
+
+  // Cancellation display: the outcome comes from the booking row the database
+  // returned, the control from the backend's own role list. Both are render
+  // decisions — `cancel-booking` re-enforces role, tenant and state.
+  const cancellation = row ? cancellationOutcome(row) : null;
+  const canCancel =
+    !!row &&
+    (CANCELLATION_ROLES as readonly (string | null)[]).includes(role ?? null) &&
+    canOfferCancellation(row.status);
+  const reasonError = cancellationReasonError(reason);
 
   return (
     <div className="space-y-6">
@@ -185,6 +275,167 @@ export function BookingDetail() {
               )}
             </CardContent>
           </Card>
+
+          {(cancellation || canCancel || cancelResult) && row && (
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <CardTitle>Cancellation</CardTitle>
+                <CardDescription>
+                  {cancellation
+                    ? "Cancellation outcome as recorded on the booking row."
+                    : "Cancelling runs the existing cancel-booking path, which re-checks role, tenant and current state."}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm">
+                {cancellation && (
+                  <>
+                    <Row label="Status">
+                      <Badge variant={statusVariant("cancelled")}>
+                        {cancellation.label}
+                      </Badge>
+                    </Row>
+                    <div>
+                      <p className="font-medium">Cancellation reason</p>
+                      {/* Staff free text: rendered as plain React text, never
+                          HTML, and never rewritten by the client. */}
+                      {cancellation.reason ? (
+                        <p className="break-words whitespace-pre-wrap text-muted-foreground">
+                          {cancellation.reason}
+                        </p>
+                      ) : (
+                        <p className="text-muted-foreground">
+                          No cancellation reason was recorded.
+                        </p>
+                      )}
+                    </div>
+                    {cancellation.cancelledAt && (
+                      <Row label="Cancelled at">
+                        {new Date(cancellation.cancelledAt).toLocaleString()}
+                      </Row>
+                    )}
+                  </>
+                )}
+
+                {cancelResult && (
+                  <p className="rounded-md bg-muted p-3">
+                    {cancelResult.alreadyCancelled
+                      ? "Cancellation already completed"
+                      : "Cancellation completed"}
+                    {" · "}
+                    {refundOutcomeLabel(cancelResult.refundInitiated)}
+                  </p>
+                )}
+
+                {canCancel && (
+                  <div className="space-y-3">
+                    {!!cancel.error && (
+                      <p
+                        role="alert"
+                        className="rounded-md bg-destructive/10 p-3 text-sm text-destructive"
+                      >
+                        {describeError(cancel.error)}
+                      </p>
+                    )}
+
+                    {!confirming ? (
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => {
+                          setCancelResult(null);
+                          setConfirming(true);
+                        }}
+                        disabled={cancel.running}
+                      >
+                        Cancel booking
+                      </Button>
+                    ) : (
+                      <div className="space-y-3 rounded-md border border-border p-3">
+                        <p className="font-medium">Confirm cancellation</p>
+                        <p className="text-muted-foreground">
+                          This cancels token{" "}
+                          <span className="font-mono">
+                            {row.token_number ?? "—"}
+                          </span>{" "}
+                          for {row.patient_name} on {row.appointment_date}. The
+                          backend verifies the booking is still in state{" "}
+                          <span className="font-mono">{row.status}</span>{" "}
+                          before it changes anything.
+                        </p>
+
+                        <div className="space-y-1">
+                          <Label htmlFor="cancellation-reason">
+                            Cancellation reason
+                          </Label>
+                          <Textarea
+                            id="cancellation-reason"
+                            value={reason}
+                            onChange={(e) => setReason(e.target.value)}
+                            placeholder="Why is this booking being cancelled?"
+                            disabled={cancel.running}
+                          />
+                          {reason.length > 0 && reasonError && (
+                            <p
+                              role="alert"
+                              className="text-xs text-destructive"
+                            >
+                              {reasonError}
+                            </p>
+                          )}
+                        </div>
+
+                        {mayOfferRefund(row) && (
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <input
+                                id="cancel-request-refund"
+                                type="checkbox"
+                                className="h-4 w-4 rounded border-input"
+                                checked={wantRefund}
+                                onChange={(e) => setWantRefund(e.target.checked)}
+                                disabled={cancel.running}
+                              />
+                              <Label htmlFor="cancel-request-refund">
+                                Request a refund
+                              </Label>
+                            </div>
+                            {/* The UI sends a boolean only: no amount, no
+                                validity decision (D16). */}
+                            <p className="text-xs text-muted-foreground">
+                              Sends this request to the existing backend refund
+                              path. The backend decides whether a refund is made
+                              and for how much.
+                            </p>
+                          </div>
+                        )}
+
+                        <div className="flex gap-2">
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => void submitCancellation()}
+                            disabled={cancel.running || !!reasonError}
+                          >
+                            {cancel.running
+                              ? "Submitting cancellation…"
+                              : "Confirm cancellation"}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={closeConfirm}
+                            disabled={cancel.running}
+                          >
+                            Keep booking
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
 
           <Card className="lg:col-span-2">
             <CardHeader>

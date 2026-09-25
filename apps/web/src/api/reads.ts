@@ -55,6 +55,10 @@ export interface BookingRow {
   payment_status_detail: string | null;
   consultation_started_at: string | null;
   consultation_completed_at: string | null;
+  // Cancellation outcome, written by `cancel-booking` (and the refund path):
+  // authoritative text + timestamp, never derived on the client.
+  cancellation_reason: string | null;
+  cancelled_at: string | null;
   created_at: string;
 }
 
@@ -309,4 +313,4 @@ export async function listDoctorNames(
 }
 
 const BOOKING_SELECT =
-  "id,hospital_id,queue_session_id,patient_id,patient_name,patient_phone,token_number,status,booking_source,assigned_doctor_id,appointment_date,booking_reference,estimated_wait_minutes,platform_fee_snapshot,receptionist_fee_snapshot,hospital_fee_snapshot,total_amount_snapshot,booking_fee_inr,payment_completed,payment_reference,payment_status_detail,consultation_started_at,consultation_completed_at,created_at";
+  "id,hospital_id,queue_session_id,patient_id,patient_name,patient_phone,token_number,status,booking_source,assigned_doctor_id,appointment_date,booking_reference,estimated_wait_minutes,platform_fee_snapshot,receptionist_fee_snapshot,hospital_fee_snapshot,total_amount_snapshot,booking_fee_inr,payment_completed,payment_reference,payment_status_detail,consultation_started_at,consultation_completed_at,cancellation_reason,cancelled_at,created_at";

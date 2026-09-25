@@ -18,7 +18,7 @@ import {
 const from = vi.fn();
 vi.mock("@/lib/supabase", () => ({ supabase: { from } }));
 
-const { listHospitalDoctors, listDoctorNames, listNotifications } =
+const { listHospitalDoctors, listDoctorNames, listNotifications, listTodaysBookings } =
   await import("@/api/reads");
 
 function builder(result: { data: unknown; error: unknown }) {
@@ -128,5 +128,28 @@ describe("listNotifications", () => {
       expect(select).toContain(col);
     }
     expect(select).not.toMatch(/token|secret|credential|password/i);
+  });
+});
+
+describe("booking read projection", () => {
+  it("selects the authoritative cancellation outcome alongside the booking", async () => {
+    const b = builder({ data: [], error: null });
+    from.mockReturnValue(b);
+
+    await listTodaysBookings("h-1", "2026-09-22");
+
+    expect(from).toHaveBeenCalledWith("bookings");
+    // RLS stays the boundary: the read is tenant-filtered and the projection is
+    // extended, never replaced by a second query or a privileged path.
+    expect(b.eq).toHaveBeenCalledWith("hospital_id", "h-1");
+
+    const select = (b.select as ReturnType<typeof vi.fn>).mock
+      .calls[0][0] as string;
+    for (const col of ["status", "cancellation_reason", "cancelled_at"]) {
+      expect(select).toContain(col);
+    }
+    // Nothing new is exposed by the cancellation work: only the two outcome
+    // fields plus what the booking projection already carried.
+    expect(select).not.toMatch(/secret|credential|password|_token\b/i);
   });
 });
