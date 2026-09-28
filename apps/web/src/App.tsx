@@ -11,16 +11,23 @@ import { Notifications } from "@/routes/Notifications";
 import { QueueBoard } from "@/routes/QueueBoard";
 import { DoctorConsole } from "@/routes/DoctorConsole";
 import { BookingDetail } from "@/routes/BookingDetail";
+import { AdminCommandCentre } from "@/routes/AdminCommandCentre";
 
 const RECEPTION_ROLES = ["receptionist", "hospital_admin"] as const;
 const DOCTOR_ROLES = ["doctor", "hospital_admin"] as const;
+// G-03: the admin surface mirrors the backend's own command-center role gate
+// (hospital_admin | global_admin). This is a UX boundary only — the Edge
+// Function re-enforces requireRole server-side on every read.
+const ADMIN_ROLES = ["hospital_admin", "global_admin"] as const;
 
-/** Send each role to its natural home after login (Phase 6 §5 role routing). */
+/** Send each role to its natural home after login (Phase 6 §5 role routing;
+ *  G-03 gives the admin roles their dedicated Command Centre destination). */
 function Landing() {
   const { role } = useAuth();
   if (role === "doctor") return <Navigate to="/doctor" replace />;
-  if (role === "receptionist" || role === "hospital_admin" || role === "global_admin")
-    return <Navigate to="/reception" replace />;
+  if (role === "hospital_admin" || role === "global_admin")
+    return <Navigate to="/admin" replace />;
+  if (role === "receptionist") return <Navigate to="/reception" replace />;
   return <div className="p-8 text-muted-foreground">No console for this role.</div>;
 }
 
@@ -41,7 +48,7 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route
         element={
-          <RequireRole roles={[...RECEPTION_ROLES, ...DOCTOR_ROLES]}>
+          <RequireRole roles={[...RECEPTION_ROLES, ...DOCTOR_ROLES, ...ADMIN_ROLES]}>
             <AppShell />
           </RequireRole>
         }
@@ -100,6 +107,14 @@ export default function App() {
           element={
             <RequireRole roles={[...DOCTOR_ROLES]}>
               <DoctorConsole />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <RequireRole roles={[...ADMIN_ROLES]}>
+              <AdminCommandCentre />
             </RequireRole>
           }
         />

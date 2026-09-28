@@ -264,3 +264,231 @@ export interface DoctorOperationsResponse {
   snapshot?: QueueSnapshot;
   dashboard?: DoctorDashboard;
 }
+
+// ─── command-center (read actions only — Phase 7 G-03) ─────────────────
+
+/**
+ * The five read actions the admin surface may invoke. The `broadcast_*`
+ * actions exist on the backend but are OUT OF SCOPE for G-03 and must never
+ * be sent from this console (investigation §Selection; phase spec §2/§9).
+ */
+export type CommandCenterReadAction =
+  | "overview"
+  | "timeline"
+  | "predictive"
+  | "sla_dashboard"
+  | "system_health";
+
+/**
+ * PostgREST serialises some PostgreSQL NUMERIC/INTERVAL values as strings and
+ * others as numbers (the integration suite wraps them in `Number()` for the
+ * same reason). Consumers must coerce via a display helper, never assume.
+ */
+export type JsonNumeric = number | string;
+
+/** Mirrors `get_hospital_command_center` (migration 47). */
+export interface CommandCenterOverview {
+  hospital_id: string;
+  date: string;
+  patients: {
+    total_today: number;
+    waiting: number;
+    called: number;
+    in_consultation: number;
+    completed: number;
+    cancelled: number;
+    no_shows: number;
+    skipped: number;
+    checked_in: number;
+    avg_wait_minutes: JsonNumeric | null;
+    avg_consultation_minutes: JsonNumeric | null;
+  } | null;
+  /** NULL when the day has no queue sessions at all (aggregate over 0 rows). */
+  queues: {
+    active_sessions: number;
+    paused_queues: number;
+    delayed_doctors: number;
+    stalled_queues: number;
+    active_consultations: number;
+    doctor_availability: Array<{
+      doctor_id: string;
+      session_id: string;
+      is_paused: boolean;
+      delay_minutes: number | null;
+      current_token: number | null;
+    }> | null;
+  } | null;
+  /** NULL with no tracking row; `{ status: "no_data" }` when unassessed. */
+  sla: {
+    status: "breached" | "healthy" | "no_data";
+    avg_wait_minutes?: JsonNumeric | null;
+    completion_rate_pct?: JsonNumeric | null;
+    wait_breached?: boolean;
+    completion_breached?: boolean;
+  } | null;
+  finance: {
+    revenue_today: JsonNumeric;
+    platform_fee_today: JsonNumeric;
+    refunds_today: JsonNumeric;
+    pending_payments: number;
+    outstanding_settlements: JsonNumeric;
+  } | null;
+  alert_activity: { recent_alerts_24h: number } | null;
+  generated_at: string;
+}
+
+/** Mirrors `get_operational_scores` (migration 47). 0–100, higher is
+ *  better except risk_score. Deterministic backend formulas — never
+ *  recomputed here. */
+export interface OperationalScores {
+  hospital_id: string;
+  date: string;
+  congestion_score: number;
+  delay_score: number;
+  risk_score: number;
+  health_score: number;
+  patient_experience_score: number;
+  inputs: {
+    waiting: number;
+    capacity: number;
+    active_sessions: number;
+    delayed_sessions: number;
+    open_alerts_24h: number;
+    avg_wait_minutes: JsonNumeric;
+  } | null;
+}
+
+/** One row of `get_hospital_timeline`'s `events` array (migration 47). */
+export interface TimelineEvent {
+  ts: string;
+  category: string;
+  event_type: string;
+  severity: "info" | "warning" | "critical";
+  entity_type: string;
+  entity_id: string | null;
+  doctor_id: string | null;
+  queue_session_id: string | null;
+  metadata: Record<string, unknown> | null;
+}
+
+export interface HospitalTimeline {
+  hospital_id: string;
+  from: string;
+  to: string;
+  events: TimelineEvent[];
+}
+
+/** Mirrors `get_predictive_insights` (migration 47) — backend-generated
+ *  deterministic projections only; the console adds no prediction logic. */
+export interface PredictiveInsights {
+  hospital_id: string;
+  date: string;
+  queue_predictions: {
+    waiting_now: number;
+    completed_now: number;
+    predicted_no_shows_today: JsonNumeric | null;
+    avg_consultation_minutes: JsonNumeric | null;
+    predicted_wait_next_minutes: JsonNumeric | null;
+    predicted_queue_exhaustion_minutes: JsonNumeric | null;
+  } | null;
+  /** `get_revenue_forecast` output, embedded verbatim. */
+  financial_predictions: {
+    hospital_id: string;
+    as_of: string;
+    projected_month_revenue: JsonNumeric;
+    projected_platform_fees: JsonNumeric;
+    projected_settlements: JsonNumeric;
+    refund_rate_30d: JsonNumeric;
+    refund_impact_forecast: JsonNumeric;
+    collection_forecast_next_7d: JsonNumeric;
+    inputs: {
+      mtd_revenue: JsonNumeric;
+      days_elapsed: number;
+      days_in_month: number;
+    } | null;
+  } | null;
+}
+
+/** Mirrors `get_sla_dashboard` (migration 47), hospital-scoped. */
+export interface SlaDashboard {
+  date: string;
+  /** NULL when nothing is tracked for the date. */
+  summary: {
+    tracked: number;
+    in_breach: number;
+    avg_breach_wait_minutes: JsonNumeric | null;
+  } | null;
+  hospitals_in_breach: Array<{
+    hospital_id: string;
+    hospital_name: string;
+    avg_wait_minutes: JsonNumeric | null;
+    completion_rate_pct: JsonNumeric | null;
+    sla_wait_breached: boolean;
+    sla_completion_breached: boolean;
+  }>;
+  trend_14d: Array<{
+    tracking_date: string;
+    avg_wait_minutes: JsonNumeric | null;
+    completion_rate_pct: JsonNumeric | null;
+    hospitals_breached: number;
+  }>;
+}
+
+/** `system_health` composites the monitoring RPCs (migrations 58 / 17 / 14).
+ *  Each component is NULL when its RPC returned no data — the handler does
+ *  not surface those errors, so absence must render as “not reported”. */
+export interface SystemHealth {
+  queueHealth: Array<{
+    queue_type: string;
+    pending_count: number;
+    processing_count: number;
+    failed_count: number;
+    dead_count: number;
+    oldest_pending_age: string | null;
+    avg_attempts: JsonNumeric | null;
+    throughput_last_hour: number;
+  }> | null;
+  materializedViews: Array<{
+    view_name: string;
+    last_refresh: string | null;
+    duration_ms: number | null;
+    last_success: boolean | null;
+    row_count: number | null;
+    is_stale: boolean | null;
+  }> | null;
+  deadLetterQueue: Array<{
+    source: string;
+    unresolved_count: number;
+    critical_count: number;
+    oldest_item_at: string | null;
+  }> | null;
+  openAlerts: number;
+}
+
+// Success-envelope `data` for each read action (command-center/index.ts).
+
+export interface CommandCenterOverviewResponse {
+  action: "overview";
+  overview: CommandCenterOverview;
+  scores: OperationalScores;
+}
+
+export interface CommandCenterTimelineResponse {
+  action: "timeline";
+  timeline: HospitalTimeline;
+}
+
+export interface CommandCenterPredictiveResponse {
+  action: "predictive";
+  predictions: PredictiveInsights;
+}
+
+export interface CommandCenterSlaResponse {
+  action: "sla_dashboard";
+  sla: SlaDashboard;
+}
+
+export interface CommandCenterSystemHealthResponse {
+  action: "system_health";
+  health: SystemHealth;
+}

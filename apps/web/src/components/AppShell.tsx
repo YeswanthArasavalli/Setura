@@ -18,6 +18,9 @@ const NAV: NavItem[] = [
   { to: "/reception/notifications", label: "Notifications", roles: ["receptionist", "hospital_admin", "global_admin"] },
   { to: "/queue", label: "Queue / Tokens", roles: ["receptionist", "hospital_admin", "global_admin"] },
   { to: "/doctor", label: "Doctor Console", roles: ["doctor", "hospital_admin", "global_admin"] },
+  // G-03: admin-only surface. Receptionist and doctor must not even see the
+  // entry; the route itself is guarded again and the backend is authoritative.
+  { to: "/admin", label: "Command Centre", roles: ["hospital_admin", "global_admin"] },
 ];
 
 export function AppShell() {
