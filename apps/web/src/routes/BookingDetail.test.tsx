@@ -27,6 +27,13 @@ const cancelBooking = vi.fn();
 vi.mock("@/api/cancellations", () => ({
   cancelBooking: (...a: unknown[]) => cancelBooking(...a),
 }));
+// Same boundary discipline for the G-02 status closure: real dispatch to
+// `update-booking-status` (role + tenant + state re-checks, audit, deduped
+// enqueue) is proven by the integration suite (E1 06, S1 05).
+const updateBookingStatus = vi.fn();
+vi.mock("@/api/statuses", () => ({
+  updateBookingStatus: (...a: unknown[]) => updateBookingStatus(...a),
+}));
 // Role is a RENDER gate only — `requireRole` in the Edge Function stays the
 // authority — so tests switch it per case.
 const auth: { role: string | null } = { role: "receptionist" };
@@ -102,6 +109,7 @@ beforeEach(() => {
     new Map([["d-1", "Dr. Anitha Rao"]]),
   );
   cancelBooking.mockReset();
+  updateBookingStatus.mockReset();
 });
 
 describe("BookingDetail consultation card", () => {
@@ -681,5 +689,275 @@ describe("BookingDetail cancellation control", () => {
       await screen.findByText("No cancellation reason was recorded."),
     ).toBeInTheDocument();
     expect(document.body.textContent).not.toMatch(/undefined|\[object/);
+  });
+});
+
+/**
+ * The G-02 status-closure control surface (Phase 7). Backend role, tenant,
+ * transition validity, concurrency, replay, audit and the deduped no-show
+ * notification enqueue are proven by the integration suite; what is pinned
+ * here is everything the console owns: who is offered which control and in
+ * which state, exact request bodies, confirmation before any mutation,
+ * double-fire suppression, `changed:false` as success, reload-instead-of-
+ * optimistic-mutation, honest error mapping, and the absolute absence of
+ * money fields and delivery claims.
+ */
+function booked(overrides: Partial<BookingRow> = {}): BookingRow {
+  return cancellable({ status: "booked", ...overrides });
+}
+
+/** Open a status confirmation panel as receptionist. */
+async function openStatusPanel(name: "Check In" | "Mark No-Show") {
+  const rendered = await renderAs("receptionist", booked());
+  await userEvent.click(screen.getByRole("button", { name }));
+  return rendered;
+}
+
+describe("BookingDetail status-closure control", () => {
+  it.each(["receptionist", "hospital_admin", "global_admin"])(
+    "offers Check In and Mark No-Show to %s for a booked booking",
+    async (role) => {
+      const { unmount } = await renderAs(role, booked());
+      expect(
+        screen.getByRole("button", { name: "Check In" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Mark No-Show" }),
+      ).toBeInTheDocument();
+      // C1's cancellation control remains intact on the same surface.
+      expect(
+        screen.getByRole("button", { name: "Cancel booking" }),
+      ).toBeInTheDocument();
+      unmount();
+    },
+  );
+
+  it("does not offer the reception controls to a doctor", async () => {
+    await renderAs("doctor", booked());
+
+    expect(screen.queryByRole("button", { name: "Check In" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Mark No-Show" })).toBeNull();
+    // A render gate, not data hiding: the booking itself stays visible.
+    expect(screen.getByText("Ramesh K")).toBeInTheDocument();
+  });
+
+  it("hides Check In once checked_in but keeps Mark No-Show", async () => {
+    await renderAs("receptionist", booked({ status: "checked_in" }));
+
+    expect(screen.queryByRole("button", { name: "Check In" })).toBeNull();
+    expect(
+      screen.getByRole("button", { name: "Mark No-Show" }),
+    ).toBeInTheDocument();
+  });
+
+  it("offers no status control on terminal or queue-owned states", async () => {
+    for (const status of [
+      "completed",
+      "cancelled",
+      "no_show",
+      "rescheduled",
+      "waiting",
+      "called",
+      "in_consultation",
+    ]) {
+      const { unmount } = await renderAs("receptionist", booked({ status }));
+      expect(screen.queryByRole("button", { name: "Check In" })).toBeNull();
+      expect(
+        screen.queryByRole("button", { name: "Mark No-Show" }),
+      ).toBeNull();
+      unmount();
+    }
+  });
+
+  it("requires confirmation before anything is sent", async () => {
+    await openStatusPanel("Check In");
+
+    // The panel is open, but no request has fired yet.
+    expect(updateBookingStatus).not.toHaveBeenCalled();
+    expect(
+      screen.getByRole("button", { name: "Confirm check-in" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/Check this patient in\?/)).toBeInTheDocument();
+  });
+
+  it("sends the exact two-field body for check-in and reloads", async () => {
+    getBooking
+      .mockReset()
+      .mockResolvedValueOnce(booked())
+      .mockResolvedValueOnce(booked({ status: "checked_in" }));
+    updateBookingStatus.mockResolvedValue({
+      bookingId: "b-1",
+      status: "checked_in",
+      changed: true,
+    });
+
+    auth.role = "receptionist";
+    renderDetail();
+    await waitForBooking();
+    await userEvent.click(screen.getByRole("button", { name: "Check In" }));
+    await userEvent.click(
+      screen.getByRole("button", { name: "Confirm check-in" }),
+    );
+
+    await screen.findByText(/Patient checked in/);
+    const [body, tenant] = updateBookingStatus.mock.calls[0] as [
+      Record<string, unknown>,
+      string,
+    ];
+    expect(body).toEqual({ bookingId: "b-1", newStatus: "checked_in" });
+    expect(tenant).toBe("h-1");
+    // Rendered state came from a second read, not a local write.
+    expect(getBooking).toHaveBeenCalledTimes(2);
+    expect(screen.getAllByText("checked in").length).toBeGreaterThan(0);
+  });
+
+  it("sends a typed no-show note verbatim; an empty note omits the key", async () => {
+    updateBookingStatus.mockResolvedValue({
+      bookingId: "b-1",
+      status: "no_show",
+      changed: true,
+    });
+    const { unmount } = await openStatusPanel("Mark No-Show");
+    fireEvent.change(screen.getByLabelText("Note (optional)"), {
+      target: { value: "  patient never travelled  " },
+    });
+    await userEvent.click(
+      screen.getByRole("button", { name: "Confirm no-show" }),
+    );
+    await waitFor(() => expect(updateBookingStatus).toHaveBeenCalledTimes(1));
+    let [body] = updateBookingStatus.mock.calls[0] as [
+      Record<string, unknown>,
+    ];
+    expect(body.notes).toBe("  patient never travelled  ");
+    unmount();
+
+    updateBookingStatus.mockReset().mockResolvedValue({
+      bookingId: "b-1",
+      status: "no_show",
+      changed: true,
+    });
+    const second = await openStatusPanel("Mark No-Show");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Confirm no-show" }),
+    );
+    await waitFor(() => expect(updateBookingStatus).toHaveBeenCalledTimes(1));
+    [body] = updateBookingStatus.mock.calls[0] as [Record<string, unknown>];
+    expect(Object.keys(body).sort()).toEqual(["bookingId", "newStatus"]);
+    second.unmount();
+  });
+
+  it("treats the changed:false replay as a completed outcome, not an error", async () => {
+    updateBookingStatus.mockResolvedValue({
+      bookingId: "b-1",
+      status: "checked_in",
+      changed: false,
+    });
+    const { unmount } = await openStatusPanel("Check In");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Confirm check-in" }),
+    );
+
+    await screen.findByText(/already checked in \(no change\)/);
+    expect(screen.queryByRole("alert")).toBeNull();
+    unmount();
+  });
+
+  it("disables the action while the request is in flight", async () => {
+    updateBookingStatus.mockReturnValue(new Promise(() => {})); // never settles
+    const { unmount } = await openStatusPanel("Check In");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Confirm check-in" }),
+    );
+
+    const busy = screen.getByRole("button", { name: "Submitting…" });
+    expect(busy).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Keep as is" })).toBeDisabled();
+    expect(updateBookingStatus).toHaveBeenCalledTimes(1);
+    unmount();
+  });
+
+  it("surfaces a concurrency rejection honestly and reloads", async () => {
+    updateBookingStatus.mockRejectedValue(
+      new ApiError({
+        code: "DB_CONCURRENCY_ERROR",
+        message: "Booking status concurrently changed to 'cancelled'.",
+        status: 409,
+        retryable: true,
+      }),
+    );
+    const { unmount } = await openStatusPanel("Check In");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Confirm check-in" }),
+    );
+
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveTextContent("concurrently changed");
+    // The page is never blanked, and the fresh read drives what is shown.
+    expect(screen.getByText("Ramesh K")).toBeInTheDocument();
+    expect(getBooking).toHaveBeenCalledTimes(2);
+    expect(screen.queryByText(/Patient checked in/)).toBeNull();
+    unmount();
+  });
+
+  it("maps a rejected transition (422) to the backend's own message", async () => {
+    updateBookingStatus.mockRejectedValue(
+      new ApiError({
+        code: "VALIDATION_ERROR",
+        message: "Booking in terminal state 'completed'",
+        status: 422,
+      }),
+    );
+    const { unmount } = await openStatusPanel("Check In");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Confirm check-in" }),
+    );
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Booking in terminal state 'completed'",
+    );
+    unmount();
+  });
+
+  it("maps an authorization denial (403) without exposing internals", async () => {
+    updateBookingStatus.mockRejectedValue(
+      new ApiError({
+        code: "FORBIDDEN",
+        message: "Booking belongs to different hospital",
+        status: 403,
+      }),
+    );
+    const { unmount } = await openStatusPanel("Check In");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Confirm check-in" }),
+    );
+
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveTextContent(
+      "You do not have permission to perform this action.",
+    );
+    expect(alert).not.toHaveTextContent(/hospital/i);
+    unmount();
+  });
+
+  it("claims no delivery and no money change anywhere on the surface", async () => {
+    updateBookingStatus.mockResolvedValue({
+      bookingId: "b-1",
+      status: "no_show",
+      changed: true,
+    });
+    const { unmount } = await openStatusPanel("Mark No-Show");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Confirm no-show" }),
+    );
+    await screen.findByText(/Booking marked as no-show/);
+
+    // The backend enqueues the notification job; the console never says it
+    // sent anything, and this feature touches no financial field.
+    expect(document.body.textContent).not.toMatch(/whatsapp|message sent/i);
+    const [body] = updateBookingStatus.mock.calls[0] as [
+      Record<string, unknown>,
+    ];
+    expect(JSON.stringify(body)).not.toMatch(/amount|fee|inr|refund/i);
+    unmount();
   });
 });

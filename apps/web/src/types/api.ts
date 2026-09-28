@@ -103,6 +103,32 @@ export interface CancelBookingResponse {
   refundInitiated?: boolean;
 }
 
+// ─── update-booking-status (Schema / successResponse) ───────────────────────
+
+/**
+ * The two lifecycle closures this console owns. `update-booking-status`
+ * accepts more statuses, but every other transition belongs to the queue
+ * runtime (QueueBoard) or the doctor console — not the reception surface.
+ */
+export type ReceptionStatusUpdate = "checked_in" | "no_show";
+
+export interface UpdateBookingStatusRequest {
+  bookingId: string;
+  newStatus: ReceptionStatusUpdate;
+  /** Optional free text (backend: `.max(500)`, stored in booking metadata).
+   *  Omitted entirely when empty — an absent key is not the same as "". */
+  notes?: string;
+}
+
+export interface UpdateBookingStatusResponse {
+  bookingId: string;
+  /** The status the database now holds, per the backend's own write. */
+  status: string;
+  /** False on the intrinsic replay (already in the target state): a no-op
+   *  success, never a failure. */
+  changed: boolean;
+}
+
 // ─── queue-control (snapshot / actions) ──────────────────────────────────────
 
 export type QueueControlAction =

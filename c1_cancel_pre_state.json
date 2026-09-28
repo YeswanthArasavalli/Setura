@@ -1,0 +1,126 @@
+{
+  "captured_at_utc": "2026-09-28T08:35Z (approx, immediately prior to cancellation)",
+  "booking_id": "61ac8f21-2d49-466d-b4bf-fb0cd9ac76bf",
+  "pre_state": {
+    "booking": {
+      "id": "61ac8f21-2d49-466d-b4bf-fb0cd9ac76bf",
+      "hospital_id": "00000000-0000-4000-8000-000000000001",
+      "patient_id": "ac93b2e3-223b-4682-a244-9fded0827aec",
+      "status": "booked",
+      "token_number": 6,
+      "booking_reference": "B50FF413F63B51DF",
+      "booking_source": "manual_free",
+      "appointment_date": "2026-09-28",
+      "queue_session_id": null,
+      "booking_fee_inr": "0.00",
+      "payment_completed": false,
+      "paid_online": false,
+      "payment_reference": null,
+      "payment_status_detail": null,
+      "cancellation_reason": null,
+      "cancelled_at": null,
+      "whatsapp_confirmation_sent": false,
+      "whatsapp_reminder_sent": false,
+      "idempotency_key": "b94cacf0-a280-448b-9242-0d76cd384fe7",
+      "assigned_doctor_id": "00000000-0000-4000-8000-0000000000a3",
+      "booked_by": "00000000-0000-4000-8000-0000000000a4",
+      "created_at": "2026-09-22 17:27:41.385424+00",
+      "updated_at": "2026-09-28 03:00:00.978486+00"
+    },
+    "patient": {
+      "id": "ac93b2e3-223b-4682-a244-9fded0827aec",
+      "hospital_id": "00000000-0000-4000-8000-000000000001",
+      "full_name": "Conf Validation Patient",
+      "normalized_phone": "+919876500123",
+      "age": 45,
+      "gender": "F",
+      "village": "ConfVillage",
+      "total_visits": 1,
+      "is_deleted": false,
+      "created_at": "2026-09-22 17:27:41.223659+00",
+      "updated_at": "2026-09-22 17:27:41.385424+00"
+    },
+    "queue": {
+      "queue_session_id_for_booking": null,
+      "note": "Nightly carry-forward cron (run-cron-nightly) legitimately NULLed queue_session_id and rolled appointment_date to 2026-09-28 at 03:00:00 UTC today; no active queue session for this booking."
+    },
+    "notifications": {
+      "notification_queue_rows_for_booking": 0,
+      "job_queue_rows_for_booking": 2,
+      "existing_jobs": [
+        {
+          "id": "93e0a816-e72c-4de9-a40b-1fab968ff288",
+          "job_type": "send_whatsapp_message",
+          "status": "dead",
+          "idempotency_key": "wa_confirm_61ac8f21-2d49-466d-b4bf-fb0cd9ac76bf",
+          "attempt_count": 5,
+          "max_attempts": 5,
+          "last_error": "WhatsApp send failed (401): {\"code\":\"UNAUTHORIZED_NO_AUTH_HEADER\",\"message\":\"Missing authorization header\"}"
+        },
+        {
+          "id": "054e68be-793a-44eb-b612-19c032362cab",
+          "job_type": "send_whatsapp_message",
+          "status": "dead",
+          "idempotency_key": "reminder_61ac8f21-2d49-466d-b4bf-fb0cd9ac76bf",
+          "attempt_count": 5,
+          "max_attempts": 5,
+          "last_error": "WhatsApp send failed (401): {\"code\":\"UNAUTHORIZED_NO_AUTH_HEADER\",\"message\":\"Missing authorization header\"}"
+        }
+      ],
+      "wa_cancel_job_pre_existing_count": 0
+    },
+    "audit": {
+      "rows_for_booking": 1,
+      "detail": [
+        {
+          "id": "2374965e-1034-4d4c-8dcb-594936a296b0",
+          "action_type": "booking_create",
+          "actor_user_id": "00000000-0000-4000-8000-0000000000a4",
+          "created_at": "2026-09-22 17:27:41.640753+00"
+        }
+      ]
+    },
+    "financial": {
+      "payment_orders_for_booking": 0,
+      "payment_refunds_for_booking": 0,
+      "financial_ledger_for_booking": 0,
+      "daily_collection_entries_for_booking": 1,
+      "dce_detail": {
+        "id": "d33a5246-b123-4b4e-bd40-2eff405721ff",
+        "collection_date": "2026-09-22",
+        "platform_fee": "0.00",
+        "receptionist_fee": "0.00",
+        "hospital_fee": "0.00",
+        "total_amount": "0.00",
+        "setura_revenue": "0.00",
+        "is_settled": false,
+        "created_at": "2026-09-22 17:27:41.385424+00"
+      }
+    }
+  },
+  "pre_mutation_checks": {
+    "status_is_booked": true,
+    "cancellation_reason_is_null": true,
+    "cancelled_at_is_null": true,
+    "tenant_matches_expected_staging": true,
+    "patient_is_designated_synthetic": true,
+    "booking_fee_inr_is_zero": true,
+    "payment_completed_is_false": true,
+    "no_payment_order_or_refund": true,
+    "no_cancellation_job_exists": true,
+    "not_already_cancelled": true
+  },
+  "global_row_census_pre": {
+    "bookings_total_non_deleted": 14,
+    "patients_total_non_deleted": 13,
+    "hospitals_total": 5,
+    "job_queue_total": 71,
+    "notification_queue_total": 0,
+    "audit_logs_total": 45,
+    "payment_orders_total": 0,
+    "payment_refunds_total": 0,
+    "financial_ledger_total": 0,
+    "daily_collection_entries_total": 14,
+    "queue_sessions_total": 2
+  }
+}
