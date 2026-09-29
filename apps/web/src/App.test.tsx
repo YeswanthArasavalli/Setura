@@ -4,6 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 
 /**
  * G-03 routing boundary: which role reaches the Command Centre surface.
+ * G-05 extends the same boundary to the Audit & Compliance viewer.
  *
  * The real RequireRole guard and the real App route table / Landing dispatch
  * are under test; the auth context is mocked per-role and every page module is
@@ -57,6 +58,9 @@ vi.mock("@/routes/BookingDetail", () => ({
 }));
 vi.mock("@/routes/AdminCommandCentre", () => ({
   AdminCommandCentre: () => <div>ADMIN COMMAND CENTRE PAGE</div>,
+}));
+vi.mock("@/routes/AdminAudit", () => ({
+  AdminAudit: () => <div>ADMIN AUDIT PAGE</div>,
 }));
 
 const { default: App } = await import("@/App");
@@ -144,5 +148,63 @@ describe("G-03 role routing", () => {
     renderAt("/admin");
     expect(screen.getByRole("link", { name: "Dashboard" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Doctor Console" })).toBeInTheDocument();
+  });
+});
+
+describe("G-05 audit viewer routing boundary", () => {
+  it("hospital_admin reaches /admin/audit directly", () => {
+    setRole("hospital_admin");
+    renderAt("/admin/audit");
+    expect(screen.getByText("ADMIN AUDIT PAGE")).toBeInTheDocument();
+  });
+
+  it("global_admin reaches /admin/audit directly", () => {
+    setRole("global_admin");
+    renderAt("/admin/audit");
+    expect(screen.getByText("ADMIN AUDIT PAGE")).toBeInTheDocument();
+  });
+
+  it("receptionist cannot reach /admin/audit and issues no viewer request", () => {
+    setRole("receptionist");
+    renderAt("/admin/audit");
+    // Redirected to the reception landing: the admin page never mounts, so
+    // the enterprise-reports wrapper inside it is never invoked (acceptance
+    // criterion 2 — zero requests from non-admin roles).
+    expect(screen.queryByText("ADMIN AUDIT PAGE")).toBeNull();
+    expect(screen.getByText("RECEPTION PAGE")).toBeInTheDocument();
+  });
+
+  it("doctor cannot reach /admin/audit", () => {
+    setRole("doctor");
+    renderAt("/admin/audit");
+    expect(screen.queryByText("ADMIN AUDIT PAGE")).toBeNull();
+    expect(screen.getByText("DOCTOR PAGE")).toBeInTheDocument();
+  });
+
+  it("navigation exposes Audit & Compliance only to admin roles", () => {
+    setRole("hospital_admin");
+    const view = renderAt("/admin/audit");
+    expect(
+      screen.getByRole("link", { name: "Audit & Compliance" }),
+    ).toBeInTheDocument();
+    view.unmount();
+
+    setRole("receptionist");
+    renderAt("/reception");
+    expect(
+      screen.queryByRole("link", { name: "Audit & Compliance" }),
+    ).toBeNull();
+
+    setRole("doctor");
+    renderAt("/doctor");
+    expect(
+      screen.queryByRole("link", { name: "Audit & Compliance" }),
+    ).toBeNull();
+  });
+
+  it("G-03 routing is unchanged: admins still land on the Command Centre", () => {
+    setRole("hospital_admin");
+    renderAt("/");
+    expect(screen.getByText("ADMIN COMMAND CENTRE PAGE")).toBeInTheDocument();
   });
 });

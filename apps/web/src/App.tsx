@@ -12,6 +12,7 @@ import { QueueBoard } from "@/routes/QueueBoard";
 import { DoctorConsole } from "@/routes/DoctorConsole";
 import { BookingDetail } from "@/routes/BookingDetail";
 import { AdminCommandCentre } from "@/routes/AdminCommandCentre";
+import { AdminAudit } from "@/routes/AdminAudit";
 
 const RECEPTION_ROLES = ["receptionist", "hospital_admin"] as const;
 const DOCTOR_ROLES = ["doctor", "hospital_admin"] as const;
@@ -115,6 +116,14 @@ export default function App() {
           element={
             <RequireRole roles={[...ADMIN_ROLES]}>
               <AdminCommandCentre />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/admin/audit"
+          element={
+            <RequireRole roles={[...ADMIN_ROLES]}>
+              <AdminAudit />
             </RequireRole>
           }
         />

@@ -492,3 +492,140 @@ export interface CommandCenterSystemHealthResponse {
   action: "system_health";
   health: SystemHealth;
 }
+
+// ─── enterprise-reports (audit + compliance reads only — Phase 7 G-05) ─
+
+/**
+ * The six read actions the audit & compliance viewer may invoke. The
+ * `generate` action exists on the backend but is OUT OF SCOPE for G-05: the
+ * executive-report types include money-sensitive `financial`/`settlement`
+ * payloads that belong to a separately-gated phase
+ * (PHASE_7_NEXT_PRODUCT_GAP_INVESTIGATION_REPORT.md §12/§14). It must never
+ * be sent from this console.
+ */
+export type EnterpriseReportReadAction =
+  | "audit_search"
+  | "audit_integrity"
+  | "settlement_integrity"
+  | "queue_integrity"
+  | "doctor_ops_integrity"
+  | "integration_matrix";
+
+/** Client-safe subset of the `audit_action_severity` enum (migration 10). */
+export type AuditSeverity = "low" | "medium" | "high" | "critical";
+
+/** One row of `search_audit_logs`' `entries` array (migration 47). */
+export interface AuditEntry {
+  id: string;
+  actor_user_id: string | null;
+  entity_type: string;
+  entity_id: string | null;
+  action_type: string;
+  action_severity: AuditSeverity;
+  metadata: Record<string, unknown> | null;
+  notes: string | null;
+  created_at: string;
+}
+
+/** `search_audit_logs` JSONB payload — tenant is echoed by the backend, never
+ *  supplied by the client (the header-carried session tenant is authoritative). */
+export interface AuditSearchResult {
+  hospital_id: string;
+  entries: AuditEntry[];
+}
+
+export interface AuditSearchResponseBody {
+  action: "audit_search";
+  results: AuditSearchResult;
+}
+
+/** Optional filters for the audit search. Every field maps 1:1 to a
+ *  `search_audit_logs` parameter the Edge Function already reads. */
+export interface AuditSearchFilters {
+  actorId?: string;
+  entityType?: string;
+  actionType?: string;
+  fromTs?: string;
+  toTs?: string;
+  correlationId?: string;
+  limit?: number;
+}
+
+/** `verify_audit_integrity` (migration 47). */
+export interface AuditIntegrityResult {
+  ok: boolean;
+  total_entries: number;
+  orphan_actors: number;
+  registered_action_types: number;
+  unknown_action_types: number;
+}
+
+/** One settlement reconciliation mismatch row from
+ *  `verify_settlement_integrity` — a reconciliation VERDICT, not a money
+ *  figure rendered for financial review (investigation §12). */
+export interface SettlementMismatch {
+  settlement_id: string;
+  total_platform_amount: JsonNumeric;
+  items_platform_total: JsonNumeric;
+}
+
+export interface SettlementIntegrityResult {
+  ok: boolean;
+  settlements_checked: number;
+  mismatches: SettlementMismatch[];
+}
+
+/** `verify_queue_integrity` (migration 47), per queue session. */
+export interface QueueIntegrityResult {
+  ok: boolean;
+  cross_hospital_bookings: number;
+  duplicate_tokens: number;
+  parallel_consultations: number;
+}
+
+/** `verify_doctor_operations_integrity` (migration 47), per doctor-day. */
+export interface DoctorOpsIntegrityResult {
+  ok: boolean;
+  timestamp_order_violations: number;
+  completed_without_timestamp: number;
+}
+
+/** `verify_integration_matrix` (migration 47), booking → collection →
+ *  ledger chain for a hospital-day. */
+export interface IntegrationMatrixResult {
+  ok: boolean;
+  collections_without_booking: number;
+  ledger_without_source: number;
+}
+
+// Success-envelope `data` for each compliance read (enterprise-reports/index.ts).
+
+export interface AuditIntegrityResponse {
+  action: "audit_integrity";
+  check: "audit_integrity";
+  result: AuditIntegrityResult;
+}
+
+export interface SettlementIntegrityResponse {
+  action: "settlement_integrity";
+  check: "settlement_integrity";
+  result: SettlementIntegrityResult;
+}
+
+export interface QueueIntegrityResponse {
+  action: "queue_integrity";
+  check: "queue_integrity";
+  result: QueueIntegrityResult;
+}
+
+export interface DoctorOpsIntegrityResponse {
+  action: "doctor_ops_integrity";
+  check: "doctor_ops_integrity";
+  result: DoctorOpsIntegrityResult;
+}
+
+export interface IntegrationMatrixResponse {
+  action: "integration_matrix";
+  check: "integration_matrix";
+  result: IntegrationMatrixResult;
+}

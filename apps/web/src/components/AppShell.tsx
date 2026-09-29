@@ -21,6 +21,8 @@ const NAV: NavItem[] = [
   // G-03: admin-only surface. Receptionist and doctor must not even see the
   // entry; the route itself is guarded again and the backend is authoritative.
   { to: "/admin", label: "Command Centre", roles: ["hospital_admin", "global_admin"] },
+  // G-05: same admin-only boundary for the audit & compliance viewer.
+  { to: "/admin/audit", label: "Audit & Compliance", roles: ["hospital_admin", "global_admin"] },
 ];
 
 export function AppShell() {
