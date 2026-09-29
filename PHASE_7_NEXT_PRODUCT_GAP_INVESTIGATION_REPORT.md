@@ -1,97 +1,84 @@
 # SETURA — PHASE 7: NEXT PRODUCT GAP INVESTIGATION
-## Fresh Source-First Product Capability Audit After G-02 Closure
+## Fresh Read-Only Discovery After G-03 PROVEN STAGING
 
-**Phase:** 7 — Next Product Gap Investigation (INVESTIGATION ONLY)
-**Date:** 2026-09-28
+**Phase:** 7 — Next Product Gap Investigation (DISCOVERY ONLY)
+**Date:** 2026-09-29
 **Status:** COMPLETE — no source, SQL, migration, RLS, Edge Function, test,
-deployment, staging-data, commit or push performed. Two read-only staging
-catalog/metadata queries and one read-only local inspection were run.
-**Supersedes:** the previous content of this file (post-C1 investigation,
-baseline `a9aa774`), whose selected candidate — booking-status closure
-(check-in + no-show) — has since been implemented at `0ec8586`
-("feat: add booking status closure controls") and closed as PROVEN STAGING.
-That report's baseline and selection are **STALE / RESOLVED**; this is a fresh
-investigation against `0ec8586`.
+deployment, staging-data, commit or push performed. Read-only git inspection,
+source/migration/test census and current-report review only.
+**Supersedes:** the previous content of this file (the post-G-02 investigation
+at baseline `0ec8586`), whose selected candidate — Hospital Admin Command
+Centre (G-03) — has since been implemented at `0cb2800`
+("Add Admin Command Centre (G-03) frontend & reports") and closed as
+**PROVEN STAGING** (see
+`PHASE_7_G03_CORS_REMEDIATION_AND_CONTROLLED_STAGING_REVALIDATION_REPORT.md`).
+That report's baseline and selection are STALE / RESOLVED; this is a fresh
+investigation against `0cb2800`.
 
 ---
 
-## 1. Scope
+## 1. Executive Summary
 
-Read-only determination of the next highest-value, bounded, backend-supported
-product gap after G-02. Performed this session:
+After G-03, the hospital-admin persona has a live, staging-proven, read-only
+Command Centre. The largest remaining *evidence-supported, bounded* product gap
+is that **every audit, compliance and executive-reporting capability the backend
+already implements and integration-tests over real HTTP is still completely
+unreachable from the product UI.** `enterprise-reports` (an audited,
+role-gated, `service_role`-mediated Edge Function) already exposes
+`audit_search`, four integrity/compliance checks and eight report types;
+`financial-command-center` already wraps the money read RPCs;
+`executive-analytics` already serves global-admin portfolio and hospital-admin
+daily analytics. None has a frontend surface.
 
-- Git branch/HEAD/origin/status/log (read-only)
-- Current frontend source (`apps/web/src`: `App.tsx`, routes, `api/`, `lib/`,
-  components) rebuilt from source, not from any older inventory
-- Current backend source: 26 Edge Functions (`supabase/functions`), `_shared`
-- Migration census (RLS policies, function grants, RPC definitions)
-- Integration/unit test census (`tests/`), including real-HTTP invocation
-  semantics of `callFn`
-- Live **staging** verification (SELECT-only) via `supabase db query --linked`
-  and read-only `supabase functions list --project-ref`
-
-Not performed (mutation-forbidden): any booking / status / payment / refund /
-queue / worker / notification / schedule / audit mutation; no staging data
-touched; no Edge Function was invoked.
-
----
-
-## 2. Investigation Rules
-
-Source-first, evidence-driven, conservative. Truth hierarchy applied: actual
-source/SQL → live catalog/runtime → executed integration tests → reports.
-Where the prior report's conclusions were reused (e.g. the reschedule defect),
-they were **re-verified against current source and live staging**, not trusted.
-Statements are classified IMPLEMENTED / STATICALLY VERIFIED / UNIT VERIFIED /
-INTEGRATION VERIFIED / RUNTIME / STAGING / PRODUCTION / UNPROVEN / BLOCKED.
-Local results are not claimed as production. No numerical scoring is used.
+The recommended next gap is a **read-only Hospital Admin Audit & Compliance
+viewer** built on the already-proven `enterprise-reports` Edge Function. This
+**re-elevates the previous G-05 "audit viewer"** candidate but **reclassifies it
+from BACKEND-REQUIRED to FRONTEND-ONLY + one targeted redeployment**, because
+current source disproves the earlier premise (it assumed no Edge Function
+exposes audit to staff — `enterprise-reports.audit_search` does, with
+`resolveAuth` + `requireRole(["hospital_admin","global_admin"])` + server-side
+hospital id + access auditing). Implementation is **not** started here.
 
 ---
 
-## 3. Current Git Baseline (PROVEN)
+## 2. Baseline (verified)
 
 | Check | Verified value |
 | --- | --- |
 | Branch | `main` |
-| HEAD | `0ec8586b3b5b72dd4fcb06c9e5239a89103dc156` |
-| origin/main | `0ec8586b3b5b72dd4fcb06c9e5239a89103dc156` (equal to HEAD) |
-| HEAD subject | `feat: add booking status closure controls` |
-| Tracked working-tree changes | 0 modified tracked files |
-| Untracked | 2 report `.md` files only (`PHASE_7_G02_COMMIT_STAGING_DEPLOYMENT_PREFLIGHT_REPORT.md`, `PHASE_7_G02_CONTROLLED_STAGING_VALIDATION_REPORT.md`) |
+| HEAD | `0cb2800d27bd5b0b920006530ca82f22300b0402` |
+| origin/main | `0cb2800d27bd5b0b920006530ca82f22300b0402` (== HEAD) |
+| HEAD subject | `Add Admin Command Centre (G-03) frontend & reports` |
+| `git status --short` | 1 untracked file only (this report); no tracked modifications |
+| Staging Supabase | `setura-staging` / ref `gzcqasntcbqqmgsoikms` / `ap-south-1` |
+| Staging frontend | `https://setura-delta.vercel.app` |
+| G-03 status | PROVEN STAGING (per the CORS remediation report) |
 
-Recent history: `0ec8586` (G-02) → `a9aa774` (C1 cancellation) →
-`037bcf1` (notifications delivery UI).
-
-Note (AGENTS.md §13 correction): the tree **is** a Git repository as of this
-session (git status/branch/log all functional). The older "not a Git repo"
-baseline note no longer holds and was not relied upon. **D-COMMIT-1 was not
-touched**; no commit, push, amend, rebase or history rewrite was performed.
-**GIT: UNCHANGED.**
+The working tree **is** a functional Git repository (git status/branch/log
+all succeed), consistent with the last two investigation reports; the older
+AGENTS.md §13 "not a Git repo" note no longer holds and was not relied upon.
+No commit, push, amend or rebase was performed. **GIT: UNCHANGED.**
 
 ---
 
-## 4. Current Staging Baseline (PROVEN / observed)
+## 3. G-03 Closure Confirmation
 
-| Item | Value | Verification |
-| --- | --- | --- |
-| Staging Supabase | `setura-staging` | linked project |
-| Project ref | `gzcqasntcbqqmgsoikms` | used for live queries |
-| Staging frontend | `https://setura-delta.vercel.app` | prior report pointer (not re-resolved this session) |
-| Edge Functions deployed | 25 functions ACTIVE | `supabase functions list` — observed |
-| `command-center` | ACTIVE v7 (2026-09-20) | observed via functions list |
-| Live `bookings` columns | `cancellation_reason`, `cancelled_at` present; `rescheduled_at`/`rescheduled_by` ABSENT | SELECT-only `information_schema.columns` |
+```text
+G-03 remains PROVEN STAGING.
+No reopening required.
+```
 
-Production: **NOT TOUCHED** (no production project referenced, configured or
-queried).
+G-03 (Command Centre) is treated as CLOSED. It was not re-investigated, not
+modified, and its five read actions were not re-designed.
 
 ---
 
-## 5. Frontend Route Census (rebuilt from `App.tsx`)
+## 4. Current Frontend Inventory (rebuilt from `App.tsx` + `api/`)
 
 | Route | Roles (`RequireRole`) | Screen |
 | --- | --- | --- |
 | `/login` | public | Login |
-| `/` (index, in shell) | reception∪doctor roles | Landing (role redirect) |
+| `/` (index, in shell) | reception∪doctor∪admin roles | Landing (role redirect) |
 | `/reception` | receptionist, hospital_admin | ReceptionDashboard |
 | `/reception/book` | receptionist, hospital_admin | BookAppointment |
 | `/reception/walk-in` | receptionist, hospital_admin | WalkIn |
@@ -99,488 +86,354 @@ queried).
 | `/reception/notifications` | receptionist, hospital_admin | Notifications |
 | `/queue` | receptionist, hospital_admin | QueueBoard |
 | `/doctor` | doctor, hospital_admin | DoctorConsole |
+| `/admin` | hospital_admin, global_admin | AdminCommandCentre (G-03) |
 | `/bookings/:bookingId` | shell roles | BookingDetail |
 
-Constants (`App.tsx:15-16`): `RECEPTION_ROLES = [receptionist, hospital_admin]`,
-`DOCTOR_ROLES = [doctor, hospital_admin]`. Role routing (`App.tsx:19-24`):
-doctor → `/doctor`; receptionist / hospital_admin / **global_admin** →
-`/reception`. **There is no dedicated admin route** — both admin roles land on
-the reception console. `global_admin` can enter the shell only through
-`/bookings/:bookingId` (no role guard) and the index redirect; it has no nav
-entry of its own.
+- Frontend calls **six** Edge Functions: `create-booking`, `queue-control`,
+  `doctor-operations`, `cancel-booking`, `update-booking-status`, and (G-03)
+  `command-center`. A grep of `apps/web/src` for `enterprise-reports`,
+  `financial-command-center`, `executive-analytics`, `alert-center` returns
+  **0 call sites** (only incidental "audit"/"not reported" strings).
+- Zero direct client table writes; reads go through PostgREST SELECT under RLS
+  (`api/reads.ts`); mutations are all Edge-Function mediated.
+- `global_admin` now has a dedicated `/admin` landing, but for a **no-tenant**
+  account the Command Centre renders "No hospital tenant is attached to your
+  account." (G-03 report TEST D) — so global-admin portfolio/system visibility
+  is still effectively absent.
 
 ---
 
-## 6. Frontend Capability Census
+## 5. Current Backend Inventory (26 Edge Functions; role/auth posture)
 
-- Frontend calls **exactly five** Edge Functions: `create-booking`,
-  `queue-control`, `doctor-operations`, `cancel-booking`, and (new, G-02)
-  `update-booking-status` via `api/statuses.ts`. (`grep` of `apps/web/src` for
-  the other 21 function slugs — `command-center`, `executive-analytics`,
-  `enterprise-reports`, `financial-command-center`, `alert-center` — returns
-  **0 matches**.)
-- **Zero direct client table writes** (`.insert/.update/.delete/.upsert` in
-  `apps/web/src`: 0 matches). All mutations are Edge-Function-mediated.
-- Direct **reads** go through PostgREST SELECT under RLS only (`api/reads.ts`,
-  whose header comment states RLS — not the client — is the enforcement
-  boundary).
-- No admin, settings, finance, reporting, audit, schedule/leave or
-  staff-management surface exists.
+Frontend-consumed (6): `create-booking`, `queue-control`, `doctor-operations`,
+`cancel-booking`, `update-booking-status`, `command-center`.
 
----
+Admin-grade **read** functions — implemented, role-gated, HTTP-integration
+tested, **never UI-consumed**:
 
-## 7. Edge Function Census (26 functions; 25 deployed ACTIVE on staging)
+| Function | Auth | Read actions | HTTP integration proof |
+| --- | --- | --- | --- |
+| `enterprise-reports` | `resolveAuth`+`requireRole([hospital_admin,global_admin])`, `getServiceClient` | `generate` (8 types), `audit_search`, `audit_integrity`, `settlement_integrity`, `queue_integrity`, `doctor_ops_integrity`, `integration_matrix` | YES — `enterprise_command_center.test.ts:1477-1524` (json/csv/pdf + validation + audit) |
+| `executive-analytics` | role-gated; portfolio=global_admin, daily=hospital_admin | `portfolio`, `daily_operations`, … | YES — `:1358-1403` (role + scope denials) |
+| `alert-center` | role-gated, audited | list / acknowledge | YES — `:1417-1473` (ack audited, cross-tenant 403) |
+| `financial-command-center` | `resolveAuth`+`requireRole([hospital_admin,global_admin])`, `getServiceClient` | `overview`, `forecast`, `reconciliation` | RPC-level only (`:727-780`); **function HTTP path not integration-tested** |
 
-Frontend-consumed (5): `create-booking`, `queue-control`, `doctor-operations`,
-`cancel-booking`, `update-booking-status`.
+Backend/system-only (unchanged): `settlement-engine`, `carry-forward-tokens`,
+`compute-sla`, `monitoring-health-check`, `refresh-rollups`,
+`run-background-worker`, `run-cron-minute`, `run-cron-nightly`,
+`send-reminders`, `send-whatsapp-message`, `process-whatsapp-webhook`,
+`create-payment-order`, `verify-payment`, `process-refund`,
+`reschedule-booking`, `queue-next-patient`.
 
-Backend/system-only, **never called by the frontend** (21):
-`command-center`, `executive-analytics`, `enterprise-reports`,
-`financial-command-center`, `alert-center`, `settlement-engine`,
-`carry-forward-tokens`, `compute-sla`, `monitoring-health-check`,
-`refresh-rollups`, `run-background-worker`, `run-cron-minute`,
-`run-cron-nightly`, `send-reminders`, `send-whatsapp-message`,
-`process-whatsapp-webhook`, `create-payment-order`, `verify-payment`,
-`process-refund`, `reschedule-booking`, `queue-next-patient`.
-
-The five admin-grade read functions (`command-center`, `executive-analytics`,
-`enterprise-reports`, `financial-command-center`, `alert-center`) are the
-structural dead-end this investigation targets: implemented, authorized,
-staging-deployed, and unreachable from the product UI.
+Key SQL objects: `audit_logs`/`search_audit_logs`/`verify_*_integrity`
+(10/36/47), financial read RPCs `get_financial_command_center` /
+`get_revenue_forecast` / `get_reconciliation_summary` (service_role-only per
+48), doctor schedule/leave tables (03/31).
 
 ---
 
-## 8. Database Capability Census (candidate-relevant)
+## 6. User Journey Coverage
 
-| Domain | Primary objects | Source |
+- **Patient/Reception/Doctor/Booking/Queue/Consultation/Notes/Cancel/Status-
+  closure/Notifications/Payment-read** — IMPLEMENTED + REACHABLE (closed prior
+  phases).
+- **Hospital Admin** — Command Centre (operational/SLA/health/timeline/
+  predictive) REACHABLE (G-03). **Audit trail ❌ · compliance/integrity checks
+  ❌ · executive reports ❌ · finance/collections read ❌ · fee config ❌** — all
+  either unreachable or absent in UI.
+- **Doctor** — own **schedule/leave visibility ❌** (tables RLS-readable, no UI).
+- **Global Admin** — Command Centre no-tenant state only; **portfolio /
+  cross-tenant analytics has no UI** despite `executive-analytics` being
+  proven.
+
+---
+
+## 7. Reachability Matrix
+
+| Capability | Backend | UI | Status |
+| --- | --- | --- | --- |
+| Command Centre reads | ✅ proven+deployed | ✅ | IMPLEMENTED + REACHABLE |
+| Booking/queue/doctor/cancel/status/notes | ✅ | ✅ | IMPLEMENTED + REACHABLE |
+| **Audit viewer / compliance checks** | ✅ `enterprise-reports` (HTTP-proven) | ❌ | **IMPLEMENTED + UNREACHABLE** |
+| **Executive reports (op/SLA/doctor)** | ✅ same function | ❌ | IMPLEMENTED + UNREACHABLE |
+| Global-admin portfolio analytics | ✅ `executive-analytics` | ❌ | IMPLEMENTED + UNREACHABLE |
+| Finance/collections read | ✅ fn, RPC-level test only | ❌ | PARTIAL (evidence weaker) |
+| Doctor schedule/leave **read** | ✅ RLS-readable tables | ❌ | BACKEND-INCOMPLETE UI (low standalone value) |
+| Doctor schedule/leave **write** | ⚠️ unaudited `FOR ALL` | ❌ | BACKEND-REQUIRED + security-sensitive |
+| Reschedule | ⚠️ broken | ❌ | BLOCKED (backend defect) |
+| Fee configuration admin | ✅ | ❌ | financial mutation, deferred |
+
+---
+
+## 8. Product Gap Matrix (classification per §11 of brief)
+
+| Gap | Class |
+| --- | --- |
+| Audit & Compliance viewer | **B — Frontend reachability** (backend proven) + E (one redeploy) |
+| Executive reports | B + E |
+| Global-admin portfolio dashboard | B + E |
+| Finance/collections read | B + E + F (fn HTTP path untested), financially sensitive to render |
+| Doctor schedule/leave read | B (low value) / write = C + D |
+| Reschedule | C — BACKEND DEFECT |
+| Fee admin | C + financial mutation |
+
+---
+
+## 9. Previously Considered Gaps — Re-evaluation (CURRENT evidence)
+
+| Prior cand. | Prior verdict | Current re-evaluation |
 | --- | --- | --- |
-| Bookings | `bookings` (+ `cancellation_reason`, `cancelled_at`, `carry_forwarded_from`, `payment_status_detail`) | `01_foundation`, `28_booking_enhancements` |
-| Booking status enum | `booked, checked_in, waiting, called, in_consultation, completed, cancelled, no_show, rescheduled, skipped` | `01_foundation.sql:34-44` |
-| Audit | `audit_logs`, `audit_action_types` | `10_audit_&_security_engine`, `36_audit_standardization` |
-| Doctor schedule | `doctor_schedules`, `doctor_leaves`, `doctor_availability_overrides`, `doctor_hospital_holidays` | `03_doctorscheduling&slotengine` |
-| Financial | ledger / collections / settlement / reconciliation RPC set | `21`, financial engines, `47` |
-| Command centre | composite read RPCs incl. `get_hospital_command_center`, `get_hospital_timeline`, `get_predictive_insights`, `get_sla_dashboard`, `get_queue_health`, `get_mv_refresh_health`, `get_dlq_summary` | `47_enterprise_command_center` |
+| G-05 Audit viewer | "BACKEND-REQUIRED — service_role RPCs, no fn exposes audit" | **SUPERSEDED.** `enterprise-reports.audit_search` (`index.ts:228-275`) already exposes audit to `hospital_admin`/`global_admin` via `getServiceClient()` with server-side hospital id and audits the access. Now **FRONTEND-ONLY + targeted redeploy**. Remains the strongest candidate and is SELECTED. |
+| Finance read (G-06) | "service_role-only, broad, money-sensitive" | fn `financial-command-center` wraps the RPCs and is role-gated, but its HTTP path is **not** integration-tested and it is a multi-view money surface. Still DEFERRED (breadth + evidence + financial). |
+| Doctor schedule/leave (G-04) | read=frontend-only low value; write=unaudited | Unchanged. Read has low standalone value; write needs an audited Edge Function. DEFERRED. |
+| Reschedule (G-07) | BACKEND DEFECT — columns absent | **STILL VALID.** `grep rescheduled_at|rescheduled_by supabase/migrations` = **0 matches**. Not ready. ELIMINATED. |
+| Fee admin (G-08) | financial mutation | Unchanged. DEFERRED. |
+| Command Centre (G-03) | SELECTED | IMPLEMENTED + PROVEN STAGING. CLOSED. |
 
 ---
 
-## 9. RLS / Security / Grants Census (freshly verified)
+## 10. Nine Stale Edge Functions (deployment drift only — NOT a product gap by itself)
 
-| Surface | Posture | File:line |
-| --- | --- | --- |
-| `command-center` fn | `resolveAuth(req, hospitalId)` + `requireRole(["hospital_admin","global_admin"])`; `getServiceClient()`; hospital resolved/verified server-side | `functions/command-center/index.ts:189-197` |
-| `executive-analytics` | portfolio action = global_admin only; hospital-scoped = hospital_admin (403 proven) | test `:1374-1403` |
-| `search_audit_logs` | SECURITY DEFINER, **caller-supplied hospital_id**, `REVOKE` from anon/authenticated, `GRANT … TO service_role` | `47:2185`, `48:628-632` |
-| `get_audit_coverage_report` | `REVOKE` anon/authenticated, `GRANT … service_role` (36's earlier `authenticated` grant superseded) | `36:593,647-649`, `48:560-563` |
-| `get_financial_command_center` | `REVOKE` anon/authenticated, `GRANT … service_role` | `48:580-582` |
-| `get_reconciliation_summary` | `REVOKE` anon/authenticated, `GRANT … service_role` | `48:592-594` |
-| `doctor_schedules` | `FOR SELECT USING … OR user_has_hospital_access(hospital_id)`; `doctor_sched_manage FOR ALL` | `03:639-645, 650+` |
-| `doctor_leaves` | `FOR SELECT USING … OR user_has_hospital_access(hospital_id)`; `doctor_leaves_manage FOR ALL`; **no audit trigger** | `03:681-687, 692+` |
+Per the G-03 report §24.2, these staging functions still carry the pre-`79b74f7`
+CORS artifact: `cancel-booking`, `update-booking-status`, `queue-next-patient`,
+`enterprise-reports`, `financial-command-center`, `executive-analytics`,
+`alert-center`, `send-whatsapp-message`, `run-background-worker`.
 
-Consequence: the **admin read Edge Functions** (`command-center`,
-`executive-analytics`) are safe to consume directly from an authenticated staff
-client because they enforce role + tenant at the edge. The **audit and finance
-read RPCs** are `service_role`-only and therefore are **not** client-callable —
-a UI for them needs a new (or extended) Edge Function action, not a pure
-frontend change. The doctor schedule/leave tables are client-**readable** under
-RLS but not client-writable within the established audited posture.
+- Do NOT mass-redeploy. They are documented as deployment drift only.
+- **Relevance to the selected candidate:** `enterprise-reports` is one of the
+  nine. Its browser path would hit the same preflight `ERR_FAILED` G-03 saw
+  until redeployed from current source. Therefore:
+  `candidate requires targeted redeployment` (of `enterprise-reports` **only**),
+  to be performed **only** in the implementation phase under explicit
+  authorization — NOT during this investigation.
+- The other eight are untouched and not implied by this recommendation.
 
 ---
 
-## 10. Completed / Closed Capabilities (not reopened)
+## 11. Security / Authorization Analysis
 
-G-02 booking-status closure (check-in + no-show) — PROVEN STAGING at `0ec8586`.
-C1 cancellation — PROVEN STAGING. Notifications delivery UI, Booking
-Confirmation, Payment Status UX, Clinical Note UI, Doctor directory fix,
-tenant isolation, core booking/queue/doctor/consultation journeys — all closed.
-None re-investigated or re-proposed.
-
----
-
-## 11. Current Workflow Map (post-G-02)
-
-Receptionist: register/search ✅ · book/walk-in ✅ · see booking ✅ · cancel ✅ ·
-check-in ✅ (G-02) · no-show ✅ (G-02) · queue ✅ · notifications ✅ · payment
-read ✅ · patient history ✅ · **reschedule ❌** · **audit ❌**.
-
-Doctor: queue ✅ · call ✅ · consult ✅ · notes ✅ · diagnosis ✅ · complete ✅ ·
-history ✅ · **own schedule/leave visibility ❌**.
-
-Hospital admin: everything a receptionist/doctor can do (shares those
-consoles) · **operational command centre ❌ (backend proven + deployed, no UI)**
-· **analytics ❌** · **collections/outstanding/settlements ❌** · **audit ❌** ·
-**staff/schedule/leave mgmt ❌** · **fees ❌**.
-
-Global admin: lands on `/reception`; **no admin surface at all** for
-portfolio/tenant inspection/audit/system health.
+For the selected candidate (`enterprise-reports` audit + compliance reads):
+- Role gate is server-side `requireRole(["hospital_admin","global_admin"])` —
+  receptionist/doctor denied at the edge (mirrors G-03's proven posture).
+- Tenant is taken ONLY from the session-derived `X-Hospital-ID` header, then
+  verified server-side; `search_audit_logs` is called with the server-supplied
+  `p_hospital_id` through `getServiceClient()`, never a client body field. The
+  prior-report O-C hazard (caller-supplied hospital id) is **not** reachable
+  from the browser because the RPC stays `service_role`-only behind the fn.
+- Audit access is itself audited (`compliance_check`, `index.ts:246-265`) —
+  accountability preserved.
+- No new RLS/SECURITY DEFINER/grant boundary is introduced. No service-role key
+  ever reaches the browser. Cross-tenant calls must be proven 403 and missing
+  header 422 (same gates as G-03).
 
 ---
 
-## 12. Frontend ↔ Backend Gap Matrix
+## 12. Financial Risk Analysis
 
-| Capability | Backend exists | Tested | RLS/auth ready | Frontend | Runtime/staging | Gap class |
-| --- | --- | --- | --- | --- | --- | --- |
-| Booking / cancel / status closure | ✅ | ✅ | ✅ | ✅ | STAGING | CLOSED |
-| Queue / doctor / consultation | ✅ | ✅ | ✅ | ✅ | STAGING | CLOSED |
-| **Admin command centre (read)** | ✅ | ✅ (HTTP) | ✅ | **❌** | **DEPLOYED STAGING** | **FRONTEND-ONLY** |
-| Admin analytics (read) | ✅ | ✅ (HTTP) | ✅ | ❌ | DEPLOYED STAGING | FRONTEND-ONLY (broad) |
-| Audit viewer | ✅ RPC | RPC-level | service_role only | ❌ | — | BACKEND REQUIRED (new fn action) |
-| Finance / collections (read) | ✅ | ✅ | service_role only | ❌ | fn deployed | BACKEND (fn exists) + money UX |
-| Doctor schedule/leave **read** | ✅ | policy | RLS-readable | ❌ | tables staging | FRONTEND-ONLY (low standalone value) |
-| Doctor schedule/leave **write** | ✅ tables | partial | RLS but unaudited | ❌ | — | BACKEND REQUIRED (audit) |
-| Reschedule | ⚠️ broken | engine-only | — | ❌ | **missing columns (staging)** | **BACKEND DEFECT** |
-| Fee configuration admin | ✅ | ✅ | financial | ❌ | — | FINANCIAL MUTATION |
+- **Selected candidate: NONE for mutations.** Audit search + integrity/compliance
+  checks are read-only metadata; `settlement_integrity` returns a
+  reconciliation **verdict**, not a money figure and performs no write.
+- Out of scope for this phase and NOT recommended: the `financial` and
+  `settlement` **report types** and the finance read dashboard — those render
+  money figures and belong to a separately-gated, evidence-stronger phase
+  (business invariant reminder: SETURA collects only the booking/platform fee;
+  the hospital collects the consultation fee directly).
 
 ---
 
-## 13. Candidate Set (G-03 … G-08)
+## 13. Candidate Comparison (factual descriptors — no scores/rankings)
 
-### G-03 — Hospital Admin Command Centre (read-only operational overview) — **SELECTED**
-- **User:** hospital_admin, global_admin.
-- **Current workflow:** admins have no operational dashboard; they land on the
-  reception console.
-- **Missing workflow:** live hospital snapshot, composite scores, SLA dashboard,
-  system health, event timeline.
-- **Backend status:** IMPLEMENTED. `command-center` read actions `overview`,
-  `timeline`, `predictive`, `sla_dashboard`, `system_health`
-  (`index.ts:52-63`). INTEGRATION VERIFIED over **real HTTP** for
-  `overview`+`timeline` (`enterprise_command_center.test.ts:1331-1356`,
-  `callFn` = `fetch(.../functions/v1/${fn})` at `:233-236`), with role +
-  tenant denial tests (`:1358-1413`: receptionist 403 ROLE_INSUFFICIENT,
-  missing-header 422, cross-tenant 403 FORBIDDEN). STAGING: function ACTIVE v7.
-- **Frontend status:** NOT IMPLEMENTED (0 references).
-- **Security status:** role-gated hospital_admin/global_admin, server-side
-  tenant scoping, service-role client — authorization already PROVEN.
-- **Financial dependency:** NONE for the read actions.
-- **External dependency:** NONE for the read actions (the `broadcast_*` actions
-  that enqueue WhatsApp jobs are **explicitly out of scope**).
-- **Complexity:** LOW–MEDIUM. **Risk:** LOW (read-only).
-- **Why it matters:** unlocks the entire admin persona using the strongest-
-  proven backend in the repo.
-- **Implementation boundary:** new admin route + a read API wrapper for the 5
-  command-center read actions; role-guard to hospital_admin/global_admin; no
-  SQL/RLS/RPC/SECURITY DEFINER/Edge-Function change; broadcasts excluded.
-- **Staging validation:** FEASIBLE — read-only, function already deployed.
-
-### G-04 — Doctor Schedule & Leave (visibility + management)
-- Tables + `FOR SELECT` RLS (client-readable) exist (`03:639-687`). A **read**
-  view is frontend-only but low standalone value; **management** writes are
-  `FOR ALL` under RLS but the tables have **no audit trigger**, so audited
-  mutation needs a new Edge Function — breaks the "all mutations through
-  audited Edge Functions" posture. Backend-dependent for the valuable half.
-
-### G-05 — Audit Activity Viewer (admin)
-- `search_audit_logs` (47:2185) + `get_audit_coverage_report` (36:593) exist,
-  but are **`service_role`-only** (48:560-563, 628-632). Not client-callable.
-  Requires a **new Edge Function action** (or extension of `command-center`)
-  with resolveAuth+requireRole. Backend-required; still bounded + read-only.
-  Strongest runner-up.
-
-### G-06 — Finance / Collections Read Dashboard
-- Read RPCs `get_financial_command_center` / `get_reconciliation_summary` are
-  `service_role`-only (48:580-594); `financial-command-center` fn is deployed
-  but never UI-consumed. Money-figure surface with reconciliation/settlement
-  semantics — broader than one bounded phase and financially sensitive to
-  display. Deferred.
-
-### G-07 — Staff-Console Reschedule — **ELIMINATED (BACKEND DEFECT)**
-- See §15. Missing columns proven in source, local migrations and **live
-  staging**. Not ready for frontend.
-
-### G-08 — Fee Configuration Admin
-- Financially sensitive **mutations**; fee report classified CASE A (expected
-  configuration). Deferred (financial-policy surface).
+| Candidate | User value | Backend readiness | Frontend | Security | Financial | Backend work | Frontend work | Runtime proof | Dependency risk |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Audit & Compliance viewer | High | Ready (`enterprise-reports`, HTTP-proven) | Missing | Ready (role+tenant audited) | Read-only / none | none (redeploy only) | one route + read wrapper | Staging, low | 1 targeted redeploy |
+| Executive operational reports | High | Ready (same fn, HTTP-proven) | Missing | Ready | Read-only (excl. money report types) | none (redeploy only) | one route | Staging, low | same single redeploy |
+| Global-admin portfolio dashboard | Medium | Ready (`executive-analytics`, HTTP-proven) | Missing | Ready (global_admin) | Read-only | none (redeploy) | one route | Staging, medium (needs tenant-less account) | 1 redeploy + account context |
+| Finance/collections read | Medium | Partial (fn RPC-level test only) | Missing | Ready | **sensitive (money display)** | 1 fn HTTP test | one route | Staging, harder | 1 redeploy + test gap |
+| Doctor schedule/leave read | Low | Ready (RLS tables) | Missing | Ready (read) | none | none | one route | Staging, low | none |
+| Doctor schedule/leave write | Medium | Missing (unaudited) | Missing | **Gap (no audit)** | none | new audited fn | one route | Staging, high | security-sensitive |
+| Reschedule | Medium | **Defect (columns absent)** | Missing | — | fee-carry | additive migration + fn fix | one route | blocked | NOT ready |
+| Fee configuration admin | Medium | Ready | Missing | financial | **MUTATION** | config/policy | one route | policy-gated | NOT selected |
 
 ---
 
-## 14. Candidate Elimination
+## 14. Recommended Next Gap
 
-| Candidate | Result | Failed criterion |
-| --- | --- | --- |
-| G-07 reschedule | ELIMINATED | backend not ready — columns absent (source + staging) |
-| G-04 schedule/leave (write) | DEFERRED | unaudited writes → needs new Edge Function + audit |
-| G-05 audit viewer | DEFERRED (runner-up) | read RPCs service_role-only → backend change needed |
-| G-06 finance read | DEFERRED | money-figure breadth + service_role RPCs |
-| G-08 fee admin | DEFERRED | financial mutation |
-| Closed areas (G-02/C1/etc.) | EXCLUDED | already implemented & staged |
-| **G-03 admin command centre** | **SELECTED** | passes all selection criteria |
+```text
+Candidate:  Hospital Admin Audit & Compliance Viewer
+            (read-only surface over the existing `enterprise-reports` Edge
+            Function: `audit_search` + the integrity/compliance checks)
 
----
+Why it exists:  Auditability is a core SETURA non-negotiable, yet no UI exposes
+                the audit trail or compliance/integrity checks. The backend
+                already implements and HTTP-integration-tests them.
 
-## 15. Reschedule Backend Verification (§9 special investigation — FRESH)
+Who needs it:   hospital_admin (and global_admin) — for operational
+                accountability, incident review and compliance.
 
-Method and evidence (no mutation executed):
+What already exists:  `enterprise-reports` (role-gated, service-role mediated,
+                access-audited) + `search_audit_logs` + `verify_*_integrity`
+                RPCs + real-HTTP integration proof + shared CORS fix in source.
 
-1. `reschedule-booking/index.ts:378-382` writes
-   `{ status: "rescheduled", rescheduled_at, rescheduled_by }`.
-2. `"rescheduled"` **IS** a valid enum value (`01_foundation.sql:43`) — the
-   state itself is legal.
-3. `rescheduled_at` / `rescheduled_by` are referenced in **zero** migrations
-   (`grep` of `supabase/migrations`: 0 matches for either identifier).
-4. **Live staging (SELECT-only, `--linked`)**: `bookings` columns include
-   `cancellation_reason`, `cancelled_at` but **not** `rescheduled_at` /
-   `rescheduled_by`.
+What is missing:  a frontend route + a read API wrapper (mirroring
+                api/commandCenter.ts), plus one targeted staging redeploy of
+                `enterprise-reports` (it is among the stale nine).
 
-Conclusion: the HTTP reschedule write would fail at the database with
-"column does not exist". Classification: **BACKEND DEFECT — NOT READY FOR
-FRONTEND IMPLEMENTATION.** To become production-ready it would need an
-additive migration adding both columns (plus decision on the fee-snapshot
-carry and a real-HTTP integration test). Not selected because it fails the
-"backend readiness" criterion; rescheduling's product value alone is not a
-reason to build a UI over a broken path.
+Why this is the next justified capability:  highest-value gap whose backend is
+                already PROVEN (unlike finance's RPC-only evidence, reschedule's
+                defect, and schedule-write's missing audit) and which reuses an
+                already-proven G-03 template (frontend over an authorized Edge
+                Function read path).
 
----
+Frontend-only or backend-required:  FRONTEND-ONLY + one targeted redeployment
+                (no new SQL / RLS / RPC / SECURITY DEFINER / fn-code change).
 
-## 16. Finance Investigation (§10)
+Expected scope:  one `/admin/audit` (or Command Centre sub-tab) route guarded
+                to [hospital_admin, global_admin]; a read wrapper calling
+                `enterprise-reports` with action=audit_search (+ integrity
+                checks); render results read-only; no report-generation of
+                financial/settlement types in this slice.
 
-Collections / payment orders / refunds / outstanding / settlements /
-reconciliation read surfaces **exist** as RPCs and a deployed
-`financial-command-center` Edge Function, but their read RPCs are
-`service_role`-only (48:580-594), so there is **no** current authenticated
-client read surface. The backend is financial-read capable but not
-UI-consumed. Classification: **BACKEND EXISTS + FRONTEND ABSENT**, but the
-surface is a multi-view money product (broad, financially sensitive to render
-correctly) → **larger architecture phase**, not a single bounded gap. Not
-mutated; not implemented this phase.
+Security implications:  relies on existing server-side role+tenant enforcement;
+                adds no new trust boundary; cross-tenant 403 / missing-header
+                422 must remain proven.
 
----
+Financial implications:  NONE (read-only audit metadata; money report types
+                explicitly excluded).
 
-## 17. Audit Investigation (§11)
+Runtime proof required:  staging browser walkthrough as hospital_admin —
+                audit_search returns rows, receptionist/doctor denied,
+                cross-tenant 403, no mutation, console/network clean; plus the
+                existing enterprise-reports HTTP integration test kept green.
 
-Admin-inspectable audit data is modelled (`audit_logs`, actor/entity/action/
-severity/metadata/notes/created_at) with read RPCs `search_audit_logs` and
-`get_audit_coverage_report`. Both are `service_role`-only (48), no Edge Function
-exposes them to staff, and there is no frontend viewer. Filtering/search/
-pagination params already exist on `search_audit_logs` (47:2185-2194, limit
-clamped 1..1000). Classification: **BOUNDED but BACKEND-REQUIRED** — a small
-additive Edge Function action (resolveAuth + requireRole(admin) + server-side
-hospital id) then a read UI. Runner-up, not selected, because it is not
-purely frontend-only.
+Dependencies:  targeted redeploy of `enterprise-reports` to staging under
+                explicit implementation-phase authorization.
+```
 
 ---
 
-## 18. Doctor Schedule / Leave Investigation (§12)
+## 15. Exact Proposed Scope (for the NEXT authorized phase)
 
-All four tables exist with `FOR SELECT` RLS readable by hospital members
-(`03`) and `FOR ALL` manage policies. Read is therefore **frontend-ready via
-PostgREST** (same posture as `reads.ts`); no schedule/leave management Edge
-Function exists, and the tables carry **no audit trigger** (only
-hospital-immutable), so audited writes would need a new Edge Function.
-Classification: **read = FRONTEND-ONLY (low standalone value)**,
-**write = BACKEND-REQUIRED + security-sensitive**. Deferred behind G-03 because
-the useful half (management) is not safely one frontend-only phase.
+MAY touch:
+- One new admin route in `App.tsx` + nav entry in `AppShell.tsx` + a page under
+  `apps/web/src/routes/` + a read wrapper under `apps/web/src/api/` + types in
+  `types/api.ts` + unit tests.
+- One targeted `supabase functions deploy enterprise-reports` to **staging**
+  (minimum to close the browser path), mirroring the proven G-03 remediation.
 
----
-
-## 19. Analytics / Admin Investigation (§13)
-
-Daily patient/booking counts, queue metrics, doctor throughput, no-show/cancel
-rates, wait times, revenue and notification metrics are **already computed**
-via rollups (`21`), monitoring (`24`), command-centre (`47`) and exposed through
-role-gated Edge Functions `command-center` and `executive-analytics` — the
-latter INTEGRATION-PROVEN over real HTTP (portfolio global_admin-gated,
-daily_operations hospital_admin — test `:1374-1403`), both deployed ACTIVE on
-staging. They are **RLS/role protected** and **pure backend with no UI**.
-Rather than "missing entirely", they are the most complete no-UI surfaces in
-the product. G-03 selects the command-centre slice of this family as the first
-bounded step; broader analytics/portfolio dashboards remain a follow-on.
+MUST NOT touch:
+- Any migration, SQL, RLS, grants, SECURITY DEFINER function, or Edge Function
+  **source** (source already correct).
+- Any of the other eight stale functions; no mass redeploy.
+- Financial/settlement report generation, fee config, reschedule, schedule/leave
+  writes, notifications/WhatsApp, worker/scheduler.
+- Production. No commit/push without explicit authorization.
 
 ---
 
-## 20. Newly Discovered Defects / Observations
+## 16. Acceptance Criteria
 
-- **D-A (confirms prior G-01):** reschedule HTTP path references non-existent
-  columns — source + staging verified (§15). OPEN, backend.
-- **O-B:** `global_admin` has no dedicated frontend landing beyond `/reception`
-  and no nav entry; the backend admin capability set is entirely unreachable.
-  Not a code defect — a product-surface gap, which G-03 begins to close.
-- **O-C:** `search_audit_logs` is SECURITY DEFINER with a **caller-supplied**
-  `hospital_id` and no internal actor check; it is safe today only because it
-  is `service_role`-only. Any future exposure **must** derive hospital_id
-  server-side — recorded so a future audit-UI phase does not expose it directly.
-
-No documentation edits made (per rules). No new backend defect beyond D-A was
-found in the examined surfaces.
-
----
-
-## 21. Documentation Drift
-
-`AGENTS.md §13` states the working tree is **not** a Git repository; this
-session found a functional repository with `HEAD == origin/main == 0ec8586`.
-Recorded only; not modified. This does not affect any gap conclusion.
+1. hospital_admin lands on the audit route and sees real audit rows for their
+   tenant via `audit_search`.
+2. Receptionist and doctor have no route entry and are redirected; they issue
+   zero `enterprise-reports` requests.
+3. Cross-tenant header → 403; missing header → 422 (proven in staging).
+4. Integrity/compliance checks render read-only verdicts; no mutation issued.
+5. Preflight returns the current shared CORS headers (`apikey`, `X-Client-Info`,
+   `Vary: Origin`) post-redeploy; all POST reads return 200.
+6. Zero errors / warnings in console; zero unexpected network mutations.
+7. Existing `enterprise_command_center.test.ts` HTTP suite stays green; typecheck
+   and build pass.
 
 ---
 
-## 22. Risk / Dependency Matrix
+## 17. Definition of Done
 
-| Candidate | Financial | External creds | New SQL/RLS/RPC/FN | Risk | Deterministic test | Staging-safe |
-| --- | --- | --- | --- | --- | --- | --- |
-| G-03 command centre (read) | NONE | NONE | NONE | LOW | YES | YES |
-| G-05 audit viewer | NONE | NONE | 1 fn action | LOW | YES | YES |
-| G-04 schedule/leave read/write | NONE | NONE | read 0 / write fn+audit | MED | partial | YES |
-| G-06 finance read | READ-ONLY money | NONE | fn exists | MED-HIGH | harder | YES |
-| G-07 reschedule | fee carry | NONE | migration + fn fix | HIGH | blocked | NO (broken) |
-| G-08 fee admin | MUTATION | NONE | fn/config | HIGH | harder | policy-gated |
-
----
-
-## 23. Selected Next Product Gap
-
-> **Selected next bounded implementation candidate based on the evidence: G-03 — Hospital Admin Command Centre (read-only operational overview).**
+```text
+Implementation            + expected behavior   + failure behavior
++ unit tests (wrapper/route)                    + integration tests (reuse HTTP suite)
++ Browser/E2E walkthrough on staging            + runtime staging proof
++ tenant isolation        + role isolation       + console/network cleanliness
++ evidence report
+```
+BLOCKED ≠ PASS. Staging proof is **NOT** production readiness; no production
+claim is made.
 
 ---
 
-## 24. Why G-03 Was Selected
+## 18. STOP CONDITIONS
 
-1. **Real hospital workflow value** — both admin roles currently have **zero**
-   dedicated surface (they land on `/reception`); the command centre is the
-   primary admin operational need and is entirely unreachable today.
-2. **Strongest backend readiness in the repo** — the `command-center` read path
-   is INTEGRATION-PROVEN over **real HTTP** with a real `hospital_admin` JWT,
-   and already **deployed ACTIVE on staging** — unlike audit/finance (locked to
-   `service_role`, needing a new backend action) and unlike schedule/leave
-   management (unaudited writes) and reschedule (broken).
-3. **Authorization already proven** — role gate + server-side tenant scoping
-   with asserted 403 role and 403 cross-tenant denials; no new security
-   boundary is introduced.
-4. **Bounded, frontend-only** — consumes an existing authorized Edge Function;
-   no SQL / RLS / RPC / SECURITY DEFINER / Edge-Function change.
-5. **Zero financial / external risk** — read actions only; the WhatsApp
-   `broadcast_*` actions are explicitly excluded.
-6. **Deterministic + staging-safe** — read-only, already testable with the
-   existing HTTP harness; same proven template as C1 and G-02 (a frontend
-   surface over an already-proven Edge Function).
+Implementation must NOT begin if:
+- The `enterprise-reports` staging redeploy is not explicitly authorized (the
+  browser path stays BLOCKED, not worked around).
+- Any audit/compliance read is found to require a new RLS/SECURITY DEFINER
+  boundary (would reclassify it as backend/security work → separate phase).
+- A financial/settlement report type is pulled into scope (financial sensitivity
+  demands its own gated phase).
+- Staging or production data mutation would be needed to demonstrate the flow.
 
 ---
 
-## 25. Why Other Candidates Were Not Selected
+## 19. Evidence Standard Notes
 
-G-07 reschedule fails backend readiness outright (broken columns, proven at
-staging). G-05 audit and G-06 finance need backend work first (their read RPCs
-are `service_role`-only), and finance additionally carries money-figure display
-sensitivity/breadth. G-04's read half is low-value standalone while its
-management half needs a new audited Edge Function. G-08 is a financial
-mutation. G-03 is the only candidate that is simultaneously high-value,
-already integration-proven, already staging-deployed, purely frontend-bounded,
-and free of financial/external risk.
-
----
-
-## 26. Exact Proposed Implementation Boundary (for a future authorized phase)
-
-- Add one admin route (e.g. `/admin` or `/command-centre`) guarded to
-  `["hospital_admin","global_admin"]`, plus a nav entry and role-landing update.
-- Add a read API wrapper (mirroring `api/statuses.ts`) that POSTs to
-  `functions/v1/command-center` with the read actions `overview` (and, if the
-  phase scope includes them, `sla_dashboard`, `system_health`, `timeline`,
-  `predictive`), passing the existing `X-Hospital-ID`/auth headers already used
-  by other wrappers.
-- Render read-only views. **Do not** wire `broadcast_*` actions.
-- **No** migration, RLS, RPC, SECURITY DEFINER, or Edge-Function source change.
+Conclusions rest on: current source (`enterprise-reports/index.ts`,
+`financial-command-center/index.ts`, `App.tsx`, `api/*.ts`,
+`_shared/cors.ts` posture via G-03 report), current integration tests
+(`enterprise_command_center.test.ts` HTTP sections), current migrations
+(reschedule-column census), and current git state. Where the prior G-05 audit
+conclusion ("backend-required") conflicts with current source, the conflict is
+reported and resolved toward source: the Edge Function already exists. Local
+test results are not claimed as production. No report/finance/analytics UI was
+found (grep of `apps/web/src`).
 
 ---
 
-## 27. Proposed Local Validation (future phase)
-
-- Unit tests for the response-parsing wrapper and role-guarding (mirroring
-  `statuses.test.ts` / `BookingDetail.test.tsx` patterns).
-- Reuse the existing `enterprise_command_center.test.ts` real-HTTP backend proof;
-  optionally add a frontend integration assertion that a hospital_admin renders
-  the overview while a receptionist cannot reach the route.
-
----
-
-## 28. Proposed Staging Validation (future phase, separate authorization)
-
-- Deploy frontend to `setura-delta.vercel.app` (no backend redeploy needed —
-  `command-center` already ACTIVE v7).
-- Sign in as a staging hospital_admin; confirm the read-only overview renders
-  live figures; confirm a receptionist session has no route access; confirm no
-  mutation, notification or WhatsApp job is produced.
-
----
-
-## 29. Explicit Non-Goals
-
-- No `broadcast_*` (WhatsApp) wiring. No finance/audit/analytics-portfolio UI.
-  No schedule/leave management. No reschedule backend fix. No production work.
-  No commit/push.
-
----
-
-## 30. Production Boundary
-
-Production: **NOT TOUCHED**. No production project, secret, function, domain,
-user, data or transaction. Staging read-only inspection only; staging data not
-modified.
-
----
-
-## 31. Final Classification
-
-G-03 backend: **IMPLEMENTED** and **INTEGRATION VERIFIED (local stack) +
-DEPLOYED/ACTIVE (staging)** for the read actions. Frontend: **NOT IMPLEMENTED**.
-Implementation type: **FRONTEND-ONLY**. Financial dependency: **NONE** (read
-actions). External dependency: **NONE** (read actions; broadcasts excluded).
-Staging validation: **FEASIBLE** with separate authorization. This investigation
-performed **no implementation**.
-
----
-
-## 32. Mandatory Final Block
+## 20. FINAL DECISION
 
 ```text
 CURRENT BASELINE:
-0ec8586b3b5b72dd4fcb06c9e5239a89103dc156
+0cb2800d27bd5b0b920006530ca82f22300b0402  (HEAD == origin/main; working tree clean
+apart from this report; staging setura-staging / gzcqasntcbqqmgsoikms;
+frontend https://setura-delta.vercel.app)
 
-STAGING:
-setura-staging / gzcqasntcbqqmgsoikms
+G-03:
+PROVEN STAGING — CLOSED
 
-PRODUCTION:
-NOT TOUCHED
+NEXT PRODUCT GAP:
+Hospital Admin Audit & Compliance Viewer (read-only surface over the existing
+`enterprise-reports` Edge Function: audit_search + integrity/compliance checks)
 
-G-02:
-PROVEN STAGING
+CLASSIFICATION:
+Frontend reachability gap (backend proven) + one targeted deployment drift fix
 
-CANDIDATES INVESTIGATED:
-6
+IMPLEMENTATION SCOPE:
+One admin route + read API wrapper (mirror commandCenter.ts) + a single targeted
+`enterprise-reports` staging redeploy. No SQL/RLS/RPC/SECURITY DEFINER/fn-source
+change. Financial/settlement report types excluded.
 
-SELECTED NEXT GAP:
-G-03 — Hospital Admin Command Centre (read-only operational overview)
+BACKEND CHANGES REQUIRED:
+No — `enterprise-reports` already exposes role-gated, service-role-mediated,
+access-audited audit + compliance reads; only its STAGING ARTIFACT needs a
+targeted redeploy (it is one of the stale nine).
 
-BACKEND STATUS:
-IMPLEMENTED
+DATABASE/RLS CHANGES REQUIRED:
+No — existing role gate + server-side tenant scoping + service_role-only audit
+RPCs remain unchanged.
 
-FRONTEND STATUS:
-NOT IMPLEMENTED
+FINANCIAL IMPACT:
+None (read-only audit metadata; money report types explicitly out of scope).
 
-SECURITY STATUS:
-command-center is role-gated to hospital_admin/global_admin with server-side
-resolveAuth tenant scoping; 403 role and 403 cross-tenant denials are proven by
-real-HTTP integration tests; function is ACTIVE on staging. No new security
-boundary required.
-
-FINANCIAL DEPENDENCY:
-NONE
-
-EXTERNAL DEPENDENCY:
-NONE (WhatsApp broadcast actions explicitly excluded)
-
-IMPLEMENTATION TYPE:
-FRONTEND-ONLY
-
-STAGING VALIDATION:
-FEASIBLE (requires separate explicit authorization)
+STAGING PROOF REQUIRED:
+- hospital_admin renders real audit rows; receptionist/doctor denied (0 requests)
+- cross-tenant 403 / missing-header 422
+- OPTIONS preflight returns current CORS headers; reads return 200
+- integrity/compliance checks render read-only; 0 mutations
+- console/network clean; existing enterprise-reports HTTP suite green; build+typecheck pass
 
 PRODUCTION:
 NOT TOUCHED
 
-IMPLEMENTATION:
-NOT PERFORMED
-
-GIT:
-UNCHANGED
-
-FINAL STATUS:
-INVESTIGATION COMPLETE — READY FOR SEPARATE IMPLEMENTATION AUTHORIZATION
+INVESTIGATION STATUS:
+COMPLETE — STOP
 ```
+
+**This was discovery only. No implementation was started.**
