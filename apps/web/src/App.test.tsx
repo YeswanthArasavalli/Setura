@@ -5,6 +5,8 @@ import { MemoryRouter } from "react-router-dom";
 /**
  * G-03 routing boundary: which role reaches the Command Centre surface.
  * G-05 extends the same boundary to the Audit & Compliance viewer.
+ * G-08 adds the reverse case: /admin/portfolio is reachable by global_admin
+ * ONLY — a hospital admin must be redirected away from the cross-tenant view.
  *
  * The real RequireRole guard and the real App route table / Landing dispatch
  * are under test; the auth context is mocked per-role and every page module is
@@ -64,6 +66,9 @@ vi.mock("@/routes/AdminAudit", () => ({
 }));
 vi.mock("@/routes/AdminReports", () => ({
   AdminReports: () => <div>ADMIN REPORTS PAGE</div>,
+}));
+vi.mock("@/routes/AdminPortfolio", () => ({
+  AdminPortfolio: () => <div>ADMIN PORTFOLIO PAGE</div>,
 }));
 
 const { default: App } = await import("@/App");
@@ -270,5 +275,76 @@ describe("G-06 executive reports viewer routing boundary", () => {
       screen.getByRole("link", { name: "Audit & Compliance" }),
     ).toBeInTheDocument();
     view.unmount();
+  });
+});
+
+describe("G-08 global portfolio routing boundary", () => {
+  it("global_admin reaches /admin/portfolio directly", () => {
+    setRole("global_admin");
+    renderAt("/admin/portfolio");
+    expect(screen.getByText("ADMIN PORTFOLIO PAGE")).toBeInTheDocument();
+  });
+
+  it("hospital_admin is redirected away and never receives the global surface", () => {
+    setRole("hospital_admin");
+    renderAt("/admin/portfolio");
+    // The page never mounts, so its wrappers are never invoked; the admin is
+    // sent to their own landing (the Command Centre).
+    expect(screen.queryByText("ADMIN PORTFOLIO PAGE")).toBeNull();
+    expect(screen.getByText("ADMIN COMMAND CENTRE PAGE")).toBeInTheDocument();
+  });
+
+  it("receptionist cannot reach /admin/portfolio", () => {
+    setRole("receptionist");
+    renderAt("/admin/portfolio");
+    expect(screen.queryByText("ADMIN PORTFOLIO PAGE")).toBeNull();
+    expect(screen.getByText("RECEPTION PAGE")).toBeInTheDocument();
+  });
+
+  it("doctor cannot reach /admin/portfolio", () => {
+    setRole("doctor");
+    renderAt("/admin/portfolio");
+    expect(screen.queryByText("ADMIN PORTFOLIO PAGE")).toBeNull();
+    expect(screen.getByText("DOCTOR PAGE")).toBeInTheDocument();
+  });
+
+  it("navigation exposes Global Portfolio to global_admin only — not to hospital_admin", () => {
+    setRole("global_admin");
+    const globalView = renderAt("/admin/portfolio");
+    expect(
+      screen.getByRole("link", { name: "Global Portfolio" }),
+    ).toBeInTheDocument();
+    globalView.unmount();
+
+    // The gap this closes versus G-03/G-05/G-06: a hospital admin is an ADMIN
+    // but must not see (or reach) the cross-tenant portfolio.
+    setRole("hospital_admin");
+    const hospitalView = renderAt("/admin");
+    expect(
+      screen.queryByRole("link", { name: "Global Portfolio" }),
+    ).toBeNull();
+    expect(screen.getByRole("link", { name: "Command Centre" })).toBeInTheDocument();
+    hospitalView.unmount();
+
+    setRole("receptionist");
+    renderAt("/reception");
+    expect(
+      screen.queryByRole("link", { name: "Global Portfolio" }),
+    ).toBeNull();
+  });
+
+  it("G-03/G-05/G-06 routes and nav remain unchanged alongside G-08", () => {
+    setRole("hospital_admin");
+    const view = renderAt("/admin/reports");
+    expect(screen.getByText("ADMIN REPORTS PAGE")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Executive Reports" }),
+    ).toBeInTheDocument();
+    view.unmount();
+
+    setRole("global_admin");
+    renderAt("/admin/audit");
+    expect(screen.getByText("ADMIN AUDIT PAGE")).toBeInTheDocument();
+    expect(screen.queryByText("ADMIN PORTFOLIO PAGE")).toBeNull();
   });
 });

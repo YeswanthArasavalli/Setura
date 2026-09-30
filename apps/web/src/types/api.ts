@@ -709,3 +709,78 @@ export interface GenerateReportResponseBody {
   format: "json";
   report: ExecutiveReportPayload;
 }
+
+// ─── executive-analytics global portfolio / benchmarks (G-08) ────────────────
+
+/**
+ * One hospital row of `get_portfolio_dashboard` (migration 47 §9). The fields
+ * are exactly the columns the SQL selects — `bookings_today`/
+ * `active_sessions` are COUNT aggregates, `revenue_today`/
+ * `outstanding_balance` NUMERIC sums and `sla_status` a derived text label.
+ * NUMERIC arrives as number or string depending on driver serialisation, so
+ * it stays `JsonNumeric`; the console never re-derives it.
+ */
+export interface PortfolioHospitalRow {
+  hospital_id: string;
+  name: string;
+  slug: string;
+  is_active: boolean;
+  bookings_today: number;
+  revenue_today: JsonNumeric;
+  /** NULL when the hospital has no `outstanding_balances` row at all — the
+   *  SQL `COALESCE` only defaults the column, not the missing row. */
+  outstanding_balance: JsonNumeric | null;
+  /** NULL when the hospital has no SLA tracking row for the date. */
+  sla_status: "breached" | "healthy" | "no_data" | null;
+  active_sessions: number;
+}
+
+/**
+ * `get_portfolio_dashboard` JSONB (tenant-free; global admins only). The
+ * counts are server-computed over ALL hospitals — `total_hospitals` is
+ * `jsonb_array_length` of the rows below and `active_hospitals` a separate
+ * `COUNT(*) WHERE is_active`, so they are NOT the same number and neither is
+ * derived in the browser.
+ */
+export interface PortfolioDashboard {
+  date: string;
+  total_hospitals: number;
+  active_hospitals: number;
+  hospitals: PortfolioHospitalRow[];
+}
+
+/** Success-envelope `data` for `action: "portfolio"`. */
+export interface PortfolioResponseBody {
+  action: "portfolio";
+  portfolio: PortfolioDashboard | null;
+}
+
+/**
+ * One row of `get_cross_hospital_benchmarks` (migration 47 §9), aggregated
+ * server-side over the trailing window. `avg_*`/`efficiency_pct` are NULL when
+ * the hospital has no comparable bookings in the window — an honest absence,
+ * never a client-side zero.
+ */
+export interface CrossHospitalBenchmarkRow {
+  hospital_id: string;
+  name: string;
+  bookings: number;
+  completed: number;
+  avg_wait_minutes: JsonNumeric | null;
+  avg_consultation_minutes: JsonNumeric | null;
+  efficiency_pct: JsonNumeric | null;
+  revenue_inr: JsonNumeric;
+}
+
+/** `get_cross_hospital_benchmarks` JSONB (tenant-free; global admins only). */
+export interface CrossHospitalBenchmarks {
+  from_date: string;
+  to_date: string;
+  benchmarks: CrossHospitalBenchmarkRow[];
+}
+
+/** Success-envelope `data` for `action: "benchmarks"`. */
+export interface BenchmarksResponseBody {
+  action: "benchmarks";
+  benchmarks: CrossHospitalBenchmarks | null;
+}

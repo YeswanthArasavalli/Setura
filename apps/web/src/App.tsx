@@ -14,6 +14,7 @@ import { BookingDetail } from "@/routes/BookingDetail";
 import { AdminCommandCentre } from "@/routes/AdminCommandCentre";
 import { AdminAudit } from "@/routes/AdminAudit";
 import { AdminReports } from "@/routes/AdminReports";
+import { AdminPortfolio } from "@/routes/AdminPortfolio";
 
 const RECEPTION_ROLES = ["receptionist", "hospital_admin"] as const;
 const DOCTOR_ROLES = ["doctor", "hospital_admin"] as const;
@@ -21,6 +22,12 @@ const DOCTOR_ROLES = ["doctor", "hospital_admin"] as const;
 // (hospital_admin | global_admin). This is a UX boundary only — the Edge
 // Function re-enforces requireRole server-side on every read.
 const ADMIN_ROLES = ["hospital_admin", "global_admin"] as const;
+// G-08: the cross-tenant portfolio surface mirrors the backend's own scope
+// rule — `executive-analytics` answers `portfolio`/`benchmarks` for a
+// `global_admin` and returns 403 FORBIDDEN for everyone else, hospital admins
+// included. Unlike the other admin routes this list is deliberately NOT
+// widened to `hospital_admin`.
+const GLOBAL_ADMIN_ROLES = ["global_admin"] as const;
 
 /** Send each role to its natural home after login (Phase 6 §5 role routing;
  *  G-03 gives the admin roles their dedicated Command Centre destination). */
@@ -135,6 +142,17 @@ export default function App() {
           element={
             <RequireRole roles={[...ADMIN_ROLES]}>
               <AdminReports />
+            </RequireRole>
+          }
+        />
+        {/* G-08: global-admin-only, read-only portfolio/benchmark surface over
+            the existing tenant-free `executive-analytics` global actions. The
+            guard is a UX boundary; the Edge Function is authoritative. */}
+        <Route
+          path="/admin/portfolio"
+          element={
+            <RequireRole roles={[...GLOBAL_ADMIN_ROLES]}>
+              <AdminPortfolio />
             </RequireRole>
           }
         />
