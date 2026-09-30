@@ -629,3 +629,61 @@ export interface IntegrationMatrixResponse {
   check: "integration_matrix";
   result: IntegrationMatrixResult;
 }
+
+// ─── enterprise-reports `generate` (executive/operational reports — G-06) ─
+
+/**
+ * The SIX non-financial executive report types the G-06 viewer exposes.
+ * `financial` and `settlement` exist on the backend `generate` enum but are
+ * DELIBERATELY ABSENT here: this allow-list is a product/security boundary
+ * (phase spec §4/§8/§38) and the wrapper makes them structurally unreachable
+ * from the console.
+ */
+export type ExecutiveReportType =
+  | "daily_hospital"
+  | "weekly_operations"
+  | "monthly_executive"
+  | "doctor_performance"
+  | "sla"
+  | "audit";
+
+/**
+ * A JSON value inside the per-report `data` payload. The reporting RPC returns
+ * heterogeneous nested JSONB whose top-level keys are named by `columns` and
+ * differ per report type, so it is typed safely as dynamic JSON rather than
+ * forced into one invented schema or an `any` (phase spec §7/§23).
+ */
+export type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JsonValue[]
+  | { [key: string]: JsonValue };
+
+/**
+ * `generate_executive_report` JSONB payload (migration 49). The stable
+ * top-level contract is shared by all eight types; `data`'s shape is
+ * report-specific. `reason`/`supported` appear only on the `ok: false`
+ * rejection variant, which the Edge Function converts to a 422 error.
+ */
+export interface ExecutiveReportPayload {
+  ok: boolean;
+  report_type: string;
+  hospital_id: string;
+  from_date: string;
+  to_date: string;
+  columns: string[];
+  data: { [key: string]: JsonValue };
+  generated_at: string;
+  reason?: string;
+  supported?: string[];
+}
+
+/** Success-envelope `data` for `action: "generate"` (json format, the default
+ *  the viewer requests) — enterprise-reports/index.ts. */
+export interface GenerateReportResponseBody {
+  action: "generate";
+  format: "json";
+  report: ExecutiveReportPayload;
+}

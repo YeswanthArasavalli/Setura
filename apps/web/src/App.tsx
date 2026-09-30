@@ -13,6 +13,7 @@ import { DoctorConsole } from "@/routes/DoctorConsole";
 import { BookingDetail } from "@/routes/BookingDetail";
 import { AdminCommandCentre } from "@/routes/AdminCommandCentre";
 import { AdminAudit } from "@/routes/AdminAudit";
+import { AdminReports } from "@/routes/AdminReports";
 
 const RECEPTION_ROLES = ["receptionist", "hospital_admin"] as const;
 const DOCTOR_ROLES = ["doctor", "hospital_admin"] as const;
@@ -124,6 +125,16 @@ export default function App() {
           element={
             <RequireRole roles={[...ADMIN_ROLES]}>
               <AdminAudit />
+            </RequireRole>
+          }
+        />
+        {/* G-06: executive / operational reports viewer. Same admin-only UX
+            boundary as G-03/G-05; the backend re-authorizes role + tenant. */}
+        <Route
+          path="/admin/reports"
+          element={
+            <RequireRole roles={[...ADMIN_ROLES]}>
+              <AdminReports />
             </RequireRole>
           }
         />

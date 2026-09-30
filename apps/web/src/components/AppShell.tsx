@@ -23,6 +23,8 @@ const NAV: NavItem[] = [
   { to: "/admin", label: "Command Centre", roles: ["hospital_admin", "global_admin"] },
   // G-05: same admin-only boundary for the audit & compliance viewer.
   { to: "/admin/audit", label: "Audit & Compliance", roles: ["hospital_admin", "global_admin"] },
+  // G-06: executive / operational reports viewer (admin-only, read-only).
+  { to: "/admin/reports", label: "Executive Reports", roles: ["hospital_admin", "global_admin"] },
 ];
 
 export function AppShell() {

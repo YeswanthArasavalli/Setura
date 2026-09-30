@@ -62,6 +62,9 @@ vi.mock("@/routes/AdminCommandCentre", () => ({
 vi.mock("@/routes/AdminAudit", () => ({
   AdminAudit: () => <div>ADMIN AUDIT PAGE</div>,
 }));
+vi.mock("@/routes/AdminReports", () => ({
+  AdminReports: () => <div>ADMIN REPORTS PAGE</div>,
+}));
 
 const { default: App } = await import("@/App");
 
@@ -206,5 +209,66 @@ describe("G-05 audit viewer routing boundary", () => {
     setRole("hospital_admin");
     renderAt("/");
     expect(screen.getByText("ADMIN COMMAND CENTRE PAGE")).toBeInTheDocument();
+  });
+});
+
+describe("G-06 executive reports viewer routing boundary", () => {
+  it("hospital_admin reaches /admin/reports directly", () => {
+    setRole("hospital_admin");
+    renderAt("/admin/reports");
+    expect(screen.getByText("ADMIN REPORTS PAGE")).toBeInTheDocument();
+  });
+
+  it("global_admin reaches /admin/reports directly", () => {
+    setRole("global_admin");
+    renderAt("/admin/reports");
+    expect(screen.getByText("ADMIN REPORTS PAGE")).toBeInTheDocument();
+  });
+
+  it("receptionist cannot reach /admin/reports and issues no viewer request", () => {
+    setRole("receptionist");
+    renderAt("/admin/reports");
+    // Redirected to the reception landing: the reports page never mounts, so
+    // the generate wrapper inside it is never invoked (zero requests).
+    expect(screen.queryByText("ADMIN REPORTS PAGE")).toBeNull();
+    expect(screen.getByText("RECEPTION PAGE")).toBeInTheDocument();
+  });
+
+  it("doctor cannot reach /admin/reports", () => {
+    setRole("doctor");
+    renderAt("/admin/reports");
+    expect(screen.queryByText("ADMIN REPORTS PAGE")).toBeNull();
+    expect(screen.getByText("DOCTOR PAGE")).toBeInTheDocument();
+  });
+
+  it("navigation exposes Executive Reports only to admin roles", () => {
+    setRole("hospital_admin");
+    const view = renderAt("/admin/reports");
+    expect(
+      screen.getByRole("link", { name: "Executive Reports" }),
+    ).toBeInTheDocument();
+    view.unmount();
+
+    setRole("receptionist");
+    renderAt("/reception");
+    expect(
+      screen.queryByRole("link", { name: "Executive Reports" }),
+    ).toBeNull();
+
+    setRole("doctor");
+    renderAt("/doctor");
+    expect(
+      screen.queryByRole("link", { name: "Executive Reports" }),
+    ).toBeNull();
+  });
+
+  it("G-03/G-05 routes remain unchanged alongside G-06", () => {
+    setRole("hospital_admin");
+    const view = renderAt("/admin/audit");
+    expect(screen.getByText("ADMIN AUDIT PAGE")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Audit & Compliance" }),
+    ).toBeInTheDocument();
+    view.unmount();
   });
 });
