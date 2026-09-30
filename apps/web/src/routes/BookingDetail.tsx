@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useAuth } from "@/auth/AuthProvider";
 import { cancelBooking } from "@/api/cancellations";
 import { updateBookingStatus } from "@/api/statuses";
+import { rescheduleBooking } from "@/api/reschedule";
 import {
   getBooking,
   listConsultationNotes,
@@ -29,6 +30,7 @@ import { paymentStatus } from "@/lib/paymentStatus";
 import type {
   CancelBookingResponse,
   ReceptionStatusUpdate,
+  RescheduleBookingResponse,
   UpdateBookingStatusResponse,
 } from "@/types/api";
 import { Badge, statusVariant } from "@/components/ui/badge";
@@ -63,6 +65,26 @@ const STATUS_ACTION_ROLES = [
   "global_admin",
 ] as const;
 
+/** Roles `reschedule-booking` admits via requireRole (G-07). As with
+ *  CANCELLATION_ROLES, rendering the control for them is a convenience only —
+ *  the Edge Function re-authorizes role, tenant and state on every call, so
+ *  this list is never the security boundary. */
+const RESCHEDULE_ROLES = [
+  "receptionist",
+  "hospital_admin",
+  "global_admin",
+] as const;
+
+/** Statuses `reschedule-booking` will transition from — its `RESCHEDULABLE`
+ *  list, mirrored here purely to decide whether to render the control. The
+ *  backend's own transition guard and optimistic `.eq("status", current)` check
+ *  remain the only authority over whether a booking was rescheduled. */
+const RESCHEDULABLE_STATUSES: readonly string[] = [
+  "booked",
+  "checked_in",
+  "waiting",
+];
+
 /** Booking detail + payment/billing state (Phase 6 §15/§16). All amounts are
  *  read from the backend's immutable fee snapshot on the booking row; the
  *  client never recomputes a fee and never reads the payment ledger directly
@@ -92,6 +114,11 @@ export function BookingDetail() {
   const [statusNote, setStatusNote] = useState("");
   const [statusResult, setStatusResult] =
     useState<UpdateBookingStatusResponse | null>(null);
+  const [rescheduling, setRescheduling] = useState(false);
+  const [newDate, setNewDate] = useState("");
+  const [rescheduleReason, setRescheduleReason] = useState("");
+  const [rescheduleResult, setRescheduleResult] =
+    useState<RescheduleBookingResponse | null>(null);
 
   useEffect(() => {
     if (!hospitalId || !bookingId) return;
@@ -252,6 +279,48 @@ export function BookingDetail() {
     refetch,
   ]);
 
+  // One idempotency key per logical reschedule, reused across retries by
+  // useAsyncAction, so a double-click replays the SAME backend operation (the
+  // key also feeds `create_booking`) rather than producing a second booking.
+  const reschedule = useAsyncAction(
+    useCallback(
+      (key: string, id: string, tenant: string, date: string, why?: string) =>
+        rescheduleBooking(
+          { bookingId: id, newDate: date, ...(why ? { reason: why } : {}) },
+          tenant,
+          key,
+        ),
+      [],
+    ),
+  );
+
+  const closeReschedule = useCallback(() => {
+    setRescheduling(false);
+    setNewDate("");
+    setRescheduleReason("");
+  }, []);
+
+  const submitReschedule = useCallback(async () => {
+    if (!hospitalId || !bookingId || !newDate) return; // defensive: disabled
+    const res = await reschedule.run(bookingId, hospitalId, newDate, rescheduleReason.trim() || undefined);
+    if (res) {
+      setRescheduleResult(res);
+      closeReschedule();
+    }
+    // Always reload after an attempt — the reschedule succeeded, was rejected
+    // (invalid date/holiday/doctor/concurrency) or already moved. The page must
+    // show the database's state, never an optimistic local reschedule.
+    await refetch();
+  }, [
+    hospitalId,
+    bookingId,
+    newDate,
+    rescheduleReason,
+    reschedule,
+    closeReschedule,
+    refetch,
+  ]);
+
   if (!hospitalId) {
     return <p className="text-muted-foreground">No hospital tenant attached.</p>;
   }
@@ -281,6 +350,15 @@ export function BookingDetail() {
   const offerCheckIn = isStatusRole && !!row && canOfferCheckIn(row.status);
   const offerNoShow = isStatusRole && !!row && canOfferNoShow(row.status);
   const noteError = statusNoteError(statusNote);
+
+  // Reschedule display: eligibility comes from the backend's own
+  // `RESCHEDULABLE` list (mirrored presentation-only), the control from the
+  // reschedule role list. `reschedule-booking` re-enforces role, tenant,
+  // state, date/holiday/working-hours and doctor availability server-side.
+  const canReschedule =
+    !!row &&
+    (RESCHEDULE_ROLES as readonly (string | null)[]).includes(role ?? null) &&
+    RESCHEDULABLE_STATUSES.includes(row.status);
 
   return (
     <div className="space-y-6">
@@ -641,6 +719,121 @@ export function BookingDetail() {
                             disabled={statusUpdate.running}
                           >
                             Keep as is
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
+          {(canReschedule || rescheduleResult) && row && (
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <CardTitle>Reschedule</CardTitle>
+                <CardDescription>
+                  {rescheduleResult && !canReschedule
+                    ? "Reschedule outcome as reported by the backend."
+                    : "Rescheduling runs the existing reschedule-booking path: the booking is marked rescheduled and a new booking/token is created through the canonical booking path, which re-checks role, tenant, current state, date, holiday, working hours and doctor availability."}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm">
+                {rescheduleResult && (
+                  <p className="rounded-md bg-muted p-3">
+                    Rescheduled to{" "}
+                    <span className="font-mono">
+                      {rescheduleResult.newDate}
+                    </span>{" "}
+                    · new token{" "}
+                    <span className="font-mono">
+                      {rescheduleResult.newTokenNumber}
+                    </span>
+                  </p>
+                )}
+
+                {canReschedule && (
+                  <div className="space-y-3">
+                    {!!reschedule.error && (
+                      <p
+                        role="alert"
+                        className="rounded-md bg-destructive/10 p-3 text-sm text-destructive"
+                      >
+                        {describeError(reschedule.error)}
+                      </p>
+                    )}
+
+                    {!rescheduling ? (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setRescheduleResult(null);
+                          setRescheduling(true);
+                        }}
+                        disabled={reschedule.running}
+                      >
+                        Reschedule booking
+                      </Button>
+                    ) : (
+                      <div className="space-y-3 rounded-md border border-border p-3">
+                        <p className="font-medium">Confirm reschedule</p>
+                        <p className="text-muted-foreground">
+                          This moves token{" "}
+                          <span className="font-mono">
+                            {row.token_number ?? "—"}
+                          </span>{" "}
+                          for {row.patient_name} off {row.appointment_date}. The
+                          backend verifies the booking is still in state{" "}
+                          <span className="font-mono">{row.status}</span>, then
+                          validates the new date and creates a fresh booking.
+                        </p>
+
+                        <div className="space-y-1">
+                          <Label htmlFor="reschedule-date">
+                            New appointment date
+                          </Label>
+                          <input
+                            id="reschedule-date"
+                            type="date"
+                            className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+                            value={newDate}
+                            onChange={(e) => setNewDate(e.target.value)}
+                            disabled={reschedule.running}
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <Label htmlFor="reschedule-reason">
+                            Reason (optional)
+                          </Label>
+                          <Textarea
+                            id="reschedule-reason"
+                            value={rescheduleReason}
+                            onChange={(e) => setRescheduleReason(e.target.value)}
+                            placeholder="Optional context for the audit record"
+                            disabled={reschedule.running}
+                          />
+                        </div>
+
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            onClick={() => void submitReschedule()}
+                            disabled={reschedule.running || !newDate}
+                          >
+                            {reschedule.running
+                              ? "Submitting reschedule…"
+                              : "Confirm reschedule"}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={closeReschedule}
+                            disabled={reschedule.running}
+                          >
+                            Keep current date
                           </Button>
                         </div>
                       </div>

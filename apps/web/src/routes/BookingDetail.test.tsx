@@ -34,6 +34,14 @@ const updateBookingStatus = vi.fn();
 vi.mock("@/api/statuses", () => ({
   updateBookingStatus: (...a: unknown[]) => updateBookingStatus(...a),
 }));
+// Same boundary discipline for the G-07 staff reschedule: real dispatch to
+// `reschedule-booking` (role + tenant + state + date/holiday/doctor re-checks,
+// audit, deduped enqueue and the canonical create_booking) is proven by the
+// integration suite.
+const rescheduleBooking = vi.fn();
+vi.mock("@/api/reschedule", () => ({
+  rescheduleBooking: (...a: unknown[]) => rescheduleBooking(...a),
+}));
 // Role is a RENDER gate only — `requireRole` in the Edge Function stays the
 // authority — so tests switch it per case.
 const auth: { role: string | null } = { role: "receptionist" };
@@ -110,6 +118,7 @@ beforeEach(() => {
   );
   cancelBooking.mockReset();
   updateBookingStatus.mockReset();
+  rescheduleBooking.mockReset();
 });
 
 describe("BookingDetail consultation card", () => {
@@ -959,5 +968,185 @@ describe("BookingDetail status-closure control", () => {
     ];
     expect(JSON.stringify(body)).not.toMatch(/amount|fee|inr|refund/i);
     unmount();
+  });
+});
+
+/**
+ * The G-07 staff reschedule control surface. Backend role, tenant, reschedulable
+ * state, booking-window/holiday/working-hours/doctor-availability validation,
+ * the optimistic guard, idempotency, the canonical create_booking, audit and the
+ * deduped notification enqueue are all proven by the integration suite; what is
+ * pinned here is everything the console owns: who is offered the control and in
+ * which state, that a date is required before submitting, the exact request
+ * body, reloading the database state instead of optimistically mutating, and
+ * honest error handling.
+ */
+function reschedulable(overrides: Partial<BookingRow> = {}): BookingRow {
+  return {
+    ...completedBooking,
+    status: "booked",
+    consultation_started_at: null,
+    consultation_completed_at: null,
+    ...overrides,
+  };
+}
+
+function rescheduledRow(): BookingRow {
+  return reschedulable({ status: "rescheduled" });
+}
+
+async function openRescheduleForm(row: BookingRow = reschedulable()) {
+  const rendered = await renderAs("receptionist", row);
+  await userEvent.click(
+    screen.getByRole("button", { name: "Reschedule booking" }),
+  );
+  return rendered;
+}
+
+function setDate(value: string) {
+  fireEvent.change(screen.getByLabelText("New appointment date"), {
+    target: { value },
+  });
+}
+
+describe("BookingDetail reschedule control", () => {
+  it.each(["receptionist", "hospital_admin", "global_admin"])(
+    "offers the reschedule control to %s",
+    async (role) => {
+      const { unmount } = await renderAs(role, reschedulable());
+      expect(
+        screen.getByRole("button", { name: "Reschedule booking" }),
+      ).toBeInTheDocument();
+      unmount();
+    },
+  );
+
+  it("does not offer the reschedule control to a doctor", async () => {
+    await renderAs("doctor", reschedulable());
+
+    expect(
+      screen.queryByRole("button", { name: "Reschedule booking" }),
+    ).toBeNull();
+    // A render gate, not data hiding: the booking itself stays visible.
+    expect(screen.getByText("Ramesh K")).toBeInTheDocument();
+  });
+
+  it("does not offer the control for a state the backend will not reschedule from", async () => {
+    for (const status of [
+      "completed",
+      "cancelled",
+      "no_show",
+      "rescheduled",
+    ]) {
+      const { unmount } = await renderAs(
+        "receptionist",
+        reschedulable({ status }),
+      );
+      expect(
+        screen.queryByRole("button", { name: "Reschedule booking" }),
+      ).toBeNull();
+      unmount();
+    }
+  });
+
+  it("requires a new date before the submit is enabled", async () => {
+    await openRescheduleForm();
+    const submit = screen.getByRole("button", {
+      name: "Confirm reschedule",
+    });
+
+    expect(submit).toBeDisabled(); // no date chosen
+    setDate("2026-10-03");
+    expect(submit).toBeEnabled();
+  });
+
+  it("sends the date-only body, the tenant context and a UUID idempotency key", async () => {
+    rescheduleBooking.mockResolvedValue({
+      originalBookingId: "b-1",
+      newBookingId: "b-2",
+      newTokenNumber: 12,
+      newDate: "2026-10-03",
+    });
+    const { unmount } = await openRescheduleForm();
+    setDate("2026-10-03");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Confirm reschedule" }),
+    );
+    await waitFor(() => expect(rescheduleBooking).toHaveBeenCalledTimes(1));
+
+    const [body, tenant, key] = rescheduleBooking.mock
+      .calls[0] as [Record<string, unknown>, string, string];
+    // No doctor override and no reason were entered, so neither is sent; the
+    // backend keeps the original doctor and records no reason.
+    expect(body).toEqual({ bookingId: "b-1", newDate: "2026-10-03" });
+    expect(tenant).toBe("h-1");
+    expect(key).toMatch(/^[0-9a-f-]{36}$/i);
+    // No money figure and no second tenant source ever leave the browser.
+    expect(Object.keys(body).join(",")).not.toMatch(/amount|fee|inr|hospital/i);
+    expect(Object.values(body).some((v) => typeof v === "number")).toBe(false);
+    unmount();
+  });
+
+  it("reloads the booking after a reschedule instead of mutating it locally", async () => {
+    getBooking
+      .mockReset()
+      .mockResolvedValueOnce(reschedulable())
+      .mockResolvedValueOnce(rescheduledRow());
+    rescheduleBooking.mockResolvedValue({
+      originalBookingId: "b-1",
+      newBookingId: "b-2",
+      newTokenNumber: 12,
+      newDate: "2026-10-03",
+    });
+
+    auth.role = "receptionist";
+    renderDetail();
+    await waitForBooking();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Reschedule booking" }),
+    );
+    setDate("2026-10-03");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Confirm reschedule" }),
+    );
+
+    await screen.findByText(/Rescheduled to/);
+    expect(rescheduleBooking).toHaveBeenCalledTimes(1);
+    // The rendered state came from a second read, not a local write.
+    expect(getBooking).toHaveBeenCalledTimes(2);
+    expect(screen.getByText("2026-10-03")).toBeInTheDocument();
+    expect(screen.getByText("12")).toBeInTheDocument();
+    // A rescheduled booking no longer offers the control.
+    expect(
+      screen.queryByRole("button", { name: "Reschedule booking" }),
+    ).toBeNull();
+  });
+
+  it("surfaces a rejected reschedule honestly and allows a retry", async () => {
+    rescheduleBooking.mockRejectedValue(
+      new ApiError({
+        code: "HOSPITAL_CLOSED",
+        message: "Holiday on new date",
+        status: 422,
+      }),
+    );
+    await openRescheduleForm();
+    setDate("2026-10-03");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Confirm reschedule" }),
+    );
+
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveTextContent("Holiday on new date");
+    // The page is never blanked and no false success is shown.
+    expect(screen.getByText("Ramesh K")).toBeInTheDocument();
+    expect(screen.queryByText(/Rescheduled to/)).toBeNull();
+    // Staff can retry without losing the chosen date.
+    expect(screen.getByLabelText("New appointment date")).toHaveValue(
+      "2026-10-03",
+    );
+    expect(
+      screen.getByRole("button", { name: "Confirm reschedule" }),
+    ).toBeEnabled();
   });
 });

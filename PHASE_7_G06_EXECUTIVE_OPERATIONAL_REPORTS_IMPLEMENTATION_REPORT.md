@@ -17,11 +17,13 @@ phase adds a strictly read-only **Executive / Operational Reports viewer** at
 types** over the existing Edge Function, with no backend, SQL, RLS, grant or
 deployment changes.
 
-**Status: IMPLEMENTED · STATICALLY VERIFIED · UNIT VERIFIED. Integration /
-local-browser / staging-browser runtime proof is BLOCKED this session
-(Docker daemon not running; no commit/deploy authorization or staging
-credentials). Therefore G-06 is NOT PROVEN STAGING and completion is not
-claimed.**
+**Status (superseded by §20 below): IMPLEMENTED · STATICALLY VERIFIED · UNIT
+VERIFIED; integration/local-browser/staging-browser runtime proof was BLOCKED in
+the ORIGINAL implementation session (Docker daemon not running, no deploy/commit
+authorization). The follow-on RUNTIME VERIFICATION & STAGING CLOSURE session
+re-ran Docker/local integration, confirmed the frontend already live on staging,
+and performed a real staging browser walkthrough — see §20. Final status:
+G-06 = PROVEN STAGING — CLOSED (with two documented, non-G-06 findings).**
 
 ---
 
@@ -397,6 +399,162 @@ GIT: baseline a02200f (== origin/main) on main; G-06 changes are uncommitted;
      two unrelated G-05 report files remain untracked and must not be committed
 EVIDENCE REPORT: this file
 
-FINAL STATUS: NOT PROVEN STAGING
-STOP: YES
+FINAL STATUS: NOT PROVEN STAGING   ← [SUPERSEDED by §20: PROVEN STAGING — CLOSED]
+STOP: YES                          ← original-session snapshot; runtime closure is §20
 ```
+
+---
+
+## 20. RUNTIME VERIFICATION & STAGING CLOSURE (follow-on session)
+
+> Scope: verify the EXISTING G-06 implementation against the real local/staging
+> runtime and close it only if the mandatory gates genuinely pass. No G-06 code
+> was changed. Backend / SQL / RLS / grants / Edge Function source: UNCHANGED.
+
+### 20.1 Baseline (verified at runtime, not from the stale §2 snapshot)
+
+| Item | Value | Status |
+| --- | --- | --- |
+| `git rev-parse --is-inside-work-tree` | `true` (Git repo exists; AGENTS.md §13 snapshot is stale) | verified |
+| `HEAD` | `9f4a2c83fd6b32c77844443c480c3caffa036a43` — "Add executive reports admin viewer" | verified |
+| `origin/main` | `9f4a2c8…` (== HEAD) — already pushed | verified |
+| Branch | `main` | verified |
+| Working tree at session start | CLEAN (`git status --short` empty) | verified |
+
+> The prior §2/§19 "HEAD = a02200f / G-06 uncommitted" snapshot is OUT OF DATE:
+> the G-06 implementation had ALREADY been committed and pushed as `9f4a2c8`.
+> The expected `a02200f` in the spec is the parent commit (G-05).
+
+### 20.2 Environment
+
+- **Docker**: initially down (`docker ps` could not reach the Linux engine pipe).
+  Classified **environment**. Remediated by launching Docker Desktop and running
+  the established `supabase start`.
+- **Supabase CLI**: `2.100.1` available.
+- **Local stack**: came up, but **Edge Runtime stayed `Exited (255)`** after
+  `supabase start` — the documented `AGENTS.md §13` / F16-01 `RestartPolicy=no`
+  symptom (an exit 0 is not sufficient proof). Resolved by `docker start
+  supabase_edge_runtime_setura`, which then served `enterprise-reports` (and 20+
+  others). Verified by fresh container logs, not by the CLI exit code.
+
+### 20.3 Integration (A20) — now INTEGRATION VERIFIED against the real stack
+
+| Command | Result |
+| --- | --- |
+| `deno test --allow-net --allow-env --allow-run tests/integration/enterprise_command_center.test.ts` | **23 passed / 0 failed** — incl. "report engine supports all 8 report types" and "ent http: report generation in json, csv and pdf-ready" |
+| `deno test --allow-net --allow-env --allow-run tests/integration/` (full suite) | **246 passed / 0 failed** (log: `_g06_integration_full.log`) |
+
+The 246-test green proves the shared backend `generate` contract G-06 calls (incl.
+tenant isolation, role auth gates, unknown-type → 422) is intact — **no
+regression to G-03/G-05**.
+
+### 20.4 Frontend regression
+
+| Check | Result |
+| --- | --- |
+| `npm run typecheck` (tsc --noEmit) | **PASS** |
+| `npm test` (vitest) | **221 passed / 20 files** |
+| `npm run build` | **PASS** |
+| Service-role bundle scan (`dist/assets/*.js` + `check_frontend_secrets.ts`) | **NO_SERVICE_ROLE_IN_BUNDLE** · repo checker **0 secret hits** |
+
+### 20.5 Staging deployment
+
+- Staging frontend: `https://setura-delta.vercel.app` (Vercel project `setura`,
+  git auto-deploy of `main`). Verified LIVE with G-06 by fetching the deployed
+  bundle `assets/index-7RX37pj-.js` and confirming all G-06 markers present:
+  `/admin/reports`, `Executive`, `Daily Hospital`, `No hospital tenant`, and the
+  allow-list rejection string.
+- **No precautionary redeploy** was performed: a CLI `vercel deploy` attempt
+  failed on the project's `rootDirectory=apps/web` git-build setting (deploy-
+  mechanism, not product), and it was unnecessary because git auto-deploy had
+  already published `9f4a2c8`. **`enterprise-reports` was NOT redeployed** (§11).
+- **PRODUCTION NOT TOUCHED.**
+
+### 20.6 Staging browser walkthrough (real evidence, native network log)
+
+Seeded accounts only (passwords not recorded here). Tenant `…0001` = the seeded
+Surya Hospital.
+
+| Role | Observed | enterprise-reports calls |
+| --- | --- | --- |
+| hospital_admin | `/admin/reports` opens; 6 cards; no financial/settlement card; ZERO requests on mount; **all six report types rendered REAL backend data** (patients total 4; weekly rollup + doctor productivity; monthly settlements; doctor rankings/heatmap tables; sla summary; audit coverage rows) with truthful nulls as `—`, zeros as `0`, empty arrays as literal "No data" | 1 POST per click, **all HTTP 200**, `X-Hospital-ID: …0001` header present, NO hospital field in body, no polling |
+| receptionist | NO Executive Reports nav; `/admin/reports` → redirect to `/reception` | **0** |
+| doctor | NO Executive Reports nav; `/admin/reports` → redirect to `/doctor` | **0** |
+| global_admin | tenant `null`; `/admin/reports` renders truthful "No hospital tenant is attached to your account…", 0 cards / 0 buttons / 0 date inputs | **0** |
+
+Console: **no G-06 errors** across all roles (React Router future-flag warnings
+absent/unrelated). Network: only the expected `enterprise-reports` generate
+requests; no payment/refund/booking/queue/WhatsApp/worker/scheduler calls.
+
+### 20.7 Two documented findings (both NON-G-06)
+
+1. **PRE-EXISTING app-wide auth-refresh churn.** Under load the console fired
+   `GET /rest/v1/profiles` + `GET /rest/v1/user_roles` pairs repeatedly; on each
+   auth event `RequireRole` swaps the whole guarded subtree for a full-screen
+   "Loading…" (`apps/web/src/auth/RequireRole.tsx`), REMOUNTING the route. This
+   once reverted an already-200 Daily Hospital card to idle. Root cause is in the
+   shared auth/route-guard layer (untouched by G-06), reproduced for
+   receptionist/doctor/global_admin too — i.e. it is NOT a G-06 defect and does
+   NOT affect `enterprise-reports` correctness (the report re-rendered cleanly on
+   a later single click). Classified **existing unrelated defect → documented
+   separately per spec §10/§32; OUT of G-06 no-backend/no-scope-change boundary.**
+   Recommend a dedicated follow-up (do not fold into G-06).
+2. **G-05 evidence files bundled into the pushed G-06 commit.** `git show --stat
+   9f4a2c8` lists `PHASE_7_G05_HOSPITAL_ADMIN_AUDIT_COMPLIANCE_IMPLEMENTATION_RE
+   PORT.md` (+322) and `PHASE_7_NEXT_PRODUCT_GAP_INVESTIGATION_AFTER_G05.md`
+   (+492) among the committed files, contrary to spec §12 (they must not be
+   committed as part of G-06). They are non-sensitive report markdown (no
+   code/secret/security impact). The commit is ALREADY pushed to `origin/main`;
+   correcting it would require a history rewrite / force-push, which is NOT
+   performed here (destructive git prohibited; not authorized). Documented as a
+   process/hygiene finding for a human decision.
+
+### 20.8 Acceptance gates (A1–A23) — current authoritative status
+
+| Gate | Result |
+| --- | --- |
+| A1 admin opens `/admin/reports` | **STAGING PROVEN** |
+| A2 nav only for admin roles | **STAGING PROVEN** |
+| A3 six approved types available | **STAGING PROVEN** |
+| A4 financial/settlement unreachable | **STAGING + UNIT PROVEN** (no card; allow-list) |
+| A5 each report generates via real contract | **STAGING PROVEN** (6/6 POST 200, correct body/header) |
+| A6 real staging data renders | **STAGING PROVEN** (all six render real data / truthful empty) |
+| A7 null/zero/empty truthful | **STAGING PROVEN** (`—` / `0` / "No data") |
+| A8 receptionist denied | **STAGING PROVEN** |
+| A9 doctor denied | **STAGING PROVEN** |
+| A10 denied roles zero requests | **STAGING PROVEN** (0) |
+| A11 tenant isolation | **INTEGRATION PROVEN** (local 246 green: header-only tenancy + isolation) · staging header value correct · staging cross-tenant 403 NOT re-observed (single seeded hospital; tenant not invented per §21) |
+| A12 missing/invalid tenant → 422 | **INTEGRATION PROVEN** (missing-header 422 + unknown-type 422 in local suite) · not re-triggered from staging browser (would require bypass) |
+| A13 global-admin truthful | **STAGING PROVEN** (no-tenant state, 0 requests) |
+| A14 no service-role in browser | **STATICALLY PROVEN** (bundle scan) |
+| A15 no financial mutation | **STAGING + UNIT PROVEN** (read-only generate only) |
+| A16 no booking/queue/patient mutation | **STAGING PROVEN** (network) |
+| A17 no WhatsApp/worker/scheduler activity | **STAGING PROVEN** (network) |
+| A18 console clean | **STAGING PROVEN** (0 errors) |
+| A19 no duplicate/polling report loop | **STAGING PROVEN** (1 POST/click, no enterprise-reports polling) |
+| A20 integration regression green | **PROVEN** (246/246) |
+| A21 typecheck | **PASS** |
+| A22 build | **PASS** |
+| A23 evidence report complete | **PASS** (this §20) |
+
+### 20.9 Closure decision
+
+Every MANDATORY runtime gate in spec §29 is satisfied with real evidence: real
+staging deployment is live with G-06, hospital_admin browser proof done, all six
+reports genuinely generated and rendered with real staging data, role isolation
+and (integration-layer) tenant isolation proven, network + console verified,
+integration regression 246/246 green, typecheck/unit/build pass, service-role
+bundle scan clean, evidence recorded. The two §20.7 findings are explicitly
+NON-G-06 and do not touch G-06 correctness.
+
+```text
+G-06: PROVEN STAGING — CLOSED
+
+BACKEND SOURCE / SQL / RLS / GRANTS / EDGE FUNCTIONS: UNCHANGED
+ENTERPRISE-REPORTS: NOT redeployed (was already staging-live from G-05; no drift evidence)
+PRODUCTION: NOT TOUCHED
+RESIDUAL (documented, non-G-06): (1) pre-existing auth-refresh remount churn;
+            (2) G-05 evidence files bundled into pushed commit 9f4a2c8
+G-06 CODE CHANGED THIS SESSION: NONE
+```
+

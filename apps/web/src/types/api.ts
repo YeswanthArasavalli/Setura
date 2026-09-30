@@ -103,6 +103,28 @@ export interface CancelBookingResponse {
   refundInitiated?: boolean;
 }
 
+// ─── reschedule-booking (Schema / successResponse) ───────────────────────────
+
+export interface RescheduleBookingRequest {
+  bookingId: string;
+  /** New appointment date, YYYY-MM-DD. The backend owns every validation —
+   *  booking window, holiday, working hours and doctor availability — the
+   *  console never recomputes or assumes any of them. */
+  newDate: string;
+  /** OPTIONAL reassignment. Omitted (or undefined) → `reschedule-booking`
+   *  keeps the booking's original assigned doctor. */
+  newDoctorId?: string;
+  /** OPTIONAL staff free text. The backend caps it at 500 characters. */
+  reason?: string;
+}
+
+export interface RescheduleBookingResponse {
+  originalBookingId: string;
+  newBookingId: string;
+  newTokenNumber: number;
+  newDate: string;
+}
+
 // ─── update-booking-status (Schema / successResponse) ───────────────────────
 
 /**

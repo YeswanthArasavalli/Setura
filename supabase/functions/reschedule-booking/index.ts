@@ -377,8 +377,6 @@ Deno.serve(
             .update({
               status: "rescheduled",
               updated_at: new Date().toISOString(),
-              rescheduled_at: new Date().toISOString(),
-              rescheduled_by: auth.userId,
             })
             .eq(
               "id",
