@@ -15,6 +15,7 @@ import { AdminCommandCentre } from "@/routes/AdminCommandCentre";
 import { AdminAudit } from "@/routes/AdminAudit";
 import { AdminReports } from "@/routes/AdminReports";
 import { AdminFinancial } from "@/routes/AdminFinancial";
+import { AdminAlerts } from "@/routes/AdminAlerts";
 import { AdminPortfolio } from "@/routes/AdminPortfolio";
 
 const RECEPTION_ROLES = ["receptionist", "hospital_admin"] as const;
@@ -166,6 +167,19 @@ export default function App() {
           element={
             <RequireRole roles={[...GLOBAL_ADMIN_ROLES]}>
               <AdminPortfolio />
+            </RequireRole>
+          }
+        />
+        {/* G-10: read-only Alert-Center surface over the existing alert-center
+            list + analytics reads. Same hospital_admin + global_admin UX
+            boundary as G-03/G-05/G-06/G-09; the Edge Function re-authorizes
+            role + tenant and the alert RPCs stay service-role-only. No mutation
+            action is reachable from this page. */}
+        <Route
+          path="/admin/alerts"
+          element={
+            <RequireRole roles={[...ADMIN_ROLES]}>
+              <AdminAlerts />
             </RequireRole>
           }
         />

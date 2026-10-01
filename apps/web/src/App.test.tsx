@@ -73,6 +73,9 @@ vi.mock("@/routes/AdminPortfolio", () => ({
 vi.mock("@/routes/AdminFinancial", () => ({
   AdminFinancial: () => <div>ADMIN FINANCIAL PAGE</div>,
 }));
+vi.mock("@/routes/AdminAlerts", () => ({
+  AdminAlerts: () => <div>ADMIN ALERTS PAGE</div>,
+}));
 
 const { default: App } = await import("@/App");
 
@@ -413,6 +416,63 @@ describe("G-09 finance / collections viewer routing boundary", () => {
     expect(
       screen.getByRole("link", { name: "Finance / Collections" }),
     ).toBeInTheDocument();
+    view.unmount();
+  });
+});
+
+describe("G-10 alert-center viewer routing boundary", () => {
+  it("hospital_admin reaches /admin/alerts directly", () => {
+    setRole("hospital_admin");
+    renderAt("/admin/alerts");
+    expect(screen.getByText("ADMIN ALERTS PAGE")).toBeInTheDocument();
+  });
+
+  it("global_admin reaches /admin/alerts directly", () => {
+    setRole("global_admin");
+    renderAt("/admin/alerts");
+    expect(screen.getByText("ADMIN ALERTS PAGE")).toBeInTheDocument();
+  });
+
+  it("receptionist cannot reach /admin/alerts and issues no alert-center request", () => {
+    setRole("receptionist");
+    renderAt("/admin/alerts");
+    // Redirected to the reception landing: the alert page never mounts, so its
+    // alert-center wrappers are never invoked (zero requests).
+    expect(screen.queryByText("ADMIN ALERTS PAGE")).toBeNull();
+    expect(screen.getByText("RECEPTION PAGE")).toBeInTheDocument();
+  });
+
+  it("doctor cannot reach /admin/alerts", () => {
+    setRole("doctor");
+    renderAt("/admin/alerts");
+    expect(screen.queryByText("ADMIN ALERTS PAGE")).toBeNull();
+    expect(screen.getByText("DOCTOR PAGE")).toBeInTheDocument();
+  });
+
+  it("navigation exposes Alert Center to admin roles only", () => {
+    setRole("hospital_admin");
+    const view = renderAt("/admin/alerts");
+    expect(screen.getByRole("link", { name: "Alert Center" })).toBeInTheDocument();
+    view.unmount();
+
+    setRole("receptionist");
+    renderAt("/reception");
+    expect(screen.queryByRole("link", { name: "Alert Center" })).toBeNull();
+
+    setRole("doctor");
+    renderAt("/doctor");
+    expect(screen.queryByRole("link", { name: "Alert Center" })).toBeNull();
+  });
+
+  it("prior admin routes and nav remain unchanged alongside G-10", () => {
+    setRole("hospital_admin");
+    const view = renderAt("/admin/financial");
+    expect(screen.getByText("ADMIN FINANCIAL PAGE")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Finance / Collections" }),
+    ).toBeInTheDocument();
+    // The alerts entry now sits alongside the other admin-only viewers.
+    expect(screen.getByRole("link", { name: "Alert Center" })).toBeInTheDocument();
     view.unmount();
   });
 });

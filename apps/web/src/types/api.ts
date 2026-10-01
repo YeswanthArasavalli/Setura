@@ -925,3 +925,108 @@ export interface ReconciliationResponseBody {
   action: "reconciliation";
   reconciliation: ReconciliationSummaryRow[] | null;
 }
+
+// ─── alert-center (G-10 read surface: list + analytics) ──────────────────────
+
+/**
+ * `public.alert_severity_level` (migration 24). The edge `Schema` and the
+ * `get_alert_center` cast both constrain severity to exactly these values.
+ */
+export type AlertSeverity = "info" | "warning" | "critical";
+
+/**
+ * One `alert_events` row as returned by `get_alert_center.alerts`
+ * (migration 47 §2). These are exactly the columns the RPC selects — nothing
+ * invented, nothing normalized away. Nullable server fields stay nullable: an
+ * unacknowledged / unassigned / un-escalated / unresolved alert carries a real
+ * `null`, never a fabricated value (§13/§16). NUMERIC may serialise as a string.
+ */
+export interface AlertEventRow {
+  id: string;
+  hospital_id: string | null;
+  alert_key: string;
+  alert_category: string | null;
+  severity: AlertSeverity;
+  current_value: JsonNumeric | null;
+  threshold_value: JsonNumeric | null;
+  message: string;
+  is_resolved: boolean;
+  acknowledged_at: string | null;
+  assigned_to: string | null;
+  escalated_at: string | null;
+  created_at: string;
+  resolved_at: string | null;
+}
+
+/**
+ * `get_alert_center.counts` (migration 47 §2): four server-side
+ * `COUNT(*) FILTER (...)` tallies over the whole tenant (not the filtered
+ * page). The console renders them verbatim and NEVER derives a count from the
+ * returned rows (§16).
+ */
+export interface AlertCenterCounts {
+  open: number;
+  acknowledged: number;
+  escalated: number;
+  critical_open: number;
+}
+
+/**
+ * The `get_alert_center` JSONB. `alerts` is `COALESCE(jsonb_agg(...), '[]')`
+ * and `counts` is a `jsonb_build_object`, so BOTH are always present — a
+ * healthy read never returns a null center, only an empty `alerts` array
+ * (which is the honest state while `check_queue_backlog_alerts()` has no
+ * runtime scheduler caller, §10/§37).
+ */
+export interface AlertCenterData {
+  alerts: AlertEventRow[];
+  counts: AlertCenterCounts;
+}
+
+/** Success-envelope `data` for `action: "list"`. */
+export interface AlertListResponseBody {
+  action: "list";
+  center: AlertCenterData;
+}
+
+/**
+ * One `get_alert_analytics.by_alert_key` row (migration 47 §2). `total` /
+ * `resolved` are server `COUNT(*)`; `avg_resolution_minutes` is a
+ * `ROUND(AVG(...))` NUMERIC that may serialise as a string.
+ */
+export interface AlertAnalyticsByKey {
+  alert_key: string;
+  total: number;
+  resolved: number;
+  avg_resolution_minutes: JsonNumeric | null;
+}
+
+/**
+ * `get_alert_analytics.summary`. `total` / `resolved` are `COUNT(*)` over the
+ * window (integers, `0` when empty); `avg_resolution_minutes` is
+ * `ROUND(AVG(...))` and is genuinely NULL when the window has no rows — an
+ * honest absence, never a `0` (§13/§16).
+ */
+export interface AlertAnalyticsSummary {
+  total: number;
+  resolved: number;
+  avg_resolution_minutes: JsonNumeric | null;
+}
+
+/**
+ * The `get_alert_analytics` JSONB. `by_alert_key` is
+ * `COALESCE(jsonb_agg(...), '[]')` (always an array) and `summary` is a
+ * `jsonb_build_object` (always present). Every statistic is computed
+ * server-side; the console renders it and never recomputes a rate, total or
+ * percentage in the browser (§16).
+ */
+export interface AlertAnalyticsData {
+  summary: AlertAnalyticsSummary;
+  by_alert_key: AlertAnalyticsByKey[];
+}
+
+/** Success-envelope `data` for `action: "analytics"`. */
+export interface AlertAnalyticsResponseBody {
+  action: "analytics";
+  analytics: AlertAnalyticsData;
+}
