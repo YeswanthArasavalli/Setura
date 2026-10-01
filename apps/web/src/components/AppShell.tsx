@@ -33,6 +33,11 @@ const NAV: NavItem[] = [
   // see the entry; the route guard and the backend are both authoritative, and
   // the surface exposes only list + analytics reads (no lifecycle mutation).
   { to: "/admin/alerts", label: "Alert Center", roles: ["hospital_admin", "global_admin"] },
+  // G-11: read-only Operations Analytics (admin-only). Receptionist and doctor
+  // must not see the entry; the route guard and the backend are both
+  // authoritative, and the surface exposes only the two tenant-scoped
+  // executive-analytics reads (no mutation, no cross-hospital aggregation).
+  { to: "/admin/operations", label: "Operations Analytics", roles: ["hospital_admin", "global_admin"] },
   // G-08: cross-tenant portfolio. `global_admin` ONLY — a hospital admin must
   // not even see the entry (the backend 403s the global actions for them, and
   // the route guard blocks direct navigation).

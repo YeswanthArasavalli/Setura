@@ -76,6 +76,9 @@ vi.mock("@/routes/AdminFinancial", () => ({
 vi.mock("@/routes/AdminAlerts", () => ({
   AdminAlerts: () => <div>ADMIN ALERTS PAGE</div>,
 }));
+vi.mock("@/routes/AdminOperations", () => ({
+  AdminOperations: () => <div>ADMIN OPERATIONS PAGE</div>,
+}));
 
 const { default: App } = await import("@/App");
 
@@ -474,5 +477,76 @@ describe("G-10 alert-center viewer routing boundary", () => {
     // The alerts entry now sits alongside the other admin-only viewers.
     expect(screen.getByRole("link", { name: "Alert Center" })).toBeInTheDocument();
     view.unmount();
+  });
+});
+
+describe("G-11 operations analytics routing boundary", () => {
+  it("hospital_admin reaches /admin/operations directly", () => {
+    setRole("hospital_admin");
+    renderAt("/admin/operations");
+    expect(screen.getByText("ADMIN OPERATIONS PAGE")).toBeInTheDocument();
+  });
+
+  it("global_admin reaches /admin/operations directly", () => {
+    setRole("global_admin");
+    renderAt("/admin/operations");
+    expect(screen.getByText("ADMIN OPERATIONS PAGE")).toBeInTheDocument();
+  });
+
+  it("receptionist cannot reach /admin/operations and issues no analytics request", () => {
+    setRole("receptionist");
+    renderAt("/admin/operations");
+    // Redirected to the reception landing: the operations page never mounts,
+    // so its executive-analytics wrappers are never invoked (zero requests).
+    expect(screen.queryByText("ADMIN OPERATIONS PAGE")).toBeNull();
+    expect(screen.getByText("RECEPTION PAGE")).toBeInTheDocument();
+  });
+
+  it("doctor cannot reach /admin/operations", () => {
+    setRole("doctor");
+    renderAt("/admin/operations");
+    expect(screen.queryByText("ADMIN OPERATIONS PAGE")).toBeNull();
+    expect(screen.getByText("DOCTOR PAGE")).toBeInTheDocument();
+  });
+
+  it("navigation exposes Operations Analytics to admin roles only", () => {
+    setRole("hospital_admin");
+    const view = renderAt("/admin/operations");
+    expect(
+      screen.getByRole("link", { name: "Operations Analytics" }),
+    ).toBeInTheDocument();
+    view.unmount();
+
+    setRole("receptionist");
+    renderAt("/reception");
+    expect(
+      screen.queryByRole("link", { name: "Operations Analytics" }),
+    ).toBeNull();
+
+    setRole("doctor");
+    renderAt("/doctor");
+    expect(
+      screen.queryByRole("link", { name: "Operations Analytics" }),
+    ).toBeNull();
+  });
+
+  it("prior admin routes and nav remain unchanged alongside G-11", () => {
+    setRole("hospital_admin");
+    const view = renderAt("/admin/alerts");
+    expect(screen.getByText("ADMIN ALERTS PAGE")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Alert Center" })).toBeInTheDocument();
+    // The operations entry now sits alongside the other admin-only viewers.
+    expect(
+      screen.getByRole("link", { name: "Operations Analytics" }),
+    ).toBeInTheDocument();
+    view.unmount();
+
+    // G-08 remains global-admin-only: a hospital admin still cannot reach or
+    // see the cross-tenant portfolio alongside the new G-11 entry.
+    setRole("hospital_admin");
+    renderAt("/admin/operations");
+    expect(
+      screen.queryByRole("link", { name: "Global Portfolio" }),
+    ).toBeNull();
   });
 });

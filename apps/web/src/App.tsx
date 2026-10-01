@@ -16,6 +16,7 @@ import { AdminAudit } from "@/routes/AdminAudit";
 import { AdminReports } from "@/routes/AdminReports";
 import { AdminFinancial } from "@/routes/AdminFinancial";
 import { AdminAlerts } from "@/routes/AdminAlerts";
+import { AdminOperations } from "@/routes/AdminOperations";
 import { AdminPortfolio } from "@/routes/AdminPortfolio";
 
 const RECEPTION_ROLES = ["receptionist", "hospital_admin"] as const;
@@ -180,6 +181,21 @@ export default function App() {
           element={
             <RequireRole roles={[...ADMIN_ROLES]}>
               <AdminAlerts />
+            </RequireRole>
+          }
+        />
+        {/* G-11: read-only Hospital Operations Analytics surface over the two
+            existing tenant-scoped executive-analytics reads
+            (daily_operations + doctor_rankings). Same hospital_admin +
+            global_admin UX boundary as G-03/G-05/G-06/G-09/G-10; the Edge
+            Function re-authorizes role + tenant and the analytics RPCs stay
+            service-role-only. No mutation and no cross-hospital aggregation
+            is reachable from this page (GLOBAL_ACTIONS remain G-08's). */}
+        <Route
+          path="/admin/operations"
+          element={
+            <RequireRole roles={[...ADMIN_ROLES]}>
+              <AdminOperations />
             </RequireRole>
           }
         />

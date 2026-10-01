@@ -1030,3 +1030,127 @@ export interface AlertAnalyticsResponseBody {
   action: "analytics";
   analytics: AlertAnalyticsData;
 }
+
+// ─── executive-analytics tenant-scoped reads (Operations — Phase 7 G-11) ─────
+
+/**
+ * Read-only contracts for the two EXISTING tenant-scoped `executive-analytics`
+ * actions (`daily_operations` / `doctor_rankings`). Every field below mirrors
+ * the exact JSONB the server SQL returns (migration 47, privilege-hardened in
+ * migration 49) — the console derives NONE of it. These actions are NOT the
+ * G-08 `GLOBAL_ACTIONS`: each request answers for exactly one hospital, the
+ * one carried in the `X-Hospital-ID` header. NUMERIC/`ROUND(...)` values may
+ * serialise as strings, so they stay `JsonNumeric`.
+ */
+
+/**
+ * One hour row of `get_daily_operations_dashboard.hourly_trend` (migration 47
+ * §6): bookings created in that hour for the date, and how many of those are
+ * `completed`. Both are `COUNT(*)` integers; the array is `COALESCE`d to `[]`,
+ * so an empty trend is an honest no-bookings day, never a missing key.
+ */
+export interface DailyOperationsHourlyRow {
+  hour: number;
+  bookings: number;
+  completed: number;
+}
+
+/**
+ * `get_daily_operations_dashboard.operations` (migration 47 §6). Summaries are
+ * `COUNT(*)` over the hospital-day (a real `0` when the day has no bookings).
+ * The two `*_rate_pct` are `100.0 * COUNT / NULLIF(COUNT, 0)` — genuinely NULL
+ * on a zero-booking day, never a client-side 0. The two averages are
+ * `ROUND(AVG(...))` filtered to the rows that carry the timestamps, so they are
+ * NULL when no booking has (yet) started or finished a consultation.
+ * `doctor_throughput` is a `jsonb_agg` that is NULL when no booking in the
+ * window has an assigned doctor at all.
+ */
+export interface DailyOperationsRates {
+  total_bookings: number;
+  completed: number;
+  cancellation_rate_pct: JsonNumeric | null;
+  no_show_rate_pct: JsonNumeric | null;
+  avg_wait_minutes: JsonNumeric | null;
+  avg_consultation_minutes: JsonNumeric | null;
+  doctor_throughput: DoctorThroughputRow[] | null;
+}
+
+/** One `operations.doctor_throughput` row: assigned bookings and completions. */
+export interface DoctorThroughputRow {
+  doctor_id: string;
+  completed: number;
+}
+
+/**
+ * `get_daily_operations_dashboard.sla` (migration 47 §6). With a tracking row
+ * the SQL object carries all three fields; with NO `sla_daily_tracking` row it
+ * is built by `COALESCE(jsonb_build_object('compliant', NULL), …)`, so the
+ * `compliant`-only shape is what an untracked day actually returns — the other
+ * two keys are then ABSENT, not null. A null `compliant` means “not assessed”,
+ * never “non-compliant”.
+ */
+export interface DailyOperationsSla {
+  compliant: boolean | null;
+  avg_wait_minutes?: JsonNumeric | null;
+  completion_rate_pct?: JsonNumeric | null;
+}
+
+/** The `get_daily_operations_dashboard` JSONB (one hospital-day). */
+export interface DailyOperationsDashboard {
+  hospital_id: string;
+  date: string;
+  hourly_trend: DailyOperationsHourlyRow[];
+  operations: DailyOperationsRates;
+  sla: DailyOperationsSla | null;
+}
+
+/** Success-envelope `data` for `action: "daily_operations"`. */
+export interface DailyOperationsResponseBody {
+  action: "daily_operations";
+  dashboard: DailyOperationsDashboard | null;
+}
+
+/**
+ * One row of `get_doctor_rankings.rankings` (migration 47 §6), aggregated
+ * server-side over the trailing window. `throughput_rank` / `efficiency_rank`
+ * are SQL `RANK() OVER (...)` values computed entirely in PostgreSQL — the
+ * console renders them as returned and NEVER sorts, ranks or scores a doctor
+ * in the browser. `avg_consultation_minutes` is NULL when the doctor completed
+ * no consultation with both timestamps in the window; `load_pct` is NULL only
+ * when the whole hospital has no bookings (its `NULLIF` denominator is 0).
+ */
+export interface DoctorRankingRow {
+  doctor_id: string;
+  completed: number;
+  total_assigned: number;
+  avg_consultation_minutes: JsonNumeric | null;
+  load_pct: JsonNumeric | null;
+  throughput_rank: number;
+  efficiency_rank: number;
+}
+
+/**
+ * One `get_doctor_rankings.utilization_heatmap` cell (migration 47 §6):
+ * completed consultations for a doctor on an ISO weekday (1 = Monday …
+ * 7 = Sunday), exactly as the server groups them.
+ */
+export interface DoctorUtilizationCell {
+  doctor_id: string;
+  weekday: number;
+  completed: number;
+}
+
+/** The `get_doctor_rankings` JSONB. Both arrays are `COALESCE`d to `[]`. */
+export interface DoctorRankingsData {
+  hospital_id: string;
+  from_date: string;
+  to_date: string;
+  rankings: DoctorRankingRow[];
+  utilization_heatmap: DoctorUtilizationCell[];
+}
+
+/** Success-envelope `data` for `action: "doctor_rankings"`. */
+export interface DoctorRankingsResponseBody {
+  action: "doctor_rankings";
+  rankings: DoctorRankingsData | null;
+}
