@@ -14,6 +14,7 @@ import { BookingDetail } from "@/routes/BookingDetail";
 import { AdminCommandCentre } from "@/routes/AdminCommandCentre";
 import { AdminAudit } from "@/routes/AdminAudit";
 import { AdminReports } from "@/routes/AdminReports";
+import { AdminFinancial } from "@/routes/AdminFinancial";
 import { AdminPortfolio } from "@/routes/AdminPortfolio";
 
 const RECEPTION_ROLES = ["receptionist", "hospital_admin"] as const;
@@ -142,6 +143,18 @@ export default function App() {
           element={
             <RequireRole roles={[...ADMIN_ROLES]}>
               <AdminReports />
+            </RequireRole>
+          }
+        />
+        {/* G-09: read-only Finance / Collections surface over the existing
+            financial-command-center reads. Same hospital_admin + global_admin
+            UX boundary as G-03/G-05/G-06; the Edge Function re-authorizes
+            role + tenant and the financial RPCs stay service-role-only. */}
+        <Route
+          path="/admin/financial"
+          element={
+            <RequireRole roles={[...ADMIN_ROLES]}>
+              <AdminFinancial />
             </RequireRole>
           }
         />

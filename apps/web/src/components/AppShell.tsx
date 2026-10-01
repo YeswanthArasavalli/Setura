@@ -25,6 +25,10 @@ const NAV: NavItem[] = [
   { to: "/admin/audit", label: "Audit & Compliance", roles: ["hospital_admin", "global_admin"] },
   // G-06: executive / operational reports viewer (admin-only, read-only).
   { to: "/admin/reports", label: "Executive Reports", roles: ["hospital_admin", "global_admin"] },
+  // G-09: read-only Finance / Collections surface (admin-only). Receptionist
+  // and doctor must not see the entry; the route guard and the backend are
+  // both authoritative.
+  { to: "/admin/financial", label: "Finance / Collections", roles: ["hospital_admin", "global_admin"] },
   // G-08: cross-tenant portfolio. `global_admin` ONLY — a hospital admin must
   // not even see the entry (the backend 403s the global actions for them, and
   // the route guard blocks direct navigation).

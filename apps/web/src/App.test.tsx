@@ -70,6 +70,9 @@ vi.mock("@/routes/AdminReports", () => ({
 vi.mock("@/routes/AdminPortfolio", () => ({
   AdminPortfolio: () => <div>ADMIN PORTFOLIO PAGE</div>,
 }));
+vi.mock("@/routes/AdminFinancial", () => ({
+  AdminFinancial: () => <div>ADMIN FINANCIAL PAGE</div>,
+}));
 
 const { default: App } = await import("@/App");
 
@@ -346,5 +349,70 @@ describe("G-08 global portfolio routing boundary", () => {
     renderAt("/admin/audit");
     expect(screen.getByText("ADMIN AUDIT PAGE")).toBeInTheDocument();
     expect(screen.queryByText("ADMIN PORTFOLIO PAGE")).toBeNull();
+  });
+});
+
+describe("G-09 finance / collections viewer routing boundary", () => {
+  it("hospital_admin reaches /admin/financial directly", () => {
+    setRole("hospital_admin");
+    renderAt("/admin/financial");
+    expect(screen.getByText("ADMIN FINANCIAL PAGE")).toBeInTheDocument();
+  });
+
+  it("global_admin reaches /admin/financial directly", () => {
+    setRole("global_admin");
+    renderAt("/admin/financial");
+    expect(screen.getByText("ADMIN FINANCIAL PAGE")).toBeInTheDocument();
+  });
+
+  it("receptionist cannot reach /admin/financial and issues no financial request", () => {
+    setRole("receptionist");
+    renderAt("/admin/financial");
+    // Redirected to the reception landing: the finance page never mounts, so
+    // its financial-command-center wrappers are never invoked (zero requests).
+    expect(screen.queryByText("ADMIN FINANCIAL PAGE")).toBeNull();
+    expect(screen.getByText("RECEPTION PAGE")).toBeInTheDocument();
+  });
+
+  it("doctor cannot reach /admin/financial", () => {
+    setRole("doctor");
+    renderAt("/admin/financial");
+    expect(screen.queryByText("ADMIN FINANCIAL PAGE")).toBeNull();
+    expect(screen.getByText("DOCTOR PAGE")).toBeInTheDocument();
+  });
+
+  it("navigation exposes Finance / Collections to admin roles only", () => {
+    setRole("hospital_admin");
+    const view = renderAt("/admin/financial");
+    expect(
+      screen.getByRole("link", { name: "Finance / Collections" }),
+    ).toBeInTheDocument();
+    view.unmount();
+
+    setRole("receptionist");
+    renderAt("/reception");
+    expect(
+      screen.queryByRole("link", { name: "Finance / Collections" }),
+    ).toBeNull();
+
+    setRole("doctor");
+    renderAt("/doctor");
+    expect(
+      screen.queryByRole("link", { name: "Finance / Collections" }),
+    ).toBeNull();
+  });
+
+  it("G-03/G-05/G-06/G-08 routes and nav remain unchanged alongside G-09", () => {
+    setRole("hospital_admin");
+    const view = renderAt("/admin/reports");
+    expect(screen.getByText("ADMIN REPORTS PAGE")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Executive Reports" }),
+    ).toBeInTheDocument();
+    // The finance entry now sits alongside the other admin-only viewers.
+    expect(
+      screen.getByRole("link", { name: "Finance / Collections" }),
+    ).toBeInTheDocument();
+    view.unmount();
   });
 });

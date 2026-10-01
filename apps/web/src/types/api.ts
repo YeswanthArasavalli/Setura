@@ -784,3 +784,144 @@ export interface BenchmarksResponseBody {
   action: "benchmarks";
   benchmarks: CrossHospitalBenchmarks | null;
 }
+
+// ─── financial-command-center reads (Finance / Collections — Phase 7 G-09) ───
+
+/**
+ * Read-only contracts for the EXISTING `financial-command-center` Edge
+ * Function. Every field below mirrors the exact JSONB the server SQL returns
+ * (migrations 13 / 47 / 49) — the console derives NONE of them. Monetary
+ * NUMERIC may arrive as a `number` or a `string` depending on driver
+ * serialisation, so every money field stays `JsonNumeric`; the browser only
+ * ever FORMATS it for display (§12) and never re-aggregates it (§10).
+ */
+
+/** The three read actions the function accepts (`FINANCE_ACTIONS`). */
+export type FinancialAction = "overview" | "forecast" | "reconciliation";
+
+/**
+ * `get_financial_command_center.daily_collections` (migration 49). The money
+ * sums are `COALESCE(SUM(...), 0)` so a no-collection day is a real `0`, never
+ * absence; the counts are integers. `get_financial_command_center` runs as
+ * service_role only (migration 48 §4), so these figures never reach the browser
+ * except THROUGH the function that already authorized the caller.
+ */
+export interface FinancialDailyCollections {
+  total_collected: JsonNumeric;
+  platform_fee: JsonNumeric;
+  hospital_fee: JsonNumeric;
+  receptionist_fee: JsonNumeric;
+  refunds: JsonNumeric;
+  net_collections: JsonNumeric;
+  online_payments: number;
+  offline_payments: number;
+  pending_payments: number;
+}
+
+/** `settlement_intelligence.aging_buckets` (migration 49): three NUMERIC sums. */
+export interface FinancialAgingBuckets {
+  current: JsonNumeric;
+  overdue_8_30: JsonNumeric;
+  overdue_31_plus: JsonNumeric;
+}
+
+/** One `settlement_intelligence.recent_settlements` row (last 10, migration 49). */
+export interface FinancialRecentSettlement {
+  id: string;
+  settlement_start_date: string | null;
+  settlement_end_date: string | null;
+  total_platform_amount: JsonNumeric;
+  amount_paid_to_setura: JsonNumeric;
+  remaining_due: JsonNumeric;
+  settlement_status: string;
+  created_at: string;
+}
+
+/**
+ * `get_financial_command_center.settlement_intelligence` (migration 49).
+ * `collection_velocity_days` is `ROUND(AVG(...))` over PAID settlements only,
+ * so it is NULL when none have been paid — an honest absence, never a `0`.
+ * `recent_settlements` is `jsonb_agg(...)`, NULL when there are no rows.
+ */
+export interface FinancialSettlementIntelligence {
+  outstanding_balance: JsonNumeric;
+  aging_buckets: FinancialAgingBuckets;
+  overdue_count: number;
+  partial_payments: number;
+  collection_velocity_days: JsonNumeric | null;
+  recent_settlements: FinancialRecentSettlement[] | null;
+}
+
+/**
+ * One row of `get_reconciliation_summary` (migration 13): the 8-column
+ * collections→ledger TABLE. Money columns are `COALESCE(SUM(...), 0)`; the two
+ * counts are integers. The standalone `reconciliation` action returns this as an
+ * ARRAY (the RPC is set-returning); the `overview` action embeds it as a single
+ * object.
+ */
+export interface ReconciliationSummaryRow {
+  total_collected: JsonNumeric;
+  platform_fee_total: JsonNumeric;
+  receptionist_fee_total: JsonNumeric;
+  total_refunded: JsonNumeric;
+  total_settled: JsonNumeric;
+  net_outstanding: JsonNumeric;
+  booking_count: number;
+  paid_booking_count: number;
+}
+
+/** The `get_financial_command_center` JSONB (one hospital-day aggregate). */
+export interface FinancialCommandCenterData {
+  hospital_id: string;
+  date: string;
+  daily_collections: FinancialDailyCollections;
+  settlement_intelligence: FinancialSettlementIntelligence;
+  reconciliation: ReconciliationSummaryRow | null;
+}
+
+/** Success-envelope `data` for `action: "overview"`. */
+export interface FinancialOverviewResponseBody {
+  action: "overview";
+  financial: FinancialCommandCenterData | null;
+}
+
+/** `get_revenue_forecast.inputs` (migration 47): the prorations' raw inputs. */
+export interface RevenueForecastInputs {
+  mtd_revenue: JsonNumeric;
+  days_elapsed: number;
+  days_in_month: number;
+}
+
+/**
+ * `get_revenue_forecast` JSONB (migration 47). Every projection is computed
+ * server-side (prorated MTD, 30-day refund rate, trailing-7-day collection);
+ * the console renders them and never recomputes a forecast (§10).
+ */
+export interface RevenueForecastData {
+  hospital_id: string;
+  as_of: string;
+  projected_month_revenue: JsonNumeric;
+  projected_platform_fees: JsonNumeric;
+  projected_settlements: JsonNumeric;
+  refund_rate_30d: JsonNumeric;
+  refund_impact_forecast: JsonNumeric;
+  collection_forecast_next_7d: JsonNumeric;
+  inputs: RevenueForecastInputs;
+}
+
+/** Success-envelope `data` for `action: "forecast"`. */
+export interface RevenueForecastResponseBody {
+  action: "forecast";
+  forecast: RevenueForecastData | null;
+}
+
+/**
+ * Success-envelope `data` for `action: "reconciliation"`. The RPC is
+ * set-returning, so the Edge Function returns the summary as an array (a single
+ * aggregate row in practice). `callFunction` returns the envelope `data`
+ * verbatim; the console renders whatever rows the server returned.
+ */
+export interface ReconciliationResponseBody {
+  action: "reconciliation";
+  reconciliation: ReconciliationSummaryRow[] | null;
+}
