@@ -18,6 +18,8 @@ import { AdminFinancial } from "@/routes/AdminFinancial";
 import { AdminAlerts } from "@/routes/AdminAlerts";
 import { AdminOperations } from "@/routes/AdminOperations";
 import { AdminPortfolio } from "@/routes/AdminPortfolio";
+import { HospitalOnboarding } from "@/routes/HospitalOnboarding";
+import { HospitalConfiguration } from "@/routes/HospitalConfiguration";
 import { BroadcastComposer } from "@/routes/BroadcastComposer";
 
 const RECEPTION_ROLES = ["receptionist", "hospital_admin"] as const;
@@ -169,6 +171,34 @@ export default function App() {
           element={
             <RequireRole roles={[...GLOBAL_ADMIN_ROLES]}>
               <AdminPortfolio />
+            </RequireRole>
+          }
+        />
+        {/* WS-ONBOARD-1: global-admin-only tenant provisioning. `global_admin`
+            ONLY (a hospital admin must not even see the entry) mirrors the
+            backend's own `requireRole(['global_admin'])` and the RPC's DB-layer
+            re-check. The route guard is a UX boundary; the Edge Function and the
+            service-role RPC remain the security and creation authority. */}
+        <Route
+          path="/admin/onboarding"
+          element={
+            <RequireRole roles={[...GLOBAL_ADMIN_ROLES]}>
+              <HospitalOnboarding />
+            </RequireRole>
+          }
+        />
+        {/* WS-ONBOARD-2: hospital configuration write surface. Both admin
+            roles can edit their own tenant; a hospital_admin's tenant is
+            enforced by the backend (the RPC re-checks actor role + tenant),
+            and the acting-hospital context in useAuth() controls which
+            tenant a global_admin edits here. The route guard is a UX
+            boundary; the Edge Function and the RPC remain the security and
+            write authority. */}
+        <Route
+          path="/admin/hospital-settings"
+          element={
+            <RequireRole roles={[...ADMIN_ROLES]}>
+              <HospitalConfiguration />
             </RequireRole>
           }
         />

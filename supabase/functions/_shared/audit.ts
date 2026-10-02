@@ -52,6 +52,7 @@ export type AuditActionType =
   | "feature_flag_update"
   | "patient_merge"
   | "admin_action"
+  | "hospital_provision"
   | "whatsapp_send"
   | "worker_crash_recovery";
 

@@ -47,6 +47,17 @@ const NAV: NavItem[] = [
   // not even see the entry (the backend 403s the global actions for them, and
   // the route guard blocks direct navigation).
   { to: "/admin/portfolio", label: "Global Portfolio", roles: ["global_admin"] },
+  // WS-ONBOARD-1: hospital tenant provisioning. `global_admin` ONLY — a
+  // hospital admin must not even see the entry. The route guard and the backend
+  // `requireRole(['global_admin'])` + the RPC's own DB-layer role re-check are
+  // both authoritative; the form is a convenience, never the security boundary.
+  { to: "/admin/onboarding", label: "Hospital Onboarding", roles: ["global_admin"] },
+  // WS-ONBOARD-2: hospital configuration write surface. Both admin roles
+  // can open it (a hospital_admin edits their own tenant; a global_admin
+  // edits the acting-hospital tenant). The route guard is a UX boundary;
+  // the Edge Function and the RPC re-check actor role + tenant on every
+  // request and are the actual security and write authority.
+  { to: "/admin/hospital-settings", label: "Hospital Configuration", roles: ["hospital_admin", "global_admin"] },
 ];
 
 export function AppShell() {

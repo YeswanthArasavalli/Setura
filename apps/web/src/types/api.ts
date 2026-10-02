@@ -29,6 +29,95 @@ export interface ApiFailure {
 
 export type ApiEnvelope<T> = ApiSuccess<T> | ApiFailure;
 
+// ─── provision-hospital (WS-ONBOARD-1 tenant provisioning) ───────────────────
+
+/** Success-envelope `data` for the `provision-hospital` Edge Function. Mirrors
+ *  the server-authoritative identity it returns after the atomic tenant RPC.
+ *  The frontend owns NO provisioning logic — it only types what the backend
+ *  already returns. */
+export interface ProvisionHospitalResponseBody {
+  hospitalId: string;
+  name: string;
+  slug: string;
+  created: boolean;
+}
+
+// ─── hospital-configuration (WS-ONBOARD-2 configuration write surfaces) ────
+
+/** Server-authoritative snapshot of a hospital's editable configuration.
+ *  Mirrors `get_hospital_configuration` (migration 66). The frontend owns
+ *  NO business rules — it only types what the backend returns. */
+export interface HospitalConfigurationHospitalSnapshot {
+  id: string;
+  slug: string;
+  name: string;
+  name_te: string | null;
+  phone: string | null;
+  email: string | null;
+  country: string;
+  state: string;
+  district: string | null;
+  town: string;
+  address: string | null;
+  timezone: string;
+  online_booking_enabled: boolean;
+  max_advance_booking_days: number;
+}
+
+export interface HospitalConfigurationSettingsSnapshot {
+  display_name: string | null;
+  logo_url: string | null;
+  platform_fee_online: string | number;
+  platform_fee_whatsapp: string | number;
+  receptionist_fee: string | number;
+  booking_fee_amount: string | number;
+  online_booking_fee_enabled: boolean;
+  default_consultation_fee_inr: string | number | null;
+  collect_consultation_at_hospital: boolean;
+  gst_enabled: boolean;
+  gst_percentage: string | number;
+  gst_registration_number: string | null;
+  max_tokens_per_day: number;
+  allow_walkin_tokens: boolean;
+  allow_online_booking: boolean;
+  allow_carry_forward: boolean;
+  queue_display_enabled: boolean;
+  send_whatsapp_confirmation: boolean;
+  send_whatsapp_reminder: boolean;
+  send_feedback_request: boolean;
+  reminder_before_minutes: number;
+  preferred_language: string;
+  timezone: string;
+  metadata: Record<string, unknown>;
+  updated_at: string;
+  updated_by: string | null;
+}
+
+export interface HospitalConfigurationFeatureFlagView {
+  flag_key: string;
+  display_name: string | null;
+  description: string | null;
+  is_enabled: boolean;
+  is_override: boolean;
+}
+
+/** `data` for the `mode: "read"` response of the hospital-configuration
+ *  Edge Function. */
+export interface HospitalConfigurationReadResponseBody {
+  hospitalId: string;
+  version: number;
+  hospital: HospitalConfigurationHospitalSnapshot;
+  settings: HospitalConfigurationSettingsSnapshot;
+  featureFlags: HospitalConfigurationFeatureFlagView[];
+}
+
+/** `data` for the `mode: "update"` response. */
+export interface HospitalConfigurationUpdateResponseBody {
+  hospitalId: string;
+  version: number;
+  updated: boolean;
+}
+
 // ─── Roles (auth.ts ROLE_HIERARCHY) ──────────────────────────────────────────
 
 export type UserRole =

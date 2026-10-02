@@ -6529,6 +6529,10 @@ export type Database = {
         Args: { p_date?: string; p_hospital_id: string }
         Returns: Json
       }
+      get_hospital_configuration: {
+        Args: { p_actor_user_id: string; p_hospital_id: string }
+        Returns: Json
+      }
       get_hospital_feature_flags: {
         Args: { p_hospital_id: string }
         Returns: {
@@ -6920,6 +6924,22 @@ export type Database = {
         }
         Returns: undefined
       }
+      provision_hospital: {
+        Args: {
+          p_actor_user_id: string
+          p_address?: string
+          p_country?: string
+          p_district?: string
+          p_email?: string
+          p_name: string
+          p_phone?: string
+          p_slug: string
+          p_state?: string
+          p_timezone?: string
+          p_town?: string
+        }
+        Returns: Json
+      }
       queue_notification: {
         Args: {
           p_booking_id: string
@@ -7269,6 +7289,17 @@ export type Database = {
           p_severity: Database["public"]["Enums"]["alert_severity_level"]
           p_threshold_unit: string
           p_threshold_value: number
+        }
+        Returns: Json
+      }
+      update_hospital_configuration: {
+        Args: {
+          p_actor_user_id: string
+          p_expected_version: number
+          p_feature_overrides: Json
+          p_hospital_id: string
+          p_hospital_patch: Json
+          p_settings_patch: Json
         }
         Returns: Json
       }
