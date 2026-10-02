@@ -2,22 +2,23 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "@/lib/errors";
 
 /**
- * The G-10 read-only boundary over `alert-center`. Only `callFunction` is
- * mocked (live transport, the role gate, cross-tenant isolation and the
- * service-role-only RPC boundary are proven by the backend real-HTTP suite
- * `alert_center_http.test.ts`). These tests pin exactly what leaves the console
- * for the two READ actions:
+ * The `alert-center` boundary: the G-10 reads and the G-UI lifecycle mutations.
+ * Only `callFunction` is mocked (live transport, the role gate, cross-tenant
+ * isolation and the service-role-only RPC boundary are proven by the backend
+ * real-HTTP suite `alert_center_http.test.ts`). These tests pin exactly what
+ * leaves the console:
  *
- *  - the exact `list` / `analytics` action names and no invented body fields;
- *  - NO mutation wrapper is reachable: the module exports nothing that could
- *    post `acknowledge` / `assign` / `resolve` / `escalate` / `suppress` (§3);
- *  - the backend filter model (§17): `list` carries optional `status` /
- *    `severity` / `category` / `limit`, `analytics` an optional `fromDate` /
- *    `toDate`, and an absent value is OMITTED (never `""`/null) so the RPC's own
- *    default applies rather than a browser-invented one;
+ *  - the exact `list` / `analytics` / `acknowledge` / `resolve` / `escalate` /
+ *    `suppress` action names and no invented body fields;
+ *  - `assign` and any `reopen` are NOT reachable (assignment deferred; D1 has no
+ *    reopen), so no wrapper can accidentally post them;
+ *  - the backend filter/mutation model: optional `notes` / `reason` are OMITTED
+ *    when absent (never `""`/null), and `suppress` carries `alertKey` /
+ *    `activeUntil`;
  *  - the authenticated tenant travels ONLY in the shared header context, never
  *    in the body;
- *  - both actions are reads, so no idempotency key is ever sent;
+ *  - NO action sends an Idempotency-Key: the reads are safe and the mutations
+ *    own replay intrinsically (the endpoint does not read the header);
  *  - the backend envelope payload is returned verbatim and errors propagate
  *    unchanged.
  */
@@ -27,30 +28,35 @@ vi.mock("@/lib/api", () => ({
 }));
 
 const alertCenter = await import("@/api/alertCenter");
-const { fetchAlertCenter, fetchAlertAnalytics } = alertCenter;
+const {
+  acknowledgeAlert,
+  escalateAlert,
+  fetchAlertAnalytics,
+  fetchAlertCenter,
+  resolveAlert,
+  suppressAlert,
+} = alertCenter;
 
 beforeEach(() => {
   callFunction.mockReset().mockResolvedValue({ action: "list" });
 });
 
-describe("alert-center read wrapper", () => {
-  it("exports ONLY the two read wrappers — no mutation method exists", () => {
+describe("alert-center wrapper", () => {
+  it("exports the reads and the four lifecycle mutations, but never assign/reopen", () => {
     expect(Object.keys(alertCenter).sort()).toEqual([
+      "acknowledgeAlert",
+      "escalateAlert",
       "fetchAlertAnalytics",
       "fetchAlertCenter",
+      "resolveAlert",
+      "suppressAlert",
     ]);
-    // None of the deferred lifecycle mutations is even name-addressable here.
+    // Assignment is deferred (no assignable-user directory) and D1 has no
+    // reopen — neither is even name-addressable through this wrapper.
     for (
-      const forbidden of [
-        "acknowledge",
-        "assign",
-        "resolve",
-        "escalate",
-        "suppress",
-      ]
+      const forbidden of ["assign", "assignAlert", "reopen", "reopenAlert"]
     ) {
       expect(alertCenter).not.toHaveProperty(forbidden);
-      expect(alertCenter).not.toHaveProperty(`fetch${forbidden}`);
     }
   });
 
@@ -129,13 +135,88 @@ describe("alert-center read wrapper", () => {
     expect(JSON.stringify(analyticsBody)).not.toMatch(/hospital/i);
   });
 
-  it("sends no idempotency key: both alert actions are reads", async () => {
+  it("sends no idempotency key for ANY action (reads or mutations)", async () => {
     await fetchAlertCenter("h-1");
     await fetchAlertAnalytics("h-1");
+    await acknowledgeAlert("h-1", "a-1");
+    await resolveAlert("h-1", "a-1", "done");
+    await escalateAlert("h-1", "a-1");
+    await suppressAlert("h-1", { alertKey: "k-abc", activeUntil: "soon" });
     for (const call of callFunction.mock.calls) {
       const opts = call[2] as Record<string, unknown>;
       expect("idempotencyKey" in opts).toBe(false);
     }
+  });
+
+  it("posts acknowledge with only the action and the target id", async () => {
+    await acknowledgeAlert("h-1", "a-1");
+    expect(callFunction.mock.calls[0][0]).toBe("alert-center");
+    expect(callFunction.mock.calls[0][1]).toEqual({
+      action: "acknowledge",
+      alertId: "a-1",
+    });
+    expect(callFunction.mock.calls[0][2]).toEqual({ hospitalId: "h-1" });
+  });
+
+  it("maps resolve/escalate notes and omits a blank one", async () => {
+    await resolveAlert("h-1", "a-1", "root cause found");
+    expect(callFunction.mock.calls[0][1]).toEqual({
+      action: "resolve",
+      alertId: "a-1",
+      notes: "root cause found",
+    });
+
+    await escalateAlert("h-1", "a-2");
+    const body = callFunction.mock.calls[1][1] as Record<string, unknown>;
+    expect(body).toEqual({ action: "escalate", alertId: "a-2" });
+    expect("notes" in body).toBe(false);
+
+    await resolveAlert("h-1", "a-3", undefined);
+    expect(callFunction.mock.calls[2][1]).toEqual({
+      action: "resolve",
+      alertId: "a-3",
+    });
+  });
+
+  it("maps the suppress window and omits a blank reason", async () => {
+    await suppressAlert("h-1", {
+      alertKey: "queue_backlog",
+      activeUntil: "2026-10-02T12:00:00.000Z",
+      reason: "maintenance",
+    });
+    expect(callFunction.mock.calls[0][1]).toEqual({
+      action: "suppress",
+      alertKey: "queue_backlog",
+      activeUntil: "2026-10-02T12:00:00.000Z",
+      reason: "maintenance",
+    });
+
+    await suppressAlert("h-1", {
+      alertKey: "queue_backlog",
+      activeUntil: "2026-10-02T12:00:00.000Z",
+    });
+    const body = callFunction.mock.calls[1][1] as Record<string, unknown>;
+    expect("reason" in body).toBe(false);
+  });
+
+  it("keeps the tenant out of every mutation body, header only", async () => {
+    await acknowledgeAlert("h-1", "a-1");
+    await resolveAlert("h-1", "a-1", "n");
+    await suppressAlert("h-1", { alertKey: "k", activeUntil: "u" });
+    for (const call of callFunction.mock.calls) {
+      expect(call[2]).toEqual({ hospitalId: "h-1" });
+      expect(JSON.stringify(call[1])).not.toMatch(/hospital/i);
+    }
+  });
+
+  it("resolves a lifecycle soft-success payload verbatim", async () => {
+    const payload = {
+      action: "acknowledge",
+      alertId: "a-1",
+      result: { ok: true, already_acknowledged: true },
+    };
+    callFunction.mockResolvedValue(payload);
+    await expect(acknowledgeAlert("h-1", "a-1")).resolves.toBe(payload);
   });
 
   it("issues exactly one request per action, with no analytics math in the wrapper", async () => {
@@ -172,5 +253,11 @@ describe("alert-center read wrapper", () => {
     callFunction.mockRejectedValue(err);
     await expect(fetchAlertCenter("h-1")).rejects.toBe(err);
     await expect(fetchAlertAnalytics("h-1")).rejects.toBe(err);
+    await expect(acknowledgeAlert("h-1", "a-1")).rejects.toBe(err);
+    await expect(resolveAlert("h-1", "a-1")).rejects.toBe(err);
+    await expect(escalateAlert("h-1", "a-1")).rejects.toBe(err);
+    await expect(
+      suppressAlert("h-1", { alertKey: "k", activeUntil: "u" }),
+    ).rejects.toBe(err);
   });
 });

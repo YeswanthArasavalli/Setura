@@ -7296,6 +7296,10 @@ export type Database = {
         Args: { p_hospital_id: string; p_roles: string[] }
         Returns: boolean
       }
+      user_is_same_hospital_doctor: {
+        Args: { p_user_id: string }
+        Returns: boolean
+      }
       verify_audit_integrity: {
         Args: { p_from_ts?: string; p_hospital_id: string }
         Returns: Json

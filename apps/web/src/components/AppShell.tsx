@@ -29,15 +29,20 @@ const NAV: NavItem[] = [
   // and doctor must not see the entry; the route guard and the backend are
   // both authoritative.
   { to: "/admin/financial", label: "Finance / Collections", roles: ["hospital_admin", "global_admin"] },
-  // G-10: read-only Alert Center (admin-only). Receptionist and doctor must not
-  // see the entry; the route guard and the backend are both authoritative, and
-  // the surface exposes only list + analytics reads (no lifecycle mutation).
+  // G-10 read + G-UI lifecycle-mutation Alert Center (admin-only). Receptionist
+  // and doctor must not see the entry; the route guard and the backend are both
+  // authoritative, and the mutation controls themselves re-authorize server-side.
   { to: "/admin/alerts", label: "Alert Center", roles: ["hospital_admin", "global_admin"] },
   // G-11: read-only Operations Analytics (admin-only). Receptionist and doctor
   // must not see the entry; the route guard and the backend are both
   // authoritative, and the surface exposes only the two tenant-scoped
   // executive-analytics reads (no mutation, no cross-hospital aggregation).
   { to: "/admin/operations", label: "Operations Analytics", roles: ["hospital_admin", "global_admin"] },
+  // C2b: Broadcast Composer (admin-only) over the existing command-center
+  // `broadcast_*` actions. Receptionist and doctor must not see the entry; the
+  // route guard and the backend are both authoritative, and the composer only
+  // queues a request — it never sends recipients and never claims delivery.
+  { to: "/admin/broadcast", label: "Broadcast Composer", roles: ["hospital_admin", "global_admin"] },
   // G-08: cross-tenant portfolio. `global_admin` ONLY — a hospital admin must
   // not even see the entry (the backend 403s the global actions for them, and
   // the route guard blocks direct navigation).

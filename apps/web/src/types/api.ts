@@ -293,6 +293,9 @@ export interface DoctorOperationsResponse {
  * The five read actions the admin surface may invoke. The `broadcast_*`
  * actions exist on the backend but are OUT OF SCOPE for G-03 and must never
  * be sent from this console (investigation §Selection; phase spec §2/§9).
+ *
+ * C2b adds a SEPARATE broadcast surface (`CommandCenterBroadcastAction` below);
+ * the five read wrappers stay exactly as G-03 authored them.
  */
 export type CommandCenterReadAction =
   | "overview"
@@ -300,6 +303,34 @@ export type CommandCenterReadAction =
   | "predictive"
   | "sla_dashboard"
   | "system_health";
+
+// ─── command-center broadcast (C2b Broadcast Composer) ────────────────
+
+/**
+ * The five broadcast actions the C2b composer may invoke over the SAME
+ * `command-center` Edge Function (`broadcast_*`, Phase 1.5). Each maps 1:1 to
+ * a `z.enum(ADMIN_ACTIONS)` value the backend `Schema` already accepts and the
+ * backend `_shared/enterprise/broadcasts.ts` layer already implements — the
+ * composer owns NOTHING of the recipient selection, message generation or
+ * idempotency; those are entirely server-side.
+ */
+export type CommandCenterBroadcastAction =
+  | "broadcast_queue_summary"
+  | "broadcast_doctor_delay"
+  | "broadcast_closure"
+  | "broadcast_admin_notice"
+  | "broadcast_alert";
+
+/**
+ * `broadcast_admin_notice` `kind` values, exactly the backend
+ * `ADMIN_BROADCAST_KINDS` enum (`command-center/index.ts`). Sent verbatim; the
+ * backend prefixes the delivered text with this tag.
+ */
+export type AdminBroadcastKind =
+  | "daily_summary"
+  | "sla_breach"
+  | "congestion"
+  | "operational_notice";
 
 /**
  * PostgREST serialises some PostgreSQL NUMERIC/INTERVAL values as strings and
@@ -513,6 +544,25 @@ export interface CommandCenterSlaResponse {
 export interface CommandCenterSystemHealthResponse {
   action: "system_health";
   health: SystemHealth;
+}
+
+/**
+ * Success-envelope `data` for any `broadcast_*` action
+ * (`command-center/index.ts`). The backend returns
+ * `{ action, broadcast: { kind, enqueued } }` where `enqueued` is the count of
+ * `enqueue_job` attempts made — an ACCEPT/QUEUE count, NEVER a WhatsApp
+ * delivery confirmation (§5/§6). A flag-gated patient broadcast can legitimately
+ * report `enqueued: 0`; the composer renders the server's number verbatim and
+ * never infers delivery from it.
+ */
+export interface CommandCenterBroadcastResult {
+  kind: string;
+  enqueued: number;
+}
+
+export interface CommandCenterBroadcastResponse {
+  action: CommandCenterBroadcastAction;
+  broadcast: CommandCenterBroadcastResult;
 }
 
 // ─── enterprise-reports (audit + compliance reads only — Phase 7 G-05) ─
@@ -1029,6 +1079,62 @@ export interface AlertAnalyticsData {
 export interface AlertAnalyticsResponseBody {
   action: "analytics";
   analytics: AlertAnalyticsData;
+}
+
+// ─── alert-center (G-UI lifecycle mutations: acknowledge / resolve / escalate /
+//     suppress). These mirror the EXISTING alert-center write contract (C2, migration
+//     64 + the edge `Schema`); the console invents NOTHING here. ───────────────────
+
+/**
+ * The `result` JSONB the lifecycle RPCs return for acknowledge / resolve /
+ * escalate (migration 64). It is a soft-success envelope, NOT a domain object:
+ *
+ *   - `ok` is the commit oracle the edge layer keys its 200/422 decision on;
+ *   - a REAL transition carries a locked `before` / `after` snapshot; a soft
+ *     `already_*` replay commits nothing and carries NEITHER snapshot (the edge
+ *     comment in `alert-center/index.ts` and `alert_center_http.test.ts` H9 both
+ *     pin this), so `before` / `after` are genuinely optional;
+ *   - the `already_*` flags are the idempotent-replay signal (§12): HTTP 200 +
+ *     `ok:true` + `already_<action>:true` is a SUCCESS, never a failure.
+ *
+ * The console reads ONLY `ok` and the `already_*` flag to word its message; it
+ * never treats the snapshot as authoritative and never mutates local state from
+ * it — the page refetches from the server after every attempt (§11).
+ */
+export interface AlertLifecycleResult {
+  ok: boolean;
+  already_acknowledged?: boolean;
+  already_assigned?: boolean;
+  already_resolved?: boolean;
+  already_escalated?: boolean;
+  before?: Record<string, unknown> | null;
+  after?: Record<string, unknown> | null;
+}
+
+/** Success-envelope `data` for `acknowledge` / `resolve` / `escalate`. */
+export interface AlertLifecycleResponseBody {
+  action: "acknowledge" | "resolve" | "escalate";
+  alertId: string;
+  result: AlertLifecycleResult;
+}
+
+/**
+ * The `suppress_alerts` JSONB (OD-b: benign overlapping windows, no dedupe and
+ * no client idempotency key). `ok` gates the 200/422 decision; `suppression_id`
+ * is present only on an accepted window. `reason` is the server's rejection
+ * string, surfaced by the edge layer as a 422 field error rather than a result
+ * the UI optimistically renders.
+ */
+export interface AlertSuppressResult {
+  ok: boolean;
+  suppression_id?: string | null;
+  reason?: string;
+}
+
+/** Success-envelope `data` for `action: "suppress"`. */
+export interface AlertSuppressResponseBody {
+  action: "suppress";
+  result: AlertSuppressResult;
 }
 
 // ─── executive-analytics tenant-scoped reads (Operations — Phase 7 G-11) ─────

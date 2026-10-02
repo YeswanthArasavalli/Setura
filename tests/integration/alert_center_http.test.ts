@@ -592,7 +592,470 @@ Deno.test("g10 alert http: client roles cannot call the alert RPCs directly", as
   }
 });
 
-// ─── 8. Cleanup ──────────────────────────────────────────────────────────────
+// ─── 8. Write-path coverage H1–H15 (C2) ─────────────────────────────────────
+//
+// These cases drive the REAL mutation actions over HTTP (acknowledge / assign /
+// resolve / escalate) end-to-end: HTTP -> Edge authz -> tenant gate -> service-
+// role RPC (migration 64) -> server response. The 13 read cases above are kept
+// unchanged. They must be read against the frozen write contract:
+//   200 success / soft already_* | 401 anonymous | 403 role/tenant/42501 |
+//   422 validation/not-found | 500 unexpected DB. No 404/409/428.
+
+/** Seeds an alert directly (service role) and returns its id. */
+async function mkAlert(
+  hospitalId: string,
+  key: string,
+  message: string,
+): Promise<string> {
+  const { db } = await ctx();
+  // deno-lint-ignore no-explicit-any
+  const { data, error } = await (db.rpc as any)("fire_managed_alert", {
+    p_hospital_id: hospitalId,
+    p_alert_key: key,
+    p_severity: "warning",
+    p_current_value: 20,
+    p_threshold_value: 10,
+    p_threshold_unit: "minutes",
+    p_message: message,
+  });
+  assertEquals(error, null);
+  assert(typeof data === "string", "fire_managed_alert must return an id");
+  return data as string;
+}
+
+function resultOf(data: Record<string, unknown>): Record<string, unknown> {
+  const result = data.result as Record<string, unknown>;
+  assertExists(result, "expected a result object");
+  return result;
+}
+
+/** Asserts a real lifecycle transition: 200 ok:true + locked snapshot. */
+function assertMutationOk(
+  data: Record<string, unknown>,
+  action: string,
+): Record<string, unknown> {
+  assertEquals(data.action, action);
+  const result = resultOf(data);
+  assertEquals(result.ok, true, `${action}: expected ok true`);
+  assert(
+    "before" in result && "after" in result,
+    `${action}: a real transition must carry before/after snapshot`,
+  );
+  return result;
+}
+
+async function countActivity(alertId: string): Promise<number> {
+  const { db } = await ctx();
+  const { count, error } = await db
+    .from("alert_activity_log")
+    .select("id", { count: "exact", head: true })
+    .eq("alert_id", alertId);
+  assertEquals(error, null);
+  return count ?? 0;
+}
+
+async function ackState(alertId: string): Promise<Record<string, unknown>> {
+  const { db } = await ctx();
+  const { data, error } = await db
+    .from("alert_events")
+    .select("acknowledged_at, is_resolved, severity")
+    .eq("id", alertId)
+    .single();
+  assertEquals(error, null);
+  assertExists(data);
+  return data as Record<string, unknown>;
+}
+
+async function countJobs(): Promise<number> {
+  const { db } = await ctx();
+  const { count, error } = await db
+    .from("job_queue")
+    .select("id", { count: "exact", head: true });
+  assertEquals(error, null);
+  return count ?? 0;
+}
+
+/** Runs DDL on the local stack via the DB container (H15 fault injection). */
+async function dbDdl(sql: string): Promise<void> {
+  const cmd = new Deno.Command("docker", {
+    args: [
+      "exec",
+      "supabase_db_setura",
+      "psql",
+      "-U",
+      "postgres",
+      "-d",
+      "postgres",
+      "-v",
+      "ON_ERROR_STOP=1",
+      "-c",
+      sql,
+    ],
+    stdout: "piped",
+    stderr: "piped",
+  });
+  const { code, stderr } = await cmd.output();
+  if (code !== 0) {
+    throw new Error(
+      `docker psql DDL failed (${code}): ${new TextDecoder().decode(stderr)}`,
+    );
+  }
+}
+
+Deno.test("g10 alert http H1: hospital admin lifecycle success (200 ok + snapshot)", async () => {
+  const f = fx();
+  let id = await mkAlert(f.hospitalA, `h1_ack_${RUN}`, "h1 ack");
+  assertMutationOk(
+    okData(
+      await callFn(f.adminA.token, f.hospitalA, {
+        action: "acknowledge",
+        alertId: id,
+      }),
+    ),
+    "acknowledge",
+  );
+
+  id = await mkAlert(f.hospitalA, `h1_assign_${RUN}`, "h1 assign");
+  assertMutationOk(
+    okData(
+      await callFn(f.adminA.token, f.hospitalA, {
+        action: "assign",
+        alertId: id,
+        assigneeId: crypto.randomUUID(),
+      }),
+    ),
+    "assign",
+  );
+
+  id = await mkAlert(f.hospitalA, `h1_resolve_${RUN}`, "h1 resolve");
+  assertMutationOk(
+    okData(
+      await callFn(f.adminA.token, f.hospitalA, {
+        action: "resolve",
+        alertId: id,
+        notes: "h1 notes",
+      }),
+    ),
+    "resolve",
+  );
+
+  id = await mkAlert(f.hospitalA, `h1_esc_${RUN}`, "h1 escalate");
+  assertMutationOk(
+    okData(
+      await callFn(f.adminA.token, f.hospitalA, {
+        action: "escalate",
+        alertId: id,
+      }),
+    ),
+    "escalate",
+  );
+});
+
+Deno.test("g10 alert http H2: global admin scoped through X-Hospital-ID succeeds", async () => {
+  const f = fx();
+  const id = await mkAlert(f.hospitalA, `h2_${RUN}`, "h2");
+  assertMutationOk(
+    okData(
+      await callFn(f.globalAdmin.token, f.hospitalA, {
+        action: "acknowledge",
+        alertId: id,
+      }),
+    ),
+    "acknowledge",
+  );
+});
+
+Deno.test("g10 alert http H3: receptionist denied write (403, not 500)", async () => {
+  const f = fx();
+  assertDenied(
+    await callFn(f.recepA.token, f.hospitalA, {
+      action: "acknowledge",
+      alertId: crypto.randomUUID(),
+    }),
+    403,
+    "ROLE_INSUFFICIENT",
+    "receptionist acknowledge",
+  );
+});
+
+Deno.test("g10 alert http H4: doctor denied write (403, not 500)", async () => {
+  const f = fx();
+  assertDenied(
+    await callFn(f.doctorA.token, f.hospitalA, {
+      action: "escalate",
+      alertId: crypto.randomUUID(),
+    }),
+    403,
+    "ROLE_INSUFFICIENT",
+    "doctor escalate",
+  );
+});
+
+Deno.test("g10 alert http H5: anonymous write is unauthorized (401)", async () => {
+  const f = fx();
+  const res = await callFn(null, f.hospitalA, {
+    action: "acknowledge",
+    alertId: crypto.randomUUID(),
+  });
+  assertEquals(res.status, 401);
+  if (res.json) {
+    assertEquals(res.json.success !== true, true);
+    assertEquals(res.json.data, undefined);
+  }
+});
+
+Deno.test("g10 alert http H6: missing X-Hospital-ID on write -> 422", async () => {
+  const f = fx();
+  assertDenied(
+    await callFn(f.adminA.token, null, {
+      action: "acknowledge",
+      alertId: crypto.randomUUID(),
+    }),
+    422,
+    "VALIDATION_ERROR",
+    "missing header write",
+  );
+});
+
+Deno.test("g10 alert http H7: cross-tenant write -> 403 + zero mutation", async () => {
+  const f = fx();
+  const idB = await mkAlert(f.hospitalB, `h7_${RUN}`, "h7 cross");
+  assertDenied(
+    await callFn(f.adminA.token, f.hospitalA, {
+      action: "acknowledge",
+      alertId: idB,
+    }),
+    403,
+    "FORBIDDEN",
+    "adminA -> B alert",
+  );
+  const row = await ackState(idB);
+  assertEquals(row.acknowledged_at, null, "cross-tenant write must not mutate");
+});
+
+Deno.test("g10 alert http H8: malformed write body -> 422", async () => {
+  const f = fx();
+  // acknowledge requires alertId (schema refine); omitted -> validation.
+  assertDenied(
+    await callFn(f.adminA.token, f.hospitalA, { action: "acknowledge" }),
+    422,
+    "VALIDATION_ERROR",
+    "missing alertId",
+  );
+});
+
+Deno.test("g10 alert http H9: already_* replay -> 200 soft-success, one activity", async () => {
+  const f = fx();
+  const id = await mkAlert(f.hospitalA, `h9_${RUN}`, "h9 replay");
+  assertMutationOk(
+    okData(
+      await callFn(f.adminA.token, f.hospitalA, {
+        action: "acknowledge",
+        alertId: id,
+      }),
+    ),
+    "acknowledge",
+  );
+  const replay = resultOf(
+    okData(
+      await callFn(f.adminA.token, f.hospitalA, {
+        action: "acknowledge",
+        alertId: id,
+      }),
+    ),
+  );
+  assertEquals(replay.ok, true);
+  assertEquals(replay.already_acknowledged, true);
+  assert(
+    !("before" in replay) && !("after" in replay),
+    "soft-success keeps existing semantics (no snapshot)",
+  );
+  assertEquals(
+    await countActivity(id),
+    1,
+    "replay must not add an activity row",
+  );
+});
+
+Deno.test("g10 alert http H10: concurrent writes serialize (both 200, one real)", async () => {
+  const f = fx();
+  const id = await mkAlert(f.hospitalA, `h10_${RUN}`, "h10 concurrent");
+  const [ra, rb] = await Promise.all([
+    callFn(f.adminA.token, f.hospitalA, {
+      action: "acknowledge",
+      alertId: id,
+    }),
+    callFn(f.adminA.token, f.hospitalA, {
+      action: "acknowledge",
+      alertId: id,
+    }),
+  ]);
+  assertEquals(ra.status, 200);
+  assertEquals(rb.status, 200);
+  const already = [ra, rb].filter(
+    (r) =>
+      (r.json?.data as { result?: Record<string, unknown> })?.result
+        ?.already_acknowledged === true,
+  ).length;
+  assertEquals(already, 1, "exactly one acknowledge reports already_*");
+  assertEquals(await countActivity(id), 1, "serialized: one real transition");
+});
+
+Deno.test("g10 alert http H11: post-resolve acknowledge is permitted (D1)", async () => {
+  const f = fx();
+  const id = await mkAlert(f.hospitalA, `h11_${RUN}`, "h11 d1");
+  assertMutationOk(
+    okData(
+      await callFn(f.adminA.token, f.hospitalA, {
+        action: "resolve",
+        alertId: id,
+      }),
+    ),
+    "resolve",
+  );
+  // D1: RESOLVE is not terminal; ACK on a resolved alert succeeds (200).
+  assertMutationOk(
+    okData(
+      await callFn(f.adminA.token, f.hospitalA, {
+        action: "acknowledge",
+        alertId: id,
+      }),
+    ),
+    "acknowledge",
+  );
+  const row = await ackState(id);
+  assertEquals(row.is_resolved, true);
+  assertExists(row.acknowledged_at, "post-resolve ACK must persist (not D2)");
+});
+
+Deno.test("g10 alert http H12: activity rows equal real transitions", async () => {
+  const f = fx();
+  const id = await mkAlert(f.hospitalA, `h12_${RUN}`, "h12 audit");
+  assertMutationOk(
+    okData(
+      await callFn(f.adminA.token, f.hospitalA, {
+        action: "acknowledge",
+        alertId: id,
+      }),
+    ),
+    "acknowledge",
+  );
+  assertMutationOk(
+    okData(
+      await callFn(f.adminA.token, f.hospitalA, {
+        action: "escalate",
+        alertId: id,
+      }),
+    ),
+    "escalate",
+  );
+  assertEquals(await countActivity(id), 2, "two real transitions -> two rows");
+});
+
+Deno.test("g10 alert http H13: lifecycle write queues no jobs", async () => {
+  const f = fx();
+  const id = await mkAlert(f.hospitalA, `h13_${RUN}`, "h13 side effects");
+  const before = await countJobs();
+  assertMutationOk(
+    okData(
+      await callFn(f.adminA.token, f.hospitalA, {
+        action: "escalate",
+        alertId: id,
+      }),
+    ),
+    "escalate",
+  );
+  assertEquals(
+    await countJobs(),
+    before,
+    "lifecycle mutation must not enqueue jobs / WhatsApp / financial work",
+  );
+});
+
+Deno.test("g10 alert http H14: response carries no message/notes PII", async () => {
+  const f = fx();
+  const secret = `PIISECRET_${RUN}`;
+  const noteSecret = `NOTESENTINEL_${RUN}`;
+  const id = await mkAlert(f.hospitalA, `h14_${RUN}`, secret);
+  const res = await callFn(f.adminA.token, f.hospitalA, {
+    action: "resolve",
+    alertId: id,
+    notes: noteSecret,
+  });
+  const text = JSON.stringify(res.json);
+  assert(
+    !text.includes(secret),
+    "snapshot/response must not echo alert_events.message",
+  );
+  assert(
+    !text.includes(noteSecret),
+    "snapshot/response must not echo resolution_notes",
+  );
+});
+
+Deno.test("g10 alert http H15: DB 42501 -> 403 and unexpected DB fault -> 500", async () => {
+  const { db } = await ctx();
+  const f = fx();
+
+  // (a) 42501 -> 403: remove the role grant so requireRole (which reads
+  // user_roles) still passes but the RPC's has_permission raises 42501.
+  const id15a = await mkAlert(f.hospitalA, `h15a_${RUN}`, "h15 privilege");
+  const { error: delErr } = await db
+    .from("role_permissions")
+    .delete()
+    .match({ role: "hospital_admin", permission: "MANAGE_HOSPITAL" });
+  assertEquals(delErr, null);
+  try {
+    assertDenied(
+      await callFn(f.adminA.token, f.hospitalA, {
+        action: "acknowledge",
+        alertId: id15a,
+      }),
+      403,
+      "FORBIDDEN",
+      "42501 must fail closed as 403, not 500",
+    );
+    assertEquals(
+      (await ackState(id15a)).acknowledged_at,
+      null,
+      "privilege denial must not mutate",
+    );
+  } finally {
+    await db.from("role_permissions").insert({
+      role: "hospital_admin",
+      permission: "MANAGE_HOSPITAL",
+    });
+  }
+
+  // (b) unexpected DB fault -> 500: a scoped BEFORE-UPDATE trigger raises a
+  // non-42501 exception, which must surface as 500 with no committed change.
+  const id15b = await mkAlert(f.hospitalA, `h15b_${RUN}`, "h15 fault");
+  await dbDdl(
+    `CREATE OR REPLACE FUNCTION public.c2_http_500() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'injected db fault'; END $$;`,
+  );
+  await dbDdl(
+    `CREATE TRIGGER c2_http_500_trg BEFORE UPDATE ON public.alert_events FOR EACH ROW WHEN (NEW.id = '${id15b}') EXECUTE FUNCTION public.c2_http_500();`,
+  );
+  try {
+    const res = await callFn(f.adminA.token, f.hospitalA, {
+      action: "acknowledge",
+      alertId: id15b,
+    });
+    assertEquals(res.status, 500, "unexpected DB fault must surface 500");
+    assertEquals(
+      (await ackState(id15b)).acknowledged_at,
+      null,
+      "unexpected fault must roll back",
+    );
+  } finally {
+    await dbDdl(
+      `DROP TRIGGER IF EXISTS c2_http_500_trg ON public.alert_events;`,
+    );
+    await dbDdl(`DROP FUNCTION IF EXISTS public.c2_http_500();`);
+  }
+});
+
+// ─── 9. Cleanup ──────────────────────────────────────────────────────────────
 
 Deno.test("zz g10 alert http: cleanup removes fixture data", async () => {
   const { db } = await ctx();

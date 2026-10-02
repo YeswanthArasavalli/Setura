@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { ApiError } from "@/lib/errors";
@@ -26,8 +26,9 @@ import type {
  *    number of returned rows (proof there is no client-side counting, §16);
  *  - a NULL / empty read says "no data" honestly and an error is an error,
  *    never a fabricated zero or empty success (§18);
- *  - ZERO lifecycle mutation controls are rendered — no Acknowledge / Assign /
- *    Resolve / Escalate / Suppress button exists anywhere on the page (§19);
+ *  - mutation controls render ONLY for hospital_admin / global_admin, are
+ *    hidden from receptionist / doctor, and every attempt re-reads the server
+ *    (reconcile) rather than trusting optimistic local state (§9/§11);
  *  - a tenant-less global admin reuses the G-08 acting-context exactly once and
  *    discloses the scope, while an unresolved context waits honestly issuing zero
  *    alert-center requests.
@@ -35,9 +36,17 @@ import type {
 const centerCall = vi.fn();
 const analyticsCall = vi.fn();
 const actingCall = vi.fn();
+const ackCall = vi.fn();
+const resolveCall = vi.fn();
+const escalateCall = vi.fn();
+const suppressCall = vi.fn();
 vi.mock("@/api/alertCenter", () => ({
   fetchAlertCenter: (h: string, o?: unknown) => centerCall(h, o),
   fetchAlertAnalytics: (h: string, o?: unknown) => analyticsCall(h, o),
+  acknowledgeAlert: (...a: unknown[]) => ackCall(...a),
+  resolveAlert: (...a: unknown[]) => resolveCall(...a),
+  escalateAlert: (...a: unknown[]) => escalateCall(...a),
+  suppressAlert: (...a: unknown[]) => suppressCall(...a),
 }));
 vi.mock("@/api/portfolio", () => ({
   fetchActingHospitalContext: () => actingCall(),
@@ -128,6 +137,18 @@ beforeEach(() => {
   centerCall.mockReset().mockResolvedValue(listOk);
   analyticsCall.mockReset().mockResolvedValue(analyticsOk);
   actingCall.mockReset().mockResolvedValue(null);
+  ackCall
+    .mockReset()
+    .mockResolvedValue({ action: "acknowledge", alertId: "x", result: { ok: true } });
+  resolveCall
+    .mockReset()
+    .mockResolvedValue({ action: "resolve", alertId: "x", result: { ok: true } });
+  escalateCall
+    .mockReset()
+    .mockResolvedValue({ action: "escalate", alertId: "x", result: { ok: true } });
+  suppressCall
+    .mockReset()
+    .mockResolvedValue({ action: "suppress", result: { ok: true, suppression_id: "s-1" } });
   auth.current.role = "hospital_admin";
   auth.current.hospitalId = "h-1";
 });
@@ -235,15 +256,35 @@ describe("AdminAlerts surface", () => {
     expect(screen.queryByText("No alerts found.")).toBeNull();
   });
 
-  it("renders ZERO lifecycle mutation controls (read-only surface)", async () => {
+  it("renders mutation controls for admins and hides them from non-admins", async () => {
+    // hospital_admin sees the full mutation affordance set.
     renderPage();
     await waitFor(() => expect(screen.getByText("Alert Inbox")).toBeInTheDocument());
-    for (const label of ["Acknowledge", "Assign", "Resolve", "Escalate", "Suppress"]) {
-      expect(screen.queryByRole("button", { name: new RegExp(label, "i") })).toBeNull();
-    }
-    // The ONLY button on the page is the bounded Refresh.
-    const buttons = screen.getAllByRole("button");
-    expect(buttons.map((b) => b.textContent)).toEqual(["Refresh"]);
+    expect(
+      screen.getByRole("button", { name: /Acknowledge alert queue_backlog_pending/ }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /^Resolve alert queue_backlog_pending/ }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Escalate alert queue_backlog_pending/ }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Suppress alerts for key queue_backlog_pending/ }),
+    ).toBeInTheDocument();
+  });
+
+  it("offers no per-field action the server already recorded (D1 fields)", async () => {
+    // The second row is already escalated → no Escalate control for it, but the
+    // independent acknowledge / resolve controls remain (D1: fields independent).
+    renderPage();
+    await waitFor(() => expect(screen.getByText("Alert Inbox")).toBeInTheDocument());
+    expect(
+      screen.queryByRole("button", { name: /Escalate alert dlq_unresolved_critical/ }),
+    ).toBeNull();
+    expect(
+      screen.getByRole("button", { name: /Acknowledge alert dlq_unresolved_critical/ }),
+    ).toBeInTheDocument();
   });
 
   it("polls nothing, and a single Refresh issues exactly one more bounded cycle", async () => {
@@ -304,5 +345,222 @@ describe("AdminAlerts surface", () => {
       screen.getByText(/no hospital exists to satisfy the required context/i),
     ).toBeInTheDocument();
     expect(centerCall).not.toHaveBeenCalled();
+  });
+});
+
+// The row keys are fixed in `listOk`, so the admin affordance is addressed by
+// the alert key that appears in each button's accessible name.
+const ROW_A_KEY = "queue_backlog_pending";
+const ROW_A_ID = listOk.center.alerts[0].id;
+
+function ackBtn() {
+  return screen.getByRole("button", {
+    name: new RegExp(`Acknowledge alert ${ROW_A_KEY}`),
+  });
+}
+
+describe("AdminAlerts lifecycle mutations", () => {
+  it("acknowledges through the wrapper and reconciles the server (no optimistic state)", async () => {
+    renderPage();
+    await waitFor(() => expect(screen.getByText("Alert Inbox")).toBeInTheDocument());
+    expect(centerCall).toHaveBeenCalledTimes(1);
+
+    await userEvent.click(ackBtn());
+
+    // Exact payload: the acting tenant first, the row id second — never a
+    // hospital id buried in the body (that is the wrapper's job, pinned in
+    // alertCenter.test.ts).
+    expect(ackCall).toHaveBeenCalledWith("h-1", ROW_A_ID);
+    // Server-authoritative: the read is re-run after the attempt (§11).
+    await waitFor(() => expect(centerCall).toHaveBeenCalledTimes(2));
+    expect(analyticsCall).toHaveBeenCalledTimes(2);
+    expect(screen.getByText(/Alert acknowledged/i)).toBeInTheDocument();
+  });
+
+  it("treats an already_acknowledged replay as success, not an error", async () => {
+    ackCall.mockResolvedValue({
+      action: "acknowledge",
+      alertId: ROW_A_ID,
+      result: { ok: true, already_acknowledged: true },
+    });
+    renderPage();
+    await waitFor(() => expect(screen.getByText("Alert Inbox")).toBeInTheDocument());
+
+    await userEvent.click(ackBtn());
+
+    expect(
+      screen.getByText(/already acknowledged\. Refreshing the latest state/i),
+    ).toBeInTheDocument();
+    // No retry fired, and no destructive error banner appeared.
+    expect(ackCall).toHaveBeenCalledTimes(1);
+    expect(screen.queryByText(/do not have permission/i)).toBeNull();
+  });
+
+  it("swallows a duplicate acknowledge click while the request is in flight", async () => {
+    ackCall.mockReturnValue(new Promise(() => {})); // never settles
+    renderPage();
+    await waitFor(() => expect(screen.getByText("Alert Inbox")).toBeInTheDocument());
+
+    const btn = ackBtn();
+    fireEvent.click(btn);
+    fireEvent.click(btn);
+
+    expect(ackCall).toHaveBeenCalledTimes(1);
+  });
+
+  it("resolves with notes and omits them when blank", async () => {
+    renderPage();
+    await waitFor(() => expect(screen.getByText("Alert Inbox")).toBeInTheDocument());
+
+    await userEvent.click(
+      screen.getByRole("button", { name: new RegExp(`^Resolve alert ${ROW_A_KEY}`) }),
+    );
+    await userEvent.type(screen.getByLabelText(/Notes \(optional\)/), "fixed it");
+    await userEvent.click(screen.getByRole("button", { name: /Confirm resolve/ }));
+
+    expect(resolveCall).toHaveBeenCalledWith("h-1", ROW_A_ID, "fixed it");
+    await waitFor(() => expect(centerCall).toHaveBeenCalledTimes(2));
+  });
+
+  it("validates resolve notes against the 1000-char backend bound and blocks submit", async () => {
+    renderPage();
+    await waitFor(() => expect(screen.getByText("Alert Inbox")).toBeInTheDocument());
+
+    await userEvent.click(
+      screen.getByRole("button", { name: new RegExp(`^Resolve alert ${ROW_A_KEY}`) }),
+    );
+    const box = screen.getByLabelText(/Notes \(optional\)/) as HTMLTextAreaElement;
+    fireEvent.change(box, { target: { value: "a".repeat(1001) } });
+
+    expect(screen.getByText(/at most 1000 characters/i)).toBeInTheDocument();
+    const confirm = screen.getByRole("button", { name: /Confirm resolve/ });
+    expect(confirm).toBeDisabled();
+    await userEvent.click(confirm);
+    expect(resolveCall).not.toHaveBeenCalled();
+  });
+
+  it("escalates through the wrapper", async () => {
+    renderPage();
+    await waitFor(() => expect(screen.getByText("Alert Inbox")).toBeInTheDocument());
+
+    await userEvent.click(
+      screen.getByRole("button", { name: new RegExp(`Escalate alert ${ROW_A_KEY}`) }),
+    );
+    await userEvent.click(screen.getByRole("button", { name: /Confirm escalate/ }));
+
+    // Blank notes are omitted (undefined), never sent as empty string.
+    expect(escalateCall).toHaveBeenCalledWith("h-1", ROW_A_ID, undefined);
+    await waitFor(() => expect(centerCall).toHaveBeenCalledTimes(2));
+  });
+
+  it("suppresses a key window with a deliberate confirm and no hospital in the payload", async () => {
+    renderPage();
+    await waitFor(() => expect(screen.getByText("Alert Inbox")).toBeInTheDocument());
+
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: new RegExp(`Suppress alerts for key ${ROW_A_KEY}`),
+      }),
+    );
+    // The key is prefilled from the row and the confirm is inert until a
+    // future window is chosen (§14).
+    expect(screen.getByLabelText(/Alert key/)).toHaveValue(ROW_A_KEY);
+    expect(screen.getByRole("button", { name: /Confirm suppression/ })).toBeDisabled();
+
+    const until = "2099-01-01T00:00";
+    fireEvent.change(screen.getByLabelText(/Suppress until/), {
+      target: { value: until },
+    });
+    await userEvent.click(screen.getByRole("button", { name: /Confirm suppression/ }));
+
+    expect(suppressCall).toHaveBeenCalledWith("h-1", {
+      alertKey: ROW_A_KEY,
+      activeUntil: new Date(until).toISOString(),
+    });
+    await waitFor(() => expect(centerCall).toHaveBeenCalledTimes(2));
+    expect(screen.getByText(/Suppression window opened/i)).toBeInTheDocument();
+  });
+
+  it("refuses a non-future suppression window", async () => {
+    renderPage();
+    await waitFor(() => expect(screen.getByText("Alert Inbox")).toBeInTheDocument());
+
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: new RegExp(`Suppress alerts for key ${ROW_A_KEY}`),
+      }),
+    );
+    fireEvent.change(screen.getByLabelText(/Suppress until/), {
+      target: { value: "2000-01-01T00:00" },
+    });
+
+    expect(screen.getByText(/must be for a future time/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Confirm suppression/ })).toBeDisabled();
+  });
+
+  it("never auto-retries a rejected suppression", async () => {
+    suppressCall.mockRejectedValue(
+      new ApiError({ code: "VALIDATION", message: "invalid_window", status: 422 }),
+    );
+    renderPage();
+    await waitFor(() => expect(screen.getByText("Alert Inbox")).toBeInTheDocument());
+
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: new RegExp(`Suppress alerts for key ${ROW_A_KEY}`),
+      }),
+    );
+    fireEvent.change(screen.getByLabelText(/Suppress until/), {
+      target: { value: "2099-01-01T00:00" },
+    });
+    await userEvent.click(screen.getByRole("button", { name: /Confirm suppression/ }));
+
+    expect(suppressCall).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+  });
+
+  it("maps server errors honestly and never leaks raw detail", async () => {
+    const cases: [number, string, RegExp][] = [
+      [401, "UNAUTHORIZED", /session expired/i],
+      [403, "FORBIDDEN", /do not have permission/i],
+      [500, "INTERNAL", /server could not complete/i],
+    ];
+    for (const [status, code, expected] of cases) {
+      ackCall.mockReset().mockRejectedValue(
+        new ApiError({ code, message: "secret sql detail", status }),
+      );
+      const view = renderPage();
+      await waitFor(() => expect(screen.getByText("Alert Inbox")).toBeInTheDocument());
+      await userEvent.click(ackBtn());
+      const banner = await screen.findByRole("alert");
+      expect(banner).toHaveTextContent(expected);
+      // The raw backend message never reaches the user.
+      expect(banner.textContent).not.toMatch(/secret sql detail/i);
+      view.unmount();
+    }
+  });
+
+  it("runs the mutation against the acting-hospital tenant for a global admin", async () => {
+    auth.current.role = "global_admin";
+    auth.current.hospitalId = null;
+    actingCall.mockResolvedValue({ hospitalId: "ctx-9", hospitalName: "Context" });
+    renderPage();
+    await waitFor(() => expect(screen.getByText("Alert Inbox")).toBeInTheDocument());
+
+    await userEvent.click(ackBtn());
+    expect(ackCall).toHaveBeenCalledWith("ctx-9", ROW_A_ID);
+  });
+
+  it("hides every mutation control from receptionist and doctor", async () => {
+    for (const role of ["receptionist", "doctor"]) {
+      auth.current.role = role;
+      const view = renderPage();
+      await waitFor(() => expect(screen.getByText("Alert Inbox")).toBeInTheDocument());
+      expect(screen.queryByText("Actions")).toBeNull();
+      expect(
+        screen.queryByRole("button", { name: /Acknowledge alert/ }),
+      ).toBeNull();
+      view.unmount();
+    }
   });
 });

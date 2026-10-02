@@ -18,6 +18,7 @@ import { AdminFinancial } from "@/routes/AdminFinancial";
 import { AdminAlerts } from "@/routes/AdminAlerts";
 import { AdminOperations } from "@/routes/AdminOperations";
 import { AdminPortfolio } from "@/routes/AdminPortfolio";
+import { BroadcastComposer } from "@/routes/BroadcastComposer";
 
 const RECEPTION_ROLES = ["receptionist", "hospital_admin"] as const;
 const DOCTOR_ROLES = ["doctor", "hospital_admin"] as const;
@@ -171,11 +172,12 @@ export default function App() {
             </RequireRole>
           }
         />
-        {/* G-10: read-only Alert-Center surface over the existing alert-center
-            list + analytics reads. Same hospital_admin + global_admin UX
-            boundary as G-03/G-05/G-06/G-09; the Edge Function re-authorizes
-            role + tenant and the alert RPCs stay service-role-only. No mutation
-            action is reachable from this page. */}
+        {/* G-10 read + G-UI lifecycle-mutation Alert-Center surface over the
+            existing alert-center function (list + analytics reads plus
+            acknowledge / resolve / escalate / suppress). Same hospital_admin +
+            global_admin UX boundary as G-03/G-05/G-06/G-09; the Edge Function
+            re-authorizes role + tenant and the alert RPCs stay service-role-only,
+            so the UI controls are a convenience, never the security boundary. */}
         <Route
           path="/admin/alerts"
           element={
@@ -196,6 +198,19 @@ export default function App() {
           element={
             <RequireRole roles={[...ADMIN_ROLES]}>
               <AdminOperations />
+            </RequireRole>
+          }
+        />
+        {/* C2b: Broadcast Composer over the existing command-center `broadcast_*`
+            actions. Same hospital_admin + global_admin UX boundary as the other
+            admin surfaces; the Edge Function re-authorizes role + tenant on
+            every request and owns recipients, message text and idempotency, so
+            these controls are a convenience, never the security boundary. */}
+        <Route
+          path="/admin/broadcast"
+          element={
+            <RequireRole roles={[...ADMIN_ROLES]}>
+              <BroadcastComposer />
             </RequireRole>
           }
         />

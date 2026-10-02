@@ -345,12 +345,48 @@ Deno.test("d63: setup - two hospitals, staff, bookings and notes", async () => {
     return { userId, email, token: await tokenFor(email) };
   }
 
-  const authorA = await actor("auth-a", `D63 Author A ${RUN}`, "01", hospitalA, "doctor");
-  const peerA = await actor("peer-a", `D63 Peer A ${RUN}`, "02", hospitalA, "doctor");
-  const receptionistA = await actor("rec-a", `D63 Rec A ${RUN}`, "03", hospitalA, "receptionist");
-  const adminA = await actor("adm-a", `D63 Adm A ${RUN}`, "04", hospitalA, "hospital_admin");
-  const docB = await actor("doc-b", `D63 Doc B ${RUN}`, "05", hospitalB, "doctor");
-  const receptionistB = await actor("rec-b", `D63 Rec B ${RUN}`, "06", hospitalB, "receptionist");
+  const authorA = await actor(
+    "auth-a",
+    `D63 Author A ${RUN}`,
+    "01",
+    hospitalA,
+    "doctor",
+  );
+  const peerA = await actor(
+    "peer-a",
+    `D63 Peer A ${RUN}`,
+    "02",
+    hospitalA,
+    "doctor",
+  );
+  const receptionistA = await actor(
+    "rec-a",
+    `D63 Rec A ${RUN}`,
+    "03",
+    hospitalA,
+    "receptionist",
+  );
+  const adminA = await actor(
+    "adm-a",
+    `D63 Adm A ${RUN}`,
+    "04",
+    hospitalA,
+    "hospital_admin",
+  );
+  const docB = await actor(
+    "doc-b",
+    `D63 Doc B ${RUN}`,
+    "05",
+    hospitalB,
+    "doctor",
+  );
+  const receptionistB = await actor(
+    "rec-b",
+    `D63 Rec B ${RUN}`,
+    "06",
+    hospitalB,
+    "receptionist",
+  );
   // No user_roles row: a pure authenticated user must gain nothing.
   const patient = await actor("pat", `D63 Patient ${RUN}`, "07", null, null);
 
@@ -393,7 +429,10 @@ Deno.test("d63: authoring doctor reads back their own note verbatim", async () =
   const { createAuthClient } = await ctx();
   const f = fx();
 
-  const rows = await visibleNotes(createAuthClient(f.authorA.token), f.bookingA);
+  const rows = await visibleNotes(
+    createAuthClient(f.authorA.token),
+    f.bookingA,
+  );
   assertEquals(rows.length, 1);
   assertEquals(rows[0].id, f.noteAId);
   assertEquals(rows[0].notes, `Headache since morning. ${RUN}`);
@@ -513,7 +552,10 @@ Deno.test("d63: authenticated cannot INSERT/UPDATE/DELETE consultation notes", a
   assertStringIncludes(del.error.message, "permission denied");
 
   // The row is untouched (read back through the author).
-  const rows = await visibleNotes(createAuthClient(f.authorA.token), f.bookingA);
+  const rows = await visibleNotes(
+    createAuthClient(f.authorA.token),
+    f.bookingA,
+  );
   assertEquals(rows.length, 1);
   assertEquals(rows[0].notes, `Headache since morning. ${RUN}`);
 });
@@ -548,7 +590,10 @@ Deno.test("d63: service-role write path still appends after the read policy", as
 
   // Append (not replace): the author now sees both notes; null diagnosis
   // renders as null data, never as the text "null".
-  const rows = await visibleNotes(createAuthClient(f.authorA.token), f.bookingA);
+  const rows = await visibleNotes(
+    createAuthClient(f.authorA.token),
+    f.bookingA,
+  );
   assertEquals(rows.length, 2);
   const follow = rows.find((r) => r.id === second.note_id);
   assertExists(follow);

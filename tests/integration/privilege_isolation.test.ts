@@ -212,18 +212,37 @@ function messageOf(res: RestResult): string {
   return res.raw;
 }
 
-/**
- * Asserts that a direct RPC call was refused by the DATABASE.
- *
- * A 404 is treated as a TEST defect rather than a pass. PostgREST answers
- * 404/PGRST202 when it cannot resolve the argument names, and a suite
- * that accepted that would report "denied" for a function it never
- * actually called — the exact false sense of security this remediation
- * is meant to remove.
- */
-function assertRpcDenied(res: RestResult, what: string): void {
-  const msg = messageOf(res);
+/** Extracts the PostgREST/Postgres error `code` (e.g. "42501", "PGRST301"). */
+function codeOf(res: RestResult): string | null {
+  if (res.body && typeof res.body === "object") {
+    const c = (res.body as Record<string, unknown>).code;
+    return typeof c === "string" ? c : null;
+  }
+  return null;
+}
 
+/**
+ * F16-05: assert a direct RPC call was refused by the DATABASE privilege
+ * boundary, proven by SQLSTATE 42501 ("permission denied for function"),
+ * NOT by a bare HTTP status.
+ *
+ * A 404 is a TEST DEFECT (wrong argument names), not a pass: PostgREST could
+ * not resolve the function, so the privilege boundary was never exercised.
+ *
+ * The HTTP status is pinned to the caller layer, which is exactly the
+ * distinction the old `401 || 403` + `"jwt"`-substring check could not make:
+ *   anon (no JWT) -> PostgREST surfaces the 42501 as HTTP 401
+ *   authenticated -> the same 42501 as HTTP 403
+ * A PostgREST/JWT-layer rejection (e.g. PGRST301 "JWT cryptographic operation
+ * failed") returns 401 but is NOT a privilege result; requiring
+ * code === "42501" is what removes that false positive.
+ */
+function assertPrivilegeDenied(
+  res: RestResult,
+  what: string,
+  expectedStatus: 401 | 403,
+): void {
+  const msg = messageOf(res);
   if (res.status === 404) {
     throw new Error(
       `${what}: PostgREST could not resolve the function (${msg}). ` +
@@ -231,21 +250,78 @@ function assertRpcDenied(res: RestResult, what: string): void {
         `result: the privilege boundary was never exercised.`,
     );
   }
+  assertEquals(
+    codeOf(res),
+    "42501",
+    `${what}: expected the DATABASE privilege denial SQLSTATE 42501, got ` +
+      `HTTP ${res.status} code=${codeOf(res)} (${msg}). A 401 whose code is ` +
+      `not 42501 (e.g. PGRST301) is a JWT/auth-layer rejection that never ` +
+      `reached the privilege boundary.`,
+  );
+  assertEquals(
+    res.status,
+    expectedStatus,
+    `${what}: SQLSTATE 42501 surfaced as HTTP ${res.status}, expected ` +
+      `${expectedStatus} (${msg})`,
+  );
+  assert(
+    msg.toLowerCase().includes("permission denied for function"),
+    `${what}: denied with 42501 but an unexpected message: ${msg}`,
+  );
+}
 
+/**
+ * Strict privilege assertion for the pre-existing category tests, which call
+ * a mix of anon and authenticated roles in one loop. It keeps the F16-05
+ * guarantee (SQLSTATE 42501, never a JWT-layer 401) without pinning a single
+ * HTTP status; tests that want the explicit layer distinction call
+ * assertPrivilegeDenied directly.
+ */
+function assertRpcDenied(res: RestResult, what: string): void {
+  const msg = messageOf(res);
+  if (res.status === 404) {
+    throw new Error(
+      `${what}: PostgREST could not resolve the function (${msg}). ` +
+        `This is a TEST DEFECT (wrong argument names), NOT a security ` +
+        `result: the privilege boundary was never exercised.`,
+    );
+  }
+  assertEquals(
+    codeOf(res),
+    "42501",
+    `${what}: expected the DATABASE privilege denial SQLSTATE 42501, got ` +
+      `HTTP ${res.status} code=${codeOf(res)} (${msg})`,
+  );
   assert(
     res.status === 401 || res.status === 403,
-    `${what}: expected 401/403 from the database, got ${res.status} (${msg})`,
+    `${what}: 42501 must surface as 401 (anon) or 403 (authenticated), ` +
+      `got ${res.status} (${msg})`,
   );
+}
 
-  const lower = msg.toLowerCase();
-  assert(
-    lower.includes("permission denied") ||
-      lower.includes("insufficient") ||
-      lower.includes("jwt") ||
-      lower.includes("not authorized") ||
-      lower.includes("42501"),
-    `${what}: denied with ${res.status} but the reason does not look like ` +
-      `a privilege failure: ${msg}`,
+/**
+ * F16-05 identity proof. The Category A helper `is_global_admin` is executable
+ * by the authenticated role, so HTTP 200 here proves the JWT genuinely
+ * authenticated and the subject resolved. Call this before asserting any
+ * authenticated privilege denial: without it, a later 401 could be a JWT-layer
+ * rejection miscounted as a privilege denial.
+ */
+async function assertGenuinelyAuthenticated(
+  caller: Caller,
+  who: string,
+): Promise<void> {
+  assertEquals(
+    caller.kind,
+    "authenticated",
+    `${who}: assertGenuinelyAuthenticated requires an authenticated caller`,
+  );
+  const res = await rpcAs(caller, "is_global_admin");
+  assertEquals(
+    res.status,
+    200,
+    `${who}: identity control is_global_admin must return 200 for a real ` +
+      `JWT; got ${res.status} (${messageOf(res)}). The caller is not proven ` +
+      `authenticated, so privilege denials from it are meaningless.`,
   );
 }
 
@@ -564,8 +640,9 @@ Deno.test("privilege: setup two tenants with real tokens and real rows", async (
 
 /**
  * Migration 48 section 3 keeps exactly four SECURITY DEFINER helpers
- * executable by anon and authenticated, because 193 RLS policies call
- * them. Revoking these would lock every legitimate user out, so the
+ * executable by anon and authenticated, because the live RLS policies
+ * (139 as recorded in Gate 2's pg_policies census) call them. Revoking
+ * these would lock every legitimate user out, so the
  * suite proves they still work before proving anything is closed.
  */
 Deno.test("privilege: Category A RLS helpers remain callable", async () => {
@@ -875,6 +952,10 @@ Deno.test("privilege: Category D RPCs are refused for authenticated", async () =
   const f = fx();
   // Both a hospital_admin and a receptionist: the point is that NO
   // authenticated role reaches these, not merely that low roles do not.
+  // F16-05: prove each token genuinely authenticates first, so a later 403
+  // is unambiguously an insufficient-privilege denial and not a JWT-layer 401.
+  await assertGenuinelyAuthenticated(f.adminA.caller, "adminA");
+  await assertGenuinelyAuthenticated(f.clerkA.caller, "clerkA");
   for (const caller of [f.adminA.caller, f.clerkA.caller]) {
     for (const p of CATEGORY_D) {
       const res = await rpcAs(caller, p.fn, p.args);
@@ -1039,6 +1120,9 @@ Deno.test("privilege: Category C RPCs are refused for anon and authenticated", a
   // boundary must hold even for a privileged user: authorization for
   // these belongs to the Edge layer running as service_role, so a
   // global_admin JWT hitting PostgREST directly must still be refused.
+  // F16-05: prove the authenticated identities before relying on their 403s.
+  await assertGenuinelyAuthenticated(f.adminA.caller, "adminA");
+  await assertGenuinelyAuthenticated(f.gadmin.caller, "gadmin");
   for (const caller of [ANON, f.adminA.caller, f.gadmin.caller]) {
     for (const p of CATEGORY_C) {
       const res = await rpcAs(caller, p.fn, p.args);
@@ -1136,6 +1220,9 @@ const CATEGORY_B: Probe[] = [
 
 Deno.test("privilege: Category B internal RPCs are refused for anon and authenticated", async () => {
   const f = fx();
+  // F16-05: prove the authenticated identities before relying on their 403s.
+  await assertGenuinelyAuthenticated(f.adminA.caller, "adminA");
+  await assertGenuinelyAuthenticated(f.clerkA.caller, "clerkA");
   for (const caller of [ANON, f.adminA.caller, f.clerkA.caller]) {
     for (const p of CATEGORY_B) {
       const res = await rpcAs(caller, p.fn, p.args);
@@ -1190,6 +1277,8 @@ Deno.test("privilege: INVOKER operational functions are service-only", async () 
     }],
   ];
 
+  // F16-05: prove adminA authenticates, so its denials are privilege results.
+  await assertGenuinelyAuthenticated(f.adminA.caller, "adminA");
   for (const caller of [ANON, f.adminA.caller]) {
     for (const [fn, args] of probes) {
       const res = await rpcAs(caller, fn, args);
@@ -1223,6 +1312,772 @@ Deno.test("privilege: INVOKER operational functions are service-only", async () 
     false,
     "hospital A's suppression leaked into hospital B",
   );
+});
+
+// ─── 5b. F16-06 exhaustive locked-routine denial census ──────────────────────
+
+/**
+ * F16-06: every locked Category B/C/D routine, sourced directly from
+ * docs/security/RPC_PRIVILEGE_CLASSIFICATION.tsv (rows whose
+ * target_execute_roles == "service_role"; the four Category A RLS helpers
+ * and the trigger-only, non-invocable set are excluded by construction).
+ *
+ * `args` lists the parameter NAMES of one overload so PostgREST resolves the
+ * call rather than returning 404/PGRST202. The privilege check fires BEFORE
+ * argument values are cast, so null placeholders are sufficient to reach and
+ * prove the real denial boundary without executing (or mutating) anything.
+ *
+ * This is the authoritative locked-routine census: 177 distinct routines.
+ * (The roadmap's "179" counts the capture_payment and cleanup_stale_presence
+ * overloads twice; coverage is measured per distinct callable routine.)
+ */
+const LOCKED_ROUTINES: Array<{ fn: string; args: string[] }> = [
+  { fn: "acknowledge_alert", args: ["p_alert_id", "p_actor_id"] },
+  { fn: "advance_queue", args: ["p_queue_session_id"] },
+  { fn: "assign_alert", args: ["p_alert_id", "p_assignee_id", "p_actor_id"] },
+  {
+    fn: "calculate_refund_amount",
+    args: ["p_booking_id", "p_cancellation_time"],
+  },
+  {
+    fn: "call_queue_token",
+    args: ["p_queue_session_id", "p_token_number", "p_actor_id"],
+  },
+  {
+    fn: "capture_payment",
+    args: [
+      "p_gateway_order_id",
+      "p_gateway_payment_id",
+      "p_gateway_signature",
+      "p_gateway_response",
+      "p_gateway_fee_inr",
+    ],
+  },
+  {
+    fn: "carry_forward_pending_tokens",
+    args: ["p_hospital_id", "p_from_date", "p_to_date"],
+  },
+  {
+    fn: "change_subscription_plan",
+    args: [
+      "p_hospital_id",
+      "p_new_plan_name",
+      "p_billing_cycle",
+      "p_performed_by",
+    ],
+  },
+  {
+    fn: "check_booking_rate_limit",
+    args: ["p_hospital_id", "p_phone", "p_window_minutes", "p_max_attempts"],
+  },
+  { fn: "check_partition_readiness", args: [] },
+  {
+    fn: "claim_idempotency_key",
+    args: [
+      "p_key",
+      "p_endpoint",
+      "p_hospital_id",
+      "p_user_id",
+      "p_request_hash",
+      "p_request_summary",
+      "p_instance_id",
+    ],
+  },
+  {
+    fn: "claim_jobs",
+    args: ["p_worker_id", "p_job_types", "p_batch_size", "p_lease_minutes"],
+  },
+  { fn: "claim_jobs_v2", args: ["p_worker_id", "p_job_types", "p_batch_size"] },
+  {
+    fn: "claim_webhook_event",
+    args: ["p_provider", "p_event_types", "p_batch_size"],
+  },
+  { fn: "cleanup_expired_restrictions", args: [] },
+  { fn: "cleanup_idempotency_keys", args: [] },
+  { fn: "cleanup_operational_data", args: [] },
+  { fn: "cleanup_stale_presence", args: ["p_batch_size"] },
+  { fn: "clear_doctor_delay", args: ["p_queue_session_id", "p_actor_id"] },
+  {
+    fn: "close_doctor_session",
+    args: ["p_queue_session_id", "p_actor_id", "p_reason"],
+  },
+  {
+    fn: "complete_consultation",
+    args: ["p_queue_session_id", "p_booking_id", "p_actor_id"],
+  },
+  {
+    fn: "complete_idempotency_key",
+    args: [
+      "p_key",
+      "p_endpoint",
+      "p_response_code",
+      "p_response_body",
+      "p_response_headers",
+    ],
+  },
+  { fn: "complete_job", args: ["p_job_id"] },
+  { fn: "complete_job_v2", args: ["p_job_id", "p_worker_id"] },
+  { fn: "complete_webhook_event", args: ["p_event_id"] },
+  { fn: "compute_global_metrics", args: ["p_report_date"] },
+  { fn: "compute_sla_tracking", args: ["p_hospital_id", "p_date"] },
+  { fn: "compute_weekly_rollup", args: ["p_hospital_id", "p_week_start"] },
+  {
+    fn: "confirm_refund_processed",
+    args: ["p_refund_id", "p_gateway_refund_id", "p_gateway_response"],
+  },
+  {
+    fn: "create_booking",
+    args: [
+      "p_hospital_id",
+      "p_queue_session_id",
+      "p_patient_id",
+      "p_patient_name",
+      "p_patient_phone",
+      "p_patient_age",
+      "p_patient_gender",
+      "p_village",
+      "p_blood_group",
+      "p_has_diabetes",
+      "p_has_bp",
+      "p_booking_source",
+      "p_doctor_id",
+      "p_booked_by",
+      "p_appointment_date",
+      "p_platform_fee",
+      "p_receptionist_fee",
+      "p_hospital_fee",
+      "p_idempotency_key",
+    ],
+  },
+  {
+    fn: "create_hospital_settlement",
+    args: ["p_hospital_id", "p_start_date", "p_end_date", "p_collected_by"],
+  },
+  {
+    fn: "create_platform_revenue_summary",
+    args: ["p_hospital_id", "p_start_date", "p_end_date", "p_performed_by"],
+  },
+  {
+    fn: "current_user_has_permission",
+    args: ["p_hospital_id", "p_permission"],
+  },
+  { fn: "detect_crashed_workers", args: [] },
+  {
+    fn: "enqueue_job",
+    args: [
+      "p_job_type",
+      "p_payload",
+      "p_priority",
+      "p_scheduled_at",
+      "p_idempotency_key",
+      "p_hospital_id",
+      "p_booking_id",
+      "p_metadata",
+    ],
+  },
+  { fn: "escalate_alert", args: ["p_alert_id", "p_actor_id", "p_notes"] },
+  {
+    fn: "estimate_wait_minutes",
+    args: ["p_queue_session_id", "p_token_number"],
+  },
+  { fn: "evaluate_queue_health", args: [] },
+  { fn: "expire_conversation_states", args: [] },
+  { fn: "expire_stale_device_sessions", args: ["p_inactive_days"] },
+  {
+    fn: "extend_job_lease",
+    args: ["p_job_id", "p_worker_id", "p_extend_seconds"],
+  },
+  {
+    fn: "fail_idempotency_key",
+    args: [
+      "p_key",
+      "p_endpoint",
+      "p_error_code",
+      "p_error_message",
+      "p_response_code",
+    ],
+  },
+  { fn: "fail_job", args: ["p_job_id", "p_error"] },
+  { fn: "fail_job_v2", args: ["p_job_id", "p_worker_id", "p_error"] },
+  { fn: "fail_migration", args: ["p_migration_id", "p_error", "p_applied_by"] },
+  { fn: "fail_webhook_event", args: ["p_event_id", "p_error"] },
+  { fn: "fetch_pending_notifications", args: ["p_limit"] },
+  { fn: "fetch_pending_whatsapp_messages", args: ["p_limit"] },
+  {
+    fn: "find_or_create_whatsapp_conversation",
+    args: ["p_hospital_id", "p_patient_id", "p_phone"],
+  },
+  {
+    fn: "fire_alert",
+    args: [
+      "p_hospital_id",
+      "p_alert_key",
+      "p_severity",
+      "p_current_value",
+      "p_threshold_value",
+      "p_threshold_unit",
+      "p_message",
+    ],
+  },
+  {
+    fn: "fire_managed_alert",
+    args: [
+      "p_hospital_id",
+      "p_alert_key",
+      "p_severity",
+      "p_current_value",
+      "p_threshold_value",
+      "p_threshold_unit",
+      "p_message",
+      "p_category",
+    ],
+  },
+  { fn: "generate_audit_log_partition_ddl", args: ["p_months"] },
+  { fn: "generate_booking_partition_ddl", args: ["p_months"] },
+  {
+    fn: "generate_executive_report",
+    args: ["p_report_type", "p_hospital_id", "p_from_date", "p_to_date"],
+  },
+  { fn: "generate_next_token", args: ["p_hospital_id", "p_visit_date"] },
+  { fn: "generate_partition_ddl", args: ["p_parent_table", "p_month"] },
+  { fn: "generate_wa_messages_partition_ddl", args: ["p_months"] },
+  {
+    fn: "get_alert_analytics",
+    args: ["p_hospital_id", "p_from_date", "p_to_date"],
+  },
+  {
+    fn: "get_alert_center",
+    args: ["p_hospital_id", "p_status", "p_severity", "p_category", "p_limit"],
+  },
+  {
+    fn: "get_audit_coverage_report",
+    args: ["p_hospital_id", "p_from_date", "p_to_date"],
+  },
+  { fn: "get_booking_fee", args: ["p_hospital_id", "p_booking_source"] },
+  { fn: "get_conversation_state", args: ["p_hospital_id", "p_phone"] },
+  { fn: "get_cross_hospital_benchmarks", args: ["p_from_date", "p_to_date"] },
+  { fn: "get_daily_operations_dashboard", args: ["p_hospital_id", "p_date"] },
+  { fn: "get_dlq_summary", args: [] },
+  {
+    fn: "get_doctor_availability_reason",
+    args: ["p_doctor_id", "p_hospital_id", "p_date"],
+  },
+  { fn: "get_doctor_dashboard", args: ["p_doctor_id", "p_hospital_id"] },
+  {
+    fn: "get_doctor_performance",
+    args: ["p_doctor_id", "p_hospital_id", "p_from_date", "p_to_date"],
+  },
+  {
+    fn: "get_doctor_rankings",
+    args: ["p_hospital_id", "p_from_date", "p_to_date"],
+  },
+  {
+    fn: "get_doctor_unavailable_dates",
+    args: ["p_doctor_id", "p_hospital_id", "p_from_date", "p_to_date"],
+  },
+  { fn: "get_effective_fees", args: ["p_hospital_id", "p_booking_source"] },
+  { fn: "get_financial_command_center", args: ["p_hospital_id", "p_date"] },
+  { fn: "get_hospital_command_center", args: ["p_hospital_id", "p_date"] },
+  { fn: "get_hospital_feature_flags", args: ["p_hospital_id"] },
+  {
+    fn: "get_hospital_timeline",
+    args: [
+      "p_hospital_id",
+      "p_from_ts",
+      "p_to_ts",
+      "p_event_types",
+      "p_severity",
+      "p_doctor_id",
+      "p_queue_session_id",
+      "p_limit",
+    ],
+  },
+  { fn: "get_monthly_dashboard", args: ["p_hospital_id", "p_month_start"] },
+  { fn: "get_operational_scores", args: ["p_hospital_id", "p_date"] },
+  { fn: "get_partition_health", args: [] },
+  { fn: "get_partition_maintenance_advice", args: [] },
+  {
+    fn: "get_platform_revenue_breakdown",
+    args: ["p_hospital_id", "p_from_date", "p_to_date"],
+  },
+  { fn: "get_portfolio_dashboard", args: ["p_date"] },
+  { fn: "get_predictive_insights", args: ["p_hospital_id", "p_date"] },
+  {
+    fn: "get_queue_config",
+    args: ["p_hospital_id", "p_doctor_id", "p_config_key"],
+  },
+  { fn: "get_queue_snapshot", args: ["p_queue_session_id"] },
+  {
+    fn: "get_reconciliation_summary",
+    args: ["p_hospital_id", "p_from_date", "p_to_date"],
+  },
+  {
+    fn: "get_remaining_token_capacity",
+    args: ["p_doctor_id", "p_hospital_id", "p_date"],
+  },
+  { fn: "get_retention_report", args: [] },
+  { fn: "get_revenue_forecast", args: ["p_hospital_id", "p_date"] },
+  { fn: "get_sla_dashboard", args: ["p_hospital_id", "p_date"] },
+  { fn: "get_subscription_limits", args: ["p_hospital_id"] },
+  { fn: "get_subscription_usage", args: ["p_hospital_id"] },
+  { fn: "get_user_permissions", args: ["p_hospital_id"] },
+  { fn: "get_weekly_dashboard", args: ["p_hospital_id", "p_week_start"] },
+  {
+    fn: "handle_whatsapp_delivery_status",
+    args: ["p_meta_message_id", "p_status", "p_payload"],
+  },
+  {
+    fn: "has_permission",
+    args: ["p_user_id", "p_hospital_id", "p_permission"],
+  },
+  {
+    fn: "idempotent_capture_payment",
+    args: [
+      "p_provider_event_id",
+      "p_payload_hash",
+      "p_raw_payload",
+      "p_gateway_order_id",
+      "p_gateway_payment_id",
+      "p_gateway_signature",
+    ],
+  },
+  {
+    fn: "idempotent_create_booking",
+    args: [
+      "p_client_request_id",
+      "p_hospital_id",
+      "p_queue_session_id",
+      "p_patient_id",
+      "p_patient_name",
+      "p_patient_phone",
+      "p_patient_age",
+      "p_patient_gender",
+      "p_village",
+      "p_blood_group",
+      "p_has_diabetes",
+      "p_has_bp",
+      "p_booking_source",
+      "p_doctor_id",
+      "p_booked_by",
+      "p_appointment_date",
+    ],
+  },
+  {
+    fn: "increment_abuse_score",
+    args: [
+      "p_hospital_id",
+      "p_phone",
+      "p_device_identifier",
+      "p_ip_address",
+      "p_score",
+    ],
+  },
+  {
+    fn: "initiate_refund",
+    args: [
+      "p_booking_id",
+      "p_refund_amount_inr",
+      "p_refund_reason",
+      "p_initiated_by",
+    ],
+  },
+  {
+    fn: "insert_emergency_patient",
+    args: [
+      "p_queue_session_id",
+      "p_patient_name",
+      "p_patient_phone",
+      "p_reason",
+      "p_actor_id",
+      "p_idempotency_key",
+    ],
+  },
+  {
+    fn: "is_doctor_available",
+    args: ["p_doctor_id", "p_hospital_id", "p_date"],
+  },
+  { fn: "is_feature_enabled", args: ["p_hospital_id", "p_flag_key"] },
+  { fn: "is_phone_blocked", args: ["p_hospital_id", "p_phone"] },
+  { fn: "is_subscription_active", args: ["p_hospital_id"] },
+  {
+    fn: "log_booking_attempt",
+    args: [
+      "p_hospital_id",
+      "p_phone",
+      "p_ip_address",
+      "p_device_identifier",
+      "p_success",
+      "p_metadata",
+    ],
+  },
+  {
+    fn: "log_security_event",
+    args: [
+      "p_hospital_id",
+      "p_user_id",
+      "p_event_type",
+      "p_event_details",
+      "p_risk_score",
+      "p_ip_address",
+      "p_user_agent",
+      "p_event_fingerprint",
+    ],
+  },
+  {
+    fn: "mark_doctor_delay",
+    args: ["p_queue_session_id", "p_minutes", "p_reason", "p_actor_id"],
+  },
+  {
+    fn: "mark_notification_sent",
+    args: ["p_notification_id", "p_provider_response"],
+  },
+  {
+    fn: "mark_patient_absent",
+    args: ["p_queue_session_id", "p_booking_id", "p_actor_id"],
+  },
+  {
+    fn: "open_doctor_session",
+    args: [
+      "p_hospital_id",
+      "p_doctor_id",
+      "p_session_date",
+      "p_max_tokens",
+      "p_actor_id",
+    ],
+  },
+  { fn: "pause_queue", args: ["p_queue_session_id", "p_reason", "p_actor_id"] },
+  {
+    fn: "plan_partitions",
+    args: ["p_parent_table", "p_months_ahead", "p_start_month"],
+  },
+  {
+    fn: "presence_heartbeat",
+    args: ["p_hospital_id", "p_role", "p_channel", "p_tab_id", "p_metadata"],
+  },
+  { fn: "presence_leave", args: ["p_hospital_id", "p_channel", "p_tab_id"] },
+  {
+    fn: "queue_notification",
+    args: [
+      "p_hospital_id",
+      "p_patient_id",
+      "p_booking_id",
+      "p_channel",
+      "p_priority",
+      "p_recipient",
+      "p_template_key",
+      "p_title",
+      "p_message_body",
+      "p_scheduled_for",
+      "p_idempotency_key",
+      "p_metadata",
+    ],
+  },
+  {
+    fn: "queue_whatsapp_message",
+    args: [
+      "p_hospital_id",
+      "p_patient_id",
+      "p_booking_id",
+      "p_phone",
+      "p_template_name",
+      "p_message_text",
+      "p_idempotency_key",
+    ],
+  },
+  { fn: "recalculate_queue_position", args: ["p_booking_id"] },
+  { fn: "recall_current_token", args: ["p_queue_session_id", "p_actor_id"] },
+  { fn: "reclaim_crashed_worker_jobs", args: [] },
+  { fn: "reclaim_stale_jobs", args: ["p_timeout_minutes"] },
+  { fn: "reclaim_stale_whatsapp_processing", args: ["p_stale_minutes"] },
+  { fn: "recompute_hospital_online_state", args: ["p_hospital_id"] },
+  {
+    fn: "record_incoming_whatsapp_message",
+    args: [
+      "p_hospital_id",
+      "p_phone",
+      "p_meta_message_id",
+      "p_text",
+      "p_patient_name",
+    ],
+  },
+  {
+    fn: "record_queue_event",
+    args: [
+      "p_queue_session_id",
+      "p_event_type",
+      "p_token_number",
+      "p_booking_id",
+      "p_actor_id",
+      "p_metadata",
+    ],
+  },
+  {
+    fn: "record_settlement_payment",
+    args: ["p_settlement_id", "p_paid_amount", "p_performed_by"],
+  },
+  {
+    fn: "record_subscription_usage",
+    args: ["p_hospital_id", "p_metric", "p_increment"],
+  },
+  { fn: "refresh_analytics_views", args: [] },
+  { fn: "refresh_analytics_views_ordered", args: [] },
+  { fn: "refresh_outstanding_balance", args: ["p_hospital_id"] },
+  { fn: "refresh_single_mv", args: ["p_view_name"] },
+  {
+    fn: "register_migration",
+    args: [
+      "p_migration_id",
+      "p_filename",
+      "p_description",
+      "p_category",
+      "p_depends_on",
+      "p_version",
+      "p_duration_ms",
+      "p_checksum",
+      "p_is_reversible",
+      "p_rollback_script",
+      "p_applied_by",
+    ],
+  },
+  {
+    fn: "register_webhook_event",
+    args: ["p_webhook_event_id", "p_event_type", "p_payload"],
+  },
+  {
+    fn: "register_webhook_event_v2",
+    args: [
+      "p_provider",
+      "p_provider_event_id",
+      "p_event_type",
+      "p_payload_hash",
+      "p_raw_payload",
+      "p_hospital_id",
+    ],
+  },
+  {
+    fn: "register_worker",
+    args: [
+      "p_worker_id",
+      "p_worker_type",
+      "p_instance_id",
+      "p_hostname",
+      "p_lease_duration",
+    ],
+  },
+  { fn: "reset_stale_idempotency_keys", args: ["p_stuck_minutes"] },
+  { fn: "resolve_alert", args: ["p_alert_id", "p_actor_id", "p_notes"] },
+  {
+    fn: "resolve_alert_threshold",
+    args: ["p_hospital_id", "p_alert_key", "p_fallback"],
+  },
+  {
+    fn: "resolve_security_event",
+    args: ["p_event_id", "p_resolved_by", "p_notes"],
+  },
+  {
+    fn: "restore_queue_token",
+    args: ["p_queue_session_id", "p_booking_id", "p_actor_id"],
+  },
+  { fn: "resume_queue", args: ["p_queue_session_id", "p_actor_id"] },
+  { fn: "retry_dead_letter_item", args: ["p_dlq_id", "p_resolved_by"] },
+  {
+    fn: "return_to_waiting",
+    args: ["p_queue_session_id", "p_booking_id", "p_actor_id"],
+  },
+  {
+    fn: "rollback_feature_flag",
+    args: [
+      "p_hospital_id",
+      "p_flag_key",
+      "p_target_version",
+      "p_rolled_back_by",
+      "p_reason",
+    ],
+  },
+  {
+    fn: "rollback_system_setting",
+    args: ["p_key", "p_target_version", "p_rolled_back_by", "p_reason"],
+  },
+  { fn: "run_analytics_rollups", args: ["p_target_date"] },
+  { fn: "run_health_check", args: [] },
+  { fn: "run_nightly_tasks", args: ["p_hospital_id"] },
+  { fn: "run_retention_cleanup", args: [] },
+  { fn: "run_scheduled_tasks", args: [] },
+  { fn: "run_worker_crash_recovery", args: [] },
+  {
+    fn: "save_consultation_note",
+    args: [
+      "p_booking_id",
+      "p_doctor_id",
+      "p_notes",
+      "p_diagnosis_summary",
+      "p_prescription",
+      "p_follow_up_date",
+      "p_attachments",
+    ],
+  },
+  { fn: "schedule_notification_retry", args: ["p_notification_id", "p_error"] },
+  { fn: "schedule_partition_creation", args: [] },
+  { fn: "schedule_whatsapp_retry", args: ["p_message_id", "p_error"] },
+  {
+    fn: "search_audit_logs",
+    args: [
+      "p_hospital_id",
+      "p_actor_id",
+      "p_entity_type",
+      "p_action_type",
+      "p_from_ts",
+      "p_to_ts",
+      "p_correlation_id",
+      "p_limit",
+    ],
+  },
+  {
+    fn: "send_to_dead_letter",
+    args: [
+      "p_source",
+      "p_source_id",
+      "p_source_table",
+      "p_job_type",
+      "p_hospital_id",
+      "p_booking_id",
+      "p_patient_id",
+      "p_attempt_count",
+      "p_last_error",
+      "p_payload",
+      "p_priority",
+    ],
+  },
+  {
+    fn: "set_conversation_state",
+    args: [
+      "p_hospital_id",
+      "p_phone",
+      "p_state",
+      "p_context",
+      "p_ttl_minutes",
+      "p_last_intent",
+      "p_unknown_count",
+      "p_handoff_reason",
+    ],
+  },
+  {
+    fn: "skip_queue_token",
+    args: ["p_queue_session_id", "p_booking_id", "p_actor_id"],
+  },
+  { fn: "soft_delete_aged_messages", args: [] },
+  {
+    fn: "start_consultation",
+    args: ["p_queue_session_id", "p_booking_id", "p_actor_id"],
+  },
+  { fn: "stop_worker", args: ["p_worker_id", "p_drain"] },
+  {
+    fn: "suppress_alerts",
+    args: [
+      "p_alert_key",
+      "p_active_until",
+      "p_actor_id",
+      "p_hospital_id",
+      "p_reason",
+    ],
+  },
+  { fn: "sync_subscription_usage", args: ["p_hospital_id"] },
+  { fn: "take_deployment_snapshot", args: ["p_label", "p_created_by"] },
+  { fn: "terminate_device_session", args: ["p_session_id", "p_user_id"] },
+  { fn: "trigger_sla_refresh", args: ["p_hospital_id", "p_date"] },
+  {
+    fn: "try_fire_queue_alert",
+    args: [
+      "p_hospital_id",
+      "p_queue_session_id",
+      "p_alert_key",
+      "p_severity",
+      "p_current_value",
+      "p_threshold_value",
+      "p_threshold_unit",
+      "p_message",
+    ],
+  },
+  {
+    fn: "upsert_device_session",
+    args: [
+      "p_user_id",
+      "p_hospital_id",
+      "p_device_name",
+      "p_device_type",
+      "p_ip_address",
+      "p_user_agent",
+      "p_session_token_hash",
+    ],
+  },
+  { fn: "upsert_presence", args: ["p_hospital_id", "p_tab_id", "p_metadata"] },
+  { fn: "verify_audit_integrity", args: ["p_hospital_id", "p_from_ts"] },
+  { fn: "verify_doctor_operations_integrity", args: ["p_doctor_id", "p_date"] },
+  { fn: "verify_integration_matrix", args: ["p_hospital_id", "p_date"] },
+  { fn: "verify_queue_integrity", args: ["p_queue_session_id"] },
+  { fn: "verify_settlement_integrity", args: ["p_hospital_id"] },
+  {
+    fn: "worker_heartbeat",
+    args: ["p_worker_id", "p_jobs_in_flight", "p_metadata"],
+  },
+  {
+    fn: "write_audit_log",
+    args: [
+      "p_hospital_id",
+      "p_actor_id",
+      "p_entity_type",
+      "p_entity_id",
+      "p_action",
+      "p_severity",
+      "p_old_data",
+      "p_new_data",
+      "p_notes",
+      "p_metadata",
+    ],
+  },
+  { fn: "write_queue_metrics_snapshot", args: [] },
+];
+
+function nullPayload(args: string[]): Record<string, unknown> {
+  const o: Record<string, unknown> = {};
+  for (const a of args) o[a] = null;
+  return o;
+}
+
+Deno.test("privilege: F16-06 locked-routine census is complete and unique", () => {
+  const names = LOCKED_ROUTINES.map((r) => r.fn);
+  assertEquals(
+    new Set(names).size,
+    names.length,
+    "duplicate routine name in the locked-routine census",
+  );
+  // 177 is the authoritative locked callable count (Category B/C/D routines
+  // revoked to service_role; see the census comment).
+  assertEquals(
+    names.length,
+    177,
+    "locked-routine census drifted from the authoritative count",
+  );
+});
+
+Deno.test("privilege: F16-06 every locked routine denies anon (HTTP 401 / SQLSTATE 42501)", async () => {
+  await ctx();
+  for (const r of LOCKED_ROUTINES) {
+    const res = await rpcAs(ANON, r.fn, nullPayload(r.args));
+    assertPrivilegeDenied(res, `anon -> ${r.fn}`, 401);
+  }
+});
+
+Deno.test("privilege: F16-06 every locked routine denies a genuine authenticated user (HTTP 403 / SQLSTATE 42501)", async () => {
+  const f = fx();
+  // clerkA is the lowest-privilege authenticated fixture. Prove the JWT
+  // authenticates FIRST (F16-05), so every 403 below is an insufficient-
+  // privilege denial at the database boundary, never a JWT-layer rejection.
+  await assertGenuinelyAuthenticated(f.clerkA.caller, "clerkA");
+  for (const r of LOCKED_ROUTINES) {
+    const res = await rpcAs(f.clerkA.caller, r.fn, nullPayload(r.args));
+    assertPrivilegeDenied(res, `authenticated:clerkA -> ${r.fn}`, 403);
+  }
 });
 
 // ─── 6. Tenant isolation on the five hardened tables ─────────────────────────

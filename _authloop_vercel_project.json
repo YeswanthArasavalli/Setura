@@ -1,0 +1,513 @@
+{
+  "accountId": "team_xQHrRH4w4Z56xJ6PBuXOficc",
+  "creator": {
+    "type": "user",
+    "user": {
+      "id": "7bmPOyBsDjDAUzN4imW0V9uz"
+    },
+    "via": null
+  },
+  "alias": [],
+  "speedInsights": {
+    "id": "7zboYa5L1MehjqtGkWzXtdaXfrd",
+    "hasData": false
+  },
+  "autoExposeSystemEnvs": true,
+  "autoAssignCustomDomains": true,
+  "autoAssignCustomDomainsUpdatedBy": "system",
+  "buildCommand": null,
+  "createdAt": 1789880662716,
+  "crons": {
+    "enabledAt": 1789880669823,
+    "disabledAt": null,
+    "updatedAt": 1790757241309,
+    "deploymentId": "dpl_HzvZDcor9e4EMRxa7dGPnsgYyVDJ",
+    "definitions": []
+  },
+  "deploymentExpiration": {
+    "expirationDays": 30,
+    "expirationDaysProduction": 30,
+    "expirationDaysCanceled": 30,
+    "expirationDaysErrored": 30,
+    "deploymentsToKeep": 10
+  },
+  "devCommand": null,
+  "directoryListing": false,
+  "env": [
+    {
+      "type": "sensitive",
+      "value": "",
+      "target": [
+        "production"
+      ],
+      "configurationId": "icfg_KeRwneMmUSb3PTZWzcDfghzZ",
+      "visibility": "secret",
+      "id": "YugmbspYxs1zzV9V",
+      "key": "POSTGRES_URL",
+      "createdAt": 1789926653201,
+      "updatedAt": 1789929442694,
+      "createdBy": "7bmPOyBsDjDAUzN4imW0V9uz",
+      "updatedBy": "7bmPOyBsDjDAUzN4imW0V9uz"
+    },
+    {
+      "type": "sensitive",
+      "value": "",
+      "target": [
+        "production"
+      ],
+      "configurationId": "icfg_KeRwneMmUSb3PTZWzcDfghzZ",
+      "visibility": "secret",
+      "id": "kqMzUdEnqvZB04Y5",
+      "key": "POSTGRES_PRISMA_URL",
+      "createdAt": 1789926653201,
+      "updatedAt": 1789929442694,
+      "createdBy": "7bmPOyBsDjDAUzN4imW0V9uz",
+      "updatedBy": "7bmPOyBsDjDAUzN4imW0V9uz"
+    },
+    {
+      "type": "sensitive",
+      "value": "",
+      "target": [
+        "production"
+      ],
+      "configurationId": "icfg_KeRwneMmUSb3PTZWzcDfghzZ",
+      "visibility": "secret",
+      "id": "DkCc4jQmp2vLuAU5",
+      "key": "POSTGRES_URL_NON_POOLING",
+      "createdAt": 1789926653201,
+      "updatedAt": 1789929442694,
+      "createdBy": "7bmPOyBsDjDAUzN4imW0V9uz",
+      "updatedBy": "7bmPOyBsDjDAUzN4imW0V9uz"
+    },
+    {
+      "type": "encrypted",
+      "value": "eyJ2IjoidjIiLCJjIjoiUlNzMXA3OHh2eEpTVC9KN0NIY0VLKzdKUkwyQjFaS3IrMkVWRnprWmdmT0dtcmM5eU53RGxzM24veXIxaFh1M01tanJxcVRMUE5UQkcwdW15SDZyWEttazJLN1cyYk9YNTBaNXdVc2haTlk9IiwiayI6WzE4NCwxLDIsMywwLDEyMCwxMDcsMTE5LDE1MywyMywyMjMsMTE3LDE4MywxMjAsNTcsMTk2LDExLDI4LDI0OSwxMTksMTA0LDIxMywxNjksMTYxLDE0MSwxNDIsOTksNjUsNDksMjEyLDMwLDE5OSw5NywyMDQsMjE4LDc3LDEwNSwxNzksMSwyMTcsNjcsMjE1LDE1NCwyMTQsMjMyLDE0NSwxNjcsMzIsNTgsMTg1LDIxNCwyNDAsMzAsMjE5LDc1LDAsMCwwLDEyNiw0OCwxMjQsNiw5LDQyLDEzNCw3MiwxMzQsMjQ3LDEzLDEsNyw2LDE2MCwxMTEsNDgsMTA5LDIsMSwwLDQ4LDEwNCw2LDksNDIsMTM0LDcyLDEzNCwyNDcsMTMsMSw3LDEsNDgsMzAsNiw5LDk2LDEzNCw3MiwxLDEwMSwzLDQsMSw0Niw0OCwxNyw0LDEyLDQ3LDEsMTMxLDg4LDUwLDE2OSwzOSw5NSwxMzQsMTY0LDExNyw0MywyLDEsMTYsMTI4LDU5LDc0LDE5OSw4NSw4NSw1OCw2OSw1NywxODAsMzEsOTQsMTE5LDE4MiwxNTgsOTIsMTcxLDE2MSwyMiwyMDAsOTksMjU0LDU4LDIzMywzNiw0MywxMTYsMjA1LDE1NiwyMTksMTk5LDEzOCwxOCwzOSwxMDMsODUsMjEzLDEzNiw4Myw4NywyMjIsODksNDAsMjAyLDEwOCw3OCw3MiwxNTMsNjAsMTM5LDIyNCwxNTUsMjAsMjEyLDIxMiwyNDMsMTIzLDI0NCwxMzMsMjUyLDEwN119",
+      "target": [
+        "production"
+      ],
+      "configurationId": "icfg_KeRwneMmUSb3PTZWzcDfghzZ",
+      "id": "2HQvpFJXNMjJamDv",
+      "key": "POSTGRES_USER",
+      "createdAt": 1789926653201,
+      "updatedAt": 1789926653201,
+      "createdBy": "7bmPOyBsDjDAUzN4imW0V9uz",
+      "updatedBy": null
+    },
+    {
+      "type": "encrypted",
+      "value": "eyJ2IjoidjIiLCJjIjoieHZPU0d4VHdjakRET1hoSVlNZ3BGOXdVUVFoMEVhL1FWUVlMMWtlTmRrZ2c2K1A4ZUVvS21VSDc4U3oydGpHUFBEUWJmNTQrelFySnpPQ29GM1pwNEYvMmRMSjM3U1luSXloemlCMEtvbWN0d3VBNzFXempKdHNac3k3MExJWHZGYXpCSG9MZjk0SnBuYlZKM1ZGaTE5MHZ0STBQSTIzUiszemRBc0t4RThrPSIsImsiOlsxODQsMSwyLDMsMCwxMjAsMTA3LDExOSwxNTMsMjMsMjIzLDExNywxODMsMTIwLDU3LDE5NiwxMSwyOCwyNDksMTE5LDEwNCwyMTMsMTY5LDE2MSwxNDEsMTQyLDk5LDY1LDQ5LDIxMiwzMCwxOTksOTcsMjA0LDIxOCw3NywxMDUsMTc5LDEsMjE3LDY3LDIxNSwxNTQsMjE0LDIzMiwxNDUsMTY3LDMyLDU4LDE4NSwyMTQsMjQwLDMwLDIxOSw3NSwwLDAsMCwxMjYsNDgsMTI0LDYsOSw0MiwxMzQsNzIsMTM0LDI0NywxMywxLDcsNiwxNjAsMTExLDQ4LDEwOSwyLDEsMCw0OCwxMDQsNiw5LDQyLDEzNCw3MiwxMzQsMjQ3LDEzLDEsNywxLDQ4LDMwLDYsOSw5NiwxMzQsNzIsMSwxMDEsMyw0LDEsNDYsNDgsMTcsNCwxMiw0NywxLDEzMSw4OCw1MCwxNjksMzksOTUsMTM0LDE2NCwxMTcsNDMsMiwxLDE2LDEyOCw1OSw3NCwxOTksODUsODUsNTgsNjksNTcsMTgwLDMxLDk0LDExOSwxODIsMTU4LDkyLDE3MSwxNjEsMjIsMjAwLDk5LDI1NCw1OCwyMzMsMzYsNDMsMTE2LDIwNSwxNTYsMjE5LDE5OSwxMzgsMTgsMzksMTAzLDg1LDIxMywxMzYsODMsODcsMjIyLDg5LDQwLDIwMiwxMDgsNzgsNzIsMTUzLDYwLDEzOSwyMjQsMTU1LDIwLDIxMiwyMTIsMjQzLDEyMywyNDQsMTMzLDI1MiwxMDddfQ==",
+      "target": [
+        "production"
+      ],
+      "configurationId": "icfg_KeRwneMmUSb3PTZWzcDfghzZ",
+      "id": "ys0EUOgswPqCSHhP",
+      "key": "POSTGRES_HOST",
+      "createdAt": 1789926653201,
+      "updatedAt": 1789926653201,
+      "createdBy": "7bmPOyBsDjDAUzN4imW0V9uz",
+      "updatedBy": null
+    },
+    {
+      "type": "sensitive",
+      "value": "",
+      "target": [
+        "production"
+      ],
+      "configurationId": "icfg_KeRwneMmUSb3PTZWzcDfghzZ",
+      "visibility": "secret",
+      "id": "32XiUAqd5vJtutDH",
+      "key": "POSTGRES_PASSWORD",
+      "createdAt": 1789926653201,
+      "updatedAt": 1789929442694,
+      "createdBy": "7bmPOyBsDjDAUzN4imW0V9uz",
+      "updatedBy": "7bmPOyBsDjDAUzN4imW0V9uz"
+    },
+    {
+      "type": "encrypted",
+      "value": "eyJ2IjoidjIiLCJjIjoibmM5RjE1MjV5NlZTbW1JNU0wUllqcFdKeDArbTBvd1hnY2I0RFpveStPYzRlVkNwY3o4MWFiQUFBQTBsOGUva1FzWXdpcFFSWWVaYkdINE95SHdNYTNFZk5xSjloMWZvemdaazZnYjdUR2M9IiwiayI6WzE4NCwxLDIsMywwLDEyMCwxMDcsMTE5LDE1MywyMywyMjMsMTE3LDE4MywxMjAsNTcsMTk2LDExLDI4LDI0OSwxMTksMTA0LDIxMywxNjksMTYxLDE0MSwxNDIsOTksNjUsNDksMjEyLDMwLDE5OSw5NywyMDQsMjE4LDc3LDEwNSwxNzksMSwxNzUsMjI1LDEwOCw3NiwxNiwxMzEsMTQ0LDEwNiwyNCwxNTksMTI4LDE5MSwyMDQsMjQ0LDI0NCwyMjMsMCwwLDAsMTI2LDQ4LDEyNCw2LDksNDIsMTM0LDcyLDEzNCwyNDcsMTMsMSw3LDYsMTYwLDExMSw0OCwxMDksMiwxLDAsNDgsMTA0LDYsOSw0MiwxMzQsNzIsMTM0LDI0NywxMywxLDcsMSw0OCwzMCw2LDksOTYsMTM0LDcyLDEsMTAxLDMsNCwxLDQ2LDQ4LDE3LDQsMTIsMTU1LDEzNCwxODgsMzksMjMsODAsOTksMTkyLDE0Myw2NCwyNTEsNjcsMiwxLDE2LDEyOCw1OSwzNSwyNTAsMTUyLDEyMSwyMTEsMTY3LDE4MiwxNjksMTg2LDE3Miw4NCwyMTMsOTAsMTEzLDI1MywyMzQsMjcsMTc0LDUyLDE4MSwxMiw3MSwyNDQsMTQzLDUzLDExNCw0MSw5NiwxMzMsMjExLDUzLDIyOSw1MiwyMjEsMTczLDIyNCwyNDgsMjQyLDk3LDIzNSwyMDIsMTM2LDE5Myw5MywxMjUsMTYsMTcyLDIwMiw0OCwxNzUsMzQsMjE2LDEyMSwxMzcsODksMTA2LDE4OCw0MiwxMzVdfQ==",
+      "target": [
+        "production"
+      ],
+      "configurationId": "icfg_KeRwneMmUSb3PTZWzcDfghzZ",
+      "id": "Uy7MohcsQ9MVTOoh",
+      "key": "POSTGRES_DATABASE",
+      "createdAt": 1789926653201,
+      "updatedAt": 1789926653201,
+      "createdBy": "7bmPOyBsDjDAUzN4imW0V9uz",
+      "updatedBy": null
+    },
+    {
+      "type": "encrypted",
+      "value": "eyJ2IjoidjIiLCJjIjoiQlhqc29VVHozMGNTakNMZ09MRklpTThuQnY5MlZMWlJqcXgyU05GMUxIczNoNXlRN25vdHZMWkx1dzhBVTBpcG5xV3lTeUhGR2dOM0ROZm1hcjN0eEZmRElWWDkzYkhZbTN2ZjRrYzZGVERqaXp3cFVzNDRzOVd0YlQySEVDTmxPVTdzMm5jSGhjZm5NMzVKd0pUT2ZtU25ra21ZbXREaXNucEQrVVk4MkVNUWthdWI3TDkxMXNZTDFxbz0iLCJrIjpbMTg0LDEsMiwzLDAsMTIwLDEwNywxMTksMTUzLDIzLDIyMywxMTcsMTgzLDEyMCw1NywxOTYsMTEsMjgsMjQ5LDExOSwxMDQsMjEzLDE2OSwxNjEsMTQxLDE0Miw5OSw2NSw0OSwyMTIsMzAsMTk5LDk3LDIwNCwyMTgsNzcsMTA1LDE3OSwxLDIxNyw2NywyMTUsMTU0LDIxNCwyMzIsMTQ1LDE2NywzMiw1OCwxODUsMjE0LDI0MCwzMCwyMTksNzUsMCwwLDAsMTI2LDQ4LDEyNCw2LDksNDIsMTM0LDcyLDEzNCwyNDcsMTMsMSw3LDYsMTYwLDExMSw0OCwxMDksMiwxLDAsNDgsMTA0LDYsOSw0MiwxMzQsNzIsMTM0LDI0NywxMywxLDcsMSw0OCwzMCw2LDksOTYsMTM0LDcyLDEsMTAxLDMsNCwxLDQ2LDQ4LDE3LDQsMTIsNDcsMSwxMzEsODgsNTAsMTY5LDM5LDk1LDEzNCwxNjQsMTE3LDQzLDIsMSwxNiwxMjgsNTksNzQsMTk5LDg1LDg1LDU4LDY5LDU3LDE4MCwzMSw5NCwxMTksMTgyLDE1OCw5MiwxNzEsMTYxLDIyLDIwMCw5OSwyNTQsNTgsMjMzLDM2LDQzLDExNiwyMDUsMTU2LDIxOSwxOTksMTM4LDE4LDM5LDEwMyw4NSwyMTMsMTM2LDgzLDg3LDIyMiw4OSw0MCwyMDIsMTA4LDc4LDcyLDE1Myw2MCwxMzksMjI0LDE1NSwyMCwyMTIsMjEyLDI0MywxMjMsMjQ0LDEzMywyNTIsMTA3XX0=",
+      "target": [
+        "preview"
+      ],
+      "configurationId": null,
+      "visibility": "config",
+      "id": "zuAKT4gJRXQXl6U4",
+      "key": "VITE_SUPABASE_URL",
+      "createdAt": 1789972984306,
+      "updatedAt": 1789972984306,
+      "createdBy": "7bmPOyBsDjDAUzN4imW0V9uz",
+      "updatedBy": null
+    },
+    {
+      "type": "encrypted",
+      "value": "eyJ2IjoidjIiLCJjIjoiTnkxOXJMc2VwdW9yU21tU2R1aXpDR2tIVm5mS0p2SjZhZzlTVlczY29kQnZUckVyVVFuTW51eUljdkpMVzE3d3ZYcjI2RUFEOWp6UWNDcVFXcHFORVR0YVZ6QVMwc2lzSE9qaHAyckZKVXc2ZlJVNnpuZnpmUlJCekVLV3RWQzNJR0hvTXV2eE5ZWlJMbUdVeEJ5OVRZd2pJd3FMUzR0ZWFGVThPWlI5T2dqNXJud0xBRXpEcFZKazl5ak1wQlJlbkp3QlVnPT0iLCJrIjpbMTg0LDEsMiwzLDAsMTIwLDEwNywxMTksMTUzLDIzLDIyMywxMTcsMTgzLDEyMCw1NywxOTYsMTEsMjgsMjQ5LDExOSwxMDQsMjEzLDE2OSwxNjEsMTQxLDE0Miw5OSw2NSw0OSwyMTIsMzAsMTk5LDk3LDIwNCwyMTgsNzcsMTA1LDE3OSwxLDE3NCwxMzgsNCwyMjYsMjEsMTkyLDg4LDE0Niw3NiwxNTYsMzYsOTIsOTgsMTYyLDE1NCwzMCwwLDAsMCwxMjYsNDgsMTI0LDYsOSw0MiwxMzQsNzIsMTM0LDI0NywxMywxLDcsNiwxNjAsMTExLDQ4LDEwOSwyLDEsMCw0OCwxMDQsNiw5LDQyLDEzNCw3MiwxMzQsMjQ3LDEzLDEsNywxLDQ4LDMwLDYsOSw5NiwxMzQsNzIsMSwxMDEsMyw0LDEsNDYsNDgsMTcsNCwxMiw5NCwyMDcsMTI1LDE4NSwyNTIsMjgsNTUsMTk1LDEyOCwyMzMsMTA5LDgwLDIsMSwxNiwxMjgsNTksMjIwLDIwNiwyMzYsODMsMjMsNTIsNCwyOSwyMDAsMTg1LDQ1LDQyLDI1NCwxNDcsNDcsMTAwLDI0NSwxMDUsMjUzLDE2Niw3MCwzMSwyMDMsMjQ1LDEwOSw3NiwxNDcsMjM5LDEzMCwyNTUsMjEwLDE4NCw3MiwxMTMsMTIwLDI0MSwxOTMsMTkxLDI0NywxMDgsMTkwLDI0LDEzNiw3OCwxMjEsMjQ3LDc3LDEyNCwyNDUsNjYsMTY3LDIyOCwyMDMsNTUsMTY0LDIzLDEyNSwyMSwxOTFdfQ==",
+      "target": [
+        "preview"
+      ],
+      "configurationId": null,
+      "visibility": "config",
+      "id": "MVJHsvVJIkfaKyMM",
+      "key": "VITE_SUPABASE_ANON_KEY",
+      "createdAt": 1789972987351,
+      "updatedAt": 1789972987351,
+      "createdBy": "7bmPOyBsDjDAUzN4imW0V9uz",
+      "updatedBy": null
+    },
+    {
+      "type": "encrypted",
+      "value": "eyJ2IjoidjIiLCJjIjoiU2R5ZnVseC92czhZcGhNWkQ2ZkZmTWQxbS9qUlpMZWhLck94aXphVWFwZHI4WXFIVjZXMW84VUxPVzRsdUxqTVk3di9NRFAxc1F1UG5DaytYZGpMN1cyTE1MTjFaR1hraHJudjdjV2RUTUpWcGNLSVZ5aHdhQ3FpV2t4QTFweEtRMHR2Tm81S3pOK0lSWFJ3RWM4N2UvOWhvOTFmbU0zaDFwSURkT0tHVkM1TWdwTjNPMkNFK25KSCtzVT0iLCJrIjpbMTg0LDEsMiwzLDAsMTIwLDEwNywxMTksMTUzLDIzLDIyMywxMTcsMTgzLDEyMCw1NywxOTYsMTEsMjgsMjQ5LDExOSwxMDQsMjEzLDE2OSwxNjEsMTQxLDE0Miw5OSw2NSw0OSwyMTIsMzAsMTk5LDk3LDIwNCwyMTgsNzcsMTA1LDE3OSwxLDE3NSwyMjUsMTA4LDc2LDE2LDEzMSwxNDQsMTA2LDI0LDE1OSwxMjgsMTkxLDIwNCwyNDQsMjQ0LDIyMywwLDAsMCwxMjYsNDgsMTI0LDYsOSw0MiwxMzQsNzIsMTM0LDI0NywxMywxLDcsNiwxNjAsMTExLDQ4LDEwOSwyLDEsMCw0OCwxMDQsNiw5LDQyLDEzNCw3MiwxMzQsMjQ3LDEzLDEsNywxLDQ4LDMwLDYsOSw5NiwxMzQsNzIsMSwxMDEsMyw0LDEsNDYsNDgsMTcsNCwxMiwxNTUsMTM0LDE4OCwzOSwyMyw4MCw5OSwxOTIsMTQzLDY0LDI1MSw2NywyLDEsMTYsMTI4LDU5LDM1LDI1MCwxNTIsMTIxLDIxMSwxNjcsMTgyLDE2OSwxODYsMTcyLDg0LDIxMyw5MCwxMTMsMjUzLDIzNCwyNywxNzQsNTIsMTgxLDEyLDcxLDI0NCwxNDMsNTMsMTE0LDQxLDk2LDEzMywyMTEsNTMsMjI5LDUyLDIyMSwxNzMsMjI0LDI0OCwyNDIsOTcsMjM1LDIwMiwxMzYsMTkzLDkzLDEyNSwxNiwxNzIsMjAyLDQ4LDE3NSwzNCwyMTYsMTIxLDEzNyw4OSwxMDYsMTg4LDQyLDEzNV19",
+      "target": [
+        "production"
+      ],
+      "configurationId": null,
+      "visibility": "config",
+      "id": "iCvGJ3g2sUPcDEiu",
+      "key": "VITE_SUPABASE_URL",
+      "createdAt": 1789981089347,
+      "updatedAt": 1789981089347,
+      "createdBy": "7bmPOyBsDjDAUzN4imW0V9uz",
+      "updatedBy": null
+    },
+    {
+      "type": "encrypted",
+      "value": "eyJ2IjoidjIiLCJjIjoiVWZvUjJvcjBZYkhDQ2UvKzVnVTN0b2xSVmRkcmY1MmtUUEhIMnRJeVczcm1mcGdWUjhkdm10SmJZeDlCbGRNL05hN05EMjBlSVkzN3kvT0VqYkVmYmZrZlhGMUx2OHp6VUh3YUlaMjhUVFNPZ2YvREtMTDM0MXdSZi9vSDVOeWhlTDJHdDZqSjBLRUFrd0l0MGUrTUJJZlJET0pDYUlpRWFMRDF4RG84YVBrR0NxS08reVpLRHVJRC9EZGJtRVdTV1F4WENnPT0iLCJrIjpbMTg0LDEsMiwzLDAsMTIwLDEwNywxMTksMTUzLDIzLDIyMywxMTcsMTgzLDEyMCw1NywxOTYsMTEsMjgsMjQ5LDExOSwxMDQsMjEzLDE2OSwxNjEsMTQxLDE0Miw5OSw2NSw0OSwyMTIsMzAsMTk5LDk3LDIwNCwyMTgsNzcsMTA1LDE3OSwxLDE3NSwyMjUsMTA4LDc2LDE2LDEzMSwxNDQsMTA2LDI0LDE1OSwxMjgsMTkxLDIwNCwyNDQsMjQ0LDIyMywwLDAsMCwxMjYsNDgsMTI0LDYsOSw0MiwxMzQsNzIsMTM0LDI0NywxMywxLDcsNiwxNjAsMTExLDQ4LDEwOSwyLDEsMCw0OCwxMDQsNiw5LDQyLDEzNCw3MiwxMzQsMjQ3LDEzLDEsNywxLDQ4LDMwLDYsOSw5NiwxMzQsNzIsMSwxMDEsMyw0LDEsNDYsNDgsMTcsNCwxMiwxNTUsMTM0LDE4OCwzOSwyMyw4MCw5OSwxOTIsMTQzLDY0LDI1MSw2NywyLDEsMTYsMTI4LDU5LDM1LDI1MCwxNTIsMTIxLDIxMSwxNjcsMTgyLDE2OSwxODYsMTcyLDg0LDIxMyw5MCwxMTMsMjUzLDIzNCwyNywxNzQsNTIsMTgxLDEyLDcxLDI0NCwxNDMsNTMsMTE0LDQxLDk2LDEzMywyMTEsNTMsMjI5LDUyLDIyMSwxNzMsMjI0LDI0OCwyNDIsOTcsMjM1LDIwMiwxMzYsMTkzLDkzLDEyNSwxNiwxNzIsMjAyLDQ4LDE3NSwzNCwyMTYsMTIxLDEzNyw4OSwxMDYsMTg4LDQyLDEzNV19",
+      "target": [
+        "production"
+      ],
+      "configurationId": null,
+      "visibility": "config",
+      "id": "a9wk7CiCh0NGjlW3",
+      "key": "VITE_SUPABASE_ANON_KEY",
+      "createdAt": 1789981092361,
+      "updatedAt": 1789981092361,
+      "createdBy": "7bmPOyBsDjDAUzN4imW0V9uz",
+      "updatedBy": null
+    }
+  ],
+  "framework": null,
+  "gitForkProtection": true,
+  "gitLFS": false,
+  "id": "prj_PZq3TlY28vzz3hF6x0TKpvxK6gMH",
+  "installCommand": null,
+  "lastRollbackTarget": null,
+  "lastAliasRequest": null,
+  "name": "setura",
+  "nodeVersion": "24.x",
+  "outputDirectory": null,
+  "passwordProtection": null,
+  "sandbox": {
+    "failoverRegions": [],
+    "region": "iad1"
+  },
+  "productionDeploymentsFastLane": true,
+  "defaultResourceConfig": {
+    "fluid": true,
+    "functionDefaultRegions": [
+      "iad1"
+    ],
+    "functionDefaultTimeout": 300,
+    "functionDefaultMemoryType": "standard",
+    "functionZeroConfigFailover": false,
+    "elasticConcurrencyEnabled": false
+  },
+  "resourceConfig": {
+    "fluid": true,
+    "functionDefaultRegions": [
+      "iad1"
+    ],
+    "buildMachineType": "basic",
+    "buildMachineSelection": "fixed"
+  },
+  "rootDirectory": "apps/web",
+  "serverlessFunctionRegion": "iad1",
+  "sourceFilesOutsideRootDirectory": true,
+  "enableAffectedProjectsDeployments": true,
+  "ssoProtection": null,
+  "updatedAt": 1790770511717,
+  "live": false,
+  "enableExternalRewriteCaching": true,
+  "gitComments": {
+    "onCommit": false,
+    "onPullRequest": true
+  },
+  "gitProviderOptions": {
+    "createDeployments": "enabled"
+  },
+  "webAnalytics": {
+    "id": "Zb3OlW1Gekm11rBG3yfL9FYS9"
+  },
+  "oidcTokenConfig": {
+    "enabled": true,
+    "issuerMode": "team"
+  },
+  "hasDeployments": true,
+  "link": {
+    "type": "github",
+    "repo": "Setura",
+    "repoId": 1355503301,
+    "org": "YeswanthArasavalli",
+    "repoOwnerId": 132380899,
+    "gitCredentialId": "cred_8883a562d55a16d8b689f6b1614641140ee6f6d6",
+    "productionBranch": "main",
+    "sourceless": true,
+    "createdAt": 1789880662521,
+    "updatedAt": 1789880662521,
+    "deployHooks": []
+  },
+  "latestDeployments": [
+    {
+      "alias": [
+        "setura-yeswantharasavallis-projects.vercel.app"
+      ],
+      "aliasAssigned": null,
+      "automaticAliases": [
+        "setura-yeswantharasavallis-projects.vercel.app"
+      ],
+      "builds": [],
+      "createdAt": 1790770510995,
+      "createdIn": "sfo1",
+      "creator": {
+        "uid": "7bmPOyBsDjDAUzN4imW0V9uz",
+        "email": "yeswantharasavalli@gmail.com",
+        "username": "yeswantharasavalli"
+      },
+      "deploymentHostname": "setura-izv0ts4zj-yeswantharasavallis-projects",
+      "forced": false,
+      "id": "dpl_BNvBLYkETA4md1VLTFa4QmAT3dRf",
+      "meta": {
+        "githubCommitAuthorName": "YeswanthArasavalli",
+        "githubCommitAuthorEmail": "132380899+YeswanthArasavalli@users.noreply.github.com",
+        "githubCommitMessage": "Staff booking reschedule + G-06 closure",
+        "githubCommitOrg": "YeswanthArasavalli",
+        "githubCommitRef": "main",
+        "githubCommitRepo": "Setura",
+        "githubCommitSha": "da5332efab5583a957f645a4a5c145ec42c46c5b",
+        "githubDeployment": "1",
+        "githubOrg": "YeswanthArasavalli",
+        "githubRepo": "Setura",
+        "gitDirty": "1",
+        "gitRootDirectory": ""
+      },
+      "name": "setura",
+      "plan": "hobby",
+      "private": true,
+      "readyState": "ERROR",
+      "target": "production",
+      "teamId": "team_xQHrRH4w4Z56xJ6PBuXOficc",
+      "type": "LAMBDAS",
+      "url": "setura-izv0ts4zj-yeswantharasavallis-projects.vercel.app",
+      "userId": "7bmPOyBsDjDAUzN4imW0V9uz",
+      "withCache": false,
+      "buildingAt": 1790770512588,
+      "readyAt": 1790770524088,
+      "previewCommentsEnabled": true,
+      "oidcTokenClaims": {
+        "sub": "owner:yeswantharasavallis-projects:project:setura:environment:production",
+        "iss": "https://oidc.vercel.com/yeswantharasavallis-projects",
+        "scope": "owner:yeswantharasavallis-projects:project:setura:environment:production",
+        "aud": "https://vercel.com/yeswantharasavallis-projects",
+        "owner": "yeswantharasavallis-projects",
+        "owner_id": "team_xQHrRH4w4Z56xJ6PBuXOficc",
+        "project": "setura",
+        "project_id": "prj_PZq3TlY28vzz3hF6x0TKpvxK6gMH",
+        "environment": "production",
+        "plan": "hobby"
+      }
+    },
+    {
+      "alias": [
+        "setura-yeswantharasavallis-projects.vercel.app"
+      ],
+      "aliasAssigned": null,
+      "automaticAliases": [
+        "setura-yeswantharasavallis-projects.vercel.app"
+      ],
+      "builds": [],
+      "createdAt": 1790770460810,
+      "createdIn": "sfo1",
+      "creator": {
+        "uid": "7bmPOyBsDjDAUzN4imW0V9uz",
+        "email": "yeswantharasavalli@gmail.com",
+        "username": "yeswantharasavalli"
+      },
+      "deploymentHostname": "setura-ki6ykn82m-yeswantharasavallis-projects",
+      "forced": false,
+      "id": "dpl_FCcwXVo8oeSwtstusyDfkGanpTtH",
+      "meta": {
+        "githubCommitAuthorName": "YeswanthArasavalli",
+        "githubCommitAuthorEmail": "132380899+YeswanthArasavalli@users.noreply.github.com",
+        "githubCommitMessage": "Staff booking reschedule + G-06 closure",
+        "githubCommitOrg": "YeswanthArasavalli",
+        "githubCommitRef": "main",
+        "githubCommitRepo": "Setura",
+        "githubCommitSha": "da5332efab5583a957f645a4a5c145ec42c46c5b",
+        "githubDeployment": "1",
+        "githubOrg": "YeswanthArasavalli",
+        "githubRepo": "Setura",
+        "gitDirty": "1",
+        "gitRootDirectory": "apps/web"
+      },
+      "name": "setura",
+      "plan": "hobby",
+      "private": true,
+      "readyState": "ERROR",
+      "target": "production",
+      "teamId": "team_xQHrRH4w4Z56xJ6PBuXOficc",
+      "type": "LAMBDAS",
+      "url": "setura-ki6ykn82m-yeswantharasavallis-projects.vercel.app",
+      "userId": "7bmPOyBsDjDAUzN4imW0V9uz",
+      "withCache": false,
+      "buildingAt": 1790770463315,
+      "readyAt": 1790770464575,
+      "previewCommentsEnabled": true,
+      "oidcTokenClaims": {
+        "sub": "owner:yeswantharasavallis-projects:project:setura:environment:production",
+        "iss": "https://oidc.vercel.com/yeswantharasavallis-projects",
+        "scope": "owner:yeswantharasavallis-projects:project:setura:environment:production",
+        "aud": "https://vercel.com/yeswantharasavallis-projects",
+        "owner": "yeswantharasavallis-projects",
+        "owner_id": "team_xQHrRH4w4Z56xJ6PBuXOficc",
+        "project": "setura",
+        "project_id": "prj_PZq3TlY28vzz3hF6x0TKpvxK6gMH",
+        "environment": "production",
+        "plan": "hobby"
+      }
+    }
+  ],
+  "targets": {
+    "production": {
+      "alias": [
+        "setura-yeswantharasavallis-projects.vercel.app"
+      ],
+      "aliasAssigned": null,
+      "automaticAliases": [
+        "setura-yeswantharasavallis-projects.vercel.app"
+      ],
+      "builds": [],
+      "createdAt": 1790770510995,
+      "createdIn": "sfo1",
+      "creator": {
+        "uid": "7bmPOyBsDjDAUzN4imW0V9uz",
+        "email": "yeswantharasavalli@gmail.com",
+        "username": "yeswantharasavalli"
+      },
+      "deploymentHostname": "setura-izv0ts4zj-yeswantharasavallis-projects",
+      "forced": false,
+      "id": "dpl_BNvBLYkETA4md1VLTFa4QmAT3dRf",
+      "meta": {
+        "githubCommitAuthorName": "YeswanthArasavalli",
+        "githubCommitAuthorEmail": "132380899+YeswanthArasavalli@users.noreply.github.com",
+        "githubCommitMessage": "Staff booking reschedule + G-06 closure",
+        "githubCommitOrg": "YeswanthArasavalli",
+        "githubCommitRef": "main",
+        "githubCommitRepo": "Setura",
+        "githubCommitSha": "da5332efab5583a957f645a4a5c145ec42c46c5b",
+        "githubDeployment": "1",
+        "githubOrg": "YeswanthArasavalli",
+        "githubRepo": "Setura",
+        "gitDirty": "1",
+        "gitRootDirectory": ""
+      },
+      "name": "setura",
+      "plan": "hobby",
+      "private": true,
+      "readyState": "ERROR",
+      "target": "production",
+      "teamId": "team_xQHrRH4w4Z56xJ6PBuXOficc",
+      "type": "LAMBDAS",
+      "url": "setura-izv0ts4zj-yeswantharasavallis-projects.vercel.app",
+      "userId": "7bmPOyBsDjDAUzN4imW0V9uz",
+      "withCache": false,
+      "buildingAt": 1790770512588,
+      "readyAt": 1790770524088,
+      "previewCommentsEnabled": true,
+      "oidcTokenClaims": {
+        "sub": "owner:yeswantharasavallis-projects:project:setura:environment:production",
+        "iss": "https://oidc.vercel.com/yeswantharasavallis-projects",
+        "scope": "owner:yeswantharasavallis-projects:project:setura:environment:production",
+        "aud": "https://vercel.com/yeswantharasavallis-projects",
+        "owner": "yeswantharasavallis-projects",
+        "owner_id": "team_xQHrRH4w4Z56xJ6PBuXOficc",
+        "project": "setura",
+        "project_id": "prj_PZq3TlY28vzz3hF6x0TKpvxK6gMH",
+        "environment": "production",
+        "plan": "hobby"
+      }
+    },
+    "preview": {
+      "alias": [],
+      "aliasAssigned": 1790095439375,
+      "aliasError": null,
+      "automaticAliases": [],
+      "builds": [],
+      "createdAt": 1790095425580,
+      "createdIn": "sfo1",
+      "creator": {
+        "uid": "7bmPOyBsDjDAUzN4imW0V9uz",
+        "email": "yeswantharasavalli@gmail.com",
+        "username": "yeswantharasavalli"
+      },
+      "deploymentHostname": "setura-nn1zr4kpv-yeswantharasavallis-projects",
+      "forced": false,
+      "id": "dpl_66oBJesqk2nB6XXgY5cGzTSveM48",
+      "meta": {
+        "githubCommitAuthorName": "YeswanthArasavalli",
+        "githubCommitAuthorEmail": "132380899+YeswanthArasavalli@users.noreply.github.com",
+        "githubCommitMessage": "docs: reconcile Vercel env findings in Phase C report",
+        "githubCommitOrg": "YeswanthArasavalli",
+        "githubCommitRef": "main",
+        "githubCommitRepo": "Setura",
+        "githubCommitSha": "5f5fbd7c5b1e4bc395663b8cd45dbe3f0f42d6f6",
+        "githubDeployment": "1",
+        "githubOrg": "YeswanthArasavalli",
+        "githubRepo": "Setura",
+        "gitDirty": "1",
+        "gitRootDirectory": ""
+      },
+      "name": "setura",
+      "plan": "hobby",
+      "private": true,
+      "readyState": "READY",
+      "readySubstate": "STAGED",
+      "target": null,
+      "teamId": "team_xQHrRH4w4Z56xJ6PBuXOficc",
+      "type": "LAMBDAS",
+      "url": "setura-nn1zr4kpv-yeswantharasavallis-projects.vercel.app",
+      "userId": "7bmPOyBsDjDAUzN4imW0V9uz",
+      "withCache": false,
+      "buildingAt": 1790095427537,
+      "readyAt": 1790095439260,
+      "previewCommentsEnabled": true,
+      "oidcTokenClaims": {
+        "sub": "owner:yeswantharasavallis-projects:project:setura:environment:preview",
+        "iss": "https://oidc.vercel.com/yeswantharasavallis-projects",
+        "scope": "owner:yeswantharasavallis-projects:project:setura:environment:preview",
+        "aud": "https://vercel.com/yeswantharasavallis-projects",
+        "owner": "yeswantharasavallis-projects",
+        "owner_id": "team_xQHrRH4w4Z56xJ6PBuXOficc",
+        "project": "setura",
+        "project_id": "prj_PZq3TlY28vzz3hF6x0TKpvxK6gMH",
+        "environment": "preview",
+        "plan": "hobby"
+      }
+    }
+  },
+  "features": {
+    "webAnalytics": false
+  },
+  "protectedSourcemaps": true,
+  "avatar": null
+}

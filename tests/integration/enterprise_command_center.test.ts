@@ -921,6 +921,414 @@ Deno.test("ent: alert dedupe, acknowledge, assign, escalate, resolve", async () 
   assertEquals(ackMissing.reason, "alert_not_found");
 });
 
+// ─── 7b. C2 locked-snapshot concurrency (two real RPC connections) ──────────
+//
+// These are genuine two-connection tests: each parallel db.rpc(...) is served
+// by PostgREST on its OWN backend database session, so two in-flight RPCs
+// really contend on the alert row's FOR UPDATE lock. No case simulates
+// concurrency by issuing sequential calls on a single connection.
+//
+// They are self-contained (own tenant + alert + cleanup) so they can be run in
+// isolation with `--filter "c2:"`. They assert the approved OD-d=D1 semantics:
+// post-resolve ACK/ASSIGN/ESCALATE remain PERMITTED, so cases 1/2 expect BOTH
+// fields to persist (a D2 expectation would be wrong here).
+
+interface C2Tenant {
+  hospital: string;
+  actor: string;
+}
+
+async function c2MkTenant(tag: string): Promise<C2Tenant> {
+  const { db } = await ctx();
+  const { data: h, error: hErr } = await db
+    .from("hospitals")
+    .insert({ name: `C2 ${tag} ${RUN}`, slug: `c2-${tag}-${RUN}` })
+    .select("id")
+    .single();
+  assertEquals(hErr, null);
+  assertExists(h);
+  const hospital = h.id as string;
+
+  const actor = crypto.randomUUID();
+  await createAuthUser(actor, `c2-${tag}-${RUN}@setura.test`);
+  const { error: pErr } = await db.from("profiles").upsert({
+    id: actor,
+    full_name: `C2 ${tag} ${RUN}`,
+    normalized_phone: `97${RUN}${String(C2_SEQ++).padStart(2, "0")}`,
+  });
+  assertEquals(pErr, null);
+  const { error: rErr } = await db.from("user_roles").insert({
+    user_id: actor,
+    hospital_id: hospital,
+    role: "hospital_admin",
+    is_primary: true,
+  });
+  assertEquals(rErr, null);
+  return { hospital, actor };
+}
+
+async function c2Cleanup(t: C2Tenant): Promise<void> {
+  const { db } = await ctx();
+  await db.from("alert_events").delete().eq("hospital_id", t.hospital);
+  await db.from("user_roles").delete().eq("user_id", t.actor);
+  await db.from("profiles").delete().eq("id", t.actor);
+  await deleteAuthUser(t.actor);
+  await db.from("hospitals").delete().eq("id", t.hospital);
+}
+
+async function c2MkAlert(
+  t: C2Tenant,
+  key: string,
+): Promise<string> {
+  const id = await rpc("fire_managed_alert", {
+    p_hospital_id: t.hospital,
+    p_alert_key: key,
+    p_severity: "warning",
+    p_current_value: 20,
+    p_threshold_value: 10,
+    p_threshold_unit: "minutes",
+    p_message: `c2 concurrency ${RUN} ${key}`,
+  });
+  assert(typeof id === "string", "fire_managed_alert must return an id");
+  return id as string;
+}
+
+async function c2Actions(alertId: string): Promise<string[]> {
+  const { db } = await ctx();
+  const { data, error } = await db
+    .from("alert_activity_log")
+    .select("action")
+    .eq("alert_id", alertId);
+  assertEquals(error, null);
+  return (data ?? []).map((r: { action: string }) => r.action);
+}
+
+async function c2Row(
+  alertId: string,
+  cols: string,
+): Promise<Record<string, unknown>> {
+  const { db } = await ctx();
+  const { data, error } = await db
+    .from("alert_events")
+    .select(cols)
+    .eq("id", alertId)
+    .single();
+  assertEquals(error, null);
+  assertExists(data);
+  return data as unknown as Record<string, unknown>;
+}
+
+async function c2RpcCall(
+  db: DbClient,
+  fn: string,
+  args: Record<string, unknown>,
+): Promise<{ data: Record<string, unknown>; error: unknown }> {
+  // deno-lint-ignore no-explicit-any
+  const { data, error } = await (db.rpc as any)(fn, args);
+  return { data: (data ?? {}) as Record<string, unknown>, error };
+}
+
+const SNAPSHOT_COLS =
+  "id, hospital_id, acknowledged_at, acknowledged_by, assigned_to, escalated_at, escalated_by, is_resolved, resolved_at, resolved_by, severity";
+
+let C2_SEQ = 0;
+
+Deno.test("c2: concurrency case 1 RESOLVE || ACKNOWLEDGE both persist (D1)", async () => {
+  const { db } = await ctx();
+  const t = await c2MkTenant("cc1");
+  try {
+    const id = await c2MkAlert(t, `c2cc1_${RUN}`);
+    const [res, ack] = await Promise.all([
+      c2RpcCall(db, "resolve_alert", {
+        p_alert_id: id,
+        p_actor_id: t.actor,
+      }),
+      c2RpcCall(db, "acknowledge_alert", {
+        p_alert_id: id,
+        p_actor_id: t.actor,
+      }),
+    ]);
+    assertEquals(res.error, null);
+    assertEquals(ack.error, null);
+    // Both are REAL transitions under D1 (no post-resolve rejection).
+    assertEquals(res.data.ok, true);
+    assertEquals(res.data.already_resolved, false);
+    assertEquals(ack.data.ok, true);
+    assertEquals(ack.data.already_acknowledged, false);
+
+    const row = await c2Row(id, SNAPSHOT_COLS);
+    assertEquals(row.is_resolved, true);
+    assertExists(row.acknowledged_at);
+
+    const acts = await c2Actions(id);
+    assertEquals(acts.length, 2, "no lost update: both transitions logged");
+    assert(acts.includes("resolved"));
+    assert(acts.includes("acknowledged"));
+
+    // Locked snapshot truthfulness (not mere key presence).
+    const resBefore = res.data.before as Record<string, unknown>;
+    const resAfter = res.data.after as Record<string, unknown>;
+    const ackBefore = ack.data.before as Record<string, unknown>;
+    const ackAfter = ack.data.after as Record<string, unknown>;
+    assertEquals(resBefore.is_resolved, false);
+    assertEquals(resAfter.is_resolved, true);
+    assertEquals(ackBefore.acknowledged_at, null);
+    assertExists(ackAfter.acknowledged_at);
+  } finally {
+    await c2Cleanup(t);
+  }
+});
+
+Deno.test("c2: concurrency case 2 RESOLVE || ESCALATE both persist (D1)", async () => {
+  const { db } = await ctx();
+  const t = await c2MkTenant("cc2");
+  try {
+    const id = await c2MkAlert(t, `c2cc2_${RUN}`);
+    const [res, esc] = await Promise.all([
+      c2RpcCall(db, "resolve_alert", { p_alert_id: id, p_actor_id: t.actor }),
+      c2RpcCall(db, "escalate_alert", { p_alert_id: id, p_actor_id: t.actor }),
+    ]);
+    assertEquals(res.error, null);
+    assertEquals(esc.error, null);
+    assertEquals(res.data.already_resolved, false);
+    assertEquals(esc.data.already_escalated, false);
+
+    const row = await c2Row(id, SNAPSHOT_COLS);
+    assertEquals(row.is_resolved, true);
+    assertExists(row.escalated_at);
+    assertEquals(row.severity, "critical");
+
+    const acts = await c2Actions(id);
+    assertEquals(acts.length, 2);
+    assert(acts.includes("resolved"));
+    assert(acts.includes("escalated"));
+
+    assertEquals(
+      (res.data.before as Record<string, unknown>).is_resolved,
+      false,
+    );
+    assertEquals((res.data.after as Record<string, unknown>).is_resolved, true);
+    assertEquals(
+      (esc.data.before as Record<string, unknown>).escalated_at,
+      null,
+    );
+    assertEquals(
+      (esc.data.after as Record<string, unknown>).severity,
+      "critical",
+    );
+  } finally {
+    await c2Cleanup(t);
+  }
+});
+
+Deno.test("c2: concurrency case 3 RESOLVE || RESOLVE -> one real transition", async () => {
+  const { db } = await ctx();
+  const t = await c2MkTenant("cc3");
+  try {
+    const id = await c2MkAlert(t, `c2cc3_${RUN}`);
+    const [a, b] = await Promise.all([
+      c2RpcCall(db, "resolve_alert", { p_alert_id: id, p_actor_id: t.actor }),
+      c2RpcCall(db, "resolve_alert", { p_alert_id: id, p_actor_id: t.actor }),
+    ]);
+    assertEquals(a.error, null);
+    assertEquals(b.error, null);
+    const reals = [a, b].filter((r) => r.data.already_resolved === false);
+    const softs = [a, b].filter((r) => r.data.already_resolved === true).length;
+    assertEquals(reals.length, 1, "exactly one real resolve transition");
+    assertEquals(softs, 1, "exactly one already_resolved soft-success");
+    // Soft-success path preserves the existing contract (no snapshot).
+    const soft = [a, b].find((r) => r.data.already_resolved === true)!;
+    assert(!("before" in soft.data) && !("after" in soft.data));
+
+    const row = await c2Row(id, SNAPSHOT_COLS);
+    assertEquals(row.is_resolved, true);
+    assertEquals((await c2Actions(id)).length, 1);
+  } finally {
+    await c2Cleanup(t);
+  }
+});
+
+Deno.test("c2: concurrency case 4 ESCALATE || ESCALATE -> one real transition", async () => {
+  const { db } = await ctx();
+  const t = await c2MkTenant("cc4");
+  try {
+    const id = await c2MkAlert(t, `c2cc4_${RUN}`);
+    const [a, b] = await Promise.all([
+      c2RpcCall(db, "escalate_alert", { p_alert_id: id, p_actor_id: t.actor }),
+      c2RpcCall(db, "escalate_alert", { p_alert_id: id, p_actor_id: t.actor }),
+    ]);
+    assertEquals(a.error, null);
+    assertEquals(b.error, null);
+    const reals = [a, b].filter((r) => r.data.already_escalated === false);
+    assertEquals(reals.length, 1);
+    assertEquals(
+      [a, b].filter((r) => r.data.already_escalated === true).length,
+      1,
+    );
+
+    const row = await c2Row(id, SNAPSHOT_COLS);
+    assertExists(row.escalated_at);
+    assertEquals(row.severity, "critical");
+    assertEquals((await c2Actions(id)).length, 1);
+  } finally {
+    await c2Cleanup(t);
+  }
+});
+
+Deno.test("c2: concurrency case 5 ASSIGN X || ASSIGN Y -> serialized, no lost update", async () => {
+  const { db } = await ctx();
+  const t = await c2MkTenant("cc5");
+  try {
+    const id = await c2MkAlert(t, `c2cc5_${RUN}`);
+    const x = crypto.randomUUID();
+    const y = crypto.randomUUID();
+    const [rx, ry] = await Promise.all([
+      c2RpcCall(db, "assign_alert", {
+        p_alert_id: id,
+        p_assignee_id: x,
+        p_actor_id: t.actor,
+      }),
+      c2RpcCall(db, "assign_alert", {
+        p_alert_id: id,
+        p_assignee_id: y,
+        p_actor_id: t.actor,
+      }),
+    ]);
+    assertEquals(rx.error, null);
+    assertEquals(ry.error, null);
+    // X != Y so both are distinct real transitions.
+    assertEquals(rx.data.already_assigned, false);
+    assertEquals(ry.data.already_assigned, false);
+
+    const row = await c2Row(id, SNAPSHOT_COLS);
+    assert(
+      row.assigned_to === x || row.assigned_to === y,
+      "last committed assignment is authoritative",
+    );
+    assertEquals((await c2Actions(id)).length, 2);
+
+    // Serialized ordering: exactly one txn saw null; the other saw the first
+    // txn's assignee (proof the second re-read under the held lock).
+    const beforeX = (rx.data.before as Record<string, unknown>).assigned_to;
+    const beforeY = (ry.data.before as Record<string, unknown>).assigned_to;
+    const nulls = [beforeX, beforeY].filter((v) => v === null).length;
+    assertEquals(nulls, 1, "exactly one assignment started from null");
+    const seen = beforeX === null ? beforeY : beforeX;
+    assert(
+      seen === x || seen === y,
+      "the serialized txn observed the first commit",
+    );
+  } finally {
+    await c2Cleanup(t);
+  }
+});
+
+Deno.test("c2: concurrency case 6 ACKNOWLEDGE || ACKNOWLEDGE -> one real transition", async () => {
+  const { db } = await ctx();
+  const t = await c2MkTenant("cc6");
+  try {
+    const id = await c2MkAlert(t, `c2cc6_${RUN}`);
+    const [a, b] = await Promise.all([
+      c2RpcCall(db, "acknowledge_alert", {
+        p_alert_id: id,
+        p_actor_id: t.actor,
+      }),
+      c2RpcCall(db, "acknowledge_alert", {
+        p_alert_id: id,
+        p_actor_id: t.actor,
+      }),
+    ]);
+    assertEquals(a.error, null);
+    assertEquals(b.error, null);
+    assertEquals(
+      [a, b].filter((r) => r.data.already_acknowledged === false).length,
+      1,
+    );
+    assertEquals(
+      [a, b].filter((r) => r.data.already_acknowledged === true).length,
+      1,
+    );
+
+    const row = await c2Row(id, SNAPSHOT_COLS);
+    assertExists(row.acknowledged_at);
+    assertEquals((await c2Actions(id)).length, 1);
+  } finally {
+    await c2Cleanup(t);
+  }
+});
+
+// ─── 7c. C2 rollback / failure injection ────────────────────────────────────
+//
+// Proves the atomicity invariant: if log_alert_activity fails, the UPDATE and
+// the activity INSERT roll back together, leaving NO state change and NO
+// activity row. The only reachable activity-log failure is injected with a
+// scoped BEFORE-INSERT trigger (dropped immediately). A thrown error alone is
+// not accepted — the test asserts the DB state AFTER the failure.
+
+async function c2DbQuery(sql: string): Promise<void> {
+  const cmd = new Deno.Command("docker", {
+    args: [
+      "exec",
+      "supabase_db_setura",
+      "psql",
+      "-U",
+      "postgres",
+      "-d",
+      "postgres",
+      "-v",
+      "ON_ERROR_STOP=1",
+      "-c",
+      sql,
+    ],
+    stdout: "piped",
+    stderr: "piped",
+  });
+  const { code, stderr } = await cmd.output();
+  if (code !== 0) {
+    throw new Error(
+      `docker psql failed (${code}): ${new TextDecoder().decode(stderr)}`,
+    );
+  }
+}
+
+Deno.test("c2: rollback — activity-log failure rolls back the state change", async () => {
+  const { db } = await ctx();
+  const t = await c2MkTenant("rbk");
+  const id = await c2MkAlert(t, `c2rbk_${RUN}`);
+  const trgFn = "public.c2_rb_raise()";
+  const trg = "c2_rb_trg";
+  try {
+    await c2DbQuery(
+      `CREATE OR REPLACE FUNCTION ${trgFn} RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'injected activity failure'; END $$;`,
+    );
+    await c2DbQuery(
+      `CREATE TRIGGER ${trg} BEFORE INSERT ON public.alert_activity_log FOR EACH ROW WHEN (NEW.alert_id = '${id}') EXECUTE FUNCTION ${trgFn};`,
+    );
+
+    const ack = await c2RpcCall(db, "acknowledge_alert", {
+      p_alert_id: id,
+      p_actor_id: t.actor,
+    });
+    assert(ack.error !== null, "injected activity failure must abort the RPC");
+
+    // State after failure: no acknowledged_at, no activity row (both rolled
+    // back together — the transactional atomicity guarantee).
+    const row = await c2Row(id, SNAPSHOT_COLS);
+    assertEquals(row.acknowledged_at, null, "state change must roll back");
+    assertEquals(
+      (await c2Actions(id)).length,
+      0,
+      "activity row must roll back",
+    );
+  } finally {
+    await c2DbQuery(
+      `DROP TRIGGER IF EXISTS ${trg} ON public.alert_activity_log;`,
+    );
+    await c2DbQuery(`DROP FUNCTION IF EXISTS ${trgFn};`);
+    await c2Cleanup(t);
+  }
+});
+
 Deno.test("ent: suppression windows gate alert firing", async () => {
   const f = fx();
   const key = `p15_sup_${RUN}`;

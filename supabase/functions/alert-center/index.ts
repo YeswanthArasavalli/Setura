@@ -344,6 +344,14 @@ Deno.serve(async (req: Request): Promise<Response> => {
     );
 
     if (error) {
+      // Defense-in-depth: a DB privilege denial (SQLSTATE 42501 raised by
+      // has_permission in the lifecycle RPC) must fail closed as 403, never
+      // leak as a 500. Any other rpc error is a genuine server fault.
+      if (error.code === "42501") {
+        throw new ForbiddenError(
+          `Not authorized to ${body.action} this alert`,
+        );
+      }
       throw new InternalError(`Alert ${body.action} failed`, {
         error: error.message,
       });
@@ -357,6 +365,15 @@ Deno.serve(async (req: Request): Promise<Response> => {
       });
     }
 
+    // Audit old/new come from the RPC's locked before/after snapshot for a
+    // real transition (authoritative while the row lock is held). A soft
+    // already_* replay commits no change and returns no snapshot, so it
+    // records a null old state plus the replayed action. The pre-read
+    // `alert` is used only for authorization/isolation, never as the audit
+    // snapshot (it is not lock-consistent with the mutation).
+    const before = (outcome.before ?? null) as Record<string, unknown> | null;
+    const after = (outcome.after ?? null) as Record<string, unknown> | null;
+
     await logAuditEvent(
       {
         hospitalId,
@@ -365,18 +382,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
         entityId: alert.id,
         actionType: "alert_center",
         severity: body.action === "escalate" ? "high" : "low",
-        oldData: {
-          severity: alert.severity,
-          is_resolved: alert.is_resolved,
-          acknowledged_at: alert.acknowledged_at,
-          assigned_to: alert.assigned_to,
-          escalated_at: alert.escalated_at,
-        },
-        newData: {
+        oldData: before,
+        newData: after ?? {
           action: body.action,
-          alert_key: alert.alert_key,
-          assigneeId: body.assigneeId ?? null,
-          notes: body.notes ?? null,
+          already: true,
           result: outcome,
         },
       },

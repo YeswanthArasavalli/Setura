@@ -13,6 +13,13 @@
 .vercel-tmp/
 .ua/
 
+# --- Vercel CLI local project state ---
+# Machine-local link created by `vercel` CLI commands (projectId/orgId
+# pointers only; no secrets). Never a build input or source of truth;
+# CI links the project explicitly. Ignoring it also keeps the generated
+# project.json out of `deno fmt`/`deno lint` discovery scope.
+.vercel/
+
 # --- Qoder generated repository wiki (D9) ---
 # Generated documentation output. Not a build input, not a runtime input,
 # not referenced by CI or any non-generated source file.
