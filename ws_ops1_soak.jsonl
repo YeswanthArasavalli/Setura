@@ -1,0 +1,5 @@
+{"kind":"meta","fired":false,"started_at":"2026-10-03T09:29:52.148Z","durationSec":45}
+{"kind":"sample","ts":"2026-10-03T09:30:07.281Z","jobs_pending":2056,"jobs_processing":0,"jobs_completed":0,"jobs_dead":0,"dlq_rows":0,"leases_open":0,"leases_reclaimed":0,"workers_crashed":0,"orphaned_leases":0,"queue_depth":2056}
+{"kind":"sample","ts":"2026-10-03T09:30:22.406Z","jobs_pending":2056,"jobs_processing":0,"jobs_completed":0,"jobs_dead":0,"dlq_rows":0,"leases_open":0,"leases_reclaimed":0,"workers_crashed":0,"orphaned_leases":0,"queue_depth":2056}
+{"kind":"sample","ts":"2026-10-03T09:30:37.659Z","jobs_pending":2056,"jobs_processing":0,"jobs_completed":0,"jobs_dead":0,"dlq_rows":0,"leases_open":0,"leases_reclaimed":0,"workers_crashed":0,"orphaned_leases":0,"queue_depth":2056}
+{"kind":"summary","samples":3,"elapsed_sec":46,"scheduler_fired":false,"completed_delta":0,"dlq_rows":0,"leases_reclaimed":0,"workers_crashed":0,"invariants_violated":[],"ended_at":"2026-10-03T09:30:37.730Z"}

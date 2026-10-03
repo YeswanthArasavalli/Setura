@@ -15,13 +15,14 @@
     "check": "deno check scripts/*.ts tests/unit/*.ts tests/integration/*.ts tests/utils/*.ts supabase/functions/*/index.ts",
     "test": "deno test --allow-env --allow-read tests/unit/",
     "test:integration": "deno test --allow-net --allow-env --allow-run tests/integration/",
-    "test:consolidated": "deno test --allow-net --allow-env --allow-run tests/integration/hospital_core_journey.test.ts tests/integration/worker_lifecycle.test.ts tests/integration/worker_lease_persistence.test.ts tests/integration/worker_job_failure.test.ts tests/integration/scheduler_autonomy.test.ts tests/integration/booking_fee_refund.test.ts tests/integration/refund_sync.test.ts tests/integration/settlement_record_payment.test.ts tests/integration/security_s1.test.ts",
+    "test:consolidated": "deno test --allow-net --allow-env --allow-run tests/integration/hospital_core_journey.test.ts tests/integration/worker_lifecycle.test.ts tests/integration/worker_lease_persistence.test.ts tests/integration/worker_job_failure.test.ts tests/integration/worker_concurrent_claim.test.ts tests/integration/scheduler_autonomy.test.ts tests/integration/booking_fee_refund.test.ts tests/integration/refund_sync.test.ts tests/integration/settlement_record_payment.test.ts tests/integration/security_s1.test.ts",
     "validate:migrations": "deno run --allow-read scripts/validate_migrations.ts",
     "validate:migration-manifest": "deno run --allow-read scripts/validate_migration_manifest.ts",
     "check:frontend-secrets": "deno run --allow-read scripts/check_frontend_secrets.ts",
     "release:manifest": "deno run --allow-read --allow-write --allow-env scripts/release_manifest.ts",
     "gen:types": "deno run --allow-run=supabase --allow-read --allow-write scripts/gen_types.ts",
     "gen:types:check": "deno run --allow-run=supabase --allow-read scripts/gen_types.ts --check",
+    "soak:autonomy": "deno run --allow-net --allow-env --allow-read --allow-write --allow-run scripts/ws_ops1_autonomy_soak.ts",
     "db:reset": "supabase db reset"
   },
   "fmt": {

@@ -19,9 +19,11 @@ import { AdminAlerts } from "@/routes/AdminAlerts";
 import { AdminOperations } from "@/routes/AdminOperations";
 import { AdminPortfolio } from "@/routes/AdminPortfolio";
 import { HospitalOnboarding } from "@/routes/HospitalOnboarding";
+import { HospitalActivation } from "@/routes/HospitalActivation";
 import { HospitalConfiguration } from "@/routes/HospitalConfiguration";
 import { IntegrationConfiguration } from "@/routes/IntegrationConfiguration";
 import { ClinicalConfiguration } from "@/routes/ClinicalConfiguration";
+import { CancellationPolicy } from "@/routes/CancellationPolicy";
 import { BroadcastComposer } from "@/routes/BroadcastComposer";
 
 const RECEPTION_ROLES = ["receptionist", "hospital_admin"] as const;
@@ -189,6 +191,20 @@ export default function App() {
             </RequireRole>
           }
         />
+        {/* WS-ONBOARD-5: hospital configuration validation & activation. This
+            is a global-admin-only, cross-tenant administrative action - a
+            hospital_admin must not activate tenants. The route guard is a UX
+            boundary; the hospital-activation Edge Function's requireRole
+            (global_admin) and the RPC's DB-layer re-check remain the security
+            and readiness authority. */}
+        <Route
+          path="/admin/activation"
+          element={
+            <RequireRole roles={[...GLOBAL_ADMIN_ROLES]}>
+              <HospitalActivation />
+            </RequireRole>
+          }
+        />
         {/* WS-ONBOARD-2: hospital configuration write surface. Both admin
             roles can edit their own tenant; a hospital_admin's tenant is
             enforced by the backend (the RPC re-checks actor role + tenant),
@@ -201,6 +217,21 @@ export default function App() {
           element={
             <RequireRole roles={[...ADMIN_ROLES]}>
               <HospitalConfiguration />
+            </RequireRole>
+          }
+        />
+        {/* WS-CONF-1: hospital cancellation policy configuration write surface.
+            Both admin roles edit their own tenant's refund policy; a
+            hospital_admin's tenant is enforced by the backend (the RPC re-checks
+            actor role + tenant). The route guard is a UX boundary; the Edge
+            Function and the service-role RPC remain the security and write
+            authority. This configures the operator's own policy inputs and never
+            computes a refund or invents business policy. */}
+        <Route
+          path="/admin/cancellation-policy"
+          element={
+            <RequireRole roles={[...ADMIN_ROLES]}>
+              <CancellationPolicy />
             </RequireRole>
           }
         />

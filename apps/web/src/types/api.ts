@@ -42,6 +42,53 @@ export interface ProvisionHospitalResponseBody {
   created: boolean;
 }
 
+// ─── hospital-activation (WS-ONBOARD-5 validation & activation) ───────────────
+
+/** A hospital row as read by the activation surface for tenant selection. Only
+ *  the fields the activation UI needs; the read is RLS-scoped. */
+export interface HospitalActivationRow {
+  id: string;
+  name: string;
+  slug: string;
+  is_active: boolean;
+  activated_at: string | null;
+  deleted_at: string | null;
+}
+
+/** One completeness check the server derives from the canonical configuration
+ *  tables. `blocking` checks gate activation; informational ones never do. */
+export interface HospitalConfigCheck {
+  key: string;
+  label: string;
+  passed: boolean;
+  blocking: boolean;
+  detail: string;
+}
+
+/** The `result` object returned by `validate_hospital_configuration`. */
+export interface HospitalValidationResult {
+  ok: boolean;
+  hospital_id: string;
+  ready: boolean;
+  checks: HospitalConfigCheck[];
+}
+
+/** Success-envelope `data` for the `mode: "validate"` response of the
+ *  hospital-activation Edge Function. */
+export interface HospitalValidationResponseBody {
+  mode: "validate";
+  result: HospitalValidationResult;
+}
+
+/** Success-envelope `data` for the `mode: "activate" | "deactivate"` response
+ *  of the hospital-activation Edge Function. */
+export interface HospitalActivationResponseBody {
+  hospitalId: string;
+  isActive: boolean;
+  reason: string;
+  activatedAt: string | null;
+}
+
 // ─── hospital-configuration (WS-ONBOARD-2 configuration write surfaces) ────
 
 /** Server-authoritative snapshot of a hospital's editable configuration.
@@ -113,6 +160,52 @@ export interface HospitalConfigurationReadResponseBody {
 
 /** `data` for the `mode: "update"` response. */
 export interface HospitalConfigurationUpdateResponseBody {
+  hospitalId: string;
+  version: number;
+  updated: boolean;
+}
+
+// ─── cancellation-policy (WS-CONF-1 cancellation / refund policy config) ───
+
+/** The editable + read-only projection of one tenant's `cancellation_policies`
+ *  row (migration 29). Numeric columns arrive as strings or numbers over JSON
+ *  (PostgreSQL NUMERIC), so both are accepted here exactly like the
+ *  hospital-settings snapshot. */
+export interface CancellationPolicySnapshot {
+  id: string;
+  full_refund_within_minutes: number;
+  partial_refund_percentage: string | number;
+  partial_refund_within_minutes: number;
+  same_day_refund_percentage: string | number;
+  no_show_penalty_enabled: boolean;
+  no_show_penalty_amount_inr: string | number;
+  allow_manual_full_refund: boolean;
+  version: number;
+  effective_from: string;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/** One prior-version snapshot row from `cancellation_policy_history`. */
+export interface CancellationPolicyHistoryEntry {
+  version: number;
+  changed_by: string | null;
+  created_at: string;
+  snapshot: Record<string, unknown>;
+}
+
+/** `data` for the `mode: "read"` response of the cancellation-policy Edge
+ *  Function. */
+export interface CancellationPolicyReadResponseBody {
+  hospitalId: string;
+  version: number;
+  policy: CancellationPolicySnapshot;
+  history: CancellationPolicyHistoryEntry[];
+}
+
+/** `data` for the `mode: "update"` response. */
+export interface CancellationPolicyUpdateResponseBody {
   hospitalId: string;
   version: number;
   updated: boolean;

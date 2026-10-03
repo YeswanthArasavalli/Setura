@@ -52,12 +52,22 @@ const NAV: NavItem[] = [
   // `requireRole(['global_admin'])` + the RPC's own DB-layer role re-check are
   // both authoritative; the form is a convenience, never the security boundary.
   { to: "/admin/onboarding", label: "Hospital Onboarding", roles: ["global_admin"] },
+  // WS-ONBOARD-5: hospital configuration validation & activation — the closing
+  // step of onboarding. `global_admin` ONLY — a hospital admin must not see the
+  // entry; the route guard, the Edge Function and the RPC re-check are all
+  // authoritative.
+  { to: "/admin/activation", label: "Hospital Activation", roles: ["global_admin"] },
   // WS-ONBOARD-2: hospital configuration write surface. Both admin roles
   // can open it (a hospital_admin edits their own tenant; a global_admin
   // edits the acting-hospital tenant). The route guard is a UX boundary;
   // the Edge Function and the RPC re-check actor role + tenant on every
   // request and are the actual security and write authority.
   { to: "/admin/hospital-settings", label: "Hospital Configuration", roles: ["hospital_admin", "global_admin"] },
+  // WS-CONF-1: hospital cancellation policy configuration. Both admin roles open
+  // their own tenant's refund policy. The nav entry and route guard are UX
+  // boundaries; the cancellation-policy Edge Function and the service-role RPC
+  // are the security and write authority.
+  { to: "/admin/cancellation-policy", label: "Cancellation Policy", roles: ["hospital_admin", "global_admin"] },
   // WS-ONBOARD-3: integration configuration surface. Both admin roles open
   // their own tenant's public identifiers + enablement; only a global_admin
   // sees the rotate-secret control (the backend RPC re-checks role at the DB

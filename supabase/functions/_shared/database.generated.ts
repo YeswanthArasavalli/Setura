@@ -2978,6 +2978,7 @@ export type Database = {
       }
       hospitals: {
         Row: {
+          activated_at: string | null
           address: string | null
           country: string
           created_at: string
@@ -3000,6 +3001,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          activated_at?: string | null
           address?: string | null
           country?: string
           created_at?: string
@@ -3022,6 +3024,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          activated_at?: string | null
           address?: string | null
           country?: string
           created_at?: string
@@ -6673,6 +6676,10 @@ export type Database = {
           total_fee: number
         }[]
       }
+      get_cancellation_policy: {
+        Args: { p_actor_user_id: string; p_hospital_id: string }
+        Returns: Json
+      }
       get_conversation_state: {
         Args: { p_hospital_id: string; p_phone: string }
         Returns: {
@@ -7501,6 +7508,14 @@ export type Database = {
         }
         Returns: Json
       }
+      set_hospital_activation: {
+        Args: {
+          p_activate: boolean
+          p_actor_user_id: string
+          p_hospital_id: string
+        }
+        Returns: Json
+      }
       set_integration_secret: {
         Args: { p_actor_user_id: string; p_provider: string; p_secret: string }
         Returns: Json
@@ -7564,6 +7579,15 @@ export type Database = {
           p_severity: Database["public"]["Enums"]["alert_severity_level"]
           p_threshold_unit: string
           p_threshold_value: number
+        }
+        Returns: Json
+      }
+      update_cancellation_policy: {
+        Args: {
+          p_actor_user_id: string
+          p_expected_version: number
+          p_hospital_id: string
+          p_patch: Json
         }
         Returns: Json
       }
@@ -7669,6 +7693,10 @@ export type Database = {
       user_is_same_hospital_doctor: {
         Args: { p_user_id: string }
         Returns: boolean
+      }
+      validate_hospital_configuration: {
+        Args: { p_actor_user_id: string; p_hospital_id: string }
+        Returns: Json
       }
       verify_audit_integrity: {
         Args: { p_from_ts?: string; p_hospital_id: string }
