@@ -10,6 +10,7 @@ import { createRequestLogger } from "../_shared/logger.ts";
 import { createTraceContext, elapsedMs } from "../_shared/tracing.ts";
 import { createMetrics } from "../_shared/metrics.ts";
 import { handleErrorResponse, successResponse } from "../_shared/response.ts";
+import { getMetaAccessToken } from "../_shared/integration_secrets.ts";
 import { InternalError, ValidationError } from "../_shared/errors.ts";
 import { Env } from "../_shared/env.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
@@ -412,7 +413,10 @@ Deno.serve(
 
       let phoneNumberId = Env.META_PHONE_NUMBER_ID;
 
-      const accessToken = Env.META_ACCESS_TOKEN;
+      // WS-ONBOARD-3: resolve the platform-global Meta access token from
+      // Vault first, falling back to Env.META_ACCESS_TOKEN (identical prior
+      // behaviour when no Vault secret is provisioned).
+      const accessToken = await getMetaAccessToken(db, logger);
 
       if (
         payload.hospital_id

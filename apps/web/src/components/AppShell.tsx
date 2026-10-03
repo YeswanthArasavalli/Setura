@@ -58,6 +58,12 @@ const NAV: NavItem[] = [
   // the Edge Function and the RPC re-check actor role + tenant on every
   // request and are the actual security and write authority.
   { to: "/admin/hospital-settings", label: "Hospital Configuration", roles: ["hospital_admin", "global_admin"] },
+  // WS-ONBOARD-3: integration configuration surface. Both admin roles open
+  // their own tenant's public identifiers + enablement; only a global_admin
+  // sees the rotate-secret control (the backend RPC re-checks role at the DB
+  // layer, and no read path ever returns a stored secret). The nav entry and
+  // route guard are UX boundaries; the Edge Function and RPCs are authority.
+  { to: "/admin/integrations", label: "Integrations", roles: ["hospital_admin", "global_admin"] },
 ];
 
 export function AppShell() {

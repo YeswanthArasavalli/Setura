@@ -2962,6 +2962,68 @@ export type Database = {
         }
         Relationships: []
       }
+      integration_config: {
+        Row: {
+          contact_number: string | null
+          created_at: string
+          enabled: boolean
+          hospital_id: string
+          last_rotated_at: string | null
+          last_test_status: string | null
+          last_tested_at: string | null
+          provider: string
+          public_identifier: string | null
+          secret_ref: string | null
+          status: string
+          updated_at: string
+          updated_by: string | null
+          version: number
+          waba_id: string | null
+        }
+        Insert: {
+          contact_number?: string | null
+          created_at?: string
+          enabled?: boolean
+          hospital_id: string
+          last_rotated_at?: string | null
+          last_test_status?: string | null
+          last_tested_at?: string | null
+          provider: string
+          public_identifier?: string | null
+          secret_ref?: string | null
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+          version?: number
+          waba_id?: string | null
+        }
+        Update: {
+          contact_number?: string | null
+          created_at?: string
+          enabled?: boolean
+          hospital_id?: string
+          last_rotated_at?: string | null
+          last_test_status?: string | null
+          last_tested_at?: string | null
+          provider?: string
+          public_identifier?: string | null
+          secret_ref?: string | null
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+          version?: number
+          waba_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "integration_config_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       job_queue: {
         Row: {
           attempt_count: number
@@ -3936,6 +3998,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      platform_integration_secret: {
+        Row: {
+          last_rotated_at: string | null
+          provider: string
+          secret_name: string
+          secret_present: boolean
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          last_rotated_at?: string | null
+          provider: string
+          secret_name: string
+          secret_present?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          last_rotated_at?: string | null
+          provider?: string
+          secret_name?: string
+          secret_present?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -6556,6 +6645,10 @@ export type Database = {
         }
         Returns: Json
       }
+      get_integration_configuration: {
+        Args: { p_actor_user_id: string; p_hospital_id: string }
+        Returns: Json
+      }
       get_monthly_dashboard: {
         Args: { p_hospital_id: string; p_month_start?: string }
         Returns: Json
@@ -7000,6 +7093,15 @@ export type Database = {
         }
         Returns: Json
       }
+      record_integration_test_result: {
+        Args: {
+          p_actor_user_id: string
+          p_hospital_id: string
+          p_provider: string
+          p_test_status: string
+        }
+        Returns: Json
+      }
       record_queue_event: {
         Args: {
           p_actor_id?: string
@@ -7111,6 +7213,10 @@ export type Database = {
       resolve_alert_threshold: {
         Args: { p_alert_key: string; p_fallback: number; p_hospital_id: string }
         Returns: number
+      }
+      resolve_integration_secret: {
+        Args: { p_provider: string }
+        Returns: string
       }
       resolve_security_event: {
         Args: { p_event_id: string; p_notes?: string; p_resolved_by: string }
@@ -7230,6 +7336,10 @@ export type Database = {
         }
         Returns: string
       }
+      set_integration_secret: {
+        Args: { p_actor_user_id: string; p_provider: string; p_secret: string }
+        Returns: Json
+      }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
       skip_queue_token: {
@@ -7300,6 +7410,16 @@ export type Database = {
           p_hospital_id: string
           p_hospital_patch: Json
           p_settings_patch: Json
+        }
+        Returns: Json
+      }
+      update_integration_configuration: {
+        Args: {
+          p_actor_user_id: string
+          p_expected_version: number
+          p_hospital_id: string
+          p_patch: Json
+          p_provider: string
         }
         Returns: Json
       }

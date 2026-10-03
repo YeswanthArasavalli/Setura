@@ -20,6 +20,7 @@ import { AdminOperations } from "@/routes/AdminOperations";
 import { AdminPortfolio } from "@/routes/AdminPortfolio";
 import { HospitalOnboarding } from "@/routes/HospitalOnboarding";
 import { HospitalConfiguration } from "@/routes/HospitalConfiguration";
+import { IntegrationConfiguration } from "@/routes/IntegrationConfiguration";
 import { BroadcastComposer } from "@/routes/BroadcastComposer";
 
 const RECEPTION_ROLES = ["receptionist", "hospital_admin"] as const;
@@ -199,6 +200,21 @@ export default function App() {
           element={
             <RequireRole roles={[...ADMIN_ROLES]}>
               <HospitalConfiguration />
+            </RequireRole>
+          }
+        />
+        {/* WS-ONBOARD-3: integration configuration + secure credential
+            management surface. Both admin roles open their own tenant's
+            public identifiers + enablement; only a global_admin can rotate
+            the platform-global secret (the rotate_secret RPC re-checks the
+            actor role at the DB layer). The route guard is a UX boundary;
+            the Edge Function and the RPCs remain the security and write
+            authority, and no read path can ever return a stored secret. */}
+        <Route
+          path="/admin/integrations"
+          element={
+            <RequireRole roles={[...ADMIN_ROLES]}>
+              <IntegrationConfiguration />
             </RequireRole>
           }
         />

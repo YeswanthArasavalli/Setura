@@ -34,6 +34,7 @@ import {
   withIdempotency,
 } from "../_shared/idempotency.ts";
 import { handleErrorResponse, successResponse } from "../_shared/response.ts";
+import { getRazorpayKeySecret } from "../_shared/integration_secrets.ts";
 import {
   ForbiddenError,
   InternalError,
@@ -295,7 +296,11 @@ Deno.serve(async (req: Request): Promise<Response> => {
         }
 
         const keyId = Env.RAZORPAY_KEY_ID;
-        const keySecret = Env.RAZORPAY_KEY_SECRET;
+        // WS-ONBOARD-3: resolve the platform-global key_secret from Vault
+        // first, falling back to Env.RAZORPAY_KEY_SECRET (identical prior
+        // behaviour when no Vault secret is provisioned). key_id stays the
+        // platform-global public identifier.
+        const keySecret = await getRazorpayKeySecret(db, logger);
         if (!keyId || !keySecret) {
           throw new InternalError("Razorpay credentials not configured");
         }

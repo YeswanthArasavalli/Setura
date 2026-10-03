@@ -19,6 +19,7 @@ import {
   withIdempotency,
 } from "../_shared/idempotency.ts";
 import { handleErrorResponse, successResponse } from "../_shared/response.ts";
+import { getRazorpayKeySecret } from "../_shared/integration_secrets.ts";
 import {
   ForbiddenError,
   InternalError,
@@ -281,7 +282,8 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
         // Call Razorpay Refunds API
         const keyId = Env.RAZORPAY_KEY_ID;
-        const keySecret = Env.RAZORPAY_KEY_SECRET;
+        // WS-ONBOARD-3: Vault-first key_secret resolution with env fallback.
+        const keySecret = await getRazorpayKeySecret(db, logger);
         if (!keyId || !keySecret) {
           throw new InternalError("Razorpay credentials not configured");
         }

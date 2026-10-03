@@ -54,6 +54,11 @@ export type AuditActionType =
   | "admin_action"
   | "hospital_provision"
   | "whatsapp_send"
+  | "integration_config_update"
+  | "integration_enabled"
+  | "integration_disabled"
+  | "integration_connection_tested"
+  | "integration_secret_rotated"
   | "worker_crash_recovery";
 
 export interface AuditEvent {

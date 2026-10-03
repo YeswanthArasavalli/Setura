@@ -118,6 +118,72 @@ export interface HospitalConfigurationUpdateResponseBody {
   updated: boolean;
 }
 
+// ─── integration-configuration (WS-ONBOARD-3 secure credential management) ───
+
+/** Supported integration providers. Platform-global secrets; per-hospital
+ *  public identifiers only (see migration 67). */
+export type IntegrationProvider = "razorpay" | "meta_whatsapp";
+
+/** The complete sanitized connection-test vocabulary. It never carries a
+ *  credential or a raw provider body. */
+export type ConnectionTestStatus =
+  | "CONNECTED"
+  | "INVALID_CREDENTIAL"
+  | "UNAUTHORIZED"
+  | "PROVIDER_UNAVAILABLE"
+  | "CONFIGURATION_INVALID";
+
+/** One per-hospital integration row. Frontend-safe: contains only public
+ *  identifiers + lifecycle bookkeeping, NEVER a secret or a secret_ref. */
+export interface IntegrationConfigView {
+  provider: IntegrationProvider;
+  public_identifier: string | null;
+  waba_id: string | null;
+  contact_number: string | null;
+  enabled: boolean;
+  status: string;
+  last_tested_at: string | null;
+  last_test_status: ConnectionTestStatus | null;
+  last_rotated_at: string | null;
+  version: number;
+}
+
+/** Platform-global secret PRESENCE marker only. The plaintext is never
+ *  returned to the browser. */
+export interface PlatformSecretPresence {
+  provider: IntegrationProvider;
+  secret_present: boolean;
+  last_rotated_at: string | null;
+}
+
+/** `data` for the integration-configuration `mode: "read"` response. */
+export interface IntegrationConfigurationReadResponseBody {
+  hospitalId: string;
+  integrations: IntegrationConfigView[];
+  platformSecrets: PlatformSecretPresence[];
+}
+
+/** `data` for the `mode: "update"` response. */
+export interface IntegrationUpdateResponseBody {
+  provider: IntegrationProvider;
+  version: number;
+  status: string;
+}
+
+/** `data` for the `mode: "test"` response. */
+export interface IntegrationTestResponseBody {
+  provider: IntegrationProvider;
+  result: ConnectionTestStatus;
+  message: string;
+}
+
+/** `data` for the `mode: "rotate_secret"` response. Never echoes the value. */
+export interface IntegrationRotateSecretResponseBody {
+  provider: IntegrationProvider;
+  secret_present: boolean;
+  last_rotated_at: string | null;
+}
+
 // ─── Roles (auth.ts ROLE_HIERARCHY) ──────────────────────────────────────────
 
 export type UserRole =
