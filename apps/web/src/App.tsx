@@ -21,6 +21,7 @@ import { AdminPortfolio } from "@/routes/AdminPortfolio";
 import { HospitalOnboarding } from "@/routes/HospitalOnboarding";
 import { HospitalConfiguration } from "@/routes/HospitalConfiguration";
 import { IntegrationConfiguration } from "@/routes/IntegrationConfiguration";
+import { ClinicalConfiguration } from "@/routes/ClinicalConfiguration";
 import { BroadcastComposer } from "@/routes/BroadcastComposer";
 
 const RECEPTION_ROLES = ["receptionist", "hospital_admin"] as const;
@@ -215,6 +216,21 @@ export default function App() {
           element={
             <RequireRole roles={[...ADMIN_ROLES]}>
               <IntegrationConfiguration />
+            </RequireRole>
+          }
+        />
+        {/* WS-ONBOARD-4: clinical configuration (departments, doctors, weekly
+            schedules, leave). Both admin roles configure their own tenant. The
+            route guard is a UX boundary only: the Edge Function re-resolves the
+            JWT, re-checks requireRole + the X-Hospital-ID tenant and calls
+            service-role-only SECURITY DEFINER RPCs, each of which re-checks the
+            actor role and the entity's hospital at the DB layer. One page with
+            four tabs, so this is one navigation entry rather than four. */}
+        <Route
+          path="/admin/clinical-configuration"
+          element={
+            <RequireRole roles={[...ADMIN_ROLES]}>
+              <ClinicalConfiguration />
             </RequireRole>
           }
         />

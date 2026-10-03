@@ -59,6 +59,19 @@ export type AuditActionType =
   | "integration_disabled"
   | "integration_connection_tested"
   | "integration_secret_rotated"
+  | "department_create"
+  | "department_update"
+  | "department_status_change"
+  | "doctor_create"
+  | "doctor_update"
+  | "doctor_status_change"
+  | "doctor_department_assignment"
+  | "doctor_schedule_create"
+  | "doctor_schedule_update"
+  | "doctor_schedule_delete"
+  | "doctor_leave_create"
+  | "doctor_leave_update"
+  | "doctor_leave_cancel"
   | "worker_crash_recovery";
 
 export interface AuditEvent {

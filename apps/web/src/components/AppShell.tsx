@@ -64,6 +64,14 @@ const NAV: NavItem[] = [
   // layer, and no read path ever returns a stored secret). The nav entry and
   // route guard are UX boundaries; the Edge Function and RPCs are authority.
   { to: "/admin/integrations", label: "Integrations", roles: ["hospital_admin", "global_admin"] },
+  // WS-ONBOARD-4: clinical configuration. ONE entry for departments, doctors,
+  // schedules and leave - four tabs on one page, not four nav entries, because
+  // they are one onboarding workflow. Both admin roles open their own tenant;
+  // the nav entry and route guard are UX boundaries, while the Edge Function
+  // and the migration-68 RPCs are the security and write authority. A schedule
+  // or leave saved here changes real availability, so the entry is not
+  // decorative.
+  { to: "/admin/clinical-configuration", label: "Clinical Setup", roles: ["hospital_admin", "global_admin"] },
 ];
 
 export function AppShell() {

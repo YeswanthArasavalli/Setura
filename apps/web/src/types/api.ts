@@ -1415,3 +1415,71 @@ export interface DoctorRankingsResponseBody {
   action: "doctor_rankings";
   rankings: DoctorRankingsData | null;
 }
+
+// ─── clinical-configuration (WS-ONBOARD-4 doctor / department / schedule / leave) ──
+
+/** The nine actions the `clinical-configuration` Edge Function accepts. Mirrors
+ *  its `z.discriminatedUnion("action", …)` exactly; the boundary rejects any
+ *  other value with 422, and every member is `.strict()` so an unknown field is
+ *  also 422. The frontend owns NO write logic — it only names what the backend
+ *  already implements (migration 68 RPCs). */
+export type ClinicalConfigurationAction =
+  | "department_create"
+  | "department_update"
+  | "department_status_change"
+  | "doctor_create"
+  | "doctor_update"
+  | "schedule_upsert"
+  | "schedule_delete"
+  | "leave_upsert"
+  | "leave_cancel";
+
+/**
+ * The server-echoed outcome of the action just performed.
+ *
+ * Every field is optional because each action populates only its own subset
+ * (the RPC result objects are built per action), and an unchanged optional
+ * field is OMITTED rather than null-cast. `version` is the department row's
+ * POST-write optimistic-concurrency version — the value to send as
+ * `expectedVersion` on the next department write.
+ */
+export interface ClinicalConfigurationEntity {
+  /** department_* : the affected row id. */
+  departmentId?: string;
+  name?: string;
+  code?: string;
+  version?: number;
+  /** doctor_* : the affected doctor profile id. */
+  doctorId?: string;
+  fullName?: string;
+  departmentCount?: number;
+  specializationCount?: number;
+  /** doctor_update : schedules the server deactivated alongside the doctor. */
+  schedulesDeactivated?: number;
+  /** department_* and doctor_* : resulting activation state. */
+  isActive?: boolean;
+  /** schedule_upsert : true when the server inserted, false when it updated. */
+  created?: boolean;
+  /** schedule_* : 0 = Sunday … 6 = Saturday, exactly as the DB stores it. */
+  weekday?: number;
+  startTime?: string;
+  endTime?: string;
+  maxTokens?: number;
+  scheduleId?: string;
+  deleted?: boolean;
+  startDate?: string;
+  endDate?: string;
+  leaveType?: string;
+  /** leave_* : server-authoritative status. Admin-created leave is recorded
+   *  `approved` because that is the only status the availability engine
+   *  honours; a `pending` row would leave the doctor bookable. */
+  leaveStatus?: string;
+  leaveId?: string;
+}
+
+/** Success-envelope `data` for `clinical-configuration`. */
+export interface ClinicalConfigurationResponseBody {
+  action: ClinicalConfigurationAction;
+  hospitalId: string;
+  entity: ClinicalConfigurationEntity;
+}

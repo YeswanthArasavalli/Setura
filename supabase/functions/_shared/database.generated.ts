@@ -1784,6 +1784,63 @@ export type Database = {
           },
         ]
       }
+      departments: {
+        Row: {
+          code: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          hospital_id: string
+          id: string
+          is_active: boolean
+          is_deleted: boolean
+          name: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          hospital_id: string
+          id?: string
+          is_active?: boolean
+          is_deleted?: boolean
+          name: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          hospital_id?: string
+          id?: string
+          is_active?: boolean
+          is_deleted?: boolean
+          name?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "departments_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "departments_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deployment_snapshots: {
         Row: {
           applied_migrations: number
@@ -1973,6 +2030,62 @@ export type Database = {
           },
           {
             foreignKeyName: "doctor_availability_overrides_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      doctor_departments: {
+        Row: {
+          assigned_by: string | null
+          created_at: string
+          department_id: string
+          doctor_id: string
+          hospital_id: string
+          id: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          created_at?: string
+          department_id: string
+          doctor_id: string
+          hospital_id: string
+          id?: string
+        }
+        Update: {
+          assigned_by?: string | null
+          created_at?: string
+          department_id?: string
+          doctor_id?: string
+          hospital_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "doctor_departments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "doctor_departments_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "doctor_departments_doctor_id_fkey"
+            columns: ["doctor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "doctor_departments_hospital_id_fkey"
             columns: ["hospital_id"]
             isOneToOne: false
             referencedRelation: "hospitals"
@@ -5930,6 +6043,10 @@ export type Database = {
         Returns: Json
       }
       advance_queue: { Args: { p_queue_session_id: string }; Returns: number }
+      assert_department_id_array: {
+        Args: { p_department_ids: Json }
+        Returns: undefined
+      }
       assign_alert: {
         Args: { p_actor_id: string; p_alert_id: string; p_assignee_id: string }
         Returns: Json
@@ -5948,6 +6065,14 @@ export type Database = {
           p_actor_id?: string
           p_queue_session_id: string
           p_token_number: number
+        }
+        Returns: Json
+      }
+      cancel_doctor_leave: {
+        Args: {
+          p_actor_user_id: string
+          p_hospital_id: string
+          p_leave_id: string
         }
         Returns: Json
       }
@@ -6230,6 +6355,28 @@ export type Database = {
           token_number: number
         }[]
       }
+      create_department: {
+        Args: {
+          p_actor_user_id: string
+          p_code: string
+          p_description?: string
+          p_hospital_id: string
+          p_name: string
+        }
+        Returns: Json
+      }
+      create_doctor: {
+        Args: {
+          p_actor_user_id: string
+          p_auth_user_id: string
+          p_department_ids?: Json
+          p_full_name: string
+          p_hospital_id: string
+          p_normalized_phone?: string
+          p_specializations?: Json
+        }
+        Returns: Json
+      }
       create_hospital_settlement: {
         Args: {
           p_collected_by: string
@@ -6253,6 +6400,14 @@ export type Database = {
         Returns: boolean
       }
       current_user_role: { Args: { p_hospital_id: string }; Returns: string }
+      delete_doctor_schedule: {
+        Args: {
+          p_actor_user_id: string
+          p_hospital_id: string
+          p_schedule_id: string
+        }
+        Returns: Json
+      }
       detect_crashed_workers: {
         Args: never
         Returns: {
@@ -7336,6 +7491,16 @@ export type Database = {
         }
         Returns: string
       }
+      set_department_status: {
+        Args: {
+          p_actor_user_id: string
+          p_department_id: string
+          p_expected_version: number
+          p_hospital_id: string
+          p_is_active: boolean
+        }
+        Returns: Json
+      }
       set_integration_secret: {
         Args: { p_actor_user_id: string; p_provider: string; p_secret: string }
         Returns: Json
@@ -7402,6 +7567,31 @@ export type Database = {
         }
         Returns: Json
       }
+      update_department: {
+        Args: {
+          p_actor_user_id: string
+          p_code?: string
+          p_department_id: string
+          p_description?: string
+          p_expected_version: number
+          p_hospital_id: string
+          p_name?: string
+        }
+        Returns: Json
+      }
+      update_doctor: {
+        Args: {
+          p_actor_user_id: string
+          p_department_ids?: Json
+          p_doctor_id: string
+          p_full_name?: string
+          p_hospital_id: string
+          p_is_active?: boolean
+          p_normalized_phone?: string
+          p_specializations?: Json
+        }
+        Returns: Json
+      }
       update_hospital_configuration: {
         Args: {
           p_actor_user_id: string
@@ -7434,6 +7624,35 @@ export type Database = {
           p_user_id: string
         }
         Returns: string
+      }
+      upsert_doctor_leave: {
+        Args: {
+          p_actor_user_id: string
+          p_doctor_id: string
+          p_hospital_id: string
+          p_leave_end_date: string
+          p_leave_id?: string
+          p_leave_start_date: string
+          p_leave_type?: string
+          p_notes?: string
+          p_reason?: string
+        }
+        Returns: Json
+      }
+      upsert_doctor_schedule: {
+        Args: {
+          p_actor_user_id: string
+          p_average_consultation_minutes?: number
+          p_doctor_id: string
+          p_end_time: string
+          p_hospital_id: string
+          p_is_active?: boolean
+          p_max_tokens?: number
+          p_schedule_id?: string
+          p_start_time: string
+          p_weekday: number
+        }
+        Returns: Json
       }
       upsert_presence: {
         Args: { p_hospital_id: string; p_metadata?: Json; p_tab_id: string }
