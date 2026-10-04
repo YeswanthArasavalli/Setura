@@ -1,0 +1,1 @@
+SELECT 'lease' AS src, id::text AS ref, leased_at::text AS t1, lease_expires_at::text AS t2, completed_at::text AS t3, worker_id::text AS w, outcome::text AS outcome FROM public.worker_job_leases WHERE job_queue_id = 'b4d09b67-35ee-46fc-9693-296f2e9d8643';
