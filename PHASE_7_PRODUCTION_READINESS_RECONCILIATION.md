@@ -25,8 +25,9 @@ repository with three corrections and one regression finding:
   secrets), P0-04 → migration 54 (`booking_fee_inr` runtime writer).
   These are IMPLEMENTED; their local runtime proof is partially logged
   (see §8–§9), and production proof remains BLOCKED (no deployment
-  exists). P0-03 (`ENABLE_WORKER_TRIGGER=false`) is still valid in the
-  current `.env.example` (line 16).
+  exists). P0-03 (`ENABLE_WORKER_TRIGGER`) was the one finding still valid in
+  the then-current `.env.example` (line 16, `false`); it has since been closed
+  as a **decision** under D6 (see §18) with the template now `true`.
 - **Regression finding — RESOLVED same-day by the G7-01 work
   package.** The most recent logged W1 worker run in this tree —
   `_w1_test.log`, 2026-09-18 — ends **`FAILED | 3 passed | 1 failed`**:
@@ -206,7 +207,7 @@ were printed, created, or committed.
 | `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` | create-payment-order, verify-payment, process-refund | optional at boot; verify-payment refuses HMAC without secret | NOT PROVISIONED; production = BLOCKED |
 | `CRON_SECRET` | run-cron-minute/nightly, send-reminders, run-background-worker | optional; **empty ⇒ all cron endpoints 403 (fail-closed)** | not set locally (AGENTS §13); production provisioning NOT IMPLEMENTED |
 | `WORKER_SECRET` | run-background-worker ⇄ send-whatsapp-message dispatch | optional | same |
-| `ENABLE_WORKER_TRIGGER` | run-cron-minute gate | optional | **still `false` in `.env.example`** — P0-03 remains open as a documented-default risk |
+| `ENABLE_WORKER_TRIGGER` | run-cron-minute gate | optional; **exact string match** — only `"true"` enables the wake (`true`-like variants such as `True`/`1`/padded values are treated as disabled) | D6 RESOLVED: `.env.example` now ships `true` (deployment intent; secrets + scheduler arming still required) |
 | `WORKER_LEASE_SECS` | worker lease math | optional, default 30 | fine |
 | `LOG_LEVEL`, `DEPLOYMENT_VERSION` | logger/versioning | optional | fine |
 | `SENTRY_DSN` | **declared in env.ts but referenced nowhere else in `supabase/functions/`** | — | dead placeholder → error tracking NOT IMPLEMENTED (§12) |
@@ -271,9 +272,12 @@ Verified from current source + last logs:
   `dead_letter_queue` untouched, per brief §10 — no action taken.
 - Production execution model: `run-background-worker` is an HTTP
   Edge Function — production requires the scheduler (or external
-  trigger) to invoke it continuously; with
-  `ENABLE_WORKER_TRIGGER=false` as the shipped default, a documented
-  default deployment would **not process jobs** (P0-03 still open).
+  trigger) to invoke it continuously. The former shipped default
+  (`ENABLE_WORKER_TRIGGER=false`, which meant a default deployment would
+  **not process jobs**) has been superseded by decision D6: the template now
+  ships `true`. Activation remains gated on real secret provisioning (G7-03)
+  and an armed scheduler; the fail-closed 403 on an absent/mismatched
+  `CRON_SECRET` is unchanged (P0-03 closed as a decision, not as a code fix).
 
 **Status: PROVEN (local happy-path/retry/DLQ) · FAIL (crash reclaim,
 last logged run) · NOT IMPLEMENTED (production execution).**
@@ -478,6 +482,9 @@ conducted or scheduled.
 
 ## 18. Open product decisions (not silently resolved)
 
+D6 has since been explicitly ruled by the owner (recorded in its row below);
+D1–D5 and D7 remain open and are not resolved by this document.
+
 | ID | Decision | Current facts (verified) | Classification |
 | --- | --- | --- | --- |
 | D1 | Mandatory doctor on walk-in/appointment | `create-booking` attaches to callable queue only with `doctorId`; doctor-less ⇒ token, `queueSessionId=null` (Phase 6 §G.1) | DEFERRED — product ruling needed |
@@ -485,7 +492,7 @@ conducted or scheduled.
 | D3 | GoTrue seed NULL-column defect | Local-only remediation UPDATEs in Phase 6 §E; not fixed in seed/migration; affects any fresh deploy of the same seed shape | DEFERRED — must be classified (seed vs GoTrue version vs config) before production provisioning |
 | D4 | Notifications staff UI | NOT IMPLEMENTED (Phase 6 §K) | DEFERRED — placement (Phase 7 vs later) is this phase's planning decision |
 | D5 | Backup/PITR/retention policy | No policy in tree; retention engine prunes data (migration 23) with no counterpart backup obligation | DEFERRED — explicit platform+product decision required |
-| D6 | `ENABLE_WORKER_TRIGGER` shipped default | `.env.example` = false; a documented-default deploy would not process jobs (P0-03) | DEFERRED — deliberate default choice required (true + secret discipline, or false + external trigger mandate) |
+| D6 | `ENABLE_WORKER_TRIGGER` shipped default | `.env.example` now = true (was false, a deliberate fail-closed default at the time of registration) | **RESOLVED 2026-10-05 — TRUE + SECRET DISCIPLINE.** `true` is the intended production deployment configuration, but autonomous worker activation is permitted only when: (1) `CRON_SECRET` is genuinely provisioned; (2) `WORKER_SECRET` / the corresponding worker authentication secret required by the existing implementation is genuinely provisioned; (3) the scheduler is armed; (4) the worker wake path is verified; (5) fail-closed behavior remains intact when secrets are absent/mismatched. No auth code, migration or live secret was changed to record this ruling |
 | D7 | Scheduler on hosted Supabase | migration 53 premises verified locally only (cron.database_name, extension availability) | UNPROVEN → verify at provisioning; not a code decision |
 
 ---
@@ -506,7 +513,7 @@ priorities as required by the Phase 7 brief §20.
 | G7-06 | Real Meta boundary | BLOCKED | Phase 6 §I | Delivery/templates/webhook unexercised | Meta business onboarding + callback registration | G7-02 | Patient channel | P1 | OPEN |
 | G7-07 | Scheduler end-to-end proof | CLOSED locally — PROVEN (SQL layer + autonomous pg_cron firing); authenticated HTTP wake stays BLOCKED (G7-03/G7-09), production BLOCKED (G7-02) | `_g707_scheduler.log` 3/3; `cron.job_run_details` 316 succeeded / 0 failed | Cannot claim autonomous firing even locally | ~~One targeted logged run~~ done | local stack | Gates G7-03/09 | P1 | CLOSED (local) |
 | G7-08 | Tenant/staff provisioning | seed.sql is local-demo only | `supabase/seed.sql`, config.toml | No way to onboard pilot hospital safely | Production onboarding runbook/RPC path review | G7-02 | Pilot impossible | P1 | OPEN |
-| G7-09 | `ENABLE_WORKER_TRIGGER` default | false shipped | `.env.example:16` | Documented default deploys non-processing system (P0-03) | Decision D6 + config change + docs | G7-03 | Silent dead queue | P1 | OPEN |
+| G7-09 | `ENABLE_WORKER_TRIGGER` default | DECISION RESOLVED — D6 = true + secret discipline; template now ships `true` | `.env.example:16` + inline preconditions; `run-cron-minute/index.ts:385` exact-match gate | Former documented-default non-processing risk (P0-03) removed; residual risk moved to operator provisioning | ~~Decision D6~~ done + config change + docs (this package) — per-environment wake verification remains with G7-03 | G7-03 | Silent dead queue: **no longer a repository default**; still possible on an environment whose scheduler is unarmed or whose secrets are placeholders | P1 | CLOSED (decision + repository documentation) — production activation UNPROVEN (G7-02/03) |
 | G7-10 | External error tracking | SENTRY_DSN declared, unused | grep across `supabase/functions/` | Prod failures invisible outside DB | Initialize error transport or record explicit alternative | G7-02 | Ops recovery | P2 | OPEN |
 | G7-11 | Backup/DR | None | repo-wide absence | Data-loss irreversibility | Decision D5 + first restore test | G7-02 | Mandatory for real patients | P2 (P0 before go-live with real data) | OPEN |
 | G7-12 | Auth production config (site_url/SMTP/reset) | localhost config; no SMTP | `config.toml` | Password reset/invitations dead in prod | Prod auth config + SMTP provisioning | G7-02 | Staff onboarding | P2 | OPEN |
@@ -528,7 +535,10 @@ priorities as required by the Phase 7 brief §20.
    authorization required; this session performed no deployment).
 4. **G7-03 → G7-04 → G7-09** — production provisioning runbook
    (placeholders only), deploy, then production privilege catalog
-   verification; flip the worker-trigger default per decision D6.
+   verification. The G7-09 repository half is **DONE** (decision D6 ruled
+   true + secret discipline and `.env.example` now ships `true`); what remains
+   of this step is provisioning the real `CRON_SECRET`/`WORKER_SECRET` at
+   deploy time and verifying the wake path in that environment.
 5. **G7-08, G7-12** — tenant/staff provisioning + production auth
    (SMTP/reset) configuration.
 6. **G7-05 / G7-06** — Razorpay and Meta staging/live verification,
@@ -602,7 +612,8 @@ G7-05 real Razorpay boundary BLOCKED
 G7-06 real Meta boundary BLOCKED
 (none open — G7-07 CLOSED locally 2026-09-19)
 G7-08 no production tenant/staff provisioning path
-G7-09 ENABLE_WORKER_TRIGGER=false documented default (P0-03)
+G7-09 CLOSED as a decision (D6 = true + secret discipline); per-environment
+      worker-wake verification still depends on G7-03 provisioning
 
 P2 hardening:
 G7-10 external error tracking absent (SENTRY_DSN unused)
@@ -613,7 +624,8 @@ G7-13 F16-05 / F16-06 test debts
 Deferred decisions:
 D1 doctor-assignment mandatory · D2 doctor names for reception ·
 D3 GoTrue seed defect classification · D4 notifications UI placement ·
-D5 backup/PITR policy · D6 worker-trigger shipped default ·
+D5 backup/PITR policy · D6 worker-trigger shipped default — **RESOLVED**
+(true + secret discipline; recorded in §18, not deferred) ·
 D7 hosted pg_cron/Vault behavior (verify at provisioning)
 
 Production deployment:

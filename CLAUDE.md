@@ -431,10 +431,24 @@ them as new defects. `fmt:check` fails on exactly 8 root markdown files, all
 Phase 1.6 audit/reconciliation documents, zero source files — cosmetic only, do
 not fix unasked.
 
-**Scheduler.** None exists — stronger than "not activated": `pg_cron` is
-available but not installed (`installed_version` NULL), there is zero `pg_net`
-HTTP scheduling invocation in the migrations, and no external scheduler
-configuration exists anywhere in the repository.
+**Scheduler.** A repository scheduler now EXISTS — this supersedes the earlier
+"none exists" premise in this section, which described the pre-migration-53
+tree. Migration 53 installs `pg_cron` + `pg_net` with Vault-provisioned secrets
+and registers `setura_cron_minute` / `setura_cron_nightly`; autonomous firing
+is locally proven (G7-07 CLOSED) and the schedules are active on staging.
+What remains unproven is *hosted* extension behavior and production
+provisioning (decision D7 / G7-03), not the presence of the mechanism. Verify
+`cron.job` on the target environment rather than repeating either claim.
+
+**Worker trigger default (decision D6 — RESOLVED).** `ENABLE_WORKER_TRIGGER`
+in `.env.example` is `true` (D6: true + secret discipline). Historically the
+template shipped `false` as a deliberate fail-closed default; that posture was
+replaced by an owner ruling, not by a code change. `true` is a *deployment
+intent*, not an activation proof: real `CRON_SECRET` / worker secrets, an armed
+scheduler and a verified wake path are all still required, and
+`run-background-worker` continues to fail closed with 403 when the cron secret
+is absent or mismatched. The consumer is `run-cron-minute`, which matches the
+literal string `"true"` only.
 
 **Background worker.** Local runtime showed 157 pending jobs and zero claimed
 jobs, worker IDs, lease timestamps, worker registry rows, heartbeat rows,
@@ -484,9 +498,9 @@ silently treat them as fixed.
 
 | ID | What | Note |
 | --- | --- | --- |
-| P0-01 | `claim_jobs_v2` doesn't set `lease_expires_at` | crash recovery can't reclaim v2-claimed jobs |
-| P0-02 | no scheduler exists | design decision (NPD-05), not a config fix |
-| P0-03 | `ENABLE_WORKER_TRIGGER=false` in `.env.example` | documented default deploys a non-processing system |
+| P0-01 | `claim_jobs_v2` doesn't set `lease_expires_at` | crash recovery can't reclaim v2-claimed jobs — remediated by migrations 51/52 and closed locally by G7-01; verify before re-reporting |
+| P0-02 | ~~no scheduler exists~~ SUPERSEDED | migration 53 installs pg_cron+pg_net schedules (NPD-05 ruled); hosted/production behavior remains UNPROVEN (D7) |
+| P0-03 | ~~documented default deploys a non-processing system~~ DECISION RESOLVED | D6 ruled TRUE + SECRET DISCIPLINE; `.env.example` now `true`. Remaining work is operator provisioning (G7-03) and wake-path verification, not a repository default |
 | P0-04 | `booking_fee_inr` has no runtime writer | one-time backfill (migration 28) only |
 | F16-01 | Edge Runtime `RestartPolicy=no` | environment/tooling, not product code |
 | F16-04 | migration 48's default-privilege fail-closed doesn't hold | new/changed SECURITY DEFINER functions need explicit REVOKE |
