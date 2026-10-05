@@ -157,3 +157,129 @@ Unchanged from `STAGING_VERIFICATION_CLOSURE_REPORT.md` and deliberately NOT reo
    - `supabase db query --linked -f _soak_close_census.sql`
    - `supabase db query --linked -f _soak_probe_baseline.sql` (end-state comparison)
 3. Apply the §14 closure PASS rule verbatim, append the dated closure addendum to this report (single append, no rewrite), upgrade the verdict, and delete the `_soak_*` scratch files.
+
+---
+
+## 19. CLOSURE ADDENDUM — 2026-10-05 (dated single append; §1–§18 above preserved as historical)
+
+**Closure census executed:** T1 = `2026-10-05 10:27:28.94 UTC` (close-census server clock); end-state baseline census `10:27:46 UTC`.
+**Window:** T0 = `2026-10-04 08:09:21+00` (original, unredefined) → T1. **Actual elapsed: 26.30 hours** (`ok_if_ge_24h=true`).
+**Authoritative sources:** staging durable telemetry (`cron.job_run_details`, `job_queue`, `worker_job_leases`, `worker_registry`, `dead_letter_jobs`) read read-only via `supabase db query --linked -f _soak_close_census.sql` + `_soak_probe_baseline.sql` + four targeted anomaly probes (q1–q6). No producer was re-run; no data was written during closure.
+
+### 19.1 Closure census results (verbatim values)
+
+| Measure | T0 (2026-10-04 08:09:21Z) | T1 (2026-10-05 ~10:27Z) | Note |
+| --- | --- | --- | --- |
+| cron in-window minute_runs / succeeded / non_succeeded | — | 1578 / 1578 / **0** | elapsed 1578.2 min; distinct_minutes=1578 |
+| cron nightly_runs in window | — | 1 (03:00:00 succeeded, q6) | criterion met |
+| Queue depth pend+proc | 0 | **0** | `queue_depth_close=0` |
+| completed total | 1 | **2** | compute_sla=2 |
+| Soak job `b4d09b67` | completed 08:11:08Z | **still `completed`**, att=1/5, worker 425cef21 | criterion 7 PASS |
+| Soak job lease rows | 1 (dde732b4, outcome=completed) | 0 at T1 — **purged by documented 24h closed-lease retention (migration 19)** | single-lease proven by T0 capture; §19.4-D |
+| dead total | 77 | 78 | +1 = new in-window job c8ee1361 |
+| `jobs_created_in_window` | — | compute_sla/completed=1 (mine, legitimate) + send_whatsapp_message/dead=1 (**autonomous reminder pipeline**) | |
+| `jobs_dead_in_window` (census predicate `dead AND updated_at>=T0`) | — | **4** = 1 genuine new death + 3 idempotent-replay `updated_at` touches of historical dead rows (q1/q5: no leases, attempts frozen 5/5) | §19.2 |
+| `dlq_failed_in_window` | 0 | **1** (794051af → c8ee1361, failed 09:00:07Z, provider 401) | §19.2 |
+| multi_lease_completed / stuck_processing / expired_open_leases | 0/0/0 | **0/0/0** | |
+| hb_in_window | — | 148 rows / 55 workers; latest heartbeat 10:27:42 (4s before probe) | 1h log truncation per migration 19; boundary liveness proven |
+| worker_registry crashed | 34 | 36 (+2 in-window, q3: both `jobs_claimed=0`, marked by crash-detection as designed) | §19.2-F |
+| net responses in window | — | 359×200 + 1 timed_out | secondary telemetry, cron layer 0 failures |
+| sla_daily_tracking | 4 zero-wait rows | +3 hospital rows for 10-04 computed 03:00 by nightly; all zero-wait `breached=false` | fixed guard healthy; TRUE branch untouched |
+
+### 19.2 The single genuine in-window dead-letter — full root cause
+
+At 08:30:01 UTC 2026-10-05 the **autonomous minute-tick reminder pipeline** (`run-cron-minute` → send-reminders) legitimately enqueued `send_whatsapp_message` job `c8ee1361` (idempotency key `reminder_77e56254…`, hospital …0001) — real product activity, not soak-produced, not fabricated. The worker attempted it exactly 5 times with textbook exponential backoff (leases q2: 08:30:02 → 08:32:03 → 08:36:04 → 08:44:06 → 09:00:07; +2/+4/+8/+16 min), each failing with `WhatsApp send failed (401) UNAUTHORIZED_NO_AUTH_HEADER` — the **intentionally-absent Meta credentials boundary** (§15 design posture, identical root cause to the 70 historical dead rows). It then dead-lettered exactly once and queue depth returned to 0. **Classification: C — known provider boundary / intentionally absent credential.** No runtime defect: retry, backoff, lease accounting, DLQ write and dedup all behaved per spec — this is positive in-window evidence of correct failure-path autonomy.
+
+Three historical dead rows (`05161a4b`, `47a2b3f6`, `d17d5127`, older reminder jobs from 09-21/10-02) show `updated_at` bumped at 08:31:01 by `enqueue_job`'s documented idempotent-replay path (`ON CONFLICT (idempotency_key) DO UPDATE SET updated_at = now()`, migration 06:237-239). q5 proves **zero lease rows and unchanged attempt_count 5/5** — they were NOT re-claimed; terminal state was never violated. Classification: B (expected historical state) + E (census predicate over-count is cosmetic).
+
+### 19.3 §14 criterion-by-criterion closure matrix
+
+| # | Criterion | Result |
+| --- | --- | --- |
+| 1 | ok_if_ge_24h = true | **PASS** (26.30h) |
+| 2 | non_succeeded = 0 | **PASS** (0/1578) |
+| 3 | minute_runs & distinct_minutes within 1 of elapsed | **PASS** (1578/1578 vs 1578.2) |
+| 4 | nightly_runs ≥ 1 | **PASS** (1) |
+| 5 | jobs_dead_in_window = 0 | **RAW FAIL** — 4 = 3 replay touches (not deaths, class B/E) + 1 genuine class-C provider-boundary death (c8ee1361) |
+| 6 | dlq_failed_in_window = 0 | **RAW FAIL** — 1 genuine class-C DLQ (c8ee1361) |
+| 7 | soak job terminal completed | **PASS** |
+| 8 | soak job exactly 1 closed lease | **PASS (by T0 record)** — single closed lease proven at T0; row purged at T1 by documented 24h retention (class D) |
+| 9 | multi_lease_completed = 0 | **PASS** |
+| 10 | stuck_processing = 0 | **PASS** |
+| 11 | expired_open_leases = 0 | **PASS** |
+| 12 | hb_in_window non-trivial/coverage | **PASS (qualified)** — boundary liveness both ends; log natively 1h-truncated (class D) |
+| 13 | completed_by_type_close ≥ 2 | **PASS** (compute_sla=2) |
+| 14 | every new anomaly explicitly classified | **PASS** (§19.2, §19.4) |
+
+### 19.4 Anomaly classification register
+
+- **C (provider boundary):** c8ee1361 dead-letter (1 DLQ) — root-caused, zero runtime impact.
+- **B (historical state):** 3 `updated_at` replay touches of old dead reminder rows; `enqueue_job` replay-suppression semantics noted for owner awareness: a reminder whose job died will never be re-enqueued under the same key (only touched) — pre-existing documented source behavior, NOT modified this closure.
+- **D (hosted retention/telemetry limits):** `worker_heartbeat_log` truncated to 1h and closed `worker_job_leases` purged >24h by migration 19 `run_scheduled_tasks` (this corrects §3/§8's "durable across window" claim for those two tables — `job_queue`/DLQ/registry totals remain durable and did carry the window); pg_net responses retention-bounded (~359/1578).
+- **E (cosmetic/non-authoritative):** 1 net `timed_out` with zero corresponding cron failure (function completed server-side; documented migration-57 pattern); `soak_job_leases` census cell displayed `count(*)=1` — a defect in my own census SQL branch (tableless aggregate), real lease evidence is the T0 capture + q5.
+- **F (environment/observation):** in-window +2 crashed worker markers (q3): invocations killed platform-side after registration with 0 jobs claimed; crash-detection marked them exactly as designed, no job impact. Hourly sampler captured 1 of 26 planned samples (machine/session ended overnight) — anticipated in §3.5; durable telemetry remained authoritative.
+- **A (genuine runtime defect):** **NONE found. No class-A event occurred anywhere in the 26.3h window.**
+
+### 19.5 compute_sla
+
+Fixed guard healthy throughout: T1 rows (7 total incl. 3 new hospitals computed autonomously by the 03:00 nightly) all zero-wait, `sla_wait_breached=false`, `avg_wait_minutes=NULL`, no 23502. No wait samples manufactured; migration 73 not touched. **TRUE branch: remains UNPROVEN on staging (data-availability item; NOT APPLICABLE to the soak gate per Phase 5).**
+
+### 19.6 Final WS-OPS-1 verdict
+
+`WS-OPS-1 — BLOCKED`
+
+Reasoning, stated without inflation: every criterion that measures **worker/scheduler/queue autonomy correctness** passed for the full 26.3h (0 scheduler failures, correct lease/claim/complete, correct retry/backoff/DLQ, zero stuck/orphan/duplicate, soak job terminal completed). But the §14 gate 5/6 pre-registered **literal zero in-window dead/DLQ**, and one genuine class-C provider-boundary dead-letter breached it. Per the pre-registered closure rule ("violations → FAIL (runtime defect) or BLOCKED (environment), never PASS") and §10 (FAILED requires a genuine runtime defect — none exists; BLOCKED applies where the criteria cannot be met for non-defect environmental reasons), the honest verdict is BLOCKED **pending one owner adjudication**: either (a) rule class-C provider-boundary DLQs NOT APPLICABLE to gates 5/6 (on this evidence WS-OPS-1 would then be CLOSED / STAGING VERIFIED — all remaining criteria passed), or (b) change staging posture (disable reminder→WhatsApp enqueue, or supply test provider credentials) and re-run the window. No PASS was manufactured.
+
+### 19.7 Closure change statement
+
+During closure: **no source change, no migration (no 74), no Edge Function change, no RLS change, no scheduler/worker configuration change, no synthetic data, no producer re-run, no harness modification or bypass, no secret requested/read/printed, no production touch.** Only this dated addendum was written; the `_soak_*` scratch files were deleted after this evidence was captured here; `git status --short` afterward shows no unintended changes.
+
+The §16 historical verdict (`BLOCKED — window in progress`) is preserved above as historical context.
+
+---
+
+## 20. OWNER ADJUDICATION ADDENDUM — 2026-10-05 (dated single append; §1–§19 preserved unchanged)
+
+**Adjudication date:** 2026-10-05. **Authority:** project owner, recorded verbatim in the owner closeout instruction for WS-OPS-1.
+
+### 20.1 Owner ruling on §19.6 option (a)
+
+The owner adjudicated the single open question raised in §19.6 in favor of option (a):
+
+> For WS-OPS-1 worker-autonomy verification, Class-C provider-boundary failures caused **solely by intentionally absent external provider credentials** are **NOT APPLICABLE to the zero-DLQ gate** (§14 criteria 5/6), provided: (1) the provider failure itself is expected, (2) no worker/runtime defect caused it, (3) retry/backoff behavior is correct, (4) lease accounting is correct, (5) the job reaches terminal dead state correctly, (6) no duplicate/stuck/orphan/expired execution occurs, (7) no Class-A runtime defect exists.
+
+The 26.30h captured evidence satisfies **all seven conditions**, each already proven in §19:
+
+1. **Expected provider failure:** `c8ee1361` failed with `WhatsApp send failed (401) UNAUTHORIZED_NO_AUTH_HEADER` — the intentionally-absent Meta credentials boundary (§15 design posture, identical root cause to the 70 historical dead rows).
+2. **No worker/runtime defect caused it:** §19.4 records **zero Class-A events anywhere in the 26.3h window**.
+3. **Retry/backoff correct:** exactly 5 attempts at +2/+4/+8/+16 min exponential backoff (leases q2: 08:30:02 → 08:32:03 → 08:36:04 → 08:44:06 → 09:00:07).
+4. **Lease accounting correct:** 5 in-window leases all belong to `c8ee1361`; `multi_lease_completed = 0`, `stuck_processing = 0`, `expired_open_leases = 0`.
+5. **Terminal dead state reached correctly:** dead-lettered exactly once (`dead_letter_jobs` row `794051af`, 09:00:07.44), queue depth returned to 0.
+6. **No duplicate/stuck/orphan/expired execution:** census fields all 0 at T1; the 3 historical-row `updated_at` bumps were idempotent-replay touches only (q5: zero leases, attempts frozen 5/5).
+7. **No Class-A runtime defect:** confirmed by full anomaly register.
+
+### 20.2 Effect on the §14 matrix
+
+Criteria 5 and 6 change from **RAW FAIL** to **NOT APPLICABLE (owner-adjudicated class-C exclusion)** for this gate. All twelve remaining criteria were already PASS (§19.3). With the adjudication applied, **every applicable §14 criterion passes**:
+
+| Gate outcome | Before adjudication | After adjudication |
+| --- | --- | --- |
+| 5 jobs_dead_in_window = 0 | RAW FAIL (1 class-C death + 3 replay touches) | **NOT APPLICABLE / PASS-by-adjudication** |
+| 6 dlq_failed_in_window = 0 | RAW FAIL (1 class-C DLQ) | **NOT APPLICABLE / PASS-by-adjudication** |
+| 1-4, 7-14 | PASS | PASS (unchanged) |
+
+### 20.3 Final WS-OPS-1 verdict (supersedes §19.6; §19.6 retained as the pre-adjudication record)
+
+`WS-OPS-1 — CLOSED / STAGING VERIFIED`
+
+The 26.30h controlled staging soak (T0 `2026-10-04 08:09:21+00` → T1 `2026-10-05 10:27:28.94+00`) is closed on durable staging telemetry: scheduler autonomy (1578/1578 minute runs, 0 non-succeeded, 1 nightly success), worker lifecycle (autonomous claim → lease → execute → completed for soak job `b4d09b67`, exactly 1 closed lease per T0 record), retry/backoff/DLQ failure-path correctness, queue hygiene (depth 0, zero stuck/orphan/expired/duplicate) and liveness all verified, **no Class-A runtime defects found**, and the single provider-boundary DLQ intentionally excluded from the zero-DLQ gate by owner adjudication.
+
+### 20.4 Standing exclusions preserved after closure
+
+- **compute_sla `sla_wait_breached = TRUE` branch remains UNPROVEN separately** — no legitimate staging wait samples exist; no samples were manufactured. This is a data-availability item, NOT a WS-OPS-1 soak-gate requirement, and does not reopen this verdict.
+- The 77 historical dead jobs (70 × whatsapp provider-401, 7 × pre-migration-73 compute_sla NULL defect) remain Class B historical state, not soak failures.
+- Production verification remains separately UNPROVEN (no deployment); this closure certifies **staging worker autonomy only**.
+
+### 20.5 Adjudication-change statement
+
+This addendum was produced with: **no second 24h soak run, no source change, no migration, no Edge Function change, no RLS change, no scheduler/worker behavior change, no provider credentials added, no synthetic data, no secret requested/read/printed, no production touch.** The only file modified is this report (§20 appended; §1–§19 byte-for-byte unchanged). Nothing was committed.
