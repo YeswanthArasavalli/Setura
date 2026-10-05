@@ -304,7 +304,9 @@ export async function broadcastHospitalClosure(
     .from("bookings")
     .select("id, patient_name, patient_phone, token_number")
     .eq("hospital_id", hospitalId)
-    .eq("booking_date", sessionDate)
+    // bookings stores the service date in appointment_date; there is no
+    // booking_date column, so filtering the wrong name silently returned 0.
+    .eq("appointment_date", sessionDate)
     .in("status", QUEUE_ACTIVE_STATUSES)
     .eq("is_deleted", false)
     .not("patient_phone", "is", null);
