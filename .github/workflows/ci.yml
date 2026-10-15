@@ -14,7 +14,10 @@
 #   frontend           — apps/web: npm ci, typecheck, build, vitest, and a
 #                        built-bundle secret/source-map scan.
 #   stack              — boots the full local Supabase stack (migrations +
-#                        seed), then runs the complete integration suite.
+#                        seed), runs the generated-type divergence guard
+#                        (P3-02: `gen:types:check`, validate-only — it never
+#                        regenerates `database.generated.ts`), then runs the
+#                        complete integration suite.
 #   release-validation — on merges to main / manual dispatch only: a curated
 #                        consolidated regression (E1, worker, scheduler,
 #                        financial, S1) against a fresh stack + npm audit +
@@ -189,6 +192,14 @@ jobs:
             psql -U postgres -d postgres \
             -c "SELECT count(*) AS table_count FROM information_schema.tables WHERE table_schema = 'public';" \
             -c "SELECT count(*) AS seeded_hospitals FROM public.hospitals WHERE id = '00000000-0000-4000-8000-000000000001';"
+
+      # P3-02 divergence guard: `deno task gen:types:check` shells out to
+      # `supabase gen types typescript --local` against the fresh stack and
+      # byte-compares the result with the committed
+      # supabase/functions/_shared/database.generated.ts. It writes nothing:
+      # any schema/type-source drift fails this step and the whole job.
+      - name: Generated-type divergence guard (gen:types:check)
+        run: deno task gen:types:check
 
       - name: Integration tests (full suite against the fresh stack)
         run: deno task test:integration
