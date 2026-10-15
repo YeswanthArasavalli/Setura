@@ -63,6 +63,15 @@ concurrency:
 env:
   DENO_VERSION: v2.8.3
   NODE_VERSION: "20"
+  # P3-02 CI repair: pin the Supabase CLI instead of resolving `latest`. The
+  # setup action only calls api.github.com/repos/supabase/cli/releases/latest
+  # when the requested version is literally `latest`; an explicit version
+  # downloads the release asset directly, so the step no longer depends on an
+  # unauthenticated, shared-IP rate-limited API call (run #48 failed there).
+  # 2.100.1 is the version the local stack, staging verification and the
+  # committed database.generated.ts were produced with, keeping the
+  # generated-type guard's comparator and generator the same version.
+  SUPABASE_CLI_VERSION: "2.100.1"
 
 jobs:
   quality:
@@ -158,6 +167,15 @@ jobs:
         run: npm run build
 
       - name: Unit tests (vitest)
+        # CI parity with the local run: apps/web/.env.local supplies these two
+        # public client values locally but is git-ignored (.gitignore `.env*`),
+        # so a fresh CI checkout has none and `src/lib/supabase.ts` throws at
+        # import time for every suite that reaches it. Same placeholder,
+        # local-safe public values as the Production build step above — the anon
+        # key is public by design and no service-role secret is ever present.
+        env:
+          VITE_SUPABASE_URL: "http://127.0.0.1:54321"
+          VITE_SUPABASE_ANON_KEY: "ci-placeholder-anon-key"
         run: npm run test
 
       - name: Built-bundle secret & source-map scan
@@ -180,7 +198,7 @@ jobs:
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: ${{ env.SUPABASE_CLI_VERSION }}
 
       - name: Start local Supabase stack (applies all migrations + seed)
         run: supabase start
@@ -227,7 +245,7 @@ jobs:
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: ${{ env.SUPABASE_CLI_VERSION }}
 
       - name: Start local Supabase stack
         run: supabase start
